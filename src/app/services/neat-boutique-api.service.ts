@@ -5765,7 +5765,6 @@ export class Answer implements IAnswer {
     vendor?: NeatBoutiqueEntity;
     googlePlace?: GooglePlacesEntity;
     votes?: AnswerVote[] | undefined;
-  newAnswer: import("/Users/shanedrye/jacobi/Neat Boutique/Code/jacobi.neat-boutique.ui/src/app/models/entity-display").EntityDisplay;
 
     constructor(data?: IAnswer) {
         if (data) {
