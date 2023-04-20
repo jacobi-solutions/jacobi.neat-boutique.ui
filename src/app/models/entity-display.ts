@@ -14,6 +14,7 @@ export class EntityDisplay implements IGooglePlacesEntity, INeatBoutiqueEntity {
     public state: string | undefined;
     public country: string | undefined;
     public formattedLocation: string | undefined;
+    
    
     constructor(data?: GooglePlacesEntity | NeatBoutiqueEntity) {
         
