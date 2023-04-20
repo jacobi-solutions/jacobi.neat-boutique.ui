@@ -1,0 +1,129 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.marquee-ad {
+    --background: none;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    float: left;
+
+    &:not(.demo, .communityAd) {
+        z-index: -1;
+        height: 100% !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 100vw !important;
+
+        h1 {
+            font-size: 4rem;
+        }
+    }
+
+    h1 {
+        margin: 0 !important;
+        color: white;
+        --ion-text-color: white;
+    }
+
+    ion-grid {
+        margin-bottom: 2rem;
+        ion-row {
+            padding: 0 !important;
+            margin: 0 !important;
+            ion-col {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                margin-left: 4rem;
+            }
+        }
+    }
+    
+    
+
+    .md-ad-button {
+        --background-color: transparent !important;
+        background-color: transparent !important;
+        --border-width: 1px !important;
+        --border-style: solid !important;
+        --border-color: white !important;
+        --border-radius: 10px;
+        color: white;
+        --ion-text-color: white;
+        font-size: 1rem;
+        margin-top: 2rem;
+    }
+
+    // used in vendor settings: hero ad
+    &.demo,
+    &.communityAd {
+        border-radius: var(--nb-border-radius); 
+        width: 100%;
+        aspect-ratio: 2 / 1;
+
+        ion-grid {
+            margin-bottom: 1rem;
+
+            ion-col {
+                margin-left: 1rem !important;
+            }
+        }
+    }
+
+    &.demo {
+        h1 {
+            font-size: 2rem;
+        }
+    }
+
+    &.communityAd {
+        h1 {
+            font-size: 4rem;
+        }
+    }
+}
+
+
+// ================================ media queries
+@include screen-xl-and-below {
+    .marquee-ad.communityAd {
+        h1 {
+            //font-size: font-sizes(h1);
+        }
+    }
+ }
+@include screen-md-and-below {
+    .marquee-ad {
+        ion-grid {
+            margin: 0 !important;
+            padding: 1rem;
+            ion-crow,
+            ion-col {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }
+
+        &.communityAd {
+            h1 {
+                font-size: 2.4rem;
+            }
+    
+            .btn-wrapper {
+    
+            }
+        }
+    }
+}
+@include screen-sm-and-below {
+    .marquee-ad.communityAd {
+        h1 {
+            font-size: 1.5rem;
+        }
+    }
+}

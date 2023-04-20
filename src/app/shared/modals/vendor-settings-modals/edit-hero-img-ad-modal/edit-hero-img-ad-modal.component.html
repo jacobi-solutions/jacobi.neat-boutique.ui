@@ -1,0 +1,86 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose($event)" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice">Edit hero image ad</p>
+          <ion-list [formGroup]="heroAdForm">
+  
+  
+            <ion-item [lines]="'none'" class="input-choice hero-img">
+              <ion-input type="text">
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.communityHeroImage}">
+                    <ion-label class="label-placeholder">Community</ion-label>
+  
+                    <ion-select
+                        formControlName="communityHeroImage"
+                        multiple="false"
+                        cancelText="Cancel"
+                        okText="Done"
+                        interface="popover">
+  
+                        <ion-select-option *ngFor="let communityHeroImg of communityHeroImages" [value]="communityHeroImg?.imageUrl">{{ communityHeroImg?.label }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+              </ion-input>
+  
+              <div class="hero-img-preview">
+                <img *ngIf="heroAdForm.value.communityHeroImage; else heroSelectPlaceholder" alt="community image" [src]="heroAdForm.value.communityHeroImage || null" />
+              
+                <ng-template #heroSelectPlaceholder>
+                  <p>Select a community image</p>
+                </ng-template>
+              </div>
+            </ion-item>
+  
+  
+            <ion-item [lines]="'none'" class="input-choice community-tagline">
+              <ion-input type="text">
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.communityTagline}">
+                    <ion-label class="label-placeholder">Community</ion-label>
+  
+                    <ion-select
+                        formControlName="communityTagline"
+                        multiple="false"
+                        cancelText="Cancel"
+                        okText="Done"
+                        interface="popover">
+  
+                        <ion-select-option *ngFor="let communityTagline of communityTaglines" [value]="communityTagline?.tagline">{{ communityTagline?.label }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+              </ion-input>
+            </ion-item>
+  
+  
+            
+  
+            <!-- <ion-item [lines]="'none'">
+              <app-input-field class="form-input"
+              [formGroupInstance]="heroAdForm"
+              [inputName]="'communityTagline'"
+              [label]="'Community Tagline'"
+              [value]="'TODO: Add default value'"></app-input-field>
+            </ion-item> -->
+  
+            <ion-item [lines]="'none'">
+              <app-input-field class="form-input"
+              [formGroupInstance]="heroAdForm"
+              [inputName]="'vendorTagline'"
+              [label]="'Vendor Tagline'"
+              [value]="'TODO: Add default value'"></app-input-field>
+            </ion-item>
+          </ion-list>
+  
+          <ion-item-divider></ion-item-divider>
+          <div class="action-btn-wrapper">
+            <app-jacobi-button [buttonType]="'auth-primary'" [disabled]="heroAdForm.invalid" (click)="onSave($event)">Save</app-jacobi-button>
+            <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose($event)">Cancel</app-jacobi-button>
+          </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

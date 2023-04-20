@@ -1,0 +1,25 @@
+<ion-grid fixed>
+  <ion-row>
+    <ion-col>
+      
+      <div class="select-logo-input-wrapper">
+        <p class="clickable" (click)="imgFile.click()">Select Image</p>
+        <input type="file" #imgFile [multiple]="false" (change)="selectImg($event)" style="display:none"/>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <div class="raw-img-container image-cropper-jJLH8n2M64jnkqma2pz8KXfG4ytkAM2e">
+        <img class="reference-img" #referenceImage [src]="imageSource">
+      </div>
+    </ion-col>
+
+    <ion-col>
+      <ion-avatar class="">
+        <img [src]="croppedImagePreview" class="img-preview">
+      </ion-avatar>
+    </ion-col>
+  </ion-row>
+</ion-grid>

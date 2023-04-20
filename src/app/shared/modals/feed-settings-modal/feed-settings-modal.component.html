@@ -1,0 +1,30 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose($event)" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <h2 class="ion-text-center">Feed Settings</h2>
+  
+        <p class="text-notice">You can choose which categories to show and hide from your feed by selecting below.</p>
+        
+        <!-- <form action=""> -->
+          <ion-list>
+            <ion-item *ngFor="let community of communities">
+              <ion-label>{{ community.name }}</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="community.isSelected"></ion-checkbox>
+            </ion-item>
+          </ion-list>
+  
+       
+        <div class="action-btn-wrapper">
+          <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose($event)">Cancel</app-jacobi-button>
+          <app-jacobi-button [buttonType]="'auth-primary'" (click)="onSave($event)">Save</app-jacobi-button>
+        </div>
+  
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

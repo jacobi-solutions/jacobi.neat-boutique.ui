@@ -1,0 +1,30 @@
+
+<!-- <ion-content> -->
+  <ion-header class="nav-bar mobile">
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+        <ion-icon class="back-button" (click)="goBack()" name="chevron-back-sharp"></ion-icon>
+      </ion-buttons>
+
+      <ion-title>
+        {{ pageName }}
+      </ion-title>
+
+      <ion-buttons slot="end">
+        <ion-icon class="location pointy-cursor" (click)="showLocationModal()" name="location-sharp"></ion-icon>
+        
+        <app-nb-avatar *ngIf="currentUser" [size]="'extra-small'" class="pointy-cursor" [routerLink]="'/settings'" [borderColor]="currentUser?.consumer?.borderColor" [altStyleClass]="'force-center-items un-color-primary'" [imageSrc]="currentUser?.consumer?.avatarSourceURL"></app-nb-avatar>
+
+        <ion-icon *ngIf="currentUser; else elseSignIn" slot="start" name="settings-outline" (click)="presentUserSettings($event)"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+<!-- </ion-content> -->
+
+<ng-template #elseSignIn>
+  <div>
+    <a class="clickable sign-in-link" (click)="goTo('/auth-flow/sign-in')" [routerLink]="">Sign in</a>
+  </div>
+</ng-template>
+

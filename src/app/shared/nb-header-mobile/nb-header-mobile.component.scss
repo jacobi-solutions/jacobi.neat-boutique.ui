@@ -1,0 +1,35 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+// ion-header.mobile {
+//     &::before,
+//     &::after {
+//         clear: both;
+//         display: block;
+//         content: "";
+//     }
+// }
+
+ion-header.mobile {
+    color: var(--nb-primary);
+}
+
+.sign-in-link {
+    padding: 0.5rem;
+    margin-right: 1rem;
+    color: white;
+    font-weight: bold;
+}
+
+app-nb-avatar {
+    margin-right: .5rem;
+}
+
+.location {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.back-button {
+    font-size: 1.5rem;
+}

@@ -1,0 +1,115 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+.form-input {
+    width: 100%;
+    margin-top: 1rem;
+
+    &:last-of-type {
+        margin-top: 0;
+    }
+}
+
+.action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    float: revert;
+}
+
+.input-choice {
+    &.hero-img {
+        margin-bottom: 2rem;
+
+        .hero-img-preview {
+            width: unit-to-vw(125);
+            height: unit-to-vw(100);
+            background-color: var(--nb-grey-70-opacity);
+            border-radius: var(--nb-border-radius);
+            border-style: solid;
+            border-width: var(--nb-border-width);
+            border-color: var(--nb-border-color);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+
+
+            img {
+                display: block;
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+
+            p {
+                color: white;
+                font-weight: bold;
+                font-size: 0.75rem;
+                padding: 0px 9px;
+                text-align: center;
+            }
+        }
+
+        ion-input {
+            margin-right: 2rem;
+        }
+    }
+
+    &.community-tagline {
+        padding: 0 6px;
+    }
+
+    @include label-as-placeholder($top: -0.5rem !important, $left: 0rem !important, $transformTop: -0.75rem !important, $labelFontSize: 1.5rem);
+    
+    ion-input {
+        padding-left: 0 !important;
+
+        @include input-styles;
+
+        ion-item {
+            width: 100%;
+            position: relative;
+
+            // ::== icon size & center ==::
+            & > ion-icon {
+                color: var(--nb-light-grey);
+                font-size: 1.8rem;
+                position: absolute;
+                right: 0.35rem;
+                top: calc(50% - .9rem);
+                bottom: calc(50% - .9rem);
+            }
+    
+            ion-label,
+            ion-select {
+                font-size: 1.5rem;
+                font-weight: 500 !important;
+            }
+        
+            ion-select {
+                padding: 0;
+
+                &::part(icon) {
+                    display: none;
+                }
+            }
+
+            &.hasValue ion-select {
+                color: var(--nb-primary) !important;
+            }
+        }
+    }  
+}
+
+
+// // select option input
+// .item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
+//     --color: #{ var(--nb-primary) };
+//     color: var(--nb-primary) !important;
+//     font-weight: bold;
+// }

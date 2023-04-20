@@ -1,0 +1,30 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <div class="poll-placeholder-heading">
+        <h3 *ngIf="currentUser?.vendor?.hasVendorPremiumSubscription">Make A Poll</h3>
+        <h3 *ngIf="!currentUser?.vendor?.hasVendorPremiumSubscription">Make A Poll <span class="pricing-link">(Available with <a [routerLink]="'/pricing'">premium subscription</a>)</span></h3>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="poll-wrapper-row">
+    <ion-col (click)="goToPollAds()" class="poll-wrapper-col clickable">
+      <div  *ngIf="examplePoll; else elseMakeFirstPoll">
+        <div class="poll-wrapper">
+          <app-post-item [expandComments]="true"  [post]="examplePoll" [altAnswerStyle]="'vendor-settings-placeholder'"></app-post-item>
+        </div>
+        <div class="poll-overlay">
+          <p>Manage Poll Ads</p>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<!-- placeholder if no polls created -->
+<ng-template #elseMakeFirstPoll>
+  <div class="make-first-poll">
+    <p>Click here to make <br/>your first poll ad</p>
+  </div>
+</ng-template>

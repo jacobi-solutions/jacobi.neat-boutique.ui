@@ -1,0 +1,76 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.post-wrapper {
+    border-radius: 15px;
+    box-shadow: var(--nb-subtle-box-shadow);
+
+    ion-icon {
+        font-size: 2rem;
+        color: var(--nb-light-grey);
+        cursor: pointer;
+    }
+
+    .post-title-row {
+        p {
+            margin: auto 5%;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--nb-primary);
+        }
+    }
+
+    .divider {
+        width: 97.5%;
+        margin: 0 auto;
+        max-height: 1px !important;
+        min-height: 1px !important;
+    }
+
+    .comment-icon-wrapper {
+        display: flex;
+        justify-content: flex-end;
+
+        p {
+            margin: 0;
+            text-align: right;
+            color: var(--nb-light-grey);
+            font-weight: bold;
+        }
+    }
+
+    .answers.minimized {
+        align-items: center;
+
+    }
+
+    ion-row.mobile.answers.minimized {
+        margin-bottom: 0.5rem;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}
+
+
+
+// ============================= Mobile ===============================
+
+@include screen-lg-and-below {
+    // .web { display: none; }
+    // .mobile { display: block; }
+
+    // row
+    .answers.minimized {
+        height: 28%;
+    }
+
+    .post-title-row p {
+        font-size: 1.2rem !important;
+    }
+
+    .comment-icon-wrapper {
+        display: block !important;
+    }
+}

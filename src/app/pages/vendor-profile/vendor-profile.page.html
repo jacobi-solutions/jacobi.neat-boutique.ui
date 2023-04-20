@@ -1,0 +1,59 @@
+
+<ion-content [scrollEvents]="true">
+
+<ion-grid>
+
+  <app-vendor-details-heading *ngIf="vendor" [vendor]="vendor"></app-vendor-details-heading>
+  
+  <app-vendor-bio *ngIf="vendor" [vendor]="vendor"></app-vendor-bio>
+
+  <div *ngIf="photos.length > 0" class="photos-container">
+    <ion-row>
+      <ion-col>
+        <h1>Photos</h1>
+      </ion-col>
+    </ion-row>
+
+    <!-- web -->
+    <ion-row class="photos hide-md-and-below">
+      <ion-col class="photo"
+        *ngFor="let photoUrl of photos; index as i; let last as last;"
+        [ngStyle]="(photoUrl) ? { 'background-image': 'url('+ photoUrl +')' } : {}">
+      </ion-col>
+    </ion-row>
+
+    <!-- mobile -->
+    <div class="photos hide-md-and-above" *ngFor="let photoUrl of photos; index as i;">
+      <div *ngIf="(i%2 === 0) && (photos?.length-1 >= i+1) || (photos?.length-1 === i)">
+        <ion-row class="mobile-photos">
+          <ion-col class="photo"[ngStyle]="{'background-image': 'url('+ photos[i] +')' }"></ion-col>
+          <ion-col class="photo"[ngStyle]="{'background-image': 'url('+ photos[i+1] +')' }"></ion-col>
+        </ion-row>
+      </div>
+    </div>
+    
+  </div>
+
+  <div *ngIf="vendor" class="vendor-reviews-wrapper">
+    <ion-row>
+      <ion-col *ngIf="vendor?.reviews.length > 0; else elseNoReviews">
+        <h1>Reviews</h1>
+      </ion-col>
+    </ion-row>
+
+    <app-review-form *ngIf="canLeaveReview()" [vendor]="vendor"></app-review-form>
+    <app-review-list *ngIf="vendor?.reviews" (onReviewDelete)="filterOutDeletedReviews()" [reviews]="vendor.reviews"></app-review-list>
+    
+  </div>
+</ion-grid>
+
+<app-nb-footer></app-nb-footer>
+</ion-content>
+
+
+
+<ng-template #elseNoReviews>
+  <ion-col>
+    <h1>Be the first to leave a review</h1>
+  </ion-col>
+</ng-template>

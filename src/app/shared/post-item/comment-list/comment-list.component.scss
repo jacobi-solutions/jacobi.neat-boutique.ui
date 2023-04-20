@@ -1,0 +1,102 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+ion-row {
+    .btn-show-all {
+        text-align: center;
+    }
+
+    &.comment-row {
+        margin-top: 1rem;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
+    }
+}
+
+
+// new posts form ===================
+$custom-input-padding: 1.75;
+.form-new-comment {
+    .user-new-comment-form {
+        display: grid;
+        grid-template-columns: 1fr 12fr;
+        align-items: center;
+    }
+
+    color: var(--nb-primary) !important;
+    @include input-styles(false, false, auto);
+    @include label-as-placeholder($top: 0.5rem, $left: 0.5rem, $transformTop: -0.3rem);
+
+    form {
+        position: relative;
+        // position: absolute;
+        // top: 1rem;
+        // right: 1rem;
+        // z-index: 100;
+        // font-size: 1.8rem;
+
+        .input-wrapper {
+            position: relative;
+    
+            ion-textarea.no-border {
+                
+                border: none !important;
+                box-shadow: none !important;
+                color: var(--nb-primary) !important;
+                font-size: 1.1rem !important;
+                
+                ion-label {
+                    // white-space: nowrap;
+                    font-weight: 700;
+                }
+            }
+        }
+        
+        // ::== icon size & center ==::
+        & > ion-icon {
+            color: var(--nb-light-grey);
+            font-size: 1.8rem;
+            position: absolute;
+            right: 1rem;
+            top: calc(50% - .9rem);
+            bottom: calc(50% - .9rem);
+            z-index: 100;
+    
+            &.paper-plane {
+                animation: fade-over 0.5s linear;
+                color: var(--nb-primary);
+            }
+    
+            @keyframes fade-over {
+                0% { opacity: 0%; }
+                40% {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    opacity: 100%;
+                    transform: rotate(-25deg);
+                }
+                60% {
+                    transform: rotate(0deg);
+                }
+                70% {
+                    transform: rotate(25deg);
+                }
+                80% {
+                    transform: rotate(0deg);
+                }
+                90% {
+                    transform: rotate(-25deg);
+                }
+                100% {
+                    transform: rotate(0deg);
+                }
+            }            
+        }
+    }    
+}

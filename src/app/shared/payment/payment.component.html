@@ -1,0 +1,114 @@
+
+              
+<ion-row *ngIf="showPayment">
+    <ion-col offset-lg="2" size-lg="8">
+
+        <ion-row *ngIf="isRevise" class="flow-title-row">
+            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
+                <h1>Change to Standard</h1>
+                <p>When you change your subscription, you'll recieve a prorated invoice for your next billing cycle. After that, you’ll see a charge from Stripe each month for your Standard subscription. Thank you for joining us and choosing to connect with your customers!</p>
+            </ion-col>
+            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_PREMIUM">
+                <h1>Change to Premium</h1>
+                <p>When you change your subscription, you'll recieve a prorated invoice for your next billing cycle. After that, you’ll see a charge from Stripe each month for your Premium subscription. Thank you for joining us and choosing to connect with your customers!</p>
+            </ion-col>
+            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.CONSUMER_BASIC">
+                <h1>Disconnect your Business</h1>
+                <p>When you change your subscription, you'll recieve a prorated invoice for your last billing cycle. After that, you will no longer be charged a subscription fee and you will lose Vendor privileges. Thank you for trying us out. Reconnect your business any time!</p>
+                <h3>Before you go</h3>
+                <p>We really appreciate you trying us out. Is there anything we can do for you to improve your experience?  We'd really like the chance to talk with you and listen to your feedback.</p>
+                <p>Please email us at info@lociknows.com and we'll be glad to listen to your concerns.</p>
+            </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="!isRevise" class="flow-title-row">
+            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
+                <h1>Final step: payment</h1>
+                <p>We use Stripe for processing payments to ensure the security of your information. You’ll see a charge from Stripe each month for your Standard subscription. Thank you for joining us and choosing to connect with your customers!</p>
+            </ion-col>
+            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_PREMIUM">
+                <h1>Final step: payment</h1>
+                <p>We use Stripe for processing payments to ensure the security of your information. You’ll see a charge from Stripe each month for your Premium subscription. Thank you for joining us and choosing to connect with your customers!</p>
+            </ion-col>
+        </ion-row>
+
+        
+
+        <!-- <ion-row>
+          <ion-col>
+            <div id="paypal-button-container"></div>
+          </ion-col>
+        </ion-row> -->
+
+        
+
+        <ion-row class="promo-code-row" *ngIf="vendorPackage.planTier !== subscriptionPlanTypes.CONSUMER_BASIC && !showPromoCodeForm">
+            <ion-col *ngIf="!isPromoCodeApplied">
+                <p class="ion-text-center pointy-cursor">
+                    <a (click)="showPromoCodeForm = true">Enter promo code</a>
+                </p>
+            </ion-col>
+            <ion-col *ngIf="isPromoCodeApplied && !promoCodeWorked">
+                <p>
+                    <a (click)="showPromoCodeForm = true">Promo code didn't work. Try again or click 'Subscribe' above.</a>
+                </p>
+                <p *ngIf="promoCodeMessage && promoCodeMessage !== ''">
+                    {{ promoCodeMessage }}
+                </p>
+            </ion-col>
+            <ion-col *ngIf="isPromoCodeApplied && promoCodeWorked">
+                <p class="ion-text-center">
+                    {{ promoCodeMessage }} Click on Subscribe Below!
+                </p>
+            </ion-col>
+        </ion-row>
+        
+        <form *ngIf="showPromoCodeForm" (ngSubmit)="enterPromoCode()" [formGroup]="promoCodeForm" class="form">
+            <ion-row class="ion-align-items-center">
+                <ion-col size="9">
+                    <app-input-field
+                        [formGroupInstance]="promoCodeForm"
+                        [inputName]="'promoCode'"
+                        [label]="'Promo code'"
+                        [icon]="'pricetag-outline'"
+                        [invalidInputWarnings]="[{ warning: 'Promo Code Did Not Work.', errorType: 'promoCodeMustMatch' }]">
+                    </app-input-field>
+                </ion-col>
+                <ion-col class="ion-justify-content-center" size="3">
+                    <ion-button class="promo-button" type="submit">
+                        Apply Code
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+        </form>
+
+        <ion-row class="form-btn-row">
+            <ion-col>
+                <ion-row >
+                    <ion-col class="">
+                        <app-jacobi-button *ngIf="!isRevise" (click)="checkOutWithStripe()" [buttonType]="'auth-primary'">Subscribe</app-jacobi-button>
+                        <app-jacobi-button *ngIf="isRevise && vendorPackage.planTier !== subscriptionPlanTypes.CONSUMER_BASIC" (click)="checkOutWithStripe()" [buttonType]="'auth-primary'">Change Subscription</app-jacobi-button>
+                        <app-jacobi-button *ngIf="isRevise && vendorPackage.planTier === subscriptionPlanTypes.CONSUMER_BASIC" (click)="cancelVendorSubscription()" [buttonType]="'green-primary'">Cancel my subscription</app-jacobi-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="">
+                        <app-jacobi-button (click)="cancel()" [buttonType]="'ghost-auth-secondary'">
+                            Back
+                        </app-jacobi-button>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="vendorPackage.planTier !== subscriptionPlanTypes.CONSUMER_BASIC" class="legal-links-row">
+            <ion-col>
+                <p>
+                    By creating a account you agree to the <br /><a [routerLink]="'/legal'">Terms and
+                        Conditions</a>
+                    and <a [routerLink]="'/legal'">Privacy Policy</a>
+                </p>
+            </ion-col>
+        </ion-row>
+    </ion-col>
+</ion-row>

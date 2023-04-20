@@ -1,0 +1,16 @@
+/*
+====================  Currently available function
+    
+    // prevent hard-coding text to px units for users that need to increase text size settings
+    @function px-to-rem($px)
+
+    // Ex: unit-to-vw([px, rem]) => %vw
+    @function unit-to-vw($unit)
+
+    // Ex: unit-to-vh([px, rem]) => %vh
+    @function unit-to-vh($unit)
+
+    // ability to make a custom grid
+    @function custom-grid($size, $total-grid-width: 12)
+*/
+    

@@ -1,0 +1,61 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.forum-header {
+    margin-bottom: 2rem;
+    ion-icon {
+        color: var(--nb-yellow);
+        font-size: 4rem;
+        margin-right: 2rem;
+    }
+}
+
+ion-grid {
+    padding: 0;
+    margin: 0;
+}
+
+
+.hero-img-wrapper {
+        padding: 0;
+
+        .hero-section-image {
+            height: calc(3rem + 30vh);
+            display: grid;
+            background: linear-gradient(
+                    var(--nb-deep-emerald-75-opacity), 
+                    var(--nb-deep-emerald-75-opacity)
+                  ),url($imgMyQuestionsHero) no-repeat center center;
+            background-size: cover;
+        
+            h1 {
+                color: white;
+                align-self: center;
+                // font-size: font-sizes(h1);
+                text-align: center;
+            }
+        }
+}
+
+.question-list-wrapper {
+    padding: 2rem;
+}
+// ==================== Mobile =========================
+
+@include screen-md-and-below {
+    .hero-section-image {
+        h1 {
+            font-size: 2rem !important;
+        }
+    }
+
+    .question-list-wrapper {
+        padding: 1rem;
+    }
+}
+
+@include screen-sm-and-below {
+    .question-list-wrapper {
+        padding: 0.5rem 0;
+    }
+}

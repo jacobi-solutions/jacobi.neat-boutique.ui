@@ -1,0 +1,68 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.modal-card-wrapper {
+    .color-chooser {
+        height: 1.5rem;
+        width: 3rem;
+        margin-bottom: 0.5rem;
+    }
+    .modal-content-wrapper {
+        margin: 0.5rem
+    }
+    .buttons-row {
+        margin-top: 2rem !important;
+    }
+    margin-left: 1rem;
+    margin-right: 1rem;
+    
+    overflow: scroll;
+
+    ion-label {
+        --color: #{ var(--nb-primary) } !important;
+        color: var(--nb-primary) !important;
+        font-weight: 900;
+        font-size: 1.1rem;
+    }
+
+    ion-grid {
+        width: 100%;
+    
+        ion-col,
+        ion-row {
+            padding: 0;
+            margin: 0;
+        }
+    
+        
+        h2 {
+            font-weight: bold;
+            color: var(--emerald-green);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+       
+    
+       
+    }
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem !important;
+        margin-top: 1rem !important;
+    }
+}
+
+
+// mobile ==============================
+
+@include screen-md-and-below {
+    ion-grid {
+        .crop-display {
+            h3 {
+                font-size: 1.5rem !important;
+            }
+        }
+    }
+}
+

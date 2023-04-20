@@ -1,0 +1,6 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.clickable {
+    @include clickable;
+}

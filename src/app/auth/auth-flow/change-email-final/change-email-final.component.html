@@ -1,0 +1,127 @@
+<ion-content class="jacobi-auth-flow jacobi-auth-flow-change-email-final">
+  <ion-grid>
+    <ion-row class="change-email-final-outer-row outer-row">
+      <ion-col
+        class="content-col"
+        [attr.size-sm]="splitScreenBgImage ? 12 : undefined"
+        [attr.size-md]="splitScreenBgImage ? 6 : undefined"
+        [attr.offset-md]="splitScreenBgImage ? 6 : undefined"
+        [attr.pull-md]="splitScreenBgImage ? 3 : undefined"
+        [attr.size-lg]="splitScreenBgImage ? 6 : undefined"
+        [attr.offset-lg]="splitScreenBgImage ? 0 : undefined"
+        [attr.pull-lg]="splitScreenBgImage ? 0 : undefined"
+      >
+        <ion-row>
+          <ion-col
+            size-sm="12"
+            size-md="12"
+            size-lg="8"
+            offset-lg="2"
+            [attr.size-xl]="    (splitScreenBgImage ? 8  : 6)"
+            [attr.offset-xl]="  (splitScreenBgImage ? 2  : 3)"
+          >
+            <ion-row class="page-heading">
+              <ion-col>
+                <div *ngIf="!(isSuccess || isFailure)">
+                  Change Email
+                  <p class="sub-heading">
+                    Enter a new email address for your account
+                  </p>
+                </div>
+                <div *ngIf="isSuccess">Success</div>
+                <div *ngIf="isFailure">Something went wrong</div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="isSuccess">
+              <ion-col>
+                {{ successMessage }}
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="isFailure">
+              <ion-col>
+                {{ failureMessage }}
+              </ion-col>
+            </ion-row>
+    
+            <ion-row class="form-row jacobi-auth-form-row">
+              <ion-col>
+                <form
+                  (ngSubmit)="changeEmail()"
+                  [formGroup]="changeEmailForm"
+                  class="form-change-email-final">
+                  <ion-row>
+                    <ion-col class="ion-margin-top email-input-wrapper">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">New Email</ion-label>
+                        <ion-input [formControlName]="'newEmail'"></ion-input>
+                        <ion-icon class="form-icon" slot="end" name="mail-outline"></ion-icon>
+                      </ion-item>
+                      <div *ngIf="changeEmailForm.controls.newEmail.invalid && changeEmailForm.controls.newEmail.touched">
+                        
+                        <ion-text color="danger" *ngIf="changeEmailForm.controls.newEmail.errors?.['required']">
+                            Email is required.
+                        </ion-text>
+                        <ion-text color="danger" *ngIf="changeEmailForm.controls.newEmail.errors?.['email']">
+                          Must be a valid email address. 
+                        </ion-text>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+    
+                  <ion-row class="auth-action-buttons">
+                    <ion-col>
+                      <ion-row>
+                        <ion-col
+                          *ngIf="!(isSuccess || isFailure)"
+                          class="ion-margin-top change-email-btn-wrapper">
+                          <ion-button (click)="(!changeEmailForm.invalid ? changeEmail() : null)" part="button" [disabled]="changeEmailForm.invalid" class="jacobi-button auth-primary" fill="clear">
+                            Change Email
+                          </ion-button>
+                        </ion-col>
+                        <ion-col *ngIf="isFailure" class="ion-margin-top try-again-btn-wrapper">
+                          <p>{{ failureMessage }}</p>
+                          <ion-button (click)="(!changeEmailForm.invalid ? changeEmail() : null)" part="button" [disabled]="changeEmailForm.invalid" class="jacobi-button auth-primary" fill="clear">
+                            Try Again
+                          </ion-button>
+                        </ion-col>
+                        <ion-col *ngIf="isSuccess" class="ion-margin-top">
+                          <ion-button [routerLink]="'sign-in'" part="button" [disabled]="false" class="jacobi-button auth-primary" fill="clear">
+                            Sign In
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col class="ion-margin-top cancel-btn-wrapper">
+                          <ion-button (click)="dismiss()"  part="button" class="jacobi-button ghost-auth-secondary" fill="clear">
+                            Cancel
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-col>
+                  </ion-row>
+                </form>
+              </ion-col>
+            </ion-row>
+
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <!-- split-screen -->
+      <ion-col
+        *ngIf="splitScreenBgImage"
+        size-lg="6"
+        class="hide-lg-and-below split-page-banner"
+        [ngStyle]="{
+          'background-image': 'url(' + splitScreenBgImage + ')',
+          'background-repeat': 'no-repeat',
+          'background-position': 'center center',
+          'background-size': 'cover'
+        }"
+      >
+        <div class="img-overlay"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

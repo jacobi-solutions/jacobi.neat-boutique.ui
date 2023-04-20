@@ -1,0 +1,36 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+ion-label {
+    --color: #{ var(--nb-primary) } !important;
+    color: var(--nb-primary) !important;
+    font-weight: 900;
+    font-size: 1.1rem;
+}
+
+.error-msg {
+    text-align: center;
+    font-weight: 900 !important;
+    font-size: 1.5rem !important;
+    color: var(--nb-deep-red);
+}
+
+.action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+    float: revert;
+}
+
+.modal-content-wrapper {
+    height: 80%;
+    margin-bottom: 0 !important;
+
+    & > div {
+        overflow: scroll;
+        height: 100%;
+    }
+}

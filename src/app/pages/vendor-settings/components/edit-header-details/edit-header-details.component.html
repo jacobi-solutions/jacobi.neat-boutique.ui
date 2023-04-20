@@ -1,0 +1,87 @@
+
+<ion-grid >
+  <ion-row class="vendor-splash-container">
+    
+      <ion-col class="vendor-splash-photo" size-xs="12" size-sm="4" size-lg="2">
+        <!-- <ion-avatar>
+          <img [src]="vendor?.avatarSourceURL || defaultLogoImg"> 
+          <ion-icon class="edit-action allow-opacity" name="create-outline" (click)="showUploadPhotoModal()"></ion-icon>
+        </ion-avatar> -->
+
+        <div class="profile-logo-container">
+          <app-nb-avatar class="pointy-cursor" [size]="'big'" [borderColor]="vendor?.borderColor" [imageSrc]="vendor.avatarSourceURL"></app-nb-avatar>
+          <ion-icon (click)="showUploadPhotoModal()" class="edit-action allow-opacity pointy-cursor" name="create-outline"></ion-icon>
+        </div>
+      </ion-col>
+    <ion-col class="vendor-splash-info" size-xs="12"  size-sm="8" size-lg="8">
+      <ion-row>
+        <ion-col>
+          <h1 class="vendor-name">{{ vendor?.name }}</h1>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="vendor?.formattedAddress">
+        <ion-col>
+          <h4 class="address">{{ vendor?.formattedAddress }}</h4>
+          <h4 class="hide-md-and-above phone"><a href="tel:{{ vendor?.phoneFormatted }}">{{ vendor?.phoneFormatted }}</a></h4>
+        </ion-col>
+      </ion-row>
+      <ion-row class="categories-wrapper-row">
+        <ion-col class="categories-wrapper">
+          <p *ngIf="vendor?.communities && (vendor?.communities.length > 0); else addCommunityPrompt;" class="categories">
+            <span *ngFor="let community of vendor?.communities">{{ community }}</span>
+          </p>
+  
+          <ng-template #addCommunityPrompt>
+            <p>Join a community by selecting some from the editor <ion-icon name="arrow-forward-outline"></ion-icon></p>
+          </ng-template>
+          <ion-icon class="categories-edit-action edit-action allow-opacity" name="create-outline" (click)="editCommunities()"></ion-icon>
+  
+        </ion-col>
+      </ion-row>
+      <ion-row class="review-stars">
+        <ion-col class="nb-vertical-center">
+          
+          <app-summed-rating class="hide-md-and-below" [numberOfReviews]="vendor?.reviewCount"[altStyle]="''" [totalRating]="vendor?.reviewRatingTotal"></app-summed-rating>
+          <app-summed-rating class="hide-md-and-above" [numberOfReviews]="vendor?.reviewCount"[altStyle]="'mobile-size'" [totalRating]="vendor?.reviewRatingTotal"></app-summed-rating>
+   
+          <h4 class="review-count">{{ vendor?.reviewCount }} {{ (vendor?.reviewCount === 1) ? 'Review' : 'Reviews' }}</h4>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="showChangeVendorSubscription">
+        <ion-col class="nb-vertical-center">
+         <a [routerLink]="'/pricing'" class="pointy-cursor">Change Vendor Subscription</a>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="hide-md-and-above social-icons-row">
+        <ion-col>
+          <ion-row class="social-icons">
+            <ion-col size="2" *ngIf="vendor?.facebookLink">
+              <a [href]="vendor?.facebookLink" target="_blank">
+                <ion-icon class="social-icon clickable" name="logo-facebook"></ion-icon>
+              </a>
+            </ion-col>
+  
+            <ion-col size="2" *ngIf="vendor?.instagramLink">
+              <a [href]="vendor?.instagramLink" target="_blank">
+                <ion-icon class="social-icon clickable" name="logo-instagram"></ion-icon>
+              </a>
+            </ion-col>
+  
+            <ion-col size="2" *ngIf="vendor?.twitterLink">
+              <a [href]="vendor?.twitterLink" target="_blank">
+                <ion-icon class="social-icon clickable" name="logo-twitter"></ion-icon>
+              </a>
+            </ion-col>
+            
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+
+
+

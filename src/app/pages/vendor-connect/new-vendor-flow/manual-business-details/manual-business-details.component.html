@@ -1,0 +1,159 @@
+<ion-content class="vendor-connect">
+
+    <ion-grid>
+        <ion-row class="vendor-flow-container">
+            <ion-col *ngIf="!showVendorAlreadyAccociatedError"
+                size-xs="12" 
+                size-md="6" offset-md="6" pull-md="3"
+                size-lg="6" offset-lg="0" pull-lg="0"
+                class="form-col">
+                
+                <ion-row class="vendor-form-row">
+                    <ion-col offset-lg="3" size-lg="8" class="vendor-form-col">
+
+                        <ion-row class="flow-title-row">
+                            <ion-col>
+                                <h1>Tell us who you are!</h1>
+                                <p>If you do not have a Google My Business account, no worries! We can connect it the old fashioned way. Please let us know about your business below.</p>
+                            </ion-col>
+                        </ion-row>
+
+                        <form (ngSubmit)="saveAndContinue()" [formGroup]="businessDetails" class="form">
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'name'"
+                                [label]="'Company Name'"
+                                [icon]="'business-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A Company name is required.', errorType: 'required' }]">
+                            </app-input-field>
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'streetAddress'"
+                                [label]="'Street Address'"
+                                [icon]="'map-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A street address is required.', errorType: 'required' }]">
+                            </app-input-field>
+                            
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'city'"
+                                [label]="'City'"
+                                [icon]="'map-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A city is required.', errorType: 'required' }]">
+                            </app-input-field>
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'state'"
+                                [label]="'State'"
+                                [icon]="'map-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A state is required.', errorType: 'required' }]">
+                            </app-input-field>
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'country'"
+                                [label]="'Country'"
+                                [icon]="'map-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A country is required.', errorType: 'required' }]">
+                            </app-input-field>
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'zip'"
+                                [inputType]="'number'"
+                                [label]="'Zip Code'"
+                                [icon]="'map-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A zip code is required.', errorType: 'required'},{ warning: 'Must be a valid zip code.', errorType: 'minLength'}]">
+                            </app-input-field>
+
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'website'"
+                                [label]="'Company Website'"
+                                [icon]="'globe-outline'">
+                            </app-input-field>
+
+                            <app-input-field
+                                [formGroupInstance]="businessDetails"
+                                [inputName]="'phone'"
+                                [label]="'Company Phone'"
+                                [icon]="'call-outline'">
+                            </app-input-field>
+                            
+                            <ion-row hidden="true" style="height: 0 !important">
+                                <ion-col>
+                                    <button type="submit" [disabled]="businessDetails.invalid">
+                                        hidden submit
+                                    </button>
+                                </ion-col>
+                            </ion-row>
+                        </form>
+
+                        <ion-row class="form-btn-row">
+                            <ion-col>
+                                <ion-row>
+                                    <ion-col [ngClass]="{ 'notClickable': businessDetails.invalid }">
+                                        <app-jacobi-button
+                                            (click)="saveAndContinue()"
+                                            [disabled]="businessDetails.invalid"
+                                            [buttonType]="'auth-primary'">Next</app-jacobi-button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col class="">
+                                        <app-jacobi-button (click)="cancel()" [buttonType]="'ghost-auth-secondary'">
+                                            Back
+                                        </app-jacobi-button>
+                                    </ion-col>
+                                </ion-row>
+                                
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row class="legal-links-row">
+                            <ion-col>
+                                <p class="alt-vendor-sign-up">
+                                    <a [routerLink]="'/vendor-connect/connect-business'">Connect Google My Business account instead</a>
+                                </p>
+                                <p>
+                                    By creating a account you agree to the <br /><a [routerLink]="'/legal'">Terms and
+                                        Conditions</a>
+                                    and <a [routerLink]="'/legal'">Privacy Policy</a>
+                                </p>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+
+            <ion-col *ngIf="showVendorAlreadyAccociatedError"
+                size-xs="12" 
+                size-md="6" offset-md="6" pull-md="3"
+                size-lg="6" offset-lg="0" pull-lg="0"
+                class="form-col">
+                <ion-row class="flow-title-row">
+                    <ion-col>
+                        <h1>Something went wrong</h1>
+                        <p>Sorry, This business has already been associated with an account. Check with your account manager to verify details.</p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+
+            <ion-col size-lg="6" class="web banner ion-align-items-center ion-text-center">
+
+                <ion-row class="vendor-flow-progress">
+                    <ion-col size="6">
+                      <div class="indicator active"></div>
+                      <div class="indicator"></div>
+                      <div class="indicator"></div>
+                    </ion-col>
+                </ion-row>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

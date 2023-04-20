@@ -1,0 +1,139 @@
+<ion-content class="vendor-connect">
+
+    <ion-grid>
+        <ion-row class="vendor-flow-container">
+            <ion-col *ngIf="!showVendorAlreadyAccociatedError"
+                size-xs="12" 
+                size-md="6" offset-md="6" pull-md="3"
+                size-lg="6" offset-lg="0" pull-lg="0"
+                class="form-col">
+                
+                <ion-row class="vendor-form-row">
+                    <ion-col offset-lg="3" size-lg="8" class="vendor-form-col">
+
+                        <ion-row class="flow-title-row">
+                            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
+                                <!-- <h1>Let's connect your business</h1> -->
+                                <h1>Thank you for choosing the standard package</h1>
+                                <p>When you connect your business with the Standard package, you can create a business profile, add photos and share your information so users can engage with you. You’ll be able to engage with users by commenting on posts about your business and responding to reviews.</p>
+                                <h2>What is your business name?</h2>
+                            </ion-col>
+                            <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_PREMIUM">
+                                <h1>Thank you for choosing the premium package</h1>
+                                <p>When you connect your business with the Premium package, you will have all the benefits of the Standard Package (commenting, responding, and engaging with users through your business profile) and be able to create polls and ads that take your customer interaction to the next level. Our polls allow you to ask questions targeted at your customers so you can use their responses to gain insights for your business. Our ads are a great way to get in front of the people that love you. Connect your business below to get started.</p>
+                                <h2>What is your business name?</h2>
+                            </ion-col>
+                        </ion-row>
+
+                        <form (ngSubmit)="saveAndContinue()" [formGroup]="connectBusiness" class="form">
+
+                            <app-input-field
+                                [formGroupInstance]="connectBusiness"
+                                [inputName]="'businessName'"
+                                [label]="'Business Name'"
+                                [icon]="'business-outline'"
+                                [invalidInputWarnings]="[{ warning: 'A business name is required.', errorType: 'required' }]">
+                            </app-input-field>
+
+                            <ion-input hidden="true" formControlName="businessEntity" [value]="selectedGooglePlace"></ion-input>
+                            
+                        </form>
+
+                        <ion-row class="google-places-selection-row">
+                            <ion-col *ngIf="googlePlacesResults" class="business-search-results">
+                                <ion-row *ngFor="let googlePlace of googlePlacesResults">
+                                    <ion-col class="business-result-item">
+                                        <ion-card (click)="selectBusiness(googlePlace)">
+                                            <ion-card-header>
+                                                <ion-card-title>{{ googlePlace.name }}</ion-card-title>
+                                                <ion-card-subtitle>{{ googlePlace.street }} {{ googlePlace.city }}, {{ googlePlace.state }} - {{ googlePlace.country }}</ion-card-subtitle>
+                                            </ion-card-header>
+                                        </ion-card>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+
+                            <ion-col *ngIf="!googlePlacesResults && selectedGooglePlace" class="selected-business">
+                                <p>If this is the correct business, click <span class="continue-prompt clickable" (click)="saveAndContinue()">Next</span> below</p>
+                                
+
+                                <ion-card>
+                                    <ion-card-header>
+                                        <ion-card-title>{{ selectedGooglePlace.name }}</ion-card-title>
+                                    </ion-card-header>
+                                    <ion-card-content>
+                                        <address>
+                                            {{ selectedGooglePlace.formattedAddress }}<br/>
+                                            {{ selectedGooglePlace.phoneNumber }}<br/>
+                                            <a target="_blank" [href]="selectedGooglePlace.websiteURL">{{ selectedGooglePlace.websiteURL }}</a>
+                                      </address> 
+                                    </ion-card-content>
+                                </ion-card>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row class="form-btn-row">
+                            <ion-col>
+                                <ion-row>
+                                    <ion-col [ngClass]="{ 'notClickable': connectBusiness.invalid }">
+                                        <app-jacobi-button
+                                            (click)="saveAndContinue()"
+                                            [disabled]="connectBusiness.invalid"
+                                            
+                                            [buttonType]="'auth-primary'">Next</app-jacobi-button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col class="">
+                                        <app-jacobi-button (click)="cancel()" [buttonType]="'ghost-auth-secondary'">
+                                            Cancel
+                                        </app-jacobi-button>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row class="legal-links-row">
+                            <ion-col>
+                                <p class="alt-vendor-sign-up">
+                                    <a [routerLink]="'/vendor-connect/manual-business-details'">Is your business not listed?</a>
+                                </p>
+
+                                <p>
+                                    By creating a account you agree to the <br /><a [routerLink]="'/legal'">Terms and
+                                        Conditions</a>
+                                    and <a [routerLink]="'/legal'">Privacy Policy</a>
+                                </p>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+
+            <ion-col *ngIf="showVendorAlreadyAccociatedError"
+                size-xs="12" 
+                size-md="6" offset-md="6" pull-md="3"
+                size-lg="6" offset-lg="0" pull-lg="0"
+                class="form-col">
+                <ion-row class="flow-title-row">
+                    <ion-col>
+                        <h1>Something went wrong</h1>
+                        <p>Sorry, This business has already been associated with an account. Check with your account manager to verify details.</p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+
+            <ion-col size-lg="6" class="web banner ion-align-items-center ion-text-center">
+
+                <ion-row class="vendor-flow-progress">
+                    <ion-col size="6">
+                      <div class="indicator active"></div>
+                      <div class="indicator"></div>
+                      <div class="indicator"></div>
+                    </ion-col>
+                </ion-row>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

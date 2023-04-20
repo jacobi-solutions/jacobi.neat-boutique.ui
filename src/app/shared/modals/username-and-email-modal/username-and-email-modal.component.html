@@ -1,0 +1,63 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose()" name="close-outline"></ion-icon>
+      <!-- <span class="close-icon clickable" (click)="onSave($event)">Save</span> -->
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice">Hello! What's your name?  We need this info so we can refer to you when you ask questions or leave a review.</p>
+        <form [formGroup]="usernameForm">
+          <ion-row>
+              <ion-col class="ion-margin-top username-input-wrapper">
+                  <ion-item class="input-item">
+                      <ion-label position="floating">Username</ion-label>
+                      <ion-input [formControlName]="'username'"></ion-input>
+                      <ion-icon class="form-icon" slot="end" name="person-circle-outline"></ion-icon>
+                  </ion-item>
+                  <div *ngIf="usernameForm.controls.username.invalid && usernameForm.controls.username.touched">
+                      <ion-text color="danger" *ngIf="usernameForm.controls.username.errors?.['required']">
+                          Username is required.
+                      </ion-text>
+                      <ion-text color="danger" *ngIf="usernameForm.controls.username.errors?.['minlength']">
+                          Username must be at least {{ minUsernameLength }} characters long.
+                      </ion-text>
+                      <ion-text color="danger" *ngIf="usernameForm.controls.username.errors?.['maxlength']">
+                          Username is limited to {{ maxUsernameLength }} characters.
+                      </ion-text>
+                  </div>
+              </ion-col>
+          </ion-row>
+        </form>
+        <!-- <form *ngIf="!currentUser.consumer.email" [formGroup]="emailForm">
+          <ion-row>
+              <ion-col class="ion-margin-top email-input-wrapper">
+                  <ion-item class="input-item">
+                      <ion-label position="floating">Email</ion-label>
+                      <ion-input [formControlName]="'email'"></ion-input>
+                      <ion-icon class="form-icon" slot="end" name="mail-outline"></ion-icon>
+                  </ion-item>
+                  <div *ngIf="emailForm.controls.email.invalid && emailForm.controls.email.touched">
+                  
+                      <ion-text color="danger" *ngIf="emailForm.controls.email.errors?.['required']">
+                          Email is required.
+                      </ion-text>
+                      <ion-text color="danger" *ngIf="emailForm.controls.email.errors?.['email']">
+                          Must be a valid email address. 
+                      </ion-text>
+                  </div>
+              </ion-col>
+          </ion-row>
+        </form> -->
+  
+          <ion-item-divider></ion-item-divider>
+          <div class="action-btn-wrapper">
+            <app-jacobi-button [buttonType]="'auth-primary'" (click)="onSave()">Save</app-jacobi-button>
+            <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose()">Cancel</app-jacobi-button>
+          </div>
+        
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

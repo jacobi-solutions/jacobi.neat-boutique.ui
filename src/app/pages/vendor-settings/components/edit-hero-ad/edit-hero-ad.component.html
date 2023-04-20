@@ -1,0 +1,39 @@
+
+<ion-grid class="hero-ad-wrapper">
+  <ion-row>
+    <ion-col>
+      <div class="hero-heading">
+        <h3 *ngIf="currentUser?.vendor?.hasVendorPremiumSubscription">Hero Ad</h3>
+        <h3 *ngIf="!currentUser?.vendor?.hasVendorPremiumSubscription">Hero Ad <span class="pricing-link">(Available with <a [routerLink]="'/pricing'">premium subscription</a>)</span></h3>
+      </div>
+    </ion-col>
+  </ion-row>
+  
+  <ion-row>
+    <ion-col>
+      <div class="hero-ad-wrapper">
+        <div class="community-hero-container">
+          <div>
+            <img [src]="'https://storage.googleapis.com/neatboutique.com/images/amirali-mirhashemian-d-yAWqj-DRg-unsplash.jpg'" alt="vendor-img-ad">
+          </div>
+      
+          <div class="tag-lines">
+            <p class="community-tag-line">Community tag-line</p>
+            <app-jacobi-button [routerLinkActive]="''" [buttonType]="'clear-primary'">Vendor tag-line</app-jacobi-button>
+          </div>
+
+          <div class="hero-overlay clickable" (click)="goToBillboardAds()"><p>Manage Hero Ads</p></div>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <div class="hero-img-ad-description-wrapper">
+        <!-- <h3>Ad Description</h3> -->
+        <p>How this ad is used on the site.</p>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

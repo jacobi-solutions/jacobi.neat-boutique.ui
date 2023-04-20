@@ -1,0 +1,250 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    padding-top: 3rem;
+    padding-left: 20vw;
+    padding-right: 20vw;
+}
+
+.basic-info {
+    padding-left: 2rem;
+    
+}
+h1 {
+    margin: 0;
+}
+p {
+    color: var(--med-grey);
+    margin: 0;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 2;
+}
+
+h2 {
+    font-weight: bold;
+    color: var(--emerald-green);
+}
+h4 {
+    margin: 0;
+    color: var(--med-grey);
+    font-weight: bold;
+    font-size: 1.3rem;;
+}
+
+.badges-title-column {
+    z-index: 2;
+}
+.ask-badge {
+    color: #cd7f31;
+}
+.answer-badge {
+    color: #969696;
+}
+.review-badge {
+    color: #ffbc02;
+}
+
+.activity-selection {
+    .selected-activity {
+        border-style: solid;  
+        border-width: 0 0 .3rem 0;
+        padding-bottom: .3rem;
+        border-color: var(--purple) !important;
+    }
+}
+
+.activity {
+    margin-top: 2rem;
+    .recent-question {
+        margin-bottom: 1.5rem;
+    }
+    .recent-answer {
+        margin-bottom: 1.5rem;
+    }
+    .recent-review {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.badges {
+    margin-top: 3rem;
+}
+.badge-card {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--nb-border-radius);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--nb-border-color);
+    box-shadow: 0 0 20px 20px var(--nb-box-shadow-color);
+    // margin: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: auto;
+    margin-bottom: 1rem;
+
+    font-size: 4rem;
+    height: 6rem;
+    width: 6rem;
+  
+    .ask {
+      ion-icon {
+        color: #cd7f31;
+      }
+      
+    }
+    .answer {
+      ion-icon {
+        color: #969696;
+      }
+    }
+    .review {
+      ion-icon {
+        color: #ffbc02;
+      }
+    }
+}
+
+.username-wrapper {
+    ion-input {
+        @include input-styles;
+        font-size: 3rem !important;
+        font-family: 'Kabel' !important;
+        color: var(--emerald-green) !important;
+    }
+}
+
+.profile-image-container {
+    height: 10rem;
+    width: 10rem;
+    position: relative;
+    ion-icon {
+        position: absolute;
+        top: 0rem;
+        right: -1rem;
+    }
+}
+  
+
+.edit-action {
+    // width: 42px;
+    // height: 42px;
+    // padding: 10px;
+    font-size: 1.5rem !important;
+    color: var(--nb-primary) !important;
+    &.allow-opacity {
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1.0;
+        }
+    }
+}
+.edit-notifications {
+    @extend .edit-action;
+    font-size: 1rem !important; 
+}
+
+.about-wrapper {
+    // position: relative;
+    // max-width: fit-content;
+    // ion-icon {
+    //     position: absolute;
+    //     top: 0rem;
+    //     left: 4rem;
+    // }
+}
+.description-wrapper {
+    position: relative;
+
+    .edit-description {
+        position: absolute;
+        top: -20px;
+        right: -18px;
+    }
+
+    .empty-description-placeholder {
+        opacity: 0.5;
+    }
+
+    
+}
+
+.editing-description-count {
+    color: var(--nb-primary);
+}
+
+.editing-description-count.description-close-to-max {
+    color: var(--nb-deep-red);
+}
+
+// ================= Mobile ===================
+
+@include screen-md-and-below {
+    ion-grid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+     }
+    
+    
+    
+
+    // .profile-image-container {
+        
+    //     p,
+    //     h4 {
+    //         font-size: 1rem;
+    //     }
+    //     app-nb-avatar {
+    //         margin: auto;
+    //     }
+    //     margin: auto;
+        
+    // }
+
+
+        .hide-md-and-above.social-icons-row {
+            margin-bottom: 2rem;
+
+            ion-icon {
+                font-size: 2rem;
+            }
+
+            .social-icons {
+                align-items: center;
+            }
+        }
+    
+}
+
+
+
+
+@include screen-sm-and-below {
+    ion-grid {
+        padding-left: 0;
+        padding-right: 0;
+        }
+        
+
+    .profile-image-container {
+            
+        p,
+        h4 {
+            font-size: 1rem;
+        }
+        app-nb-avatar {
+            margin: auto;
+        }
+        margin: auto;
+        
+    }
+    .basic-info {
+        padding-left: 0;
+        text-align: center;
+    }
+
+    
+}

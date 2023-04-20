@@ -1,0 +1,43 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.social-icons-row {
+    width: fit-content;
+
+    & > ion-col {
+        position: relative;
+        padding-right: 1.5rem;
+
+        & > .edit-action {
+            position: absolute;
+            right: 0;
+            top: 10%;
+        }
+    }
+    
+    .social-icons {
+        width: fit-content;
+        margin-left: 0 !important;
+        
+        & > ion-col {
+            margin-left: 1rem;
+    
+            &:first-of-type {
+                margin-left: 0;
+            }
+    
+            .social-icon {
+                color: var(--nb-primary);
+            }
+        }
+    }
+}
+
+// ============================================
+@include screen-md-and-below {
+    .vendor-details-container {
+        .description {
+            font-size: 1rem;
+        }
+    }
+}

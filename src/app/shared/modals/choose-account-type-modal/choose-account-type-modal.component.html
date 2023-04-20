@@ -1,0 +1,43 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-img src="https://storage.googleapis.com/neatboutique.com/images/loci_long_1024.png"></ion-img>
+      <ion-icon class="close-icon clickable" (click)="onClose()" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice" [innerHTML]="noticeInnerHTML || 'Which account to perform this action with?'"></p>
+        <div class="action-content-wrapper">          
+            <div class="choice clickable" (click)="getConsumerProfile()">
+              <app-nb-avatar
+                [borderColor]="consumer?.borderColor"
+                [imageSrc]="consumer?.avatarSourceURL"
+                [username]="consumer?.name"
+                [altStyleClass]="'force-center-items flex-text-wrapper'">
+              </app-nb-avatar>
+            </div>
+  
+            <div class="choice clickable" (click)="getVendorProfile()">
+              <app-nb-avatar
+                [borderColor]="vendor?.borderColor"
+                [imageSrc]="vendor?.avatarSourceURL"
+                [username]="vendor?.name"
+                [altStyleClass]="'force-center-items flex-text-wrapper'">
+              </app-nb-avatar>          
+            </div>
+  
+          <!-- <app-nb-button [buttonType]="'white-primary'" (click)="getConsumerProfile()">
+            
+          </app-nb-button> -->
+  
+          
+  
+          <!-- <app-nb-button [buttonType]="'white-primary'" (click)="getVendorProfile()">
+            
+          </app-nb-button> -->
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

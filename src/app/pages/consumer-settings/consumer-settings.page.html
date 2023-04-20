@@ -1,0 +1,151 @@
+
+
+<ion-content [scrollEvents]="true">
+
+  <ion-grid>
+    
+        <ion-row>
+          <ion-col class="splash-photo ion-align-items-right" 
+            size-sm="4"
+            size-md="4"
+            size-xs="12"   size-lg="3">
+            <div class="profile-image-container">
+              <app-nb-avatar class="pointy-cursor" [size]="'big'" [borderColor]="currentUser?.consumer?.borderColor" [imageSrc]="currentUser?.consumer?.avatarSourceURL"></app-nb-avatar>
+              <ion-icon (click)="showUploadPhotoModal()" class="edit-action allow-opacity pointy-cursor" name="create-outline"></ion-icon>
+            </div>
+            
+          </ion-col>
+          <ion-col  class="basic-info">
+            <div class="username-wrapper">
+              <h1 *ngIf="!editUsername">{{ currentUser?.consumer?.name }} <ion-icon (click)="toggleEditUsername()" class="edit-action allow-opacity pointy-cursor" name="create-outline"></ion-icon></h1>
+              <div *ngIf="editUsername" class="action-btn-wrapper">
+                <ion-input [autofocus]="true" [(ngModel)]="newUsername" ></ion-input>
+                <ion-row>
+                  <ion-col>
+                    <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditUsername()">Cancel</app-jacobi-button>
+                  </ion-col>
+                  <ion-col>
+                    <app-jacobi-button [buttonType]="'auth-primary'" (click)="saveEditUsername()">Save</app-jacobi-button>
+                  </ion-col>
+                </ion-row>
+                
+              </div>
+            </div>
+            <!-- <h4>Local Pro</h4> -->
+            <p>Member since {{ currentUser?.consumer?.createdDateUtc | date: 'longDate' }} </p>
+            <br/>
+           
+            <div class="about-wrapper">
+              <h4>About <ion-icon *ngIf="!editDescription" (click)="toggleEditDescription()" class="edit-action allow-opacity pointy-cursor" name="create-outline"></ion-icon>
+              </h4>
+              <div *ngIf="!editDescription; else allowDescriptionEdit" class="description-wrapper">
+                <p *ngIf="currentUser?.consumer?.description !== ''">{{ currentUser?.consumer?.description }}</p>
+                <p *ngIf="currentUser?.consumer?.description === ''">Let people know a little about yourself</p>
+              </div>
+      
+              <ng-template #allowDescriptionEdit>
+                <div>
+                  <app-textarea-field
+                  [formGroupInstance]="descriptionForm"
+                  [inputName]="'description'"
+                  [label]="'About you'"
+                  [maxlength]="maxConsumerDescriptionChars"
+                  [remHeight]="18"
+                  [value]="currentUser?.consumer?.description">
+                </app-textarea-field>
+      
+                <div class="remianing-description-chars">Characters remaining: <span class="editing-description-count" [ngClass]="{ 'description-close-to-max': (maxConsumerDescriptionChars - (descriptionForm.value.description.length || 0)) < 15 }">{{ maxConsumerDescriptionChars - (descriptionForm.value.description.length || 0) }}</span></div>
+      
+                <div class="action-btn-wrapper">
+                  <app-jacobi-button [buttonType]="'auth-primary'" (click)="saveEditDescription()">Save</app-jacobi-button>
+                  <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditDescription()">Cancel</app-jacobi-button>
+                </div>
+                </div>
+              </ng-template>
+            </div>
+              
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="badges">
+          <ion-col class="badges-title-column" size="12">
+            <h2>Badges</h2>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-card class="ion-text-center badge-card">
+              <ion-card-header class="ask nb-vertical-center">
+                <ion-icon name="ribbon-outline"></ion-icon>
+              </ion-card-header>
+            </ion-card>
+            <p>{{ currentUser?.consumer?.questionsAskedCount }} {{ currentUser?.consumer?.questionsAskedCount === 1 ? 'Question' : 'Questions'}} asked</p>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-card class="ion-text-center badge-card">
+              <ion-card-header class="answer nb-vertical-center">
+                <ion-icon name="ribbon-outline"></ion-icon>
+              </ion-card-header>
+            </ion-card>
+            <p>{{ currentUser?.consumer?.questionsAnsweredCount }} {{ currentUser?.consumer?.questionsAnsweredCount === 1 ? 'Question' : 'Questions'}} answered</p>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-card class="ion-text-center badge-card">
+              <ion-card-header class="review nb-vertical-center">
+                <ion-icon name="ribbon-outline"></ion-icon>
+              </ion-card-header>
+            </ion-card>
+            <p>{{ currentUser?.consumer?.reviewsCount }} {{ currentUser?.consumer?.reviewsCount === 1 ? 'Review' : 'Reviews'}}</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="activity-selection">
+          <ion-col size="12">
+            <h2>Recent Activity</h2>
+          </ion-col>
+          <ion-col class="ion-text-center" size="4">
+            <h4 (click)="selectedActivity = 'recent-questions'">
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-questions'}">Questions</strong>
+            </h4>
+          </ion-col>
+          <ion-col class="ion-text-center" size="4">
+            <h4 (click)="selectedActivity = 'recent-answers'">
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-answers'}">Answers</strong>
+            </h4>
+          </ion-col>
+          <ion-col class="ion-text-center" size="4">
+            <h4 (click)="selectedActivity = 'recent-reviews'">
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-reviews'}">Reviews</strong>
+            </h4>
+          </ion-col>
+
+
+          
+        </ion-row>
+        <div class="activity">
+          <div *ngIf="selectedActivity === 'recent-questions'">
+            <ion-row class="recent-question" *ngFor="let post of recentActivity.recentQuestions">
+              <ion-col>
+                <app-post-item [post]="post"></app-post-item>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div *ngIf="selectedActivity === 'recent-answers'">
+            <ion-row class="recent-answer" *ngFor="let post of recentActivity.recentAnswers">
+              <ion-col>
+                <app-post-item [post]="post"></app-post-item>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div *ngIf="selectedActivity === 'recent-reviews'">
+            <ion-row class="recent-review" *ngFor="let review of recentActivity.recentReviews">
+              <ion-col>
+                <app-review-item [review]="review"></app-review-item>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+
+        
+  </ion-grid>
+
+  <app-nb-footer></app-nb-footer>
+</ion-content>

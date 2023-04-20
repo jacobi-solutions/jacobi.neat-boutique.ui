@@ -1,0 +1,85 @@
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+.vendor-description-wrapper {
+    position: relative;
+
+    .edit-vendor-description {
+        position: absolute;
+        top: -20px;
+        right: -18px;
+    }
+
+    .empty-vendor-description-placeholder {
+        opacity: 0.5;
+    }
+
+    
+}
+
+.editing-vendor-description-count {
+    color: var(--nb-primary);
+}
+
+.editing-vendor-description-count.description-close-to-max {
+    color: var(--nb-deep-red);
+}
+
+
+
+
+.action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    float: revert;
+}
+
+
+
+.social-icons-row {
+    width: fit-content;
+
+    & > ion-col {
+        position: relative;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+
+        & > .social-edit-action {
+            position: absolute;
+            right: 0;
+            top: 10%;
+        }
+    }
+    
+    .social-icons {
+        width: fit-content;
+        margin-left: 0 !important;
+        
+        & > ion-col {
+            margin-left: 1rem;
+    
+            &:first-of-type {
+                margin-left: 0;
+            }
+    
+            .social-icon {
+                color: var(--nb-primary);
+            }
+        }
+    }
+}
+
+
+// ============================================
+@include screen-md-and-below {
+    .vendor-details-container {
+        .description {
+            font-size: 1rem;
+        }
+    }
+}

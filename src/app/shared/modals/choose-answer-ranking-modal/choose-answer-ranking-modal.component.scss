@@ -1,0 +1,40 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+#{$chooseAnswerRankingModalClass} {    
+    .text-notice {
+        text-align: center;
+    }
+
+    .action-content-wrapper {
+        width: fit-content !important;
+        background: white !important;
+        // display: flex;
+        // flex-direction: column;
+
+        .account-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+
+            &:last-child {
+                margin-bottom: 0
+            }
+        }
+
+        .choice {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: var(--nb-border-radius);
+            &:hover {
+                background: var(--nb-primary-15-opacity);
+            }
+            // &:last-of-type {
+            //     margin-bottom: 0;
+            // }
+        }
+    }
+}
+
+

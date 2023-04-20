@@ -1,0 +1,37 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.forum-header {
+    margin-bottom: 2rem;
+    ion-icon {
+        color: var(--nb-yellow);
+        font-size: 4rem;
+        margin-right: 2rem;
+    }
+}
+
+ion-grid {
+    padding-right: 2.5rem;
+    padding-left: 3.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+
+    .load-spinner-wrapper {
+        display: flex;
+        justify-content: center;
+
+        ion-spinner {
+            height: 100px;
+            width: 100px;
+            color: var(--nb-primary);
+        }
+    }
+}
+
+
+@include screen-md-and-below {
+    ion-grid {
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+}

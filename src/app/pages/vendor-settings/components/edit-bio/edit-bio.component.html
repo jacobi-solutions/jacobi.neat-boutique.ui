@@ -1,0 +1,91 @@
+
+
+
+<ion-row class="vendor-details-container">
+  <ion-col class="vendor-details-description" size-xs="12" size-md="7">
+    <ion-card>
+
+      <ion-card-content>
+
+        <div *ngIf="!editDescription; else allowDescriptionEdit" class="vendor-description-wrapper">
+          <div *ngIf="vendor?.description; else emptyVendorDescriptionPlaceholder" class="description" [innerHtml]="vendor?.description"></div>
+
+          <ng-template #emptyVendorDescriptionPlaceholder>
+            <div class="empty-vendor-description-placeholder">
+              This is where you're vendor description goes. Tell your customers about your business today!
+            </div>
+          </ng-template>
+
+          <ion-icon class="edit-vendor-description edit-action allow-opacity" name="create-outline" (click)="toggleEditDescription()"></ion-icon>
+        </div>
+
+        <ng-template #allowDescriptionEdit>
+          <div>
+            <app-textarea-field
+            [formGroupInstance]="descriptionForm"
+            [inputName]="'description'"
+            [label]="'Vendor Description'"
+            [maxlength]="maxVendorDescriptionChars"
+            [remHeight]="18"
+            [value]="vendor?.description">
+          </app-textarea-field>
+
+          <div class="remianing-description-chars">Characters remaining: <span class="editing-vendor-description-count" [ngClass]="{ 'description-close-to-max': (maxVendorDescriptionChars - (descriptionForm.value.description.length || 0)) < 15 }">{{ maxVendorDescriptionChars - (descriptionForm.value.description.length || 0) }}</span></div>
+
+          <div class="action-btn-wrapper">
+            <app-jacobi-button [buttonType]="'auth-primary'" (click)="saveEditDescription()">Save</app-jacobi-button>
+            <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditDescription()">Cancel</app-jacobi-button>
+          </div>
+          </div>
+        </ng-template>
+        
+      </ion-card-content>
+
+      
+
+    </ion-card>
+  </ion-col>
+  <ion-col class="hide-md-and-below vendor-details-info" size-xs="12" size-md="5">
+    <ion-row *ngIf="vendor?.websiteURL">
+      <ion-col class="nb-vertical-center">
+        <ion-icon name="globe-outline"></ion-icon>
+        &nbsp; <a href="{{ vendor?.websiteURL }}" target="_blank" rel="noopener noreferrer">{{ vendor?.websiteURL }}</a>
+      </ion-col>
+    </ion-row>
+   
+    <ion-row *ngIf="vendor?.phoneNumber">
+      <ion-col class="nb-vertical-center">
+        <ion-icon name="call-outline"></ion-icon>
+        &nbsp; <a class="clickable" href="tel:+{{ vendor?.phoneFormatted }}">{{ vendor?.phoneFormatted }}</a>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="social-icons-row">
+      <ion-col>
+        <ion-row class="social-icons">
+          <ion-col *ngIf="vendor?.facebookLink">
+            <a [href]="vendor.facebookLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-facebook"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col *ngIf="vendor?.instagramLink">
+            <a [href]="vendor.instagramLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-instagram"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col *ngIf="vendor?.twitterLink">
+            <a [href]="vendor.twitterLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-twitter"></ion-icon>
+            </a>
+          </ion-col>
+        </ion-row>
+        <div class="social-edit-action">
+          <ion-icon class="edit-action allow-opacity" name="create-outline" (click)="editSocialMediaLinks()"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+
+  </ion-col>
+</ion-row>

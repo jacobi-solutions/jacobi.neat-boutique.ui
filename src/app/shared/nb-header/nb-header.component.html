@@ -1,0 +1,106 @@
+<ion-header #webHeader class="web">
+  <div class="nb-header-1">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3">
+          <ion-img (click)="goToPage('feed')" class="clickable"
+            src="https://storage.googleapis.com/neatboutique.com/images/loci_long_1024_color.png"></ion-img>
+        </ion-col>
+        <!-- <ion-col offset="1" size="4">
+          <ion-row *ngIf="showSearch">
+            <ion-col size="10">
+              <ion-searchbar search-icon="false"></ion-searchbar>
+            </ion-col>
+            <ion-col class="hide-md-and-bellow">
+              <ion-icon name="search-circle-sharp"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-col> -->
+        
+        <ion-col class="location" offset="2" size="3">
+          <ion-icon class="pointy-cursor" (click)="showLocationModal()" name="location-sharp"></ion-icon><span class="pointy-cursor" (click)="showLocationModal()">Pensacola, Fl</span>
+        </ion-col>
+
+
+        <ion-col *ngIf="currentUser" class="ion-text-right" size="4">
+          <div class="signed-in-user">
+            <p>Hi, {{ currentUser?.consumer.name }}!</p>
+            <app-nb-avatar class="pointy-cursor" [borderColor]="currentUser?.consumer?.borderColor" [routerLink]="'/settings'" [imageSrc]="currentUser?.consumer.avatarSourceURL"></app-nb-avatar>
+            <ion-icon slot="start" name="settings-outline" (click)="presentUserSettings($event)"></ion-icon>
+          </div>
+        </ion-col>
+
+        <ion-col *ngIf="!currentUser" class="ion-text-right" size="3">
+          <p>Existing User? <a class="clickable" (click)="goToPage('auth-flow/sign-in')">Sign In</a>&nbsp;</p>
+        </ion-col>
+        <ion-col *ngIf="!currentUser" class="ion-text-right" size="1">
+          <app-jacobi-button [buttonType]="'green-secondary no-squish'" (click)="goToPage('auth-flow/sign-up')">
+            Sign up
+          </app-jacobi-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+  <div *ngIf="showNbHeader2" class="nb-header-2">
+    <ion-buttons>
+      <ion-grid>
+        <ion-row>
+          <ion-col size-md="8" size-lg="9">
+            <ion-row>
+              <ion-col size="2" *ngFor="let navItem of firstLevelNav">
+                <ion-button (click)="goToPage(navItem.href)">
+                  <strong [ngClass]="{'selected-category': selectedPageName === navItem?.name}">{{ navItem?.name }}</strong>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col offset="1">
+            <ion-row class="social-icons">
+              <ion-col>
+                <a class="clickable" href="#" target="_blank">
+                  <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+              </ion-col>
+              <ion-col>
+                <a class="clickable" href="#" target="_blank">
+                  <ion-icon name="logo-instagram"></ion-icon>
+                </a>
+              </ion-col>
+              <ion-col>
+                <a class="clickable" href="#" target="_blank">
+                  <ion-icon name="logo-linkedin"></ion-icon>
+                </a>
+              </ion-col>
+              <ion-col>
+                <a class="clickable" href="#" target="_blank">
+                  <ion-icon name="logo-youtube"></ion-icon>
+                </a>
+              </ion-col>
+              <ion-col>
+                <a class="clickable" href="#" target="_blank">
+                  <ion-icon name="logo-twitter"></ion-icon>
+                </a>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-buttons>
+  </div>
+  <div *ngIf="showNbHeader3" class="nb-header-3">
+    <ion-buttons>
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngFor="let navItem of secondLevelNav">
+            <ion-button (click)="browseCategory(navItem?.name)">
+              {{ navItem?.name }}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-buttons>
+  </div>
+
+</ion-header>

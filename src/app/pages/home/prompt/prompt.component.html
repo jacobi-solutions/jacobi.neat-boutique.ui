@@ -1,0 +1,19 @@
+
+<div class="prompt ion-text-center" #slidingPrompt>
+      <ion-row>
+            <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
+                  <ion-row *ngIf="title">
+                        <ion-col class="ion-text-center">
+                        <h2>{{ title }}</h2>
+                        </ion-col>
+                  </ion-row>
+                  <ion-row>
+                        <ion-col>
+                              <ng-content></ng-content>
+                              <h3 class="description" *ngIf="description">{{ description }}</h3>
+                        </ion-col>
+                  </ion-row>
+            </ion-col>
+      </ion-row>
+      
+</div>

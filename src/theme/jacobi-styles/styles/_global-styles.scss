@@ -1,0 +1,193 @@
+// create your global styles in this file
+
+// ==========================  Jacobi custom hide
+// =======  hide 820px and below
+// .web
+
+// =======  hide 820px and above
+// .mobile
+
+
+// ==========================  Hide below Ionic sizes
+// .hide-sm-and-below
+// .hide-md-and-below
+// .hide-lg-and-below
+// .hide-xl-and-below
+
+
+// ==========================  Hide above Ionic sizes
+// .hide-sm-and-above
+// .hide-md-and-above
+// .hide-lg-and-above
+// .hide-xl-and-above
+
+
+// ==========================  Interactions
+// .clickable
+// .not-clickable
+
+
+
+
+// image cropper overrides
+// edit vendor logo img
+.vendor-logo-image-cropper-jJLH8n2M64jnkqma2pz8KXfG4ytkAM2e {
+    .cropper-container {
+        width: auto !important;
+    }
+}
+
+
+
+// ================================================== _modal-base-theme
+.custom-modal {
+    .modal-wrapper {
+      height: 21rem;
+      width: 50%;
+      color: var(--nb-primary);
+      background: transparent;
+      height: 100%;
+      --box-shadow: none;
+  
+      ion-card {
+        margin: auto auto;
+        box-shadow: $box-shadow;
+        padding: 0;
+        border-radius: var(--nb-border-radius);
+      }
+  
+      .logo-wrapper {
+        background: var(--nb-primary);
+        padding: 0.5rem;
+        position: relative;
+        height: 4rem;
+  
+        ion-img {
+          height: 3rem;
+          float: left;
+  
+          &::part(image) {
+            width: auto;
+          }
+        }
+  
+        .close-icon {
+          position: absolute;
+          color: white;
+          font-size: 2rem;
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+  
+      .modal-content-wrapper {
+        margin: 2rem 0;
+  
+        .text-notice {
+          text-align-last: center;
+          font-size: 1.5rem;
+          font-weight: bold;
+          margin-bottom: 1rem;
+  
+          p {
+            text-align-last: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+  
+            &:last-child {
+              margin-bottom: 1rem;
+            }
+          }
+        }
+  
+        .action-content-wrapper {
+          padding: 2rem;
+          margin: 0 auto;
+          width: 20rem;
+          background: white;
+          text-align-last: center;
+        }
+      }
+    }
+
+    // =========== class overrides
+    &.vendor-settings-edit-communities {
+
+      .modal-wrapper {
+        height: 100% !important;
+      }
+    }
+    &.notification-category-selection {
+
+      .modal-wrapper {
+        height: 100% !important;
+      }
+    }
+  }
+
+
+// ================================ media queries
+@include screen-md-and-below {
+    ion-modal {
+
+        &.custom-modal .modal-wrapper .modal-content-wrapper,
+        &.custom-modal .modal-wrapper .modal-content-wrapper .text-notice p,
+        &.custom-modal {
+            p, p.text-notice, .text-notice p { font-size: 1rem; }
+            h2 { font-size: 1.2rem; }
+            h1 { font-size: 2rem; }
+            
+            ion-card {
+              width: 100%;
+
+              .logo-wrapper {
+                ion-img {
+                  padding: 10px;
+                }
+              }
+            }
+            
+        }
+
+        &.custom-modal {
+            width: 100%;
+            padding: 0 0.5rem;
+
+            .modal-wrapper {
+                width: 100%;
+            }
+        }
+
+        &.confirm-action-warning-modal {
+            .text-notice {
+                text-align: center;
+                
+                p {
+                    margin-bottom: 2rem;
+                }
+
+                strong {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        // ==========================   vendor settings
+        &.upload-photo-modal {
+            padding: 0;
+
+            ion-card {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        &.change-avatar-modal {
+          padding: 0;
+
+          ion-card {
+              width: 100%;
+              height: 100%;
+          }
+      }
+    }
+}

@@ -1,0 +1,103 @@
+// @mixin input-shadows {
+//   box-shadow: 0 0 10px 15px rgba(0, 0, 0, 0.5) !important;
+// }
+
+@mixin placeholder($color: var(--nb-dark-grey)) {
+  &::-webkit-input-placeholder {
+    /* Edge */
+    color: $color;
+  }
+
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: $color;
+  }
+
+  &::placeholder {
+    color: $color;
+  }
+}
+
+@mixin label-as-placeholder($primaryColor: var(--nb-primary),
+  $secondaryColor: var(--nb-dark-grey-50-opacity),
+  $top: None,
+  $left: 0.8rem,
+  $transformTop: 0.3rem,
+  $transformFontSize: 0.75rem,
+  // $inputFontSize: 1rem,
+  $labelFontSize: 1.1rem) {
+
+  .input-wrapper ion-input,
+  .select-wrapper,
+  .date-input,
+  .input-wrapper ion-textarea {
+    ion-label {
+      display: inline-block;
+      position: absolute;
+      color: $secondaryColor;
+      // white-space: nowrap;
+      z-index: -1;
+
+      @if($top) {
+        top: $top;
+      }
+
+      @else {
+        top: calc(50% - #{ $labelFontSize * 0.6 }); //$top;
+      }
+
+      left: $left;
+      font-size: $labelFontSize !important;
+      transition: all 0.15s;
+    }
+
+    &.hasValue ion-label {
+      top: $transformTop;
+      font-size: $transformFontSize !important;
+      color: $primaryColor;
+    }
+  }
+}
+
+@mixin input-styles($withBorder: true,
+  $withBoxShadow: true,
+  $height: 4rem,
+
+  $borderColor: var(--nb-dark-grey),
+  $background: white,
+  $fontSize: 1.1rem,
+  $padding: 1rem,
+  $paddingLeft: 0.35rem) {
+
+  & {
+    color: var(--nb-light-grey);
+    padding: 1rem;
+    padding-left: 0.35rem !important;
+    font-size: $fontSize;
+    // margin-top: 1rem;
+    background-color: transparent !important;
+
+    @if $withBorder {
+      border: 1px solid #f0f0f0 !important;
+      border-radius: 10px;
+    }
+
+    @if $withBoxShadow {
+      box-shadow: 0 0 10px 1px #f8f8f8 !important;
+    }
+
+    height: $height;
+    width: 100%;
+
+    &:focus {
+      outline: none !important;
+
+      @if $withBorder {
+        border-width: 2px !important;
+        border-style: solid !important;
+        border-color: #409195 !important;
+      }
+
+    }
+  }
+}

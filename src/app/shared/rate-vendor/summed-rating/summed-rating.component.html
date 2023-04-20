@@ -1,0 +1,4 @@
+<div class="average-rating {{ altStyle }}" *ngIf="totalRating" [ngStyle]="{ display: displayFlex ? 'flex' : 'block' }">
+  <ion-icon *ngFor="let icon of ratingIcons" [name]="icon"></ion-icon>  
+</div>
+    

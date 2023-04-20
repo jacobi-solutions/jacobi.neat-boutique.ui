@@ -1,0 +1,181 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    padding-top: 3rem;
+    padding-left: 20vw;
+    padding-right: 20vw;
+}
+.profile-image-container {
+    height: 10rem;
+    width: 10rem;
+    position: relative;
+}
+
+.basic-info {
+    padding-left: 2rem;
+    
+}
+h1 {
+    margin: 0;
+}
+p {
+    color: var(--med-grey);
+    margin: 0;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 2;
+}
+h2 {
+    font-weight: bold;
+    color: var(--emerald-green);
+}
+h4 {
+    margin: 0;
+    color: var(--med-grey);
+    font-weight: bold;
+    font-size: 1.3rem;;
+}
+
+.badges-title-column {
+    z-index: 2;
+}
+.ask-badge {
+    color: #cd7f31;
+}
+.answer-badge {
+    color: #969696;
+}
+.review-badge {
+    color: #ffbc02;
+}
+
+.activity-selection {
+    .selected-activity {
+        border-style: solid;  
+        border-width: 0 0 .3rem 0;
+        padding-bottom: .3rem;
+        border-color: var(--purple) !important;
+    }
+}
+
+.activity {
+    margin-top: 2rem;
+    .recent-question {
+        margin-bottom: 1.5rem;
+    }
+    .recent-answer {
+        margin-bottom: 1.5rem;
+    }
+    .recent-review {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.badges {
+    margin-top: 3rem;
+}
+.badge-card {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--nb-border-radius);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--nb-border-color);
+    box-shadow: 0 0 20px 20px var(--nb-box-shadow-color);
+    // margin: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: auto;
+    margin-bottom: 1rem;
+
+    font-size: 4rem;
+    height: 6rem;
+    width: 6rem;
+  
+    .ask {
+      ion-icon {
+        color: #cd7f31;
+      }
+      
+    }
+    .answer {
+      ion-icon {
+        color: #969696;
+      }
+    }
+    .review {
+      ion-icon {
+        color: #ffbc02;
+      }
+    }
+  }
+
+  // ================= Mobile ===================
+
+  @include screen-md-and-below {
+    ion-grid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+     }
+    
+    
+    
+
+    // .profile-image-container {
+        
+    //     p,
+    //     h4 {
+    //         font-size: 1rem;
+    //     }
+    //     app-nb-avatar {
+    //         margin: auto;
+    //     }
+    //     margin: auto;
+        
+    // }
+
+
+        .hide-md-and-above.social-icons-row {
+            margin-bottom: 2rem;
+
+            ion-icon {
+                font-size: 2rem;
+            }
+
+            .social-icons {
+                align-items: center;
+            }
+        }
+    
+}
+
+
+
+
+@include screen-sm-and-below {
+    ion-grid {
+        padding-left: 0;
+        padding-right: 0;
+        }
+        
+
+    .profile-image-container {
+            
+        p,
+        h4 {
+            font-size: 1rem;
+        }
+        app-nb-avatar {
+            margin: auto;
+        }
+        margin: auto;
+        
+    }
+    .basic-info {
+        padding-left: 0;
+        text-align: center;
+    }
+
+    
+}

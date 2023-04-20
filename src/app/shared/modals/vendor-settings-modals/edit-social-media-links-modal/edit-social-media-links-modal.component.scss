@@ -1,0 +1,19 @@
+
+
+.link-input {
+    width: 100%;
+    margin-top: 1rem;
+
+    &:last-of-type {
+        margin-top: 0;
+    }
+}
+
+.action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    float: revert;
+}

@@ -1,0 +1,111 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.vendor-splash-container {
+
+    .vendor-splash-photo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 !important;
+        ion-avatar {
+            border: 2px solid var(--nb-grey);
+            width: 10rem;
+            height: 10rem;
+        }
+    }
+        
+    .vendor-splash-info {
+        padding: 0 !important;
+    }
+
+    
+    .review-stars {
+        h4 {
+            margin-left: 1.5rem;
+        }
+    }
+    .btn-row {
+        display: block;
+    }
+
+    .categories {
+        font-weight: 300 !important;
+        span {
+            padding: 0 0.25rem;
+            border-right: 1px solid var(--nb-grey-15-opacity);
+            &:first-of-type {
+                padding-left: 0;
+            }
+
+            &:last-of-type {
+                border-right: none;
+            }
+        }
+    }
+}
+
+
+// ========================= Mobile =============================
+
+
+@include screen-md-and-below {
+    .vendor-splash-container {
+        // .web { display: none; }
+        // .mobile { display: block; }
+        p, h4 { font-size: 1rem; }
+
+        .vendor-splash-photo {
+            display: revert;
+            
+            ion-avatar {
+                width: 10rem;
+                height: 10rem;
+                margin: 0 auto;  
+            }
+        }
+
+        .vendor-splash-info {
+            padding: 0 !important;
+
+            .vendor-name {
+                font-size: 2rem;
+            }
+        }
+    
+        .hide-md-and-above.social-icons-row {
+            margin-bottom: 2rem;
+
+            ion-icon {
+                    font-size: 2rem;
+            }
+
+            .social-icons {
+                align-items: center;
+            }
+        }
+    }    
+}
+
+
+@include screen-sm-and-below {
+    .vendor-splash-container {
+        .vendor-splash-info {
+            text-align: center;
+    
+            .review-stars {
+                ion-col {
+                    justify-content: center;
+                }
+            }
+        }
+    
+        .hide-md-and-above.social-icons-row .social-icons {
+            justify-content: center;
+        }
+    }  
+}
+
+
+

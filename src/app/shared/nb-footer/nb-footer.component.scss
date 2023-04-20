@@ -1,0 +1,18 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.nb-footer {
+    --background: #{var(--nb-primary)};
+    --color: white;
+    --ion-text-color: white;
+    --padding-start: 3rem;
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    letter-spacing: .1px !important;
+}
+
+.nb-footer-button {
+    font-size: 1.2rem;
+    letter-spacing: .1px !important;
+}
+

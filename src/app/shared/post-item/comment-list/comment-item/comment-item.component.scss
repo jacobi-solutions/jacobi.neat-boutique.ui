@@ -1,0 +1,38 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    &,
+    & > ion-row > ion-col {
+        padding: 0 !important;
+    }
+
+    ion-icon {
+        font-size: 2rem;
+        color: var(--nb-light-grey);
+        @include clickable;
+    }
+
+    .liked-wrapper {
+        display: flex;
+        // justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+
+        ion-icon {
+            font-size: $icon-md-size;
+
+            &.like-icon {
+                color: var(--nb-deep-red);
+            }
+
+            &.options-icon {
+                color: var(--nb-dark-grey);
+            }
+        }
+    }
+}
+
+.modal-template-hide {
+    display: none;
+}

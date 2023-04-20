@@ -1,0 +1,38 @@
+
+  <div class="{{ altStyle }}">
+    <ion-row class="answer-item expanded clickable" (click)="addVote()">
+      <ion-col size-xs="1.5" offset-md=".5" size-md="1">
+      </ion-col>
+      <ion-col size-xs="2" size-md="1">
+        <div class="avatar-container">
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.FIRST" class="trophy" src="../../../../../assets/icons/Trophy_Gold_Fill.svg"></ion-icon>
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.SECOND" class="trophy" src="../../../../../assets/icons/Trophy_Silver_Fill.svg"></ion-icon>
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.THIRD" class="trophy" src="../../../../../assets/icons/Trophy_Bronze_Fill.svg"></ion-icon>
+          <app-nb-avatar class="avatar clickable"
+            [borderColor]="borderColor"
+            [altStyleClass]="
+                  'post-answer center-username truncate-username ' +
+                  ((answer.entity.isGooglePlaceEntity) ? 'for-google' : ' ')
+                "
+            [imageSrc]="answer.entity.avatarSourceURL"
+            [colorAlt]="chartColor">
+          </app-nb-avatar>
+        </div>
+      </ion-col> 
+      <ion-col class="bar-wrapper ion-text-left" size-xs="8" size-md="8.5">
+     
+        <div class="vendor-name">{{ answer.entity.name }}</div>
+        <!-- [ngStyle]="{ background: chartColor, width: chartBar+'%' }" -->
+        <div #chartBar class="bar"></div>
+      
+      </ion-col>
+      <ion-col size-xs=".5" size-md=".5">
+        <!-- <span class="vote-count nb-vertical-center">
+          {{ answer.votes.length }}
+        </span> -->
+      </ion-col>
+  
+      
+    </ion-row>
+  </div>
+

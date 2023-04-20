@@ -1,0 +1,1017 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+// global theme imports
+// @import 'theme/fonts';
+// @import 'theme/mixins';
+// @import 'theme/extends';
+// @import 'theme/media-queries';
+// @import 'theme/modal-base-theme';
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.menu-content-open {
+    pointer-events: all !important;
+}
+
+
+p {
+    font-size: 1.1rem;
+}
+h1 {
+    font-size: 3rem;
+    font-family: "Kabel";
+}
+h2 {
+    font-size: 2.4rem;
+    font-family: "Kabel";
+}
+h3 {
+    font-family: "Kabel";
+    font-size: 2rem;
+}
+h4 {
+    font-size: 1.5rem;
+}
+
+.choose-answer-ranking-modal {
+  .title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .choice {
+    font-size: 2rem !important;
+    // margin-right: 1rem;
+    p {
+      font-size: 1rem !important;
+      font-weight: 500  ;
+    }
+    .remove {
+      color: var(--nb-deep-red);
+    }
+  }
+  
+  .view-vendor-profile {
+    color: var(--nb-primary);
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+
+ // ======================================  jacobi-button start
+.jacobi-button {
+  letter-spacing: .1px !important;
+  border-radius: var(--nb-border-radius) !important;
+  --border-radius: var(--nb-border-radius) !important;
+
+  // ======================================  button styles
+  &.white-primary {
+      --border-style: solid !important;
+      --border-width: var(--nb-border-width) !important;
+      --border-color: var(--nb-border-color) !important;
+      --box-shadow: 0 0 10px 10px var(--nb-box-shadow-color) !important;
+      --background: white !important;
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+      color: var(--nb-light-grey) !important;
+  }
+  
+  &.white-secondary {
+      --border-style: solid !important;
+      --border-width: var(--nb-border-width) !important;
+      --border-color: var(--nb-border-color) !important;
+      --box-shadow: 0 0 10px 10px var(--nb-box-shadow-color) !important;
+      --background: white !important;
+      color: var(--nb-primary) !important;
+      font-size: 1.1rem !important;
+      height: 3.5rem;
+  }
+  
+  &.white-secondary-md {
+      @extend .white-secondary;
+      font-size: 1.5rem !important;
+  }
+
+  &.no-squish {
+      /* prevent button text from getting too squished */
+      min-width: calc(100% + 20px);
+  }
+  
+  &.clear-primary {
+      --background-color: transparent !important;
+      background-color: transparent !important;
+      --border-width: var(--nb-border-width) !important;
+      --border-style: solid !important;
+      --border-color: white !important;
+      --border-radius: var(--nb-border-radius);
+      color: white;
+      --ion-text-color: white;
+      font-weight: bold;
+  }
+
+  &.text-grey {
+      color: var(--nb-grey) !important;
+  }
+  
+  &.green-primary {
+      color: white;
+      background-color: var(--nb-primary);
+      border-radius: var(--nb-border-radius);
+      width: 100%;
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+  }
+  
+  &.green-secondary {
+      background-color: var(--nb-deep-emerald) !important;
+      color: white;
+      border-radius: var(--nb-border-radius);
+      height: 3rem;
+      font-size: 1.1rem !important;
+      width: 100%;
+  }
+  
+  &.green-secondary-md {
+      @extend .green-secondary;
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+  }
+  
+  &.auth-primary {
+      width: 100%;
+      color: white;
+      background-color: var(--nb-primary);
+      border-radius: var(--nb-border-radius);
+  
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+  }
+  
+  &.auth-secondary {
+      color: white;
+      opacity: .5;
+      width: 100%;
+      background-color: var(--nb-primary);
+      border-radius: var(--nb-border-radius);
+  
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+  }
+  
+  // ::  ghost button styles :: //
+  
+  &.ghost-white {
+      color: white;
+      border: 1px solid white;
+      border-radius: var(--nb-border-radius);
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+      width: 100%;
+  }
+  
+  &.ghost-green-primary {
+      color: var(--nb-primary);
+      border: 1px solid var(--nb-primary);
+      border-radius: var(--nb-border-radius);
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+      width: 100%;
+  }
+  
+  &.ghost-green-secondary {
+      color: var(--nb-deep-emerald);
+      border: 1px solid var(--nb-deep-emerald);
+      border-radius: var(--nb-border-radius);
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+      width: 100%;
+  }
+  
+  &.ghost-auth-secondary {
+      color: var(--nb-primary-50-opacity);
+      border: 1px solid var(--nb-primary-50-opacity);
+      border-radius: var(--nb-border-radius);
+      font-size: 1.5rem !important;
+      height: 3.5rem;
+      width: 100%;
+  }
+  
+  
+  &.secondary {
+      width: fit-content !important;
+      font-size: 1.1rem !important;
+      height: 3.5rem;
+  }
+  
+  &.hover-auth:hover {
+      background-color: var(--nb-primary);
+      color: white;
+  }
+
+  // ======================================  alt styles
+  &.min-padding {
+      font-size: .75rem !important;
+      height: 2rem;
+      margin-inline: 0;
+  }
+
+  &.paragraph {
+      font-size: 1.1rem !important;
+  }
+
+  &.p-height {
+      height: 2rem;
+  }
+
+  &.width-fit-content {
+      max-width: fit-content !important;
+  }
+
+  // @for $i from 1 through 10 {
+  //     &.width-#{$i * 10} {
+  //       width: (($i*10) + 0%) !important;
+  //     }
+  //   }
+
+  &.text-light-grey {
+      color: var(--nb-light-grey);
+  }
+
+  &.text-left {
+      &::part(native) {
+          padding-left: 0 !important;
+          text-align: left;
+      }
+  }
+
+  &.min-height {
+      height: fit-content !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+  }
+
+  &.text-size-p {
+      &::part(native) {
+          font-size: 1.1rem !important;
+      }
+  }
+
+  &.min-width {
+      width: fit-content;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+  }
+
+  &.text-wrap {
+      white-space: normal !important;
+      height: fit-content !important;
+      
+      &::part(native) {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+      }
+  }
+}
+
+// ===================== Mobile =======================
+
+@include screen-md-and-below {
+  .mobile-height-md {
+      height: 2.5rem !important;
+  }
+}
+
+ // ======================================  jacobi-button end
+
+// ion-input {
+   
+//     $height: 2rem;
+  
+//     $borderColor: var(--nb-dark-grey);
+//     $background: white;
+//     $fontSize: 1.1rem;
+//     $padding: 1rem;
+//     $paddingLeft: 0.35rem;
+  
+//     & {
+//       color: var(--nb-light-grey);
+//       padding: 1rem;
+//       padding-left: 0.35rem !important;
+//       font-size: $fontSize;
+//       // margin-top: 1rem;
+//       background-color: transparent !important;
+//       border: var(--nb-border) !important;
+//       border-radius: 10px;
+//       box-shadow: 0 0 10px 1px #f8f8f8 !important;
+//       height: $height;
+//       width: 100%;
+  
+//       &:focus {
+//         outline: none !important;
+//         border-width: 2px !important;
+//         border-style: solid !important;
+//         border-color: var(--nb-primary) !important;
+        
+  
+//       }
+//     }
+// }
+
+.modal-p-min {
+  font-size: 1.1rem !important;
+  // font-weight: normal !important;
+  margin: 1rem auto !important;
+  width: 80% !important;
+}
+
+// create your global styles in this file
+
+// ==========================  Jacobi custom hide
+// =======  hide 820px and below
+// .web
+
+// =======  hide 820px and above
+// .mobile
+
+
+// ==========================  Hide below Ionic sizes
+// .hide-sm-and-below
+// .hide-md-and-below
+// .hide-lg-and-below
+// .hide-xl-and-below
+
+
+// ==========================  Hide above Ionic sizes
+// .hide-sm-and-above
+// .hide-md-and-above
+// .hide-lg-and-above
+// .hide-xl-and-above
+
+
+// ==========================  Interactions
+// .clickable
+// .not-clickable
+
+
+
+
+// image cropper overrides
+// edit vendor logo img
+.vendor-logo-image-cropper-jJLH8n2M64jnkqma2pz8KXfG4ytkAM2e {
+  .cropper-container {
+      width: auto !important;
+  }
+}
+
+
+
+// ================================================== _modal-base-theme
+
+
+.custom-modal::part(content) {
+  height: var(--current-modal-height) !important;
+  width: var(--current-modal-width) !important;
+  // max-width: 50%;
+  max-height: 100%;
+  border-radius: var(--nb-border-radius) !important;
+  overflow-y: scroll;
+}
+.custom-modal {
+  .modal-wrapper {
+    // height: 21rem;
+    // max-width: 50%;
+    color: var(--nb-primary);
+    background: transparent;
+    // height: 100%;
+    --box-shadow: none;
+
+    ion-card {
+      margin: auto auto;
+      box-shadow: $box-shadow;
+      padding: 0;
+      border-radius: var(--nb-border-radius);
+    }
+
+    .logo-wrapper {
+      background: var(--nb-primary);
+      padding: 0.5rem;
+      position: relative;
+      height: 4rem;
+
+      ion-img {
+        height: 3rem;
+        float: left;
+
+        &::part(image) {
+          width: auto;
+        }
+      }
+
+      .close-icon {
+        position: absolute;
+        color: white;
+        font-size: 2rem;
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    .modal-content-wrapper {
+      margin: 2rem 0;
+
+      .text-notice {
+        text-align-last: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+
+        p {
+          text-align-last: center;
+          font-size: 1.5rem;
+          font-weight: bold;
+
+          &:last-child {
+            margin-bottom: 1rem;
+          }
+        }
+      }
+
+      .action-content-wrapper {
+        padding: 2rem;
+        margin: 0 auto;
+        width: 20rem;
+        background: white;
+        text-align-last: center;
+      }
+    }
+  }
+  
+
+  // =========== class overrides
+  &.vendor-settings-edit-communities {
+
+    .modal-wrapper {
+      height: 100% !important;
+    }
+  }
+  &.notification-category-selection {
+
+    .modal-wrapper {
+      height: 100% !important;
+    }
+  }
+  &.answer-ranking-choices {
+    .choice {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  }
+}
+@include screen-md-and-above {
+  .custom-modal::part(content) {
+    max-width: 50%;
+  }
+}
+
+
+// ================================ media queries
+@include screen-md-and-below {
+  ion-modal {
+
+      &.custom-modal .modal-wrapper .modal-content-wrapper,
+      &.custom-modal .modal-wrapper .modal-content-wrapper .text-notice p,
+      &.custom-modal {
+          p, p.text-notice, .text-notice p { font-size: 1rem; }
+          h2 { font-size: 1.2rem; }
+          h1 { font-size: 2rem; }
+          
+          ion-card {
+            width: 100%;
+
+            .logo-wrapper {
+              ion-img {
+                padding: 10px;
+              }
+            }
+          }
+          
+      }
+
+      &.custom-modal {
+          width: 100%;
+          padding: 0 0.5rem;
+
+          .modal-wrapper {
+              width: 100%;
+          }
+      }
+
+      &.confirm-action-warning-modal {
+          .text-notice {
+              text-align: center;
+              
+              p {
+                  margin-bottom: 2rem;
+              }
+
+              strong {
+                  text-decoration: underline;
+              }
+          }
+      }
+
+      // ==========================   vendor settings
+      &.upload-photo-modal {
+          padding: 0;
+
+          ion-card {
+              width: 100%;
+              height: 100%;
+          }
+      }
+      &.change-avatar-modal {
+        padding: 0;
+
+        ion-card {
+            width: 100%;
+            height: 100%;
+        }
+    }
+  }
+}
+
+// auth -----------------------------------------
+
+.input-item {
+  min-height: 4.5rem !important;
+  height: 4.5rem !important;
+  border: 1px solid var(--nb-border-color);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 1px #f8f8f8 !important;
+  --highlight-background: none;
+  --highlight-height: 0px !important;
+  
+  ion-icon {
+    font-size: 2rem;
+    align-self: center;
+    color: #045546 !important;
+    --color: var(--nb-light-grey);
+    color: var(--nb-light-grey) !important;
+  }
+  ion-label {
+      font-size: 1.25rem !important;
+      margin: 0 !important;
+      --color: #B1B1B1 !important;
+      font-weight: 600;
+  }
+  ion-input {
+      margin: 0 !important;
+      color: #045546 !important;
+      border-style: unset !important;
+  }
+}
+
+
+.input-item::part(native) {
+  min-height: 4.5rem !important;
+  height: 4.5rem !important;
+  --background-hover-opacity: 0;
+  border: none;
+  
+}
+
+.jacobi-auth-flow {
+    
+    & > ion-grid {
+
+        .split-page-banner .img-overlay {
+            background: linear-gradient(
+                var(--nb-deep-emerald-75-opacity), 
+                var(--nb-deep-emerald-75-opacity)
+            );
+        }
+
+        .page-heading {
+            color: var(--nb-primary) !important;
+            font-size: 3rem;
+            font-family: 'Kabel' !important;
+            @media  (max-height: 400px) {
+                font-size: 1.5rem !important;
+            }
+
+            @include screen-sm-and-below {
+                font-size: 2rem !important;
+            }
+        }
+
+
+        // .input-item {
+        //     //.grid-container {
+        //         border: 1px solid var(--nb-border-color);
+        //         border-radius: 10px;
+        //         box-shadow: 0 0 10px 1px #f8f8f8 !important;
+        //     //}
+
+        //     ion-input {
+        //         --color: var(--nb-primary);
+        //     }
+
+        //     ion-label {
+        //         --color: var(--nb-light-grey);
+        //         color: var(--nb-light-grey) !important;
+        //         font-size: 1.1rem;
+        //         font-weight: 500;
+        //         top: -0.5rem;
+        //         position: relative;
+        //     }
+
+        //     ion-icon {
+        //         --color: var(--nb-light-grey);
+        //         color: var(--nb-light-grey) !important;
+        //         height: 50% !important;
+        //         margin-top: calc(25% + 5px);
+        //     }
+
+        //     .error-msg {
+        //         --ion-color-danger: var(--nb-primary);
+        //         margin-top: 5px;
+        //     }
+        // }
+
+        .remember-me-row {
+            margin-top: 1rem;
+
+            .forgot-pw {
+                align-items: center;
+                display: grid;
+            }
+
+            .remember-checkbox ion-label,
+            .forgot-pw a {
+                color: var(--nb-primary) !important;
+                text-decoration: none;
+            }
+        }
+
+        .no-account {
+            color: var(--nb-primary);
+        }
+
+        .legal-links a {
+            color: var(--nb-grey)
+        }
+        
+        
+
+    }
+
+    // select individual sub-route pages
+    &.jacobi-auth-flow-sign-in {}
+    &.jacobi-auth-flow-sign-up {}
+    &.jacobi-auth-flow-reset-pw-init {}
+    &.jacobi-auth-flow-reset-pw-final {}
+    &.jacobi-auth-flow-change-email-init {}
+    &.jacobi-auth-flow-change-email-final {}
+}
+
+// ----------------------------------------------
+
+// @import 'src/global-sass-variables';
+
+ion-item-divider {
+  min-height: 1px;
+  max-height: 1px;
+  margin-top: 1rem;
+}
+
+.nb-no-padding {
+  padding: 0;
+}
+
+.nb-no-margin {
+  margin: 0;
+}
+
+.nb-vertical-center {
+  height: 100%;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.nb-vertical-bottom {
+  height: 100%;
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+.searchbar-input {
+  font-size: 1.1rem !important;
+  padding-left: .1rem !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+  border-radius: 0 !important;
+}
+
+h1 {
+  color: var(--nb-primary);
+  font-size: 2.8rem;
+  
+}
+
+.review-stars {
+  font-size: 1.75rem;
+  color: #ffbc00;
+  // padding-bottom: 1rem;
+
+  h4 {
+    display: inline;
+    font-size: 1.5rem;
+    color: var(--nb-dark-grey);
+  }
+}
+
+ion-button {
+  text-transform: none;
+  letter-spacing: .1px !important;
+}
+
+ion-checkbox {
+  --size: 1.5rem;
+}
+
+.nb-textarea {
+  @include input-styles;
+  height: 65vh;
+}
+
+.pointy-cursor,
+.clickable {
+  @include link-basic;
+  cursor: pointer !important;
+  z-index: 5 !important;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.modal-p-min {
+  font-size: 1.1rem !important;
+  // font-weight: normal !important;
+  margin: 1rem auto !important;
+  width: 80% !important;
+}
+
+.text-left-align {
+  text-align: left;
+}
+
+.modal-wrapper {
+  border-radius: var(--nb-border-radius) !important;
+}
+
+// ================================================== _extends.scss
+
+.nb-input {
+  color: var(--nb-light-grey);
+  padding: 1rem;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  background-color: transparent !important;
+  border: var(--nb-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 10px 1px #f8f8f8 !important;
+  height: 4rem;
+  width: 100%;
+
+  &:focus {
+    outline: none !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: var(--nb-primary) !important;
+  }
+}
+
+
+// select option input
+.item.sc-ion-label-md-h,
+.item .sc-ion-label-md-h {
+
+  &::not(.jacobi-input-field) {
+    --color: #{ var(--nb-primary) };
+    color: var(--nb-primary) !important;
+    font-weight: bold;
+  }
+}
+
+// popover
+.popover-content {
+  --box-shadow: $box-shadow;
+  --width: fit-content;
+
+  .popover-viewport {
+    background: white;
+
+    border-radius: var(--nb-border-radius);
+
+    ion-item::part(native) .item-inner {
+      border: none !important;
+    }
+
+    .clickable {
+      @include clickable;
+    }
+
+    .setting-actions {
+      ion-list {
+        padding-bottom: 1rem;
+      }
+    }
+
+    
+
+    ion-item {
+      font-size: 1.1rem;
+      color: var(--nb-primary);
+      height: 2.2rem;
+
+      ion-label {
+        margin-right: 0.5rem;
+      }
+
+      // &.cta-btn {
+      //   height: auto;
+
+      //   &>div {
+      //     margin-top: 1rem;
+      //     border-radius: var(--nb-border-radius);
+      //     padding: 1rem;
+      //     background: var(--nb-primary);
+
+      //     ion-label {
+      //       color: white;
+      //     }
+      //   }
+      // }
+    }
+  }
+}
+
+@include screen-below-custom($mobile-screen) {
+    .web {
+      display: none !important;
+    }
+  }
+  
+  @include screen-above-custom($mobile-screen) {
+    .mobile {
+      display: none !important;
+    }
+  }
+  
+  @include screen-md-and-above {
+    .hide-md-and-above {
+      display: none;
+    }
+  }
+  
+  // hide below
+  @include screen-sm-and-below {
+    .hide-sm-and-below {
+      display: none !important;
+    }
+  }
+  
+  @include screen-md-and-below {
+    .hide-md-and-below {
+      display: none !important;
+    }
+  }
+  
+  @include screen-lg-and-below {
+    .hide-lg-and-below {
+      display: none !important;
+    }
+  }
+  
+  @include screen-xl-and-below {
+    .hide-xl-and-below {
+      display: none !important;
+    }
+  }
+  
+  // hide above
+  @include screen-sm-and-above {
+    .hide-sm-and-above {
+      display: none !important;
+    }
+  }
+  
+  @include screen-md-and-above {
+    .hide-md-and-above {
+      display: none !important;
+    }
+  }
+  
+  @include screen-lg-and-above {
+    .hide-lg-and-above {
+      display: none !important;
+    }
+  }
+  
+  @include screen-xl-and-above {
+    .hide-xl-and-above {
+      display: none !important;
+    }
+  }
+
+// HelveticaNeue
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeue.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueItalic.ttf');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueBold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueBoldItalic.ttf');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueMedium.ttf');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueMediumItalic.ttf');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueLight.ttf');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./assets/fonts/HelveticaNeue/HelveticaNeueLightItalic.ttf');
+    font-weight: lighter;
+    font-style: italic;
+}
+
+// Kabel-Black
+@font-face {
+    font-family: 'Kabel';
+    src: url('./assets/fonts/Kabel/Kabel-Black.ttf');
+    font-weight: 900;
+    font-style: normal;
+}

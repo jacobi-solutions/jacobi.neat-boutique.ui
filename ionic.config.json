@@ -1,0 +1,7 @@
+{
+  "name": "Loci",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

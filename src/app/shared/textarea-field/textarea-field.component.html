@@ -1,0 +1,19 @@
+<ion-row *ngIf="formGroupInstance" data-unique="c%r+Zm-RvBS+g6h92G?cG+KGe97uGNYU" class="input-container {{ unique }} {{ altStyle }}">
+  <ion-col class="">
+      <div class="input-wrapper" [formGroup]="formGroupInstance">
+          <ion-textarea
+            [ngClass]="{hasValue: formGroupInstance?.value[inputName]}"
+            [maxlength]="maxlength"
+            (ionChange)="calcRemainingChars()"
+            [formControlName]="inputName">
+            <ion-label>{{ label }}</ion-label>
+          </ion-textarea>
+      </div>
+      
+      <div *ngIf="invalidInputWarnings && inputControl.invalid && inputControl.touched" class="alert alert-danger">
+          <div *ngFor="let invalidInput of invalidInputWarnings">
+            <div *ngIf="inputControl.errors[invalidInput.errorType]" [innerHtml]="invalidInput.warning"></div>
+          </div>
+      </div>
+  </ion-col>
+</ion-row>

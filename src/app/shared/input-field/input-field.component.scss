@@ -1,0 +1,51 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.input-container {
+    @include label-as-placeholder;
+    width: 100%; 
+    align-items: center;
+    display: flex;        
+
+    // ::== icon size & center ==::
+    .input-wrapper {
+        position: relative;
+
+        & > ion-icon {
+            color: var(--nb-light-grey);
+            font-size: 1.8rem;
+            position: absolute;
+            right: 1rem;
+            top: calc(50% - .9rem);
+            bottom: calc(50% - .9rem);
+        }
+        // make eye icon clickable
+        & > ion-icon.password-show-toggle {
+            z-index: 3;
+        }
+    }
+
+    ion-input {
+        color: var(--nb-primary) !important;
+        font-weight: 500 !important;
+        @include input-styles;
+
+        padding-right: 0.5rem !important;
+        &.with-icon {
+            padding-right: 3rem !important;
+        }
+    }
+
+    &.mobile-input {
+        ion-col {
+            padding: 0;
+        }
+
+        ion-input {
+            font-size: 1rem;
+            height: 3.5rem;
+        }
+    }
+}

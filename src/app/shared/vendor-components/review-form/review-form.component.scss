@@ -1,0 +1,224 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+// $primaryColor: var(--nb-primary);
+// $secondaryColor: var(--nb-light-grey);
+$top: 1rem;
+$left: 0.85rem;
+$transformTop: 0.3rem;
+
+
+.new-reviews-form,
+.form-header {
+    ion-col {
+        padding: 0.5rem 0;
+    }
+}
+
+ion-textarea {
+    position: relative;
+
+    .submit-icon-wrapper {
+        position: absolute;
+        bottom: 1.25rem;
+        right: -0.5rem;
+        // float: right;
+        font-size: 2rem;
+
+        ion-icon {
+            color: var(--nb-light-grey);
+            font-size: 1.8rem;
+            position: absolute;
+            right: 1rem;
+            top: calc(50% - #{.9rem});
+            // bottom: calc(50% - .9rem);
+            z-index: 100;
+
+            &.paper-plane {
+                animation: fade-over 0.5s linear;
+                color: var(--nb-primary);
+            }
+
+            @keyframes fade-over {
+                0% { opacity: 0%; }
+                40% {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    opacity: 100%;
+                    transform: rotate(-25deg);
+                }
+                60% {
+                    transform: rotate(0deg);
+                }
+                70% {
+                    transform: rotate(25deg);
+                }
+                80% {
+                    transform: rotate(0deg);
+                }
+                90% {
+                    transform: rotate(-25deg);
+                }
+                100% {
+                    transform: rotate(0deg);
+                }
+            }  
+        }
+    }  
+}
+
+
+.rating-input-label-wrapper {
+    display: flex;
+    justify-content: flex-end;
+
+    .rating-input-label {
+        margin: 0;
+        align-self: center;
+        text-align: right;
+        display: inline-block;
+        font-weight: 500 !important;
+        font-size: 1.5rem;
+        color: var(--nb-primary-50-opacity);
+    }
+}
+
+
+.textarea-container {
+    @include label-as-placeholder;
+    width: 100%; 
+    align-items: center;
+    display: flex;        
+
+    // ::== icon size & center ==::
+    .textarea-wrapper {
+        position: relative;
+
+        & > ion-icon {
+            color: var(--nb-light-grey);
+            font-size: 1.8rem;
+            position: absolute;
+            right: 1rem;
+            top: calc(50% - .9rem);
+            bottom: calc(50% - .9rem);
+        }
+        // // make eye icon clickable
+        // & > ion-icon.password-show-toggle {
+        //     z-index: 3;
+        // }
+    }
+
+
+    ion-textarea {
+        padding-top: 0.45rem !important;
+        color: var(--nb-primary) !important;
+        font-weight: 500 !important;
+        @include input-styles;
+        // @include label-as-placeholder;
+
+        height: auto !important;
+        min-height: 4rem;
+
+        .textarea-wrapper {
+            height: 100%;
+        }
+
+        ion-label {
+            display: inline-block;
+            position: absolute;
+            color: var(--nb-dark-grey-50-opacity);
+            // white-space: nowrap;
+            z-index: -1;
+            top: $top;
+            left: $left;
+            bottom: 100%;
+            transition: all 0.15s;
+        }
+    
+        &.hasValue ion-label {
+            top: $transformTop;
+            font-size: 0.5rem;
+            color: var(--nb-primary);
+        }
+    }
+
+    .mobile-textarea-col {
+        ion-textarea {
+            font-size: 1rem;
+        }
+    }
+}
+
+
+form {
+    .edit-btn-wrapper {
+        display: flex;
+        justify-content: flex-end;
+    
+        .update-edit-btn {
+            margin-left: 2rem;
+        }
+    } 
+}
+
+ion-item-divider {
+    margin: 1rem auto;
+}
+
+// ===========================================
+@include screen-md-and-below  {
+    .vendor-review-form-wrapper {
+        font-size: 1rem;
+
+        // .rating-input-label {
+        //     font-size: 1rem;
+        // }
+
+        .mobile-star-rating {
+            ion-col {
+                display: flex;
+
+                p {
+                    font-size: 1rem;
+                    font-weight: bold;
+                    color: var(--nb-primary);
+                    display: inline-block;
+                    margin: 0.3rem;
+                }
+    
+                .stars {
+                    width: 50%;
+                }
+            }
+        }
+
+        .mobile-input-field {
+            margin-bottom: 1rem;
+        }
+
+        & > ion-col {
+            padding: 0;
+        }
+        
+        .form-new-review-wrapper {
+            ion-col {
+                padding: 0;
+            }
+
+            .new-reviews-form {
+                padding: 0;
+            }
+    
+            .hide-lg-and-above {
+                .rating-input-label {
+                    font-size: font-sizes(mobile-h2);
+                }
+            }
+        }
+        
+    }
+}

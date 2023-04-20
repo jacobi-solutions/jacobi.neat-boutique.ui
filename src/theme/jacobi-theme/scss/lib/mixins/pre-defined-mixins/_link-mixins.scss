@@ -1,0 +1,23 @@
+// @import "../vars";
+
+@mixin link-basic {
+  
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  @mixin clickable {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  @mixin not-clickable {
+    text-decoration: none;
+  
+    &:hover {
+      cursor: no-drop;
+    }
+  }
+  

@@ -1,0 +1,119 @@
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <h1>Start now and upgrade later!</h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>User</ion-card-title>
+            <ion-card-subtitle>Traveler or local pro</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Start asking questions now and know where to go!
+            <ion-card-title>Free</ion-card-title>
+            <ion-list lines="none">
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Ask questions</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Answer questions</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Give extra insight with comments</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Review local businesses</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+          <ion-row class="call-to-action-row">
+            <ion-col>
+              <app-jacobi-button *ngIf="!isAuthenticated" [routerLink]="'/auth-flow/sign-up'" [buttonType]="'green-primary'">Sign up</app-jacobi-button>
+              <a class="pointy-cursor" *ngIf="isAuthenticated && isVendor" (click)="cancelVendorSubscription()">Cancel Vendor Subscription</a>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+      <ion-col size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Connect your Business</ion-card-title>
+            <ion-card-subtitle>Standard</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Engage with your customers.
+            <ion-card-title>$45/month</ion-card-title>
+            <ion-list lines="none">
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Take control of your Business Profile with photos and more</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Comment on and answer questions as your business</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Respond to reviews about your business as your business</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+          <ion-row class="call-to-action-row">
+            <ion-col>
+              <a *ngIf="!isAuthenticated" [routerLink]="'/auth-flow/sign-up'">Sign up for a user account and then promote your business</a>
+              <app-jacobi-button *ngIf="isAuthenticated && !isVendor" (click)="startVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Start with Standard</app-jacobi-button>
+              <a class="pointy-cursor" *ngIf="isAuthenticated && isVendor && isPremiumVendor" (click)="downgradeVendorSubscriptionToStandard()">Downgrade to Standard</a>
+
+              <p *ngIf="isAuthenticated && isVendor && !isPremiumVendor">You have the Standard package</p>
+
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+      <ion-col size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Connect your Business</ion-card-title>
+            <ion-card-subtitle>Premium</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Know what your customers want.
+            <ion-card-title>$95/month</ion-card-title>
+            <ion-list lines="none">
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Do everything you can do with your standard account</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Resolve poor reviews with Loci as a mediator (coming soon)</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Make polls and learn exacatly what your customers want</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Advertise your business with our beautiful Hero ads</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Connect with other like minded business owners using our networking groups (coming soon)</ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-row>
+              <ion-col>
+                <a *ngIf="!isAuthenticated" [routerLink]="'/auth-flow/sign-up'">Sign up for a user account and then promote your business</a>
+                <app-jacobi-button *ngIf="isAuthenticated && !isVendor" (click)="startVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Start with Premium</app-jacobi-button>
+                <app-jacobi-button *ngIf="isAuthenticated && isVendor && !isPremiumVendor" (click)="upgradeVendorSubscriptionToPremium()" [buttonType]="'green-primary'">Upgrade to Premium</app-jacobi-button>
+                <p *ngIf="isAuthenticated && isVendor && isPremiumVendor">You have the Premium package</p>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+  </ion-grid>
+  <app-nb-footer></app-nb-footer>
+</ion-content>

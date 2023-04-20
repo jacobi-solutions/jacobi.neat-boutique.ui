@@ -1,0 +1,63 @@
+
+
+<ion-content [scrollEvents]="true">
+
+<ion-grid>
+  <app-edit-header-details [vendor]="vendor"></app-edit-header-details>
+  <app-edit-bio [vendor]="vendor"></app-edit-bio>
+  <div class="photos-container">
+    <ion-row>
+      <ion-col>
+        <h2>Photos</h2>
+      </ion-col>
+    </ion-row>
+    <ion-row class="photos">
+      <ion-col>
+        <app-vendor-photos [vendor]="vendor"></app-vendor-photos>
+      </ion-col>
+    </ion-row>
+
+    
+    <ion-row class="ads-parent-row">
+      <ion-col>
+        <h2>Advertisements</h2>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+
+      <!-- poll ad -->
+      <ion-col size-xs="12" size-lg="5.5" class="poll-col">
+        <app-poll-ad-placeholder></app-poll-ad-placeholder>
+      </ion-col>
+
+      <!-- hero img ad -->
+      <ion-col size-xs="12" offset-xs="0" size-lg="5.5" offset-lg="1" class="hero-img-col">
+        <app-edit-hero-ad></app-edit-hero-ad>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-row class="">
+    <ion-col>
+      <h2>Reviews</h2>
+    </ion-col>
+  </ion-row>
+
+  <div *ngIf="vendor?.reviews.length !== 0; else elseNoReviews">
+    <app-review-list [reviews]="vendor?.reviews"></app-review-list>
+  </div>
+  
+</ion-grid>
+
+<app-nb-footer></app-nb-footer>
+</ion-content>
+
+
+<ng-template #elseNoReviews>
+  <ion-row class="no-reviews-row">
+    <ion-col>
+      <p>You don't have any reviews yet.</p>
+    </ion-col>
+  </ion-row>
+</ng-template>
+

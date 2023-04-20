@@ -1,0 +1,25 @@
+<!-- <ion-button [disabled]="disabled" class="nb-button" fill="clear"
+[ngClass]="{
+  'green-primary' : buttonType === 'green-primary',
+  'green-secondary' : buttonType === 'green-secondary',
+  'green-secondary-md' : buttonType === 'green-secondary-md',
+  'white-primary' : buttonType === 'white-primary',
+  'white-secondary' : buttonType === 'white-secondary',
+  'white-secondary-md' : buttonType === 'white-secondary-md',
+  'clear-primary' : buttonType === 'clear-primary',
+  'auth-primary' : buttonType === 'auth-primary',
+  'auth-secondary' : buttonType === 'auth-secondary',
+  'ghost-white' : buttonType === 'ghost-white',
+  'ghost-green-primary' : buttonType === 'ghost-green-primary',
+  'ghost-green-secondary' : buttonType === 'ghost-green-secondary',
+  'ghost-auth-secondary' : buttonType === 'ghost-auth-secondary'
+}"
+
+> -->
+
+
+<!-- [ngClass]="allClassNames" -->
+
+<ion-button [disabled]="disabled" class="nb-button {{ buttonType }} {{ altStyle }}" fill="clear">
+  <ng-content></ng-content>
+</ion-button>

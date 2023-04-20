@@ -1,0 +1,472 @@
+@use "sass:math";
+
+@import "src/theme/jacobi-theme/scss/main";
+@import "src/global-sass-variables";
+
+.clickable {
+  @include clickable;
+}
+
+// community section ======================================
+.category-selections {
+  //padding-right: 1.5rem;
+
+  .community-heading {
+    align-items: center;
+    color: var(--nb-light-grey);
+    font-weight: bold !important;
+
+    ion-icon {
+      font-size: 2.25vw;
+    }
+  }
+
+  .community-list-card {
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--nb-border-color);
+    box-shadow: 0 0 10px 10px var(--nb-box-shadow-color);
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    margin-top: 0;
+    margin-bottom: 0.2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+    color: var(--nb-light-grey);
+
+    .community-item-wrapper { 
+      align-items: center;
+      cursor: pointer;
+  
+      ion-icon {
+        font-size: 2rem;
+      }
+      ion-checkbox {
+        --size: 1rem !important;
+      }
+  
+      p {
+        margin: 0;
+  
+        span {
+          color: var(--nb-light-grey);
+          // display: inline-block;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+}
+.my-communities-col {
+  padding: 0;
+}
+.community-feed-col {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.no-show {
+  left: -200vw !important;
+  position: fixed !important;
+}
+
+.md-ad-container {
+  --background: none;
+  background-image: url(https://storage.googleapis.com/neatboutique.com/images/50percent.jpeg);
+  background-position: 50% 60%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: multiply;
+  padding: 0;
+  border-radius: 10px;
+  height: 28vw;
+}
+.md-ad {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border-radius: 10px;
+  background-color: var(--nb-deep-emerald-75-opacity);
+  .md-ad-text {
+    height: 85%;
+    display: flex !important;
+    align-items: flex-end !important;
+    padding-left: 1rem;
+    --ion-font-family: "Kabel" !important;
+    font-family: "Kabel" !important;
+    font-size: 3rem;
+    color: white;
+    --ion-text-color: white;
+  }
+  .md-ad-buttons {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 15%;
+    .md-ad-indicator {
+      display: inline-block;
+      margin: 0.4rem;
+      border-radius: 5px;
+      height: 1.2rem;
+      width: 1.8rem;
+      background-color: white;
+      opacity: 50%;
+    }
+    .md-ad-showing-indicator {
+      background-color: var(--nb-primary) !important;
+    }
+    .md-ad-button {
+      margin-top: -0.5rem;
+    }
+  }
+}
+
+.sm-ad-section {
+  margin-left: -1rem;
+  margin-right: -1rem;
+  ion-col {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .sm-ad-container {
+    height: 18vw;
+    --background: none;
+    background-position: 50% 60%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 0;
+    border-radius: 10px;
+    // margin-top: .5rem;
+    // margin-bottom: .5rem;
+  }
+  .sm-ad-container-1 {
+    background-image: url(https://storage.googleapis.com/neatboutique.com/images/szabo-viktor-oDBmduFQDn4-unsplash.jpg);
+  }
+  .sm-ad-container-2 {
+    background-image: url(https://storage.googleapis.com/neatboutique.com/images/obi-onyeador-yukvZM3Z0e0-unsplash.jpg);
+    background-position: 50% 40%;
+  }
+  .sm-ad-container-3 {
+    background-image: url(https://storage.googleapis.com/neatboutique.com/images/jesse-orrico-L94dWXNKwrY-unsplash.jpg);
+  }
+  .sm-ad {
+    display: flex !important;
+    align-items: flex-end !important;
+    padding-left: 1rem;
+    height: 100%;
+    padding-bottom: 1rem;
+    font-size: 2.1rem;
+    padding-left: 1.5rem;
+    color: white;
+    --ion-text-color: white;
+    --ion-font-family: "Kabel" !important;
+    font-family: font-families(kabel) !important;
+  }
+}
+
+.create-post-container {
+  margin-bottom: 4rem;
+  color: var(--nb-light-grey);
+  .create-post-header {
+    color: var(--nb-primary);
+    font-size: 3rem;
+    --ion-font-family: "Kabel" !important;
+    font-family: "Kabel" !important;
+  }
+  .create-post-disclaimer {
+    color: var(--nb-light-grey);
+    font-size: 1.1rem;
+    h4 {
+      color: var(--nb-dark-grey);
+    }
+  }
+  label {
+    font-size: 1.5rem;
+    color: var(--nb-dark-grey);
+  }
+  ion-icon {
+    color: var(--nb-primary);
+    font-size: 2.5rem;
+  }
+  ion-checkbox {
+    --size: 1.5rem;
+  }
+}
+
+.forum-header {
+  margin-top: 2.5rem;
+  ion-icon {
+    color: #ffbc00;
+    font-size: 4rem;
+  }
+}
+
+ion-grid {
+  padding-right: 2rem;
+  padding-left: 2rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.community-list-header {
+  padding-left: 1rem;
+  font-weight: bold;
+  color: var(--nb-dark-grey);
+
+  ion-col {
+    padding-left: 0;
+  }
+
+  ion-icon {
+    color: var(--nb-primary);
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.recent-posts-header {
+  padding-left: 1rem;
+  font-weight: bold;
+  color: var(--nb-dark-grey);
+
+  ion-col {
+    padding-left: 0;
+  }
+
+  ion-icon {
+    color: var(--nb-primary);
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+
+
+.recent-posts-card {
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--nb-border-color);
+  box-shadow: 0 0 10px 10px var(--nb-box-shadow-color);
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  margin-top: 0;
+  margin-bottom: 0.2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--nb-light-grey);
+  .recent-question {
+    margin-bottom: 1rem;
+  }
+}
+
+.align-right {
+  float: right;
+}
+
+.post-question-row {
+  padding: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 1rem;
+}
+
+.post-question-col {
+  padding: 0;
+  margin: 0;
+}
+
+.submit-wrapper {
+  &.hideSubmit {
+    display: none;
+  }
+
+  .new-post-submit {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    app-jacobi-button {
+      height: 2rem !important;
+      width: 12%;
+
+      &:first-of-type {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+// ===================
+
+.posts-container {
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+
+  .specific-post {
+    margin-bottom: .5rem;
+  }
+  .community-post-row {
+    margin-bottom: 1rem;
+  }
+  .community-post-col {
+    padding: 0;
+  }
+}
+
+.post-header-card {
+  height: 6rem;
+  border-radius: 10px;
+  background-color: var(--nb-primary);
+  --ion-font-family: "Kabel" !important;
+  font-family: font-families(kabel) !important;
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  --ion-text-color: white;
+  padding-left: 1.5rem;
+  padding-right: 2.5rem;
+  margin: 0;
+
+  ion-icon {
+    font-size: 3rem;
+  }
+  .elipsis {
+    font-size: 2.5rem;
+  }
+}
+.inactive {
+  background-color: var(--nb-primary-70-opacity) !important;
+  --background-color: var(--nb-primary-70-opacity) !important;
+}
+.post-card {
+  height: 6rem;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--nb-border-color);
+  box-shadow: 0 0 2px 2px var(--nb-box-shadow-color);
+  margin-top: 0.5rem !important;
+  padding: 0;
+  margin: 0;
+  font-size: 1.1rem;
+  .post-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .post-subtitle {
+    font-size: 1.1rem;
+  }
+  .already-visited {
+    color: var(--nb-purple);
+  }
+  color: var(--nb-light-grey);
+  ion-avatar {
+    margin-left: 1rem;
+    img {
+      border-style: solid;
+      border-width: 2px;
+      border-color: var(--nb-orange);
+    }
+  }
+  ion-icon {
+    font-size: 3rem;
+  }
+}
+
+.lastPost {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.expanded-post-card-header {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.load-more-posts-wrapper {
+  display: flex;
+  justify-content: center;
+
+  app-jacobi-button {
+    margin-top: 2rem;
+  }
+}
+
+// ============================= Mobile ===============================
+
+@include screen-xl-and-below {
+  .community-list-wrapper ion-row .community-item-wrapper {
+   
+
+    ion-icon {
+      font-size: 2vw;
+    }
+  }
+  
+}
+
+@include screen-sm-and-below {
+  .community-feed-col {
+    padding: 0;
+  }
+  ion-grid {
+    padding: 0;
+  }
+}
+
+@include screen-lg-and-below {
+  .web {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+
+  ion-grid {
+    padding: 0;
+  }
+
+  .form-new-posts {
+    .user-new-post-form {
+      display: block;
+    }
+  }
+}
+
+.mobile.category-selections {
+  color: var(--nb-light-grey);
+  font-weight: bold !important;
+  align-items: center;
+  margin: 1rem;
+  span {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  ion-icon {
+    margin-right: 1rem;
+    font-size: 2rem !important;
+  }
+}

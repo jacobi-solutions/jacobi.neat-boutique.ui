@@ -1,0 +1,111 @@
+<ng-container>
+  <div *ngIf="(answers?.length > 0); else searchVendorForm">
+   <div *ngIf="answersChanged" class="answers expanded">
+    <ion-row *ngFor="let answer of normalize(minimalAnswers); index as i" class="answer-item-row">
+      <ion-col>
+        <!-- community post answer -->
+        <app-answer-item *ngIf="(postType === postTypes.COMMUNITY_QUESTION)"
+        [expanded]="true"
+        [chartBar]="answer.barChartValue"
+        [answer]="answer"
+        [answers]="answers"
+        [chartColor]="colors[i%(colors?.length)]"
+        [altStyle]="altAnswerStyle"
+        [isDemo]="isDemo">
+      </app-answer-item>
+
+        <!-- poll post answer -->
+        <app-poll-answer-item *ngIf="(postType === postTypes.POLL)"
+          [expanded]="true"
+          [chartBar]="answer.barChartValue"
+          [answer]="answer"
+          [chartColor]="colors[i%(colors?.length)]"
+          [altStyle]="altAnswerStyle"
+          [isDemo]="isDemo">
+        </app-poll-answer-item>
+
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="answers?.length > defaultNumberOfAnswersToShow">
+      <ion-col class="ion-text-left">
+        <app-jacobi-button class="btn-show-all" (click)="toggleShowAll()" [buttonType]="'clear-primary'"
+          [altStyle]="'text-light-grey paragraph text-left'">{{ viewRangeText }}</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-row>
+    <ion-col>
+      <ng-content *ngIf="true then searchVendorForm"></ng-content>
+    </ion-col>
+  </ion-row>
+  </div>
+</ng-container>
+
+
+<ng-template #noAnswersYet>
+  <div *ngIf="currentUser" class="no-answers">
+    <ng-content [ngModel]="searchVendorForm"></ng-content>
+  </div>
+</ng-template>
+
+
+
+<ng-template #searchVendorForm>
+  <div *ngIf="!selectedVendor && (postType !== postTypes.POLL)" class="form-search-answer">
+    <div class="search-for-vendor-answer">
+      <app-nb-avatar
+        [borderColor]="currentUser?.consumer.borderColor"
+        [imageSrc]="currentUser?.consumer.avatarSourceURL">
+      </app-nb-avatar>
+      <form (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
+        <ion-item class="input-wrapper">
+          <ion-input type="text" formControlName="newAnswer" name="newAnswer" ngDefaultControl
+            class="no-border"
+            [ngClass]="{ hasValue: answerForm.value.newAnswer }">
+            <ion-label>Cast your vote</ion-label>
+          </ion-input>
+        </ion-item>
+      </form>
+    </div>
+
+    <ion-grid *ngIf="vendorResults" class="vendor-results">
+      <ion-row *ngFor="let vendor of vendorResults" class="vendor-result">
+        <ion-col offset="1" class="vendor-search-option" (click)="selectVendorFromList(vendor)">
+          <app-nb-avatar
+            [imageSrc]="vendor.avatarSourceURL"
+            [username]="vendor.name"
+            [secondaryText]="vendor?.formattedLocation"
+            [altStyleClass]="'post-answer force-center-items ' + ((vendor.has) ? 'for-google' : '')"></app-nb-avatar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+ 
+  <ion-row *ngIf="selectedVendor && (postType !== postTypes.POLL)" class="selected-vendor">
+    <ion-col>
+      <app-nb-avatar *ngIf="selectedVendor.isGooglePlaceEntity"
+        [username]="selectedVendor.name"
+        [altStyleClass]="'post-answer force-center-items for-google'"></app-nb-avatar>
+
+        <app-nb-avatar *ngIf="!selectedVendor.isGooglePlaceEntity"
+        [imageSrc]="selectedVendor.avatarSourceURL"
+        [username]="selectedVendor.name"
+        [altStyleClass]="'post-answer force-center-items'">
+      </app-nb-avatar>
+    </ion-col>
+    
+    <ion-col>
+      <div class="buttons-wrapper">
+        <app-jacobi-button (click)="selectedVendor = null" [buttonType]="'ghost-green-primary paragraph p-height'">Cancel
+        </app-jacobi-button>
+        <app-jacobi-button (click)="addNewAnswer()" [buttonType]="'green-primary paragraph p-height'">Add Answer
+        </app-jacobi-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ng-template>
+
+

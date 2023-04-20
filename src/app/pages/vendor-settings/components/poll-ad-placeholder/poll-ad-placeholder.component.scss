@@ -1,0 +1,104 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+
+    &,
+    ion-row,
+    ion-col {
+        margin: 0;
+        padding: 0;
+    }
+
+    h2 {
+        font-family: font-families(kabel);
+        font-size: 3rem;
+        color: var(--nb-primary);
+        font-weight: 900;
+    }
+    
+    h3 {
+        // font-family: font-families(kabel);
+        // font-size: font-sizes(h3);
+        color: var(--nb-primary);
+        font-weight: 900;
+    }
+    
+    .poll-heading {
+        position: relative;
+        width: fit-content;
+    }
+
+    .poll-wrapper-col {
+        position: relative;
+
+        .poll-overlay {
+            opacity: 0.1;
+            position: absolute;
+            z-index: 101;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: var(--nb-border-radius);
+            background: var(--nb-primary-75-opacity);
+            transition: opacity 0.5s;
+
+            p {
+                // font-family: font-families(kabel);
+                font-size: 2.4rem;
+                color: white;
+                font-weight: bold;
+                text-align: center;
+                text-transform: capitalize;
+            }
+        }
+
+        &:hover .poll-overlay {
+            opacity: 1;
+        }
+
+        // no polls placeholder
+        .make-first-poll {
+            height: 20rem;
+            padding: 2rem;
+            background: var(--nb-primary-75-opacity);
+            border-radius: var(--nb-border-radius);
+            // border: var(--nb-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            p {
+                // font-family: font-families(kabel);
+                font-size: 2rem;
+                color: white;
+                font-weight: bold;
+                text-align: center;
+                text-transform: capitalize;
+            }
+        }
+    }
+}
+
+// ================= Mobile ===================
+// @include screen-md-and-below {
+//     h1 {
+//         font-size: 2rem !important;
+//     }
+//     h2 {
+//         font-size: 2rem !important;
+//     }
+//     h2.mobile-h2 {
+//         font-size: 1.2rem !important;
+//     }
+//     h3 {
+//         font-size: 1.2rem !important;
+//     }
+// }
+

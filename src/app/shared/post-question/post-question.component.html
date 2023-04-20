@@ -1,0 +1,53 @@
+<ion-row class="form-new-posts user-new-post-form">
+  <ion-col class="hide-sm-and-below ion-align-self-center" size="1">
+    <app-nb-avatar [borderColor]="currentUser?.consumer.borderColor" [imageSrc]="currentUser?.consumer?.avatarSourceURL"></app-nb-avatar>
+  </ion-col>
+  <ion-col size-xs="12" size-sm="11">
+    <form class="input-wrapper" (ngSubmit)="confirmNonEditablePost()" [formGroup]="postForm">
+      <ion-input  #newPost class="ion-text-left"
+        [ngClass]="{ hasValue: (postForm.value.newQuestion?.trim() !== '') && (postWithQuestionMark !== null) }"
+        (ngModelChange)="newPostChange($event)" formControlName="newQuestion" autocapitalize="true">
+        <ion-label>Post a question...</ion-label>
+    
+        <div *ngIf="postWithQuestionMark" class="clonedInputWrapper">
+          <p #questionMarkPlaceholder class="cloned-input">
+            {{ postWithQuestionMark }}<span [ngClass]="{ 
+                hasInputValue: (postForm.value.newQuestion?.trim() !== '') && (postWithQuestionMark !== null),
+                hasQuestionMark: postForm.value.newQuestion?.endsWith('?') }">?</span>
+          </p>
+        </div>
+      </ion-input>
+    
+      <span #categorySelection *ngIf="postForm.value.newQuestion?.trim() !== ''" lines="none" class="clickable category-selector" [ngClass]="{hasValue: postForm.value.communityName !== ''}">
+        
+        <ion-select      
+            class="clickable"      
+            placeholder="Select Community"                                
+            formControlName="communityName"
+            multiple="false"
+            interface="popover">
+            <ion-select-option *ngFor="let community of communities" [value]="community.name">{{ community.name }}</ion-select-option>
+        </ion-select>
+      </span>
+              
+      
+      <ion-icon
+        #submitPostIcon 
+        class="clickable"
+        [ngClass]="{'enabled': postForm?.value?.newQuestion !== '' && postForm?.value?.communityName !== ''}"
+        (click)="confirmNonEditablePost()"
+        (mouseenter)="newPostIcon = 'paper-plane'"
+        (mouseleave)="newPostIcon = 'paper-plane-outline'"
+        [name]="newPostIcon">
+      </ion-icon>
+    
+      <button type="submit" style="display: none" [disabled]="postForm.invalid || !currentUser">
+        hidden submit
+      </button>
+    
+    </form>
+  </ion-col>
+</ion-row>
+
+
+

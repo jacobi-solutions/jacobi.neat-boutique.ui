@@ -1,0 +1,36 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+
+ion-grid {
+
+    padding: 0;
+    
+    ion-col,
+    ion-list {
+        padding-bottom: 0;
+    }
+
+    .avatar-wrapper {
+        height: fit-content;
+    }
+
+    .cta-btn {
+        color: white;
+        font-weight: bold;
+
+        height: auto;
+
+        &>div {
+          margin-top: 1rem;
+          border-radius: var(--nb-border-radius);
+          padding: 1rem;
+          background: var(--nb-primary);
+
+          ion-label {
+            color: white !important;
+          }
+        }
+    }
+}

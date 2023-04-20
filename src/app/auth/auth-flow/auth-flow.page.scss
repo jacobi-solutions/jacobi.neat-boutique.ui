@@ -1,0 +1,173 @@
+
+
+.jacobi-auth-flow {
+    height: 100%;
+    width: 100%;
+
+    & > ion-grid {
+        height: 100%;
+    }
+
+    .outer-row {
+        height: 100%;
+        align-items: center;
+        display: flex;
+    }
+
+    .content-col {
+        color: grey;
+        // height: 100%;
+        // align-items: center;
+
+        // &:not(.no-hero-img) {
+        //     display: flex;
+        // }
+
+        // &.no-hero-img {
+        //     display: inline;
+        //     height: fit-content;
+        //     margin: auto 0;
+        // }
+
+        & > ion-row {
+            width: 100%; 
+            & > ion-col {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .page-heading {
+            color: grey;
+            font-size: 3rem;
+
+            .sub-heading {
+                font-size: 1.5rem;
+            }
+        }
+
+
+
+        // ============== form styles ==============
+        .form-row {
+            & > ion-col {
+                padding: 0;
+            }
+
+            .jacobi-input-field {
+                width: 100%;
+            }
+        }
+        
+        .auth-action-buttons {
+            margin-top: 2rem;
+
+            & > ion-col {
+                padding: 0;
+
+                ion-button.default-auth-btn {
+                    background: rgb(66, 135, 245);
+                    width: 100%;
+                    color: white;
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    .legal-links {
+        text-align: center;
+    }
+
+
+    // split page banner
+    .outer-row .split-page-banner {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 0;
+    
+        .img-overlay {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    }
+}
+
+
+// ============================================== facebook button (sign-in/sign-up)
+.fb-btn-wrapper {
+    img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    ion-button {
+        width: 100%;
+        height: 3.5rem;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        button {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        ion-icon {
+            margin-right: .5rem;
+            font-size: 2.5rem;
+        }
+
+        &::part(native) {
+            background: #1B77F2;
+            border-radius: 10px;
+        }
+        
+    }
+}
+
+// ============================================== apple button (sign-in/sign-up)
+.apple-btn-wrapper {
+    img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    ion-button {
+        width: 100%;
+        height: 3.5rem;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        button {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        ion-icon {
+            margin-right: .5rem;
+            font-size: 2.5rem;
+        }
+
+        &::part(native) {
+            background: #000;
+            border-radius: 10px;
+        }
+        
+    }
+}
+
+
+
+// ============================================== media queries
+@media  (max-height: 400px) {
+    .page-heading {
+        font-size: 1.5rem;
+    }
+    
+    form .auth-action-buttons {
+        margin-top: .25rem;
+    }
+}
+

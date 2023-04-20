@@ -1,0 +1,95 @@
+<ion-content class="jacobi-auth-flow jacobi-auth-flow-change-email-init">
+  <ion-grid>
+    <ion-row class="change-email-init-outer-row outer-row">
+      <ion-col
+        class="content-col"
+        [attr.size-sm]="splitScreenBgImage ? 12 : undefined"
+        [attr.size-md]="splitScreenBgImage ? 6 : undefined"
+        [attr.offset-md]="splitScreenBgImage ? 6 : undefined"
+        [attr.pull-md]="splitScreenBgImage ? 3 : undefined"
+        [attr.size-lg]="splitScreenBgImage ? 6 : undefined"
+        [attr.offset-lg]="splitScreenBgImage ? 0 : undefined"
+        [attr.pull-lg]="splitScreenBgImage ? 0 : undefined"
+      >
+        <ion-row>
+          <ion-col
+            size-sm="12"
+            size-md="12"
+            size-lg="8"
+            offset-lg="2"
+            [attr.size-xl]="    (splitScreenBgImage ? 8  : 6)"
+            [attr.offset-xl]="  (splitScreenBgImage ? 2  : 3)"
+          >
+            <ion-row class="page-heading">
+              <ion-col>
+                <div *ngIf="!(isSuccess || isFailure)">
+                  Delete Account
+                  <p class="sub-heading">
+                    For security reasons, we'll send you a sign in link to
+                    verify your account. Click below to start the
+                    process.
+                  </p>
+                </div>
+                <div *ngIf="isSuccess">Success</div>
+                <div *ngIf="isFailure">Something went wrong</div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="isSuccess">
+              <ion-col>
+                {{ successMessage }}
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="isFailure">
+              <ion-col>
+                {{ failureMessage }}
+              </ion-col>
+            </ion-row>
+    
+            <ion-row class="auth-action-buttons">
+              <ion-col>
+                <ion-row>
+                  <ion-col *ngIf="!(isSuccess || isFailure)" class="ion-margin-top send-btn-wrapper">
+                    <ion-button (click)="initDeleteAccountRequest()" part="button" [disabled]="false" class="jacobi-button auth-primary" fill="clear">
+                      Send
+                    </ion-button>
+                  </ion-col>
+                  <ion-col *ngIf="isFailure" class="ion-margin-top resend-btn-wrapper">
+                    <ion-button (click)="initDeleteAccountRequest()" part="button" [disabled]="false" class="jacobi-button auth-primary" fill="clear">
+                      Resend Link
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-margin-top cancel-btn-wrapper">
+                    <ion-button (click)="dismiss()"  part="button" class="jacobi-button ghost-auth-secondary" fill="clear">
+                      Cancel
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+
+          </ion-col>
+        </ion-row>
+
+        
+      </ion-col>
+
+      <!-- split-screen -->
+      <ion-col
+        *ngIf="splitScreenBgImage"
+        size-lg="6"
+        class="hide-lg-and-below split-page-banner"
+        [ngStyle]="{
+          'background-image': 'url(' + splitScreenBgImage + ')',
+          'background-repeat': 'no-repeat',
+          'background-position': 'center center',
+          'background-size': 'cover'
+        }"
+      >
+        <div class="img-overlay"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

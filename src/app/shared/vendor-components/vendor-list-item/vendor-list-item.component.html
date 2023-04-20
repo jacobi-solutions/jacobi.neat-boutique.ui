@@ -1,0 +1,53 @@
+<ion-grid>
+  
+  <ion-row (click)="goToVendorProfile(vendor)" class="vendor-splash-container clickable">
+    <ion-col class="vendor-splash-photo hide-md-and-below" size-sm="4" size-md="3" size-lg="3.5" size-xl="3">
+      <div class="img-wrapper">
+        <app-nb-avatar
+          [size]="'big'"
+          [borderColor]="vendor?.borderColor"
+          [imageSrc]="vendor?.avatarSourceURL || defaultImg"
+          [altStyleClass]="'as-vendor-list-item'">
+        </app-nb-avatar>
+      </div>
+    </ion-col>
+
+    <ion-col size-xs="12" size-md="9" size-lg="8.5" size-xl="9">
+      <ion-card class="vendor-info-card">
+        <ion-row>
+          <ion-col class="hide-md-and-above" size="2.5">
+              <app-nb-avatar
+                [borderColor]="vendor?.borderColor"
+                [imageSrc]="vendor?.avatarSourceURL || defaultImg"
+                [altStyleClass]="'as-vendor-list-item'">
+              </app-nb-avatar>
+          </ion-col>
+          <ion-col size="" class="ion-text-left">
+            <ion-row class="vendor-name-col">
+              <ion-col>
+                <h1 class="">{{ vendor?.name }}</h1>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <p class="categories">
+                  <span *ngFor="let category of vendor?.communities">{{ category }}</span>
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+
+        </ion-row>
+        <ion-row class="review-stars-row">
+          <ion-col class="review-stars nb-vertical-center">
+
+            <app-summed-rating class="hide-md-and-below" [numberOfReviews]="vendor?.reviewCount" [totalRating]="vendor?.reviewRatingTotal"></app-summed-rating>
+            <app-summed-rating class="start-icon-rating hide-md-and-above" [displayFlex]="false" [altStyle]="'mobile-size align-right'" [numberOfReviews]="vendor?.reviewCount" [totalRating]="[vendor?.reviewRatingTotal]"></app-summed-rating>
+              
+            <h4 >{{ vendor?.reviewCount }} {{ (vendor?.reviewCount === 1) ? 'Review' : 'Reviews' }}</h4>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

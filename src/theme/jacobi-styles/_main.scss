@@ -1,0 +1,98 @@
+
+/* ========================  Jacobi Styles  ======================== */
+@import "../../../node_modules/@jacobi-solutions/jacobi-foundation/src/theme/scss/main";
+@import "./styles/fonts";
+@import "./styles/functions";
+@import "./styles/maps";
+@import "./styles/vars";
+@import "./styles/mixins";
+@import "./styles/global-styles";
+
+
+/* auth-flow style overrides */
+@import "./auth-flow/auth-shared";
+
+
+
+// set some ionic default theme vars
+:root {
+
+
+
+  /** ============================================  primary **/
+  // --ion-color-primary: #3880ff;
+  // --ion-color-primary-rgb: 56, 128, 255;
+
+  /** ============================================  secondary **/
+  // --ion-color-secondary: #3dc2ff;
+  // --ion-color-secondary-rgb: 61, 194, 255;
+
+  /** ============================================  tertiary **/
+  // --ion-color-tertiary: #5260ff;
+  // --ion-color-tertiary-rgb: 82, 96, 255;
+
+  /** ============================================  success **/
+  // --ion-color-success: #2dd36f;
+  // --ion-color-success-rgb: 45, 211, 111;
+
+  /** ============================================  warning **/
+  // --ion-color-warning: #ffc409;
+  // --ion-color-warning-rgb: 255, 196, 9;
+
+  /** ============================================  danger **/
+  // --ion-color-danger: #eb445a;
+  // --ion-color-danger-rgb: 235, 68, 90;
+
+  /** ============================================  dark **/
+  // --ion-color-dark: #222428;
+  // --ion-color-dark-rgb: 34, 36, 40;
+
+  /** ============================================  medium **/
+  // --ion-color-medium: #92949c;
+  // --ion-color-medium-rgb: 146, 148, 156;
+
+  /** ============================================  light **/
+  // --ion-color-light: #f4f5f8;
+  // --ion-color-light-rgb: 244, 245, 248;
+}
+
+
+
+// set some ionic default theme vars
+:root {
+  /** ============================================  primary **/
+  // --ion-color-primary: #3880ff;
+  // --ion-color-primary-rgb: 56, 128, 255;
+
+  /** ============================================  secondary **/
+  // --ion-color-secondary: #3dc2ff;
+  // --ion-color-secondary-rgb: 61, 194, 255;
+
+  /** ============================================  tertiary **/
+  // --ion-color-tertiary: #5260ff;
+  // --ion-color-tertiary-rgb: 82, 96, 255;
+
+  /** ============================================  success **/
+  // --ion-color-success: #2dd36f;
+  // --ion-color-success-rgb: 45, 211, 111;
+
+  /** ============================================  warning **/
+  // --ion-color-warning: #ffc409;
+  // --ion-color-warning-rgb: 255, 196, 9;
+
+  /** ============================================  danger **/
+  // --ion-color-danger: #eb445a;
+  // --ion-color-danger-rgb: 235, 68, 90;
+
+  /** ============================================  dark **/
+  // --ion-color-dark: #222428;
+  // --ion-color-dark-rgb: 34, 36, 40;
+
+  /** ============================================  medium **/
+  // --ion-color-medium: #92949c;
+  // --ion-color-medium-rgb: 146, 148, 156;
+
+  /** ============================================  light **/
+  // --ion-color-light: #f4f5f8;
+  // --ion-color-light-rgb: 244, 245, 248;
+}

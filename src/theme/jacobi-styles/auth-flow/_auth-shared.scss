@@ -1,0 +1,104 @@
+
+// /* 
+// 	jacobi-styles vars, mixins, maps, functions, etc. can be used without the `@import "../main"`	trying `@import "../main"` from jacobi-styles will create a circular dependency error
+// */
+
+// @use "sass:math";
+
+
+// .jacobi-auth-flow {
+    
+//     & > ion-grid {
+
+//         .split-page-banner .img-overlay {
+//             background: linear-gradient(
+//                 var(--nb-deep-emerald-75-opacity), 
+//                 var(--nb-deep-emerald-75-opacity)
+//             );
+//         }
+
+//         .page-heading {
+//             color: var(--nb-primary) !important;
+//             font-size: 3rem;
+//             font-family: 'Kabel' !important;
+//             @media  (max-height: 400px) {
+//                 font-size: 1.5rem !important;
+//             }
+
+//             @include screen-sm-and-below {
+//                 font-size: 2rem !important;
+//             }
+//         }
+
+
+//         .jacobi-input-field {
+//             .grid-container {
+//                 border: 1px solid var(--nb-border-color);
+//                 border-radius: 10px;
+//                 box-shadow: 0 0 10px 1px #f8f8f8 !important;
+//             }
+
+//             ion-input {
+//                 --color: var(--nb-primary);
+//             }
+
+//             ion-label {
+//                 --color: var(--nb-light-grey);
+//                 color: var(--nb-light-grey) !important;
+//                 font-size: 1.1rem;
+//                 font-weight: 500;
+//                 top: -0.5rem;
+//                 position: relative;
+//             }
+
+//             ion-icon {
+//                 --color: #{var(--nb-light-grey)};
+//                 color: var(--nb-light-grey) !important;
+//                 height: 50% !important;
+//                 margin-top: calc(25% + 5px);
+//             }
+
+//             .error-msg {
+//                 --ion-color-danger: var(--nb-primary);
+//                 margin-top: 5px;
+//             }
+//         }
+
+//         .remember-me-row {
+//             margin-top: 1rem;
+
+//             .forgot-pw {
+//                 align-items: center;
+//                 display: grid;
+//             }
+
+//             .remember-checkbox ion-label,
+//             .forgot-pw a {
+//                 color: var(--nb-primary) !important;
+//                 text-decoration: none;
+//             }
+//         }
+
+//         .no-account {
+//             color: var(--nb-primary);
+//         }
+
+//         .legal-links a {
+//             color: var(--nb-grey)
+//         }
+        
+        
+
+//     }
+
+//     // select individual sub-route pages
+//     &.jacobi-auth-flow-sign-in {}
+//     &.jacobi-auth-flow-sign-up {}
+//     &.jacobi-auth-flow-reset-pw-init {}
+//     &.jacobi-auth-flow-reset-pw-final {}
+//     &.jacobi-auth-flow-change-email-init {}
+//     &.jacobi-auth-flow-change-email-final {}
+// }
+
+
+

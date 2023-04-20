@@ -1,0 +1,40 @@
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <h2>Promo Codes</h2>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-md="3">
+      <ion-row class="multiple-choice-row">
+        <ion-col>
+          <!-- <p (click)="selectCommunity($event)">test</p> -->
+          <ion-input type="text">
+              <ion-item lines="none" class="select-wrapper">
+                <ion-icon name="logo-usd"></ion-icon>
+                <ion-label class="label-placeholder">Choose Discount</ion-label>
+                <ion-select cancelText="Cancel" okText="Done" [(ngModel)]="discountType">
+                    <ion-select-option [value]="discountTypes.FREE_3_MONTHS">3 Months Free</ion-select-option>
+                    <ion-select-option [value]="discountTypes.FREE_6_MONTHS">6 Months Free</ion-select-option>
+                    <ion-select-option [value]="discountTypes.FREE_FOREVER">Free Forever</ion-select-option>
+                </ion-select>
+            </ion-item>
+          </ion-input>
+          
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!promoCode || promoCode === ''">
+        <ion-col>
+            <app-jacobi-button (click)="createPromotionalDiscount()" [disabled]="!discountType || discountType == ''" [buttonType]="'auth-primary'">
+                  Create Promo Code
+              </app-jacobi-button>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="promoCode && promoCode !== ''">
+        <ion-col>
+            <h4>Promo Code: {{ promoCode }}</h4>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

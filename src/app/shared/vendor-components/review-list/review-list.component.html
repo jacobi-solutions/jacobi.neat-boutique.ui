@@ -1,0 +1,9 @@
+
+<ion-grid>
+  <ion-row *ngFor="let review of reviews" class="review-list-row">
+    <ion-col>
+      <app-review-item (onDelete)="onDeletedReview($event)" [review]="review"></app-review-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+

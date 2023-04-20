@@ -1,0 +1,31 @@
+
+// // $px: only number, no unit denomination
+// // Ex: px-to-rem(16) => 1rem
+// @function _get-unit-type($value) {
+//     @return str-slice($value * 0 + "", 2, -1);
+// }
+
+// @function px-to-rem($px) {
+//     $one-px: 0.063; // ~ `rem` val for 1px
+//     @return #{($px * $one-px)}rem;
+// }
+
+// Ex: unit-to-vw([px, rem]) => %vw
+@function unit-to-vw($unit) {
+    $type: _get-unit-type($unit);
+    @if($type != '') {
+        @return calc(100vw - (100vw - #{$unit}));
+    }
+    // default to px if no unit used
+    @return calc(100vw - (100vw - #{$unit}px));
+}
+
+// // Ex: unit-to-vh([px, rem]) => %vh
+// @function unit-to-vh($unit) {
+//     $type: _get-unit-type($unit);
+//     @if($type != '') {
+//         @return calc(100vh - (100vh - #{$unit}));
+//     }
+//     // default to px if no unit used
+//     @return calc(100vh - (100vh - #{$unit}px));
+// }

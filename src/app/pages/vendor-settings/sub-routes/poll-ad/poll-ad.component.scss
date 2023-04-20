@@ -1,0 +1,43 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    
+    color: var(--nb-primary) !important;
+
+    --ion-grid-width: 100%;
+    
+    padding: 0 2rem;
+    margin-bottom: 3rem;
+
+    .mobile-divider {
+        display: none;
+    }
+}
+
+@include screen-lg-and-above {
+    .live-preview-half {
+        max-width: 49%;
+    }
+}
+
+@include screen-lg-and-below {
+    ion-grid {
+        padding: 0 0.5rem;
+    }
+
+    .mobile-divider {
+        display: block;
+        width: 100%;
+
+        ion-item-divider {
+            height: 1px;
+        }
+    }
+}
+
+@include screen-sm-and-below {
+    ion-grid {
+        padding: 0;
+    }
+}

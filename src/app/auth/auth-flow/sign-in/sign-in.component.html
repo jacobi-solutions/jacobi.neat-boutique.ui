@@ -1,0 +1,190 @@
+<ion-content class="jacobi-auth-flow jacobi-auth-flow-sign-in">
+  <ion-grid>
+    <ion-row class="sign-in-outer-row outer-row">
+      <ion-col
+        class="content-col"
+        [attr.size-sm]="    (splitScreenBgImage ? 12 : undefined)"
+        [attr.size-md]="    (splitScreenBgImage ? 6  : undefined)"
+        [attr.offset-md]="  (splitScreenBgImage ? 6  : undefined)"
+        [attr.pull-md]="    (splitScreenBgImage ? 3  : undefined)"
+        [attr.size-lg]="    (splitScreenBgImage ? 6  : undefined)"
+        [attr.offset-lg]="  (splitScreenBgImage ? 0  : undefined)"
+        [attr.pull-lg]="    (splitScreenBgImage ? 0  : undefined)"
+      >
+        <ion-row>
+          <ion-col
+            size-sm="12"
+            size-md="12"
+            size-lg="8"
+            offset-lg="2"
+            [attr.size-xl]="    (splitScreenBgImage ? 8  : 6)"
+            [attr.offset-xl]="  (splitScreenBgImage ? 2  : 3)"
+          >
+            <ion-row class="page-heading">
+              <ion-col *ngIf="!(isFailure || isSuccess)"> Sign in </ion-col>
+
+              <ion-col *ngIf="isSuccess"> Success </ion-col>
+              <ion-col *ngIf="isFailure"> Something went wrong </ion-col>
+            </ion-row>
+            <ion-row *ngIf="isSuccess">
+              <ion-col>
+                {{ successMessage }}
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="isFailure">
+              <ion-col>
+                {{ failureMessage }}
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="form-row">
+              <ion-col>
+                <form
+                  (ngSubmit)="signIn()"
+                  [formGroup]="loginForm"
+                  class="form-login"
+                >
+                  <ion-row>
+                    <ion-col class="ion-margin-top email-input-wrapper">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Email</ion-label>
+                        <ion-input [formControlName]="'email'"></ion-input>
+                        <ion-icon class="form-icon" slot="end" name="mail-outline"></ion-icon>
+                      </ion-item>
+                      <div *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+                        
+                        <ion-text color="danger" *ngIf="loginForm.controls.email.errors?.['required']">
+                            Email is required.
+                        </ion-text>
+                        <ion-text color="danger" *ngIf="loginForm.controls.email.errors?.['email']">
+                          Must be a valid email address. 
+                        </ion-text>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col class="ion-margin-top password-input-wrapper">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Password</ion-label>
+                        <ion-input [type]="passwordInputType" [formControlName]="'password'"></ion-input>
+                        <ion-icon class="form-icon" slot="end" [name]="passwordEyeIcon" (click)="onTogglePasswordHide()"></ion-icon>
+                      </ion-item>
+                      <div *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+                        
+                        <ion-text color="danger" *ngIf="loginForm.controls.password.errors?.['required']">
+                            Password is required.
+                        </ion-text>
+                        <ion-text color="danger" *ngIf="loginForm.controls.password.errors?.['minLength']">
+                            Password must be at least 8 characters.
+                        </ion-text>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </form>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="remember-me-row">
+              <ion-col class="remember-checkbox">
+                <ion-checkbox [(ngModel)]="rememberMe"></ion-checkbox>
+                <ion-label>Remember me</ion-label>
+              </ion-col>
+              <ion-col class="forgot-pw clickable text-center">
+                <a [routerLink]="'/auth-flow/change-password-init'"
+                  >Forgot Password?</a
+                >
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="auth-action-buttons">
+              <ion-col>
+                <ion-row>
+                  <ion-col class="ion-margin-top sign-in-btn-wrapper">
+                    <div>
+                      <ion-button (click)="(!loginForm.invalid ? signIn() : null)" part="button" [disabled]="loginForm.invalid" class="jacobi-button auth-primary" fill="clear">
+                        Sign In
+                      </ion-button>
+                    </div>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="hasFacebookButton" class="fb-btn-wrapper">
+                  <ion-col>
+                    <ion-button
+                      (click)="signInWithFacebook()"
+                      class="facebook-sign-in-button"
+                    >
+                      <ion-icon name="logo-facebook"></ion-icon>Sign in with Facebook
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="hasAppleButton" class="apple-btn-wrapper">
+                  <ion-col>
+                    <ion-button
+                      (click)="signInWithApple()"
+                      class="apple-sign-in-button"
+                    >
+                      <ion-icon name="logo-apple"></ion-icon>Sign in with Apple
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row>
+                  <ion-col class="ion-margin-top cancel-btn-wrapper">
+                    <div>
+                      <ion-button (click)="dismiss()"  part="button" class="jacobi-button ghost-auth-secondary" fill="clear">
+                        Cancel
+                      </ion-button>
+                    </div>
+                  </ion-col>
+                </ion-row>
+
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-col>
+                  <p class="no-account text-center">
+                    Don't have an account?
+                    <strong
+                      class="clickable"
+                      [routerLink]="'/auth-flow/sign-up'"
+                      >Sign up</strong
+                    >
+                  </p>
+                </ion-col>
+
+                <p *ngIf="legalLinks" class="legal-links">
+                  By creating a account you agree to the <br /><a
+                    [routerLink]="legalLinks.termsAndConditions"
+                    >Terms and Conditions</a
+                  >
+                  and
+                  <a [routerLink]="legalLinks.privacyPolicy">Privacy Policy</a>
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <!-- split-screen -->
+      <ion-col
+        *ngIf="splitScreenBgImage"
+        size-lg="6"
+        class="hide-lg-and-below split-page-banner"
+        [ngStyle]="{
+          'background-image': 'url(' + splitScreenBgImage + ')',
+          'background-repeat': 'no-repeat',
+          'background-position': 'center center',
+          'background-size': 'cover'
+        }"
+      >
+        <div class="img-overlay"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

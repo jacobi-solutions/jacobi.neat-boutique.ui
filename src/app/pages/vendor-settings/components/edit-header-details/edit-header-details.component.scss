@@ -1,0 +1,140 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    padding: 0;
+    margin: 0;
+
+    .vendor-splash-container {       
+        .vendor-splash-photo {
+            .profile-logo-container {
+                height: 10rem;
+                width: 10rem;
+                position: relative;
+                ion-icon {
+                    position: absolute;
+                    top: 0rem;
+                    right: -1rem;
+                }
+            }
+        } 
+        
+
+        .vendor-splash-info {
+            padding: 0 !important;
+        }
+
+        .review-stars {
+            h4 {
+                margin-left: 1.5rem;
+            }
+        }
+
+        .btn-row {
+            display: block;
+
+            .my-list-btn {
+                margin-left: 2rem;
+            }
+        }
+
+        .categories-wrapper {
+            position: relative;
+            max-width: fit-content;
+
+            .categories-edit-action {
+                position: absolute;
+                right: -1.5rem;
+                top: 0;
+                z-index: 10;
+            }
+
+            .categories {
+                font-weight: 300 !important;
+                $grey: var(--nb-grey);
+                span {
+                    padding: 0 0.25rem;
+                    border-right: 1px solid var(--nb-grey-15-opacity);
+
+                    &:first-of-type {
+                        padding-left: 0;
+                    }
+
+                    &:last-of-type {
+                        border-right: none;
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ========================= Mobile =============================
+
+
+    @include screen-md-and-below {
+        .vendor-splash-container {
+
+            p,
+            h4 {
+                font-size: 1rem;
+            }
+
+            .vendor-splash-photo {
+                .profile-logo-container {
+            
+                    p,
+                    h4 {
+                        font-size: 1rem;
+                    }
+                    app-nb-avatar {
+                        margin: auto;
+                    }
+                    margin: auto;
+                    
+                }
+            }
+
+            .vendor-splash-info {
+                padding: 0 !important;
+
+                .vendor-name {
+                    font-size: 2rem;
+                }
+            }
+
+            .hide-md-and-above.social-icons-row {
+                margin-bottom: 2rem;
+
+                ion-icon {
+                    font-size: 2rem;
+                }
+
+                .social-icons {
+                    align-items: center;
+                }
+            }
+        }
+    }
+}
+
+
+
+@include screen-sm-and-below {
+    .vendor-splash-container {
+        .vendor-splash-info {
+            text-align: center;
+
+            .review-stars {
+                ion-col {
+                    justify-content: center;
+                }
+            }
+        }
+
+        .hide-md-and-above.social-icons-row .social-icons,
+        .categories-wrapper-row {
+            justify-content: center;
+        }
+    }
+}

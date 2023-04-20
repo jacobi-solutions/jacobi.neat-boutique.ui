@@ -1,0 +1,24 @@
+
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose($event)" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice">Must be signed in to perform this action.</p>
+        <div class="action-content-wrapper">
+          <app-jacobi-button class="pointy-cursor" [buttonType]="'green-primary mobile-height-md'" (click)="goToSignIn()">
+            <span class="btn-text">Sign in</span>
+          </app-jacobi-button>
+          <p class="text-center no-accnt">
+            Don't have an account?
+            <strong class="pointy-cursor" (click)="goToSignUp()"><span class="btn-text">Sign up</span></strong>
+          </p>
+          <!-- <p class="text-center">Have an account? <strong class="pointy-cursor" (click)="goToSignIn()">Sign in</strong></p> -->
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

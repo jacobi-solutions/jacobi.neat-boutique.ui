@@ -1,0 +1,22 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <!-- <ion-img src="https://storage.googleapis.com/neatboutique.com/images/loci_long_1024.png"></ion-img> -->
+      <ion-icon class="close-icon clickable" (click)="onClose()" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <div class="text-notice" [innerHtml]="confirmationInnerHTML"></div>
+        <div class="action-content-wrapper">
+          <div class="action-btn">
+            <app-jacobi-button (click)="onConfirm()" [buttonType]="'green-primary mobile-height-md'"><span class="btn-text">{{ confirmButton.label }}</span></app-jacobi-button>
+          </div>
+          <div *ngIf="showCancel" class="action-btn">
+            <app-jacobi-button (click)="onClose()" [buttonType]="'ghost-green-primary mobile-height-md'"><span class="btn-text">Cancel</span></app-jacobi-button>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

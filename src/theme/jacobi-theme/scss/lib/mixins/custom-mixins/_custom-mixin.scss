@@ -1,0 +1,139 @@
+
+
+@mixin link-basic {
+    // text-decoration: underline;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  @mixin clickable {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  @mixin not-clickable {
+    text-decoration: none;
+    &:hover {
+      cursor: no-drop;
+    }
+  }
+  
+  @mixin input-shadows {
+    box-shadow: 0 0 10px 15px var(--nb-black-50-opacity) !important;
+  }
+  
+  // @mixin subtle-shadow {
+  //   box-shadow: 0 0 15px 2px var(--nb-black-50-opacity);
+  // }
+  
+  // text colors
+  @mixin text-grey {
+    color: var(--nb-dark-grey);
+  }
+  
+  @mixin color-opacity($color: var(--nb-deep-emerald), $opacity: 1.0) {
+    color: rgba($color, $opacity);
+  }
+  
+  // text alignment
+  @mixin text-center {
+    & {
+      text-align: center;
+    }
+  }
+  @mixin text-left {
+    & {
+      text-align: left;
+    }
+  }
+  @mixin text-right {
+    & {
+      text-align: right;
+    }
+  }
+  
+  @mixin text-bold {
+    font-weight: bold;
+  }
+  
+  @mixin truncate-text($width) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: $width;
+  }
+  
+  // @mixin p-basic {
+  //   font: font-sizes(p) font-families(default);
+  // }
+  
+  // @mixin input-styles($withBorder: true, $withBoxShadow: true, $height: 4rem) {
+  //   & {
+  //     color: var(--nb-light-grey);
+  //     padding: 1rem;
+  //     padding-left: 0.35rem !important;
+  //     font-size: 1.5rem;
+  //     // margin-top: 1rem;
+  //     background-color: transparent !important;
+  //     @if $withBorder {
+  //       border: var(--nb-border) !important;
+  //       border-radius: 10px;
+  //     }
+  //     @if $withBoxShadow {
+  //       box-shadow: 0 0 10px 1px #f8f8f8 !important;
+  //     }
+      
+  //     height: $height;
+  //     width: 100%;
+  
+  //     &:focus {
+  //       outline: none !important;
+  //       @if $withBorder {
+  //         border-width: 2px !important;
+  //         border-style: solid !important;
+  //         border-color: var(--nb-primary) !important;
+  //       }
+        
+  //     }
+  //   }
+  // }
+  
+  @mixin not-selectable-text {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+  }
+  
+  // @mixin label-as-placeholder(
+  //   $primaryColor: var(--nb-primary),
+  //   $secondaryColor: var(--nb-light-grey),
+  //   $top: 1rem,
+  //   $left: 0.85rem,
+  //   $transformTop: 0.3rem,
+  //   ) {
+  //   .input-wrapper ion-input,
+  //   .select-wrapper,
+  //   .input-wrapper ion-textarea {
+  //     ion-label {
+  //         display: inline-block;
+  //         position: absolute;
+  //         color: rgba($primaryColor, 0.5);
+  //         // white-space: nowrap;
+  //         z-index: -1;
+  //         top: $top;
+  //         left: $left;
+  //         transition: all 0.15s;
+  //     }
+  
+  //     &.hasValue ion-label {
+  //         top: $transformTop;
+  //         font-size: 0.8rem;
+  //         color: $secondaryColor;
+  //     }
+  //   }
+  // }
+  
+  

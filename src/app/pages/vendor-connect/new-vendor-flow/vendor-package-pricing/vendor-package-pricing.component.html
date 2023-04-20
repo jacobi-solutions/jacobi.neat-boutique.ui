@@ -1,0 +1,23 @@
+<ion-content class="vendor-connect">
+
+    <ion-grid class="vendor-choose-pay-method">
+        <ion-row class="vendor-flow-container">
+          <ion-col
+            size-xs="12" 
+            size-md="6" offset-md="6" pull-md="3"
+            size-lg="6" offset-lg="0" pull-lg="0"
+            class="form-col">
+            <app-payment [isRevise]="false" (OnSubscribe)="createStripeCheckout($event)" (OnCancel)="cancel()" ></app-payment>
+          </ion-col>
+          <ion-col size-lg="6" class="web banner ion-align-items-center ion-text-center">
+            <ion-row class="vendor-flow-progress">
+                <ion-col size="6">
+                  <div class="indicator"></div>
+                  <div class="indicator"></div>
+                  <div class="indicator active"></div>
+                </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

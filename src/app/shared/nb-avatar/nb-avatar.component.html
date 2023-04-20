@@ -1,0 +1,19 @@
+
+<ion-grid #avatarTemplate>
+  <ion-row class="ion-justify-content-start ion-align-items-start avatar-wrapper {{ altStyleClass }}">
+    <ion-col class="avatar-col" [ngClass]="{ 'only-avatar': !username && !secondaryText }">
+      <ion-avatar [ngClass]="{'big': size === 'big', 'extra-small': size === 'extra-small'}" [ngStyle]="{'border-color': borderColor}">
+        <img [src]="imageSrc || defaultProfileImg"> 
+      </ion-avatar>
+
+      <ion-icon class="google-place-default" name="business-outline"></ion-icon>
+
+      <div class="username-wrapper ion-text-left">
+        <p *ngIf="username" class="username">{{ username }} <span class="tertiary-text" *ngIf="tertiaryText">{{ tertiaryText }}</span></p>
+        <p #customColor *ngIf="secondaryText" class="secondary-text">{{ secondaryText }}</p>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+

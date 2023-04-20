@@ -1,0 +1,31 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+    .promo-code-row {
+        font-size: 1.1rem;
+        text-align: center;
+        color: var(--nb-primary) !important;
+        & > a {
+            text-decoration: underline !important;
+            @include link-basic;
+            color: var(--nb-primary);
+        }
+    }
+
+    .flow-title-row {
+        color: var(--nb-primary) !important;
+        h1 {
+            font-size: 3rem !important;
+            font-family: font-families(kabel) !important;
+            @media  (max-height: 400px) {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        // p {
+            
+        // }
+    }
+

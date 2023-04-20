@@ -1,0 +1,57 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.google-places-selection-row {
+    ion-card ion-label {
+        color: var(--nb-primary);
+        font-weight: bold;
+    }
+}
+
+.business-search-results {
+    .business-result-item {
+        ion-card {
+            margin: 0;
+            box-shadow: none;
+            @include clickable;
+
+            &:hover {
+                background: var(--nb-primary-quarter-opacity);
+                border-radius: var(--nb-border-radius);
+            }
+        }
+
+        ion-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--nb-primary);
+        }
+        
+    }
+}
+
+
+.selected-business {
+    & > p {
+        text-align: center;
+        margin: 1rem 0;
+
+        .continue-prompt {
+            font-weight: bold;
+            color: var(--nb-primary);
+        }
+    }
+
+    ion-card {
+        ion-card-header ion-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--nb-primary);
+        }
+
+        ion-card-content address {
+            font-weight: bold;
+            font-style: inherit;
+        }
+    }
+}

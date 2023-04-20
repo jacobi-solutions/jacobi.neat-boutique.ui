@@ -1,0 +1,28 @@
+
+
+.remember-me-row {
+    padding: 0 5px;
+
+    .remember-checkbox {
+        display: flex;
+        align-items: center;
+    
+        ion-label {
+            margin-left: 0.5rem;
+        }
+    }
+    
+    .forgot-pw {
+        text-align: right;
+
+        a {
+            display: inline-block;
+            color: grey;
+        }
+        
+    }
+}
+
+.no-account {
+    text-align: center;
+}

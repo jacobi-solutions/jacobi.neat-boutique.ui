@@ -1,0 +1,136 @@
+<!-- <div *ngIf="photoUrl; else photoPlaceholder" class="photo">
+  <img alt="photo" [src]="photoUrl"/>
+</div> -->
+
+
+<ion-grid fixed>
+  <ion-row *ngIf="!imageSource">
+    <ion-col class="preview-col">
+      <ion-row class="preview-wrapper-row">
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <h3>Preview</h3>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <div [ngClass]="{'circular': isCircular}" class="photo placeholder preview-crop">
+                  <p>Preview</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    
+      <ion-row>
+        <ion-col>
+          <div class="ref-img clickable placeholder" (click)="imgFile.click()">
+            <ng-content></ng-content>
+          </div>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <div class="select-photo-input-wrapper">
+            <app-jacobi-button [buttonType]=" 'auth-primary' " (click)="imgFile.click()"><span class="btn-text">Select Image</span></app-jacobi-button>
+            <input type="file" #imgFile [multiple]="false" (change)="selectImg($event)" style="display:none"/>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-row *ngIf="loadingImg">
+    <ion-col class="preview-col">
+      <ion-row class="preview-wrapper-row">
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <h3>Preview</h3>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <div class="photo placeholder preview-crop">
+                  <p>Preview</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      
+
+      
+
+      <ion-row>
+        <ion-col>
+          <div class="ref-img clickable placeholder" (click)="imgFile.click()">
+            <p>Loading image...</p>
+            <div class="spinner-wrapper">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <div class="select-photo-input-wrapper">
+            <app-jacobi-button [buttonType]=" 'auth-primary' " (click)="imgFile.click()"><span class="btn-text">Select Image</span></app-jacobi-button>
+            <input type="file" #imgFile [multiple]="false" accept="image/*" capture="false" (change)="selectImg($event)" style="display:none"/>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+
+  </ion-row>
+
+
+  <ion-row *ngIf="imageSource">
+    <ion-col class="preview-col">
+      
+      <ion-row class="live preview-wrapper-row">
+        <ion-col class="">
+          <ion-row>
+            <ion-col>
+              <div [ngClass]="{'circular': isCircular, 'not-circular': !isCircular}" class="live photo preview-crop">
+                <img [src]="croppedImagePreview" class="img-preview">
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <div class="select-photo-input-wrapper upload-btn">
+                <app-jacobi-button [buttonType]=" 'auth-primary' " (click)="saveCroppedImage()">Upload Photo</app-jacobi-button>
+                <input type="file" #imgFile [multiple]="false" (change)="selectImg($event)" style="display:none"/>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div class="ref-img photo-image-cropper">
+            <img class="reference-img" #referenceImage [src]="imageSource" crossorigin>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div class="select-photo-input-wrapper">
+            <app-jacobi-button [buttonType]=" 'ghost-green-primary' " (click)="imgFile.click()"><span class="btn-text">Change Image</span></app-jacobi-button>
+            <input type="file" #imgFile [multiple]="false" (change)="selectImg($event)" style="display:none"/>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>

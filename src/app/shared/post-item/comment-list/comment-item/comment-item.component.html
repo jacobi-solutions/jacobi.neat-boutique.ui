@@ -1,0 +1,26 @@
+<ion-grid *ngIf="!isDeleted">
+  <ion-row (mouseenter)="showMoreOptions = true" (mouseleave)="showMoreOptions = false">
+    <ion-col>
+      <app-nb-avatar
+        (click)="goToConsumerProfilePage(comment.author)"
+        [style]="'comment-style'"
+        [borderColor]="comment.author.borderColor"
+        [username]="comment.author.name  +' '+ (comment.localLastUpdated| date: 'short')"
+        [secondaryText]="comment.body"
+        [imageSrc]="comment.author.avatarSourceURL"
+        ></app-nb-avatar>
+    </ion-col>
+
+    <ion-col size="1" class="liked-wrapper hide-md-and-below">
+      <div *ngIf="!isAuthor || !showMoreOptions"></div>
+      <ion-icon *ngIf="showMoreOptions && isAuthor" class="options-icon" name="ellipsis-vertical" (click)="presentCommentOptions($event)"></ion-icon>
+      <ion-icon class="like-icon" [name]="isLiked ? 'heart' : 'heart-outline'" (click)="toggleLikeComment()"></ion-icon>
+    </ion-col>
+
+    <ion-col size="3" class="liked-wrapper hide-md-and-above">
+      <div></div>
+      <ion-icon *ngIf="isAuthor" class="hide-md-and-above options-icon" name="ellipsis-vertical" (click)="presentCommentOptions($event)"></ion-icon>
+      <ion-icon class="like-icon" [name]="isLiked ? 'heart' : 'heart-outline'" (click)="toggleLikeComment()"></ion-icon>
+    </ion-col>
+  </ion-row>      
+</ion-grid>

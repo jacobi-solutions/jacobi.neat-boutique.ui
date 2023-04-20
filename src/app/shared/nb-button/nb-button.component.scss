@@ -1,0 +1,186 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.nb-button {
+    letter-spacing: .1px !important;
+    border-radius: var(--nb-border-radius) !important;
+    --border-radius: var(--nb-border-radius) !important;
+}
+
+// alt styles
+.nb-button.min-padding {
+    font-size: .75rem !important;
+    height: 2rem;
+    margin-inline: 0;
+}
+
+.nb-button.paragraph {
+    font-size: 1.1rem !important;
+}
+
+.nb-button.p-height {
+    height: 2rem;
+}
+
+.nb-button.width-fit-content {
+    max-width: fit-content !important;
+}
+
+@for $i from 1 through 10 {
+    .nb-button.width-#{$i * 10} {
+      width: (($i*10) + 0%) !important;
+    }
+  }
+
+.nb-button.text-light-grey {
+    color: var(--nb-light-grey);
+}
+
+.nb-button.text-left {
+    &::part(native) {
+        padding-left: 0 !important;
+        text-align: left;
+    }
+}
+
+// button types
+.white-primary {
+    --border-style: solid !important;
+    --border-width: var(--nb-border-width) !important;
+    --border-color: var(--nb-border-color) !important;
+    --box-shadow: 0 0 10px 10px var(--nb-box-shadow-color) !important;
+    --background: white !important;
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+    color: var(--nb-light-grey) !important;
+}
+
+.white-secondary {
+    --border-style: solid !important;
+    --border-width: var(--nb-border-width) !important;
+    --border-color: #{var(--nb-border-color)} !important;
+    --box-shadow: 0 0 10px 10px var(--nb-box-shadow-color) !important;
+    --background: white !important;
+    color: var(--nb-primary) !important;
+    font-size: 1.1rem !important;
+    height: 3.5rem;
+}
+
+.white-secondary-md {
+    @extend .white-secondary;
+    font-size: 1.5rem !important;
+}
+
+.clear-primary {
+    --background-color: transparent !important;
+    background-color: transparent !important;
+    --border-width: var(--nb-border-width) !important;
+    --border-style: solid !important;
+    --border-color: white !important;
+    --border-radius: var(--nb-border-radius);
+    color: white;
+    --ion-text-color: white;
+    font-weight: bold;
+}
+
+.green-primary {
+    color: white;
+    background-color: var(--nb-primary);
+    border-radius: var(--nb-border-radius);
+    width: 100%;
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+}
+
+.green-secondary {
+    background-color: var(--nb-deep-emerald) !important;
+    color: white;
+    border-radius: var(--nb-border-radius);
+    height: 3rem;
+    font-size: 1.1rem !important;
+    width: 100%;
+}
+
+.green-secondary-md {
+    @extend .green-secondary;
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+}
+
+.auth-primary {
+    width: 100%;
+    color: white;
+    background-color: var(--nb-primary);
+    border-radius: var(--nb-border-radius);
+
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+}
+
+.auth-secondary {
+    color: white;
+    opacity: .5;
+    width: 100%;
+    background-color: var(--nb-primary);
+    border-radius: var(--nb-border-radius);
+
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+}
+
+// ghost button styles
+
+.ghost-white {
+    color: white;
+    border: 1px solid white;
+    border-radius: var(--nb-border-radius);
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+    width: 100%;
+}
+
+.ghost-green-primary {
+    color: var(--nb-primary);
+    border: 1px solid var(--nb-primary);
+    border-radius: var(--nb-border-radius);
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+    width: 100%;
+}
+
+.ghost-green-secondary {
+    color: var(--nb-deep-emerald);
+    border: 1px solid var(--nb-deep-emerald);
+    border-radius: var(--nb-border-radius);
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+    width: 100%;
+}
+
+.ghost-auth-secondary {
+    color: rgba(var(--nb-primary), 0.5);
+    border: 1px solid rgba(var(--nb-primary), 0.5);
+    border-radius: var(--nb-border-radius);
+    font-size: 1.5rem !important;
+    height: 3.5rem;
+    width: 100%;
+}
+
+
+.nb-button.secondary {
+    width: fit-content !important;
+    font-size: 1.1rem !important;
+    height: 3.5rem;
+}
+
+.nb-button.hover-auth:hover {
+    background-color: var(--nb-primary);
+}
+
+// ===================== Mobile =======================
+
+@include screen-md-and-below {
+    .mobile-text-md {
+        font-size: 1rem !important;
+    }
+}

@@ -1,0 +1,40 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { empty, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { AccountsService } from 'src/app/services/accounts.service';
+import { CurrentUserDisplay } from '../models/current-user-display';
+@Injectable({ providedIn: 'root' })
+export class VendorGuard implements CanActivate {
+  private _currentUser: CurrentUserDisplay;
+    constructor(private router: Router, private _accountsService: AccountsService) {
+
+      this._accountsService.currentUserSubject.subscribe((currentUser: CurrentUserDisplay) => {
+        if(currentUser) {
+           this._currentUser = currentUser;
+        }
+      });
+    }
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+        let redirect = route.data["redirect"] as string;
+
+        const promise = new Promise<boolean | UrlTree>((resolve, reject) => {
+          if(this._currentUser?.vendor?.hasVendorSubscription) {
+            resolve(true);
+          } else {
+            this._accountsService.accountsHaveBeenLoadedSubject.subscribe((accountsHaveBeenLoaded) => {
+              if(accountsHaveBeenLoaded) {
+                if(this._currentUser?.vendor?.hasVendorSubscription) {
+                  resolve(true);
+                } else {
+                  resolve(this.router.parseUrl(redirect));
+                }
+              }
+            });
+          }
+        });
+        
+        return promise;
+    }
+
+}

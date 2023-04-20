@@ -1,0 +1,47 @@
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row class="forum-header">
+      <ion-col class="nb-vertical-center">
+        <ion-icon [name]="category?.icon + '-sharp'" [ngStyle]="{color: category?.hexColor}"></ion-icon>
+        &nbsp;
+        <app-jacobi-button [buttonType]="'white-primary'">
+          {{ category?.name }}
+        </app-jacobi-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col *ngIf="vendorsHaveLoaded; else elseShowLoadSpinner">
+        <ion-row *ngFor="let vendor of vendors">
+          <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
+            <app-vendor-list-item [vendor]="vendor"></app-vendor-list-item>
+          </ion-col>
+        </ion-row>
+        
+    
+        <ion-row *ngIf="showLoadMore">
+          <ion-col (click)="loadMoreVendors()">
+            <app-jacobi-button [buttonType]="'ghost-green-secondary'">
+              Load more
+            </app-jacobi-button>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    
+  </ion-grid>
+
+
+  <app-nb-footer></app-nb-footer>
+</ion-content>
+
+<!-- Crescent loader -->
+<ng-template #elseShowLoadSpinner>
+  <ion-col>
+    <div class="load-spinner-wrapper">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </ion-col>
+</ng-template>

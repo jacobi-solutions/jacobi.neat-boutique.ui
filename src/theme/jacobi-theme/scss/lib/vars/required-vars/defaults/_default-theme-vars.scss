@@ -1,0 +1,56 @@
+@use "sass:map";
+@import '../../../functions/utility';
+
+// =================================================== colors
+// $colors-map: (
+//     primary: #C22125,
+//     secondary: #0a004c,
+//     _white: #fff,
+//     _black: #000,
+//     _grey: #707070,
+// );
+
+// // =================================================== padding
+// $padding-values: (
+//     default: px-to-rem(5)
+// );
+
+
+// =================================================== font styles
+// target font-size with a base 16px
+// https://nekocalc.com/px-to-rem-converter 
+// http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
+// $font-sizes-map: (
+//     small:  px-to-rem(8),   // ~8px
+//     big:    px-to-rem(42),  // ~42px
+//     p:      px-to-rem(16),  // ~16px
+//     h1:     px-to-rem(30),  // ~30px
+//     h2:     px-to-rem(24),  // ~24px
+//     h3:     px-to-rem(20),  // ~20px
+//     h4:     px-to-rem(18),  // ~18px
+// );
+
+//--
+// $fonts-map: (
+//     default: 'Helvetica',
+// );
+
+
+// =================================================== media screen widths
+$screen-widths-map: (
+    mobile: 820px,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+);
+
+
+// =================================================== misc.
+
+// input values for SCSS calculations
+// $input-height: 2.5;
+// $textarea-height: 6;
+// $input-size: 1.5;
+// $icon-input-size: 1.8;
+

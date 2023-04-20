@@ -1,0 +1,100 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.reviews-container {
+    .review-subject {
+        color: var(--nb-light-grey);
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .review-body {
+        color: var(--nb-light-grey);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    ion-card {
+        margin: 0;
+        padding: 1rem;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--nb-border-color);
+        box-shadow: 0 0 10px 10px var(--nb-box-shadow-color);
+    }
+    ion-avatar {
+        margin-left: 1rem;
+        img {
+            border-style: solid;
+            border-width: 2px;
+            border-color: var(--nb-orange);
+        }
+    }
+}
+
+
+.review-item-wrapper {
+    ion-icon {
+        font-size: $icon-md-size;
+    
+        &.options-icon {
+            color: var(--nb-dark-grey);
+            visibility: hidden;
+
+            &.show-options {
+                visibility: visible;
+            }
+            
+        }
+
+        &.show-options-mobile {
+            visibility: visible !important;
+        }
+        
+    }
+
+    &:hover {
+        ion-icon.options-icon {
+            visibility: visible;
+        }
+    }
+
+    // .review-stars {
+    //     .text-only-rating {
+    //         display: none;
+    //     }
+    // }
+}
+
+// ====================== Mobile ===============================
+@include screen-md-and-below  {
+    .hide-md-and-above {
+        padding: 0;
+
+        ion-card {
+            margin: 0;
+        }
+
+        // .review-stars {
+        //     .start-icon-rating {
+        //         display: none;
+        //     }
+    
+        //     .text-only-rating {
+        //         display: block !important;
+        //         font-size: 1rem;
+        //         color: var(--nb-yellow);
+        //         font-weight: bold;
+        //         text-align: center;
+        //     }
+        // }
+
+        .options-icon {
+            font-size: 1.5rem;
+        }
+
+        .review-body {
+            font-size: 1rem;
+        }
+    }
+    
+}

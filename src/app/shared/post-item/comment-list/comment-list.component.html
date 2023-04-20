@@ -1,0 +1,45 @@
+
+<ion-row>
+  <ion-col>
+    <ion-row *ngFor="let comment of shownComments" class="comment-row">
+      <ion-col>
+        <app-comment-item [comment]="comment" [isDemo]="isDemo" [reportStatusToParentCallback]="updateCommentStatusFromChildCallback()"></app-comment-item>
+      </ion-col>
+    </ion-row>
+  
+    <ion-row *ngIf="post.comments?.length > minCommentToShow">
+      <ion-col>
+        <app-jacobi-button class="btn-show-all" (click)="toggleShowAll()" [buttonType]="'clear-primary'" [altStyle]="'text-light-grey paragraph text-left'">{{ viewRangeText }}</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="post.hasAnswered" class="form-new-comment">
+      <ion-col>
+        <div class="user-new-comment-form">
+          <app-nb-avatar 
+            [borderColor]="currentUser?.consumer.borderColor"
+            [imageSrc]="currentUser?.consumer.avatarSourceURL">
+          </app-nb-avatar>
+
+          <form (ngSubmit)="addNewComment()" [formGroup]="commentForm">
+            <ion-item class="input-wrapper">
+              
+              <ion-textarea #newComment class="no-border" formControlName="newComment" (ngModelChange)="onNewCommentChange()" required [ngClass]="{ hasValue: commentForm.value.newComment !== '' }">
+                <ion-label>Type a new comment</ion-label>
+              </ion-textarea>
+            </ion-item>
+
+            <ion-icon class="{{ submitIcon }}"
+              [ngClass]="{'paper-plane': commentForm.value.newComment}"
+              (click)="addNewComment()"
+              (mouseenter)="submitIcon = 'paper-plane'"
+              (mouseleave)="submitIcon = 'paper-plane-outline'"
+              [name]="submitIcon"></ion-icon>
+                
+            <button type="submit" style="display:none" [disabled]="commentForm.invalid">hidden submit</button>
+        </form>
+          </div>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>

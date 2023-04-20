@@ -1,0 +1,91 @@
+
+
+
+<ion-content>
+
+  <ion-row>
+    <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
+      <ion-row class="big-button-container">
+        <ion-col size="4">
+          <ion-card class="ion-text-center action-button-card">
+            <ion-card-header class="ask" (click)="goToCommunityPage()">
+              <ion-icon class="big-icons" src="../../../assets/icons/Question.svg"></ion-icon>
+              <ion-card-title class="major-category-titles">Ask</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="ion-text-center action-button-card">
+            <ion-card-header class="answer" (click)="goToCommunityPage()">
+              <ion-icon class="big-icons"  src="../../../assets/icons/Connect.svg"></ion-icon>
+              <ion-card-title class="major-category-titles">Answer</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card class="ion-text-center action-button-card">
+            <ion-card-header class="browse" (click)="goToBrowsePage()">
+              <ion-icon class="big-icons"  src="../../../assets/icons/Eye.svg"></ion-icon>
+              <ion-card-title class="major-category-titles">Browse</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-row class="prompt-container-row">
+    <ion-col class="prompt-container-col">
+      <div class="prompt-container">
+        <app-prompt class="question-prompt" #questionPrompt [title]="'Ask a Question'"
+          [description]="'Loci allows you to ask locals in your area where the best place is for the experience you’re wanting to have.'">
+          <app-post-question class="bring-to-front" (onPost)="goToCommunityPage()" (click)="setPromptInteraction()"></app-post-question>
+        </app-prompt>
+    
+        <app-prompt class="answer-prompt" #answerPrompt [title]="'Answer Questions'"
+          [description]="'Let others know by answering their question with the name of the local business that you think would be a great fit for what they are looking for.'">
+          <app-post-item *ngIf="currentPromptPost" [post]="currentPromptPost" (click)="setPromptInteraction()"></app-post-item>
+        </app-prompt>
+      
+        <app-prompt class="vendor-prompt" #vendorPrompt [title]="'Browse Local Businesses'">
+          <app-vendor-list-item *ngIf="currentPromptVendor" [vendor]="currentPromptVendor"></app-vendor-list-item>
+        </app-prompt>
+      </div>
+    </ion-col>
+  </ion-row>
+  
+  
+
+  <ion-row *ngIf="reviews">
+    <ion-col class="ion-text-center">
+    <h2>Recent Reviews</h2>
+    </ion-col>
+  </ion-row>
+  <ion-row class="prompt-container-row">
+    <ion-col class="prompt-container-col">
+      <div class="review-prompt-container">
+        <app-prompt class="review-prompt" #reviewPrompt1>
+          <app-review-item *ngIf="review1" [review]="review1" (click)="setReviewsInteraction()"></app-review-item>
+        </app-prompt>
+        <app-prompt class="review-prompt" #reviewPrompt2>
+          <app-review-item *ngIf="review2" [review]="review2" (click)="setReviewsInteraction()"></app-review-item>
+        </app-prompt>
+        <app-prompt class="review-prompt" #reviewPrompt3>
+          <app-review-item *ngIf="review3" [review]="review3" (click)="setReviewsInteraction()"></app-review-item>
+        </app-prompt>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="promoteMyBusinessLabel !== ''">
+    <ion-col class="ion-text-center">
+      <ion-button (click)="promoteMyBusiness()" size="large" class="promote-my-business-button">
+        {{ promoteMyBusinessLabel }}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+       
+  <app-nb-footer></app-nb-footer>
+</ion-content>
+

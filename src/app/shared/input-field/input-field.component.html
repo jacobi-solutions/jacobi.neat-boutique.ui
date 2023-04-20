@@ -1,0 +1,20 @@
+<ion-row class="input-container {{ altStyle }}">
+  <ion-col class="ion-margin-top">
+      <div class="input-wrapper" [formGroup]="formGroupInstance">
+          <ion-icon *ngIf="icon" class="clickable" [name]="icon"></ion-icon>
+          <ion-input
+            [ngClass]="{hasValue: formGroupInstance?.value[inputName], 'with-icon': icon }"
+            [formControlName]="inputName"
+            [type]="inputType || 'text'"
+            [value]="value || null">
+              <ion-label>{{ label }}</ion-label>
+          </ion-input>
+      </div>
+      
+      <div *ngIf="invalidInputWarnings && inputControl.invalid && inputControl.touched" class="alert alert-danger">
+          <div *ngFor="let invalidInput of invalidInputWarnings">
+            <div *ngIf="inputControl.errors[invalidInput.errorType]" [innerHtml]="invalidInput.warning"></div>
+          </div>
+      </div>
+  </ion-col>
+</ion-row>

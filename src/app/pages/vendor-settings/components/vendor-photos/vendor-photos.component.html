@@ -1,0 +1,23 @@
+<ion-grid fixed class="photos-container">
+  <!-- web -->
+  <ion-row>
+    <ion-col size-xs="6" size-lg="3" class="photo-col-wrapper" *ngFor="let photo of vendorPhotos | keyvalue; index as i;">
+      <!-- <div *ngIf="photo.value" class="delete-btn-wrapper">
+        <ion-icon class="photo-delete-action delete-action" name="close-circle-outline" (click)="showUploadPhotoModal(i)"></ion-icon>
+      </div> -->
+      <div *ngIf="photo.value" class="vendor-photo position-{{i}}">
+        <img alt="photo" [src]="photo.value"/>
+      </div>
+      <div *ngIf="!photo.value" (click)="showUploadPhotoModal(i)" class="vendor-photo placeholder">
+        <ion-icon name="cloud-upload"></ion-icon>
+        <p>Add photo</p>
+      </div>
+
+      <div class="edit-btn-wrapper">
+        <ion-icon class="photo-edit-action edit-action" name="create-outline" (click)="showUploadPhotoModal(i)"></ion-icon>
+      </div>
+    </ion-col>
+  </ion-row>
+
+</ion-grid>
+

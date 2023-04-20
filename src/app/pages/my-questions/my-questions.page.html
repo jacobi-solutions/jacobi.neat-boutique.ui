@@ -1,0 +1,23 @@
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col class="hero-img-wrapper">
+        <div class="hero-section-image">
+          <h1>Questions I've asked</h1>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col offset-md="2" size-md="8" class="question-list-wrapper">
+        <ion-row *ngFor="let post of questionPosts">
+          <ion-col>
+            <app-post-item [post]="post"></app-post-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

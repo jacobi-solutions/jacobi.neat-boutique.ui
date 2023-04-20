@@ -1,0 +1,81 @@
+
+
+
+<ion-row *ngIf="!editReview; else elseEditReview" class="reviews-container review-item-wrapper">
+  
+  <!-- web -->
+  <ion-col class="hide-md-and-below ion-no-padding">
+    <ion-card>
+      <ion-row>
+        <ion-col class="text-center" size="1">
+          <app-nb-avatar
+            class="pointy-cursor"
+            (click)="goToConsumerProfilePage(review.author)"
+            [imageSrc]="review.author?.avatarSourceURL"
+          ></app-nb-avatar>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-col size="7.5" class="review-subject ion-text-left">
+              <div>{{review?.title}}</div>
+              <div>by {{review?.author?.name}}</div>
+            </ion-col>
+            <ion-col class="ion-text-right review-stars">
+              <app-summed-rating [displayFlex]="false" [numberOfReviews]="1" [altStyle]="'align-right'" [totalRating]="[review?.rating]"></app-summed-rating>
+            </ion-col>
+
+            <ion-col class="options-icon-wrapper" size="0.5">
+              <ion-icon *ngIf="currentUserIsAuthor" class="options-icon" [ngClass]="{ 'show-options': showMoreOptions }" name="ellipsis-vertical" (click)="presentReviewOptions($event)"></ion-icon>
+            </ion-col>
+
+          </ion-row>
+          <ion-row>
+            <ion-col class="review-body ion-text-left">
+              {{review?.body}}
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-col>
+
+  <!-- mobile  -->
+  <ion-col class="hide-md-and-above">
+    <ion-card>
+      <ion-row>
+        <ion-col class="text-center">
+          <app-nb-avatar
+            class="pointy-cursor"
+            (click)="goToConsumerProfilePage(review.author)"
+            [username]="review?.author?.name"
+            [secondaryText]="review?.title"
+            [imageSrc]="review.author?.avatarSourceURL">
+          </app-nb-avatar>
+        </ion-col>
+        <ion-col size-xl="5" size-lg="5" size-md="4" size-sm="4" size-xs="6">
+          <ion-row>
+            <ion-col class="review-stars">
+              <app-summed-rating class="start-icon-rating" [displayFlex]="false" [altStyle]="'mobile-size align-right'" [numberOfReviews]="1" [totalRating]="[review?.rating]"></app-summed-rating>
+              <!-- <div class="text-only-rating">{{ review?.rating }} Stars</div> -->
+            </ion-col>
+
+            <ion-col class="options-icon-wrapper" size="2">
+              <ion-icon *ngIf="currentUserIsAuthor" class="options-icon show-options-mobile" name="ellipsis-vertical" (click)="presentReviewOptions($event)"></ion-icon>
+            </ion-col>
+
+          </ion-row>
+        </ion-col>
+      </ion-row>  
+      <ion-row>
+        <ion-col class="review-body ion-text-left">
+          {{review?.body}}
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-col>
+</ion-row> 
+
+
+<ng-template #elseEditReview>
+  <app-review-form [reviewToEdit]="review" (onDoneEditing)="setEditedReview($event)"></app-review-form>
+</ng-template>

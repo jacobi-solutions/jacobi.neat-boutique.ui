@@ -1,0 +1,22 @@
+<ion-grid>
+  <ion-row class="setting-actions">
+    <ion-col>
+      <ion-list lines="none">
+        <ion-item class="mobile avatar-wrapper">
+          <p><strong>Hi, {{currentUser?.consumer.name}}!</strong></p>
+          <!-- <app-nb-avatar class="pointy-cursor" [routerLink]="'/settings'" [altStyleClass]="'force-center-items un-color-primary'" [imageSrc]="currentUser?.consumer.avatarSourceURL" [username]="'Hi, '+ currentUser?.consumer.name +'!'"></app-nb-avatar> -->
+        </ion-item> 
+
+        <ion-item *ngFor="let item of popoverItems" class="{{ item?.cssClass }} ">
+          <div *ngIf="!item?.innerHtml" [ngClass]="{ clickable: item?.isClickable }" (click)="item?.callback($event)">
+            <ion-label class="{{ item?.cssClass }}">
+              {{ item.label }}
+            </ion-label>
+          </div>
+
+          <div *ngIf="item?.innerHtml" [ngClass]="{ clickable: item?.isClickable }" [innerHTML]="item?.innerHtml"></div>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>

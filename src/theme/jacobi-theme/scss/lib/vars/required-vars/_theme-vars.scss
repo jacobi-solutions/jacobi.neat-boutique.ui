@@ -1,0 +1,136 @@
+@use "sass:map";
+@use "sass:string";
+@import '../../functions/utility';
+
+
+// // =================================================== colors
+// // -- over writable --
+// /*
+//     primary: #C22125,
+//     secondary: #0a004c,
+//     white: #fff,
+//     black: #000,
+//     grey: #707070,
+// */
+// $_primary-color: #409195;
+// $_deep-emerald: #003e42;
+
+// $custom-colors: (
+//     primary: $_primary-color,
+//     primary-half-opacity: rgba($_primary-color, 0.70),
+//     deep-emerald: $_deep-emerald,
+//     deep-emerald-75-opacity: rgba($_deep-emerald, 0.75),
+//     gulf-sand: #f4ecdf,
+//     _orange: #de7826,
+//     _purple: #9169d6,
+//     _yellow: #ffbc00,
+//     deep-red: #93290F,
+//     _blue: #65c2db,
+//     dark-blue: #0e5176,
+//     border-color:  #f0f0f0,
+//     box-shadow: #f8f8f8,
+//     light-grey: #b2b2b2,
+//     med-grey: #9b9b9b,    
+//     dark-grey: #7c7c7c,
+//     _grey: #8c8c8c,
+// );
+
+
+// // =================================================== font-families
+// // -- over writable --
+// /*
+//     default: 'Helvetica',
+// */
+// $custom-fonts: (
+//     default: 'HelveticaNeue',
+//     kabel: 'Kabel',
+// );
+
+
+// // =================================================== font-sizes
+// // -- over writable --
+// /*
+//     small:  px-to-rem(8),   // ~8px
+//     big:    px-to-rem(42),  // ~42px
+//     p:      px-to-rem(16),  // ~16px
+//     h1:     px-to-rem(30),  // ~30px
+//     h2:     px-to-rem(24),  // ~24px
+//     h3:     px-to-rem(20),  // ~20px
+//     h4:     px-to-rem(18),  // ~18px
+// */
+// $custom-font-sizes: (
+//     base: 1rem,
+//     small: 0.75rem,
+//     p: 1.1rem,
+//     h1: 3rem,
+//     h2: 2.4rem,
+//     h3: 2rem,
+//     h4: 1.5rem,
+//     // 
+//     mobile-p: 1rem,
+//     mobile-h2: 1.2rem,
+//     mobile-h1: 2rem,
+// );
+
+// // =================================================== padding
+// // -- over writable --
+// /*
+//     default: px-to-rem(5)
+// */
+// $custom-padding-values: ();
+
+
+// // =================================================== screen-widths (media-query screen widths)
+// // -- over writable --
+// /*
+//     mobile: 820px,
+//     sm: 576px,
+//     md: 768px,
+//     lg: 992px,
+//     xl: 1200px,
+// */
+ $custom-screen-widths: ();
+
+// // =================================================== misc. vars
+
+// // border
+// // var(--nb-border-radius): 10px;
+// // var(--nb-border-width): 1px;
+// // $border: var(--nb-border-width) solid map.get($colors-map, border-color);
+
+
+// // ===============================================================================
+// // ===================== map merging & functions for clean map use ===============
+// // ===============================================================================
+// // $fonts-map: map.merge($fonts-map, $custom-fonts);
+// // $colors-map: map.merge($colors-map, $custom-colors);
+// // $font-sizes-map: map.merge($font-sizes-map, $custom-font-sizes);
+// // $padding-values: map.merge($padding-values, $custom-padding-values);
+$screen-widths-map: map.merge($screen-widths-map, $custom-screen-widths);
+
+// // --
+// // @function colors($prop, $opacity: 1.0) {
+// //     @if ($prop == null) {
+// //         @return '#{prop} not fount in colors()';
+// //     }
+// //     $prop-to-str: string.quote($prop);
+// //     // if prop has `opacity` in the name, the rgba is already set
+// //     @if(string.index($prop-to-str, 'opacity')) {
+// //         @return map.get($colors-map, $prop);
+// //     }
+// //     @return rgba(map.get($colors-map, $prop), $opacity); 
+// // }
+// // // @function font-families($prop) {
+// // //     @return map.get($fonts-map, $prop); 
+// // // }
+// // @function padding-values($prop) {
+// //     @return map.get($padding-values, $prop); 
+// // }
+// // @function font-sizes($prop) {
+// //     @return map.get($font-sizes-map, $prop); 
+// // }
+@function screen-widths($prop) {
+    @return map.get($screen-widths-map, $prop); 
+}
+
+

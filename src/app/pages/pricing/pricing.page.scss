@@ -1,0 +1,67 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+// ion-grid {
+//     height: 100%; display: flex; flex-flow: column;
+//     ion-row {
+//         flex-grow: 1;
+//     }
+// }
+
+ion-grid {
+    ion-row {
+        width: 100%;
+    }
+    display: flex;
+    flex-wrap: wrap;
+    margin: 12px;
+    overflow: hidden;
+    
+    ion-col {
+      display: flex;
+      justify-content: center;
+    }
+
+    ion-card {
+        width: 100%;
+        position: relative;
+        .call-to-action-row {
+            bottom: 1rem;
+            width: 100%;
+            position: absolute;
+        }
+        //ion-card-content {
+            
+        //     display: flex;
+        //     flex-flow: column;
+        //     //height: 100%;
+        //     ion-row {
+        //         flex-grow: 1;
+        //     }
+        // }
+        
+        box-shadow: var(--nb-subtle-box-shadow);
+        border-radius: var(--nb-border-radius);
+    
+        & > ion-label {
+          color: var(--nb-dark-grey);
+          // display: inline-block;
+          //font-weight: bold !important;
+        }
+    
+        ion-card-title {
+            color: var(--nb-primary);
+            font-size: 2rem;
+            --ion-font-family: "Kabel" !important;
+            font-family: "Kabel" !important;
+        }
+    
+        ion-icon {
+            margin-right: 1rem;
+            color: var(--nb-primary);
+        }
+    }
+  }
+
+
+

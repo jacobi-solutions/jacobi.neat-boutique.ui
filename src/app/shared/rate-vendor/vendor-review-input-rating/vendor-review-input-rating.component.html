@@ -1,0 +1,18 @@
+<div>
+  <ion-row>
+    <ion-col>
+      <div #rating class="rating-input">
+        <div class="average-rating">
+          <ion-icon class="{{ altSize }}" *ngFor="let icon of ratingIcons; index as i;" [name]="icon" (click)="scoreClick(i+1)"></ion-icon>  
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <div hidden="true" [formGroup]="formGroupInstance">
+    <ion-input [formControlName]="inputName" type="number" [value]="inputRating">
+    </ion-input>
+</div>
+</div>
+
+

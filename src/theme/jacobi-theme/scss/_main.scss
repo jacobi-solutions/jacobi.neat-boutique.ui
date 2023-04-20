@@ -1,0 +1,34 @@
+
+// @import './fonts';
+// vars
+@import './lib/vars/required-vars/defaults/default-theme-vars';
+@import './lib/vars/required-vars/theme-vars';
+@import './lib/vars/custom-vars';
+// functions
+@import './lib/functions/utility';
+@import './lib/functions/color-functions';
+// mixins
+@import './lib/mixins/pre-defined-mixins/form-mixins';
+@import './lib/mixins/pre-defined-mixins/link-mixins';
+@import './lib/mixins/pre-defined-mixins/media-query-mixins';
+@import './lib/mixins/pre-defined-mixins/text-mixins';
+@import './lib/mixins/pre-defined-mixins/misc-mixins';
+@import './lib/mixins/custom-mixins/custom-mixin';
+// global styles
+@import './lib/global-styles/default-global/global-class-styles';
+@import './lib/global-styles/default-global/global-reset-styles';
+@import './lib/global-styles/custom-global';
+@import './lib/global-styles/default-global/modal-styles';
+@import './lib/global-styles/_cropper-overrides.scss';
+
+// set some ionic default theme vars
+:root {
+    
+    //--ion-font-family: "#{font-families(default)}" !important;
+
+    color: var(--nb-primary);    
+}
+
+
+
+

@@ -1,0 +1,54 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.major-category-card {
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--nb-border-color);
+    box-shadow: 0 0 20px 20px var(--nb-box-shadow-color);
+    margin: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .major-category-grid {
+    padding: 3rem !important;
+  }
+  
+  .major-category-titles {
+    font-size: 1.325rem;
+  }
+  .big-icons {
+    font-size: 7.5rem; //Preferred size here
+  }
+// ======== MOBILE ==============
+  @include screen-lg-and-below {
+    
+    .major-category-grid {
+      padding: 0 !important;
+    }
+    .big-icons {
+      font-size: 4.5rem; //Preferred size here
+    }
+
+
+  }
+
+  @include screen-xl-and-below {
+    .major-category-card {
+      border-radius: 25px;
+      border-style: solid;
+      border-width: 1px;
+      border-color: var(--nb-border-color);
+      box-shadow: 0 0 20px 20px var(--nb-box-shadow-color);
+      margin: .5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+
+    .major-category-titles {
+      font-size: 1rem;
+    }
+  }

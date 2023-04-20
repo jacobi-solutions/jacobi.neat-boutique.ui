@@ -1,0 +1,83 @@
+<ion-row class="vendor-splash-container">
+
+  <ion-col class="vendor-splash-photo" size-xs="12" size-sm="4" size-lg="2">
+    <!-- <app-nb-avatar [size]="'big'" [imageSrc]="vendor?.avatarSourceURL || defaultLogoImg"></app-nb-avatar> -->
+    <ion-avatar>
+      <img [src]="vendor?.avatarSourceURL || defaultLogoImg"> 
+    </ion-avatar>
+  </ion-col>
+
+  <ion-col class="vendor-splash-info" size-xs="12" size-sm="8" size-lg="5">
+    <ion-row>
+      <ion-col>
+        <h1 class="vendor-name">{{ vendor?.name }}</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="vendor?.formattedAddress">
+      <ion-col>
+        <h4 class="address">{{ vendor?.formattedAddress }}</h4>
+        <h4 class="hide-md-and-above phone"><a href="tel:{{ vendor?.phoneFormatted }}">{{ vendor?.phoneFormatted }}</a></h4>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="categories">
+          <span *ngFor="let community of vendor?.communities">{{ community }}</span>
+        </p>
+      </ion-col>
+    </ion-row>
+   
+    <ion-row class="review-stars">
+      <ion-col class="nb-vertical-center">
+
+        <app-summed-rating class="hide-md-and-below" [numberOfReviews]="vendor?.reviewCount"[altStyle]="''" [totalRating]="vendor?.reviewRatingTotal"></app-summed-rating>
+        <app-summed-rating class="hide-md-and-above" [numberOfReviews]="vendor?.reviewCount"[altStyle]="'mobile-size'" [totalRating]="vendor?.reviewRatingTotal"></app-summed-rating>
+
+        <h4 class="review-count">{{ vendor?.reviewCount }} {{ (vendor?.reviewCount === 1) ? 'Review' : 'Reviews' }}</h4>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="hide-md-and-above social-icons-row">
+      <ion-col>
+        <ion-row class="social-icons">
+          <ion-col size="2" *ngIf="vendor?.facebookLink">
+            <a [href]="vendor?.facebookLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-facebook"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col size="2" *ngIf="vendor?.instagramLink">
+            <a [href]="vendor?.instagramLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-instagram"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col size="2" *ngIf="vendor?.twitterLink">
+            <a [href]="vendor?.twitterLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-twitter"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col *ngIf="!isAddedToMyList; else elseRemoveFromMyList">
+            <app-jacobi-button [buttonType]="'auth-secondary secondary hover-auth'" class="my-list-btn hide-md-and-bellow" (click)="addToMyList()">Add to My List</app-jacobi-button>
+          </ion-col>
+          
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+  </ion-col>
+
+  <ion-col class="btn-row hide-md-and-below" *ngIf="!isAddedToMyList; else elseRemoveFromMyList">
+    <app-jacobi-button [buttonType]="'auth-secondary secondary hover-auth'" class="my-list-btn hide-md-and-bellow" (click)="addToMyList()">Add to My List</app-jacobi-button>
+  </ion-col>
+  
+</ion-row>
+
+
+
+<ng-template #elseRemoveFromMyList>
+  <ion-col>
+    <app-jacobi-button [buttonType]="'ghost-auth-secondary secondary'" class="my-list-btn hide-md-and-bellow" (click)="removeFromMyList()">Remove from My List</app-jacobi-button>
+  </ion-col>
+</ng-template>

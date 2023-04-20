@@ -1,0 +1,227 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.pricing-link {
+    color: var(--nb-light-grey) !important;
+    font-size: 1.1rem !important;
+    font-family: font-families(HelveticaNeue) !important;
+    a {
+        color: var(--nb-primary);
+        cursor: pointer;
+    }
+}
+
+h2 {
+    font-family: font-families(kabel);
+    font-size: 3rem;
+    color: var(--nb-primary);
+    font-weight: 900;
+}
+
+.vendor-splash-container {
+    .vendor-splash-photo {
+        // height: 18vw;
+        // --background: none;
+        // background-position:50% 60%;
+        // background-repeat: no-repeat;
+        // background-size: cover;
+        // border-radius: 10px;
+        // background-image: url(https://storage.googleapis.com/neatboutique.com/images/szabo-viktor-oDBmduFQDn4-unsplash.jpg);
+    }
+    .vendor-splash-info {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 2rem;
+        color: var(--nb-light-grey);
+        font-size: 1.1rem;
+        h1 {
+            margin: .25rem;
+            margin-top: 0;
+            padding: 0;
+        }
+        h2 {
+            margin-top: 0;
+            color: var(--nb-primary);
+            // --ion-font-family: "#{font-families(kabel)}" !important;
+            // font-family: font-families(kabel) !important;
+            font-size: 2rem;
+        }
+        h4 {
+            // font-size: 1.5rem;
+            margin: .25rem;
+            padding: 0;
+            color: var(--nb-dark-grey);
+        }
+        p {
+            margin: .25rem;
+            font-weight: 500;
+            padding: 0;
+        }
+        ion-col {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .keywords span {
+            margin-left: 1rem;
+
+            &:first-of-type {
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+
+
+.vendor-details-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    .vendor-details-description {
+        ion-card {
+            font-size: 1.5rem;
+            border-radius: var(--nb-border-radius);
+            border-style: solid;
+            border-width: var(--nb-border-width);
+            border-color: var(--nb-border-color);
+            box-shadow: 0 0 10px 10px var(--nb-box-shadow-color);
+            margin: 0;
+            padding: 1.5rem;
+        }
+    }
+    .vendor-details-info {
+        padding-left: 2rem;
+        color: var(--nb-light-grey);
+        font-size: 1.5rem;
+        font-weight: 500;
+
+        ion-row {
+            margin: 1rem;
+        }
+        ion-icon {
+            color: black;
+            font-size: 2rem;
+        }
+    }
+    ion-card-content {
+        padding: 0;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    ion-col {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.photos-container {
+    .photos {
+        margin-bottom: 2rem;
+        width: 100%;
+        
+        .photo {
+            height: 18vw;
+            margin-left: .5rem !important;
+            margin-right: .5rem !important;
+            --background: none !important;
+            background-position:50% 50% !important;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+            border-radius: 10px !important;
+        }
+    }
+    ion-button {
+        margin-top: 1rem;
+    }
+}
+
+.reviews-container {
+    .review-subject {
+        color: var(--nb-light-grey);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    .review-body {
+        color: var(--nb-light-grey);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    ion-card {
+        padding: 1rem;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--nb-border-color);
+        box-shadow: 0 0 10px 10px var(--nb-box-shadow-color);
+    }
+    ion-avatar {
+        margin-left: 1rem;
+        img {
+            border-style: solid;
+            border-width: 2px;
+            border-color: var(--nb-orange);
+        }
+    }
+}
+
+ion-grid {
+    padding-right: 2.5rem;
+    padding-left: 3.5rem;
+    padding-top: 3.5rem;
+    padding-bottom: 2.5rem;
+
+    // template for no reviews
+    .no-reviews-row {
+        p {
+            color: var(--nb-primary);
+            font-weight: bold;
+        }
+    }
+}
+
+.edit-action {
+    // width: 42px;
+    // height: 42px;
+    // padding: 10px;
+    font-size: 1.5rem !important;
+    color: var(--nb-primary) !important;
+    &.allow-opacity {
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1.0;
+        }
+    }
+    
+}
+
+// ================= Mobile ===================
+@include screen-md-and-below {
+    h1 {
+        font-size: 2rem !important;
+    }
+    h2 {
+        font-size: 2rem !important;
+    }
+    h2.mobile-h2 {
+        font-size: 1.2rem !important;
+    }
+    h3 {
+        font-size: 1.2rem !important;
+    }
+}
+
+@include screen-sm-and-below {
+    ion-grid {
+       padding-left: 0.5rem;
+       padding-right: 0.5rem;
+
+       .no-reviews-row {
+            p {
+                font-size: 1rem;
+                color: var(--nb-primary);
+                font-weight: bold;
+            }
+        }
+    }
+}

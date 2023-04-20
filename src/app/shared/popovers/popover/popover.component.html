@@ -1,0 +1,7 @@
+<ion-grid>
+  <ion-row *ngFor="let item of itemList">
+    <ion-col [ngClass]="{ clickable: item?.isClickable }" (click)="item?.callback($event, item)">
+      <p>{{ item.label }}</p>
+    </ion-col>
+  </ion-row>
+</ion-grid>

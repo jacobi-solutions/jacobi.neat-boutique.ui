@@ -1,0 +1,56 @@
+// @import "../vars";
+
+// text colors
+@mixin text-grey {
+    color: var(--nb-dark-grey) !important; // var(--vd-color-gray);
+}
+  
+@mixin color-opacity($color: var(--nb-primary), $opacity: 1.0) {
+    color: rgba($color, $opacity);
+}
+
+@mixin not-selectable-text {
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+/Edge */
+    user-select: none;
+    /* Standard */
+}
+  
+
+// text alignment
+@mixin text-center {
+    & {
+        text-align: center;
+    }
+}
+  
+@mixin text-left {
+    & {
+        text-align: left;
+    }
+}
+
+@mixin text-right {
+    & {
+        text-align: right;
+    }
+}
+
+@mixin text-bold {
+    font-weight: bold;
+}
+
+@mixin truncate-text($width) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: $width;
+}
+
+// @mixin p-basic {
+//     font: general-font-sizes(p) font-families(josefin-sans);
+// }

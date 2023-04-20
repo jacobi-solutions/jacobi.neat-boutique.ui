@@ -1,0 +1,75 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+.input-container[data-unique="c%r+Zm-RvBS+g6h92G?cG+KGe97uGNYU"] {
+    ion-col {
+        padding: 0;
+        margin: 0;
+    }
+    
+    @include label-as-placeholder(
+        $primaryColor: var(--nb-light-grey),
+        $secondaryColor: var(--nb-light-grey),
+        $top: 1.25rem,
+        $left: 1rem,
+        $transformTop: 0.25rem,
+        $transformFontSize: 0.8rem,
+        );
+    width: 100%; 
+    align-items: center;
+    display: flex;        
+
+    // ::== icon size & center ==::
+    .input-wrapper {
+        position: relative;
+    }
+
+
+    // var for height
+    $text-area-height: 10rem;
+    // =============================
+    ion-textarea {
+        // color: var(--vd-color-red) !important;
+        color: var(--nb-dark-grey);
+        // font-weight: bold;
+        margin: 0;
+        @include input-styles(
+            $borderColor: rgba(var(--nb-dark-grey), 0.5),
+            $withBoxShadow: false,
+            $background: white,
+            $height: #{ $text-area-height },
+            $fontSize: 1.1rem,
+            $paddingLeft: 0,
+            $padding: 0
+        );
+
+        padding: 0.95rem 0.5rem !important;
+        padding-top: 1.25rem !important;
+
+        textarea {
+            @include placeholder;
+            padding-top: 0;
+            height: calc(#{ $text-area-height } - 1.75rem);
+            // padding-top: 1.5rem;
+        }
+    }
+
+    &.mobile-input {
+        font-size: 1rem;
+
+        ion-label,
+        ion-textarea {
+            font-size: 1rem;
+        }
+        // @include input-styles(
+        //     $borderColor: rgba(var(--nb-dark-grey), 0.5),
+        //     $withBoxShadow: false,
+        //     $background: white,
+        //     $height: #{ $text-area-height },
+        //     $fontSize: 1rem,
+        //     $paddingLeft: 0,
+        //     $padding: 0
+        // );
+    }
+}

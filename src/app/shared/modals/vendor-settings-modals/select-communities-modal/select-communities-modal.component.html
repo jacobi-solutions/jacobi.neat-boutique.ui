@@ -1,0 +1,28 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+  
+      <ion-icon class="close-icon clickable" (click)="onClose($event)" name="close-outline"></ion-icon>
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice">Update your communities</p>
+        <p *ngIf="userErrorMsg" class="error-msg"> {{ userErrorMsg }}</p>
+        <!-- <form action=""> -->
+          <ion-list>
+            <ion-item *ngFor="let community of communityTypes">
+              <ion-label>{{ community }}</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="communitySet[community].isSelected" (ionChange)="assessSelectedCommunities($event)"></ion-checkbox>
+            </ion-item>
+          </ion-list>
+  
+        <div class="action-btn-wrapper">
+          <app-jacobi-button [buttonType]="'auth-primary'" [disabled]="userErrorMsg !== null" (click)="onSave($event)">Save</app-jacobi-button>
+          <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose($event)">Cancel</app-jacobi-button>
+        </div>
+  
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

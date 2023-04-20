@@ -1,0 +1,77 @@
+// @import "../vars";
+
+// max-width
+@mixin screen-sm-and-below {
+  @media (max-width: calc(#{screen-widths(sm)} - 1px)) {
+    @content;
+  }
+}
+
+@mixin screen-md-and-below {
+  @media (max-width: calc(#{screen-widths(md)} - 1px)) {
+    @content;
+  }
+}
+
+@mixin screen-lg-and-below {
+  @media (max-width: calc(#{screen-widths(lg)} - 1px)) {
+    @content;
+  }
+}
+
+@mixin screen-xl-and-below {
+  @media (max-width: calc(#{screen-widths(xl)} - 1px)) {
+    @content;
+  }
+}
+
+// min-width
+@mixin screen-sm-and-above {
+  @media (min-width: screen-widths(sm)) {
+    @content;
+  }
+}
+
+@mixin screen-md-and-above {
+  @media (min-width: screen-widths(md)) {
+    @content;
+  }
+}
+
+@mixin screen-lg-and-above {
+  @media (min-width: screen-widths(lg)) {
+    @content;
+  }
+}
+
+@mixin screen-xl-and-above {
+  @media (min-width: screen-widths(xl)) {
+    @content;
+  }
+}
+
+// custom media query min/max
+@mixin screen-below-mobile-820 {
+  @media (max-width: screen-widths(mobile)) {
+    @content;
+  }
+}
+
+@mixin screen-above-mobile-820 {
+  @media (min-width: screen-widths(mobile)) {
+    @content;
+  }
+}
+
+// custom media query min/max
+@mixin screen-below-custom($custom-width: 820px) {
+  @media (max-width: $custom-width) {
+    @content;
+  }
+}
+
+@mixin screen-above-custom($custom-width: 820px) {
+  @media (min-width: $custom-width) {
+    @content;
+  }
+}

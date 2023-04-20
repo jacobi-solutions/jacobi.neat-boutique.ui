@@ -1,0 +1,78 @@
+
+<ion-content #content [scrollEvents]="true">
+
+  <ion-grid fixed>
+    <ion-row>
+      <!-- create poll ad -->
+      <ion-col *ngIf="pollIsCreated" size-xs="12" 
+        size-md="6" offset-md="6" pull-md="3"
+        size-lg="6" offset-lg="0" pull-lg="0"
+        class="form-col">
+        
+          <h1>You're Poll is now live!</h1>
+          <p>Your poll will show in your community feed throughout the next 7 days. Check back for updates on your poll's interactions.</p>
+            
+      </ion-col>
+      <ion-col *ngIf="!pollIsCreated" size-lg="6" size-xs="12">
+        <ion-row>
+          <ion-col>
+            <div>
+              <h1 class="ion-text-center">Create Poll Ad</h1>
+            </div>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col>
+            <app-edit-poll-ad [vendor]="vendor" [clearForm]="clearForm" (onChange)="updateLivePreview($event)"></app-edit-poll-ad>
+          </ion-col>
+        </ion-row>
+
+        <!-- submit poll -->
+        <ion-row>
+          <ion-col>
+            <div class="action-btn-wrapper">
+              <app-jacobi-button
+                [disabled]="(!pollAdToSubmit || pollAdToSubmit?.invalid)"
+                [buttonType]="'auth-primary'"
+                (click)="submitPoll()"
+                >Post Now</app-jacobi-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      
+
+      <ion-row class="mobile-divider">
+        <ion-col>
+          <ion-item-divider></ion-item-divider>
+        </ion-col>
+      </ion-row>
+
+      <!-- live preview -->
+      <ion-col class="live-preview-half">
+        <ion-row>
+          <ion-col>
+            <div>
+              <h1 class="ion-text-center">Live Preview</h1>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <app-post-item
+              [isDemo]="true"
+              [post]="pollLivePreview"
+              [altAnswerStyle]="'poll-preview'"
+              [expandComments]="(pollLivePreview?.question) ? true : false"></app-post-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+    
+  </ion-grid>
+  <app-nb-footer></app-nb-footer>
+</ion-content>

@@ -1,0 +1,151 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-grid {
+    width: 100%;
+
+    .preview-wrapper-row {
+        width: 60%;
+        margin: 0 auto;
+
+        .select-photo-input-wrapper {
+            &.upload-btn {
+                margin-bottom: 2rem;
+            }
+        }
+    }
+}
+
+.circular {
+    margin: auto !important;
+    height: 10rem !important;
+    width: 10rem !important;
+    border-radius: 50% !important;
+}
+.ref-img {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+
+    
+    &.placeholder {
+        background: var(--nb-grey-50-opacity);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+
+        
+        h3,
+        p {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            text-align: center;
+            font-family: font-families(default);
+            font-weight: bold;
+            color: white;
+        }
+
+        // h3 {
+        //     font-size: font-sizes(h3);
+        // }
+
+        p {
+            // font-size: font-sizes(p);
+
+            span {
+                color: var(--nb-primary-75-opacity);
+            }
+        }
+    }
+    
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    &.photo-image-cropper {
+        aspect-ratio: auto;
+    }
+    
+}
+
+.preview-col {
+    h3 {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+        font-family: "HelveticaNeue";
+        font-weight: bold;
+        color: var(--nb-primary);
+        // font-size: font-sizes(h3);
+    }
+    
+    .photo {
+        
+        // width: 50%;
+        // margin: 0 auto;
+        aspect-ratio: 3 / 2;
+        border-radius: var(--nb-border-radius);
+        background-color: var(--nb-grey-50-opacity);
+        overflow: hidden;
+
+        &:not(.live) {
+            margin-bottom: 2rem;
+        }
+
+        &.placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--nb-grey-15-opacity);
+            border-width: var(--nb-border-width);
+
+            p {
+                margin: 0;
+                padding: 0;
+                width: fit-content;
+
+                color: var(--nb-grey-70-opacity);
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
+
+            ion-icon {
+                color: var(--nb-grey-70-opacity);
+                font-size: 4rem;
+            }
+        }
+
+        img {
+            display: block;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+
+// mobile ==============================
+
+@include screen-md-and-below {
+    ion-grid {
+
+        .preview-col {
+            ion-avatar {
+                width: unit-to-vw(150px);
+                height: unit-to-vw(150px);
+                margin: 0 auto;  
+            }
+        }
+
+        .btn-text {
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    }
+}

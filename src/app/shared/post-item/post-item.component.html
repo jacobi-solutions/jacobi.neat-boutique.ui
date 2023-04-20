@@ -1,0 +1,68 @@
+
+<div *ngIf="post" fixed>
+  <ion-row class="post-wrapper">
+    <ion-col>
+      <ion-row>
+        <ion-col size="9">
+          <div [ngClass]="{ clickable: (post.postType === postTypes.POLL) }" (click)="((post.postType === postTypes.POLL) ? goToVendor() : null)">
+            <app-nb-avatar
+              class="pointy-cursor"
+              (click)="goToConsumerProfilePage(post.author)"
+              [username]="getDisplayName()"
+              [borderColor]="post.author.borderColor"
+              [secondaryText]="post.localCreated"
+              [tertiaryText]="' in '  + post.communityName"
+              [imageSrc]="post.author.avatarSourceURL">
+            </app-nb-avatar>
+          </div>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="post-title-row">
+        <ion-col class=" ion-text-left">
+          <p>{{ post.question }}</p>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row *ngIf="post?.comments?.length > 0 || post.hasAnswered">
+        <ion-col class="ion-margin-end">
+          <div class="comment-icon-wrapper">
+            <ion-icon class="ion-float-right" (click)="toggleComments()" [name]="iconShowComments"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col>
+          <div *ngIf="true">
+  
+            <ion-row>
+              <ion-col>
+                <!-- [answers]="normalizedAnswersForChartMinMax(post.answers)" -->
+                <app-answer-list [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.answers?.sort(sortByPointTotals)"></app-answer-list>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+    
+      <app-expandable [expanded]="expandComments">
+        <ion-row>
+          <ion-col>
+            <ion-item-divider class="divider"></ion-item-divider>
+          </ion-col>
+        </ion-row>
+  
+        <ion-row>
+          <ion-col>
+            <app-comment-list [post]="post" [isDemo]="isDemo"></app-comment-list>
+          </ion-col>
+        </ion-row>
+      </app-expandable>
+  
+    </ion-col>
+  </ion-row>
+  
+  
+  
+</div>

@@ -1,0 +1,29 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose($event)" name="close-outline"></ion-icon>
+      <!-- <span class="close-icon clickable" (click)="onSave($event)">Save</span> -->
+    </ion-card-header>
+  
+    <ion-card-content class="modal-content-wrapper">
+      <div>
+        <p class="text-notice">Update your social media links</p>
+          <ion-list>
+            <ion-item [lines]="'none'" *ngFor="let socialMedia of socialMediaUrls">
+              <app-input-field class="link-input"
+              [formGroupInstance]="socialMediaForm"
+              [inputName]="socialMedia[0]"
+              [label]="prettyLabelNames(socialMedia[0])"
+              [value]="socialMedia[1]"></app-input-field>
+            </ion-item>
+          </ion-list>
+  
+          <ion-item-divider></ion-item-divider>
+          <div class="action-btn-wrapper">
+            <app-jacobi-button [buttonType]="'auth-primary'" (click)="onSave($event)">Save</app-jacobi-button>
+            <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose($event)">Cancel</app-jacobi-button>
+          </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

@@ -1,0 +1,208 @@
+<ion-content class="jacobi-auth-flow jacobi-auth-flow-sign-up">
+
+<ion-grid>
+    <ion-row class="sign-up-outer-row outer-row">
+        
+        <ion-col
+            class="content-col"
+            [attr.size-sm]="    (splitScreenBgImage ? 12 : undefined)"
+            [attr.size-md]="    (splitScreenBgImage ? 6  : undefined)"
+            [attr.offset-md]="  (splitScreenBgImage ? 6  : undefined)"
+            [attr.pull-md]="    (splitScreenBgImage ? 3  : undefined)"
+            [attr.size-lg]="    (splitScreenBgImage ? 6  : undefined)"
+            [attr.offset-lg]="  (splitScreenBgImage ? 0  : undefined)"
+            [attr.pull-lg]="    (splitScreenBgImage ? 0  : undefined)"
+        >
+
+            <ion-row>
+                <ion-col
+                    size-sm="12"
+                    size-md="12"
+                    size-lg="8"
+                    offset-lg="2"
+                    [attr.size-xl]="    (splitScreenBgImage ? 8  : 6)"
+                    [attr.offset-xl]="  (splitScreenBgImage ? 2  : 3)"
+                >
+                    <ion-row class="page-heading">
+                        <ion-col *ngIf="!(isFailure || isSuccess)">
+                            Sign up
+                        </ion-col>
+                        <ion-col *ngIf="isSuccess">
+                            Success
+                        </ion-col>
+                        <ion-col *ngIf="isFailure">
+                            Something went wrong
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="isSuccess">
+                        <ion-col>
+                            {{successMessage}}
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="isFailure">
+                        <ion-col>
+                            {{failureMessage}}
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                        <ion-col>
+                            <p><strong>Let's create your account</strong></p>
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row class="form-row jacobi-auth-form-row">
+                        <ion-col>
+                            <form (ngSubmit)="signUp()" [formGroup]="registerForm" class="form-register">
+                                <ion-row>
+                                    <ion-col class="ion-margin-top username-input-wrapper">
+                                        <ion-item class="input-item">
+                                            <ion-label position="floating">Username</ion-label>
+                                            <ion-input [formControlName]="'username'"></ion-input>
+                                            <ion-icon class="form-icon" slot="end" name="person-circle-outline"></ion-icon>
+                                        </ion-item>
+                                        <div *ngIf="registerForm.controls.username.invalid && registerForm.controls.username.touched">
+                                        
+                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['required']">
+                                                Username is required.
+                                            </ion-text>
+                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['minlength']">
+                                                Username must be at least {{ minUsernameLength }} characters long.
+                                            </ion-text>
+                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['maxlength']">
+                                                Username is limited to {{ maxUsernameLength }} characters.
+                                            </ion-text>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+    
+                                <ion-row>
+                                    <ion-col class="ion-margin-top email-input-wrapper">
+                                        <ion-item class="input-item">
+                                            <ion-label position="floating">Email</ion-label>
+                                            <ion-input [formControlName]="'email'"></ion-input>
+                                            <ion-icon class="form-icon" slot="end" name="mail-outline"></ion-icon>
+                                        </ion-item>
+                                        <div *ngIf="registerForm.controls.email.invalid && registerForm.controls.email.touched">
+                                        
+                                            <ion-text color="danger" *ngIf="registerForm.controls.email.errors?.['required']">
+                                                Email is required.
+                                            </ion-text>
+                                            <ion-text color="danger" *ngIf="registerForm.controls.email.errors?.['email']">
+                                                Must be a valid email address. 
+                                            </ion-text>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+                                
+
+                                <!-- removed class hide-xl-and-below -->
+                                <ion-row class="pw-confirm">
+                                    <ion-col size-xs="12" size-xl="6" class="ion-margin-top password-input-wrapper">
+                                        <ion-item class="input-item">
+                                            <ion-label position="floating">Password</ion-label>
+                                            <ion-input [type]="passwordInputType" [formControlName]="'password'"></ion-input>
+                                            <ion-icon class="form-icon" slot="end" [name]="passwordEyeIcon" (click)="onTogglePasswordHide()"></ion-icon>
+                                        </ion-item>
+                                        <div *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
+                                        
+                                            <ion-text color="danger" *ngIf="registerForm.controls.password.errors?.['required']">
+                                                Password is required.
+                                            </ion-text>
+                                            <ion-text color="danger" *ngIf="registerForm.controls.password.errors?.['minLength']">
+                                                Password must be at least 8 characters.
+                                            </ion-text>
+                                        </div>
+                                    </ion-col>
+    
+                                    <ion-col size-xs="12" size-xl="6" class="ion-margin-top password-confirm-input-wrapper">
+                                        <ion-item class="input-item">
+                                            <ion-label position="floating">Confirm</ion-label>
+                                            <ion-input [type]="passwordInputType" [formControlName]="'passwordConfirm'"></ion-input>
+                                            <ion-icon class="form-icon" slot="end" [name]="passwordEyeIcon" (click)="onTogglePasswordHide()"></ion-icon>
+                                        </ion-item>
+                                        <div *ngIf="registerForm.controls.passwordConfirm.invalid && registerForm.controls.passwordConfirm.touched">
+                                            <ion-text color="danger" *ngIf="registerForm.controls.passwordConfirm.errors?.['passwordConfirmMustMatch']">
+                                                The confirmation password does not match.'
+                                            </ion-text>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+
+                                <ion-row class="auth-action-buttons">
+                                    <ion-col>
+                                        <ion-row>
+                                            <ion-col class="ion-margin-top sign-up-btn-wrapper">
+                                                <ion-button (click)="(!registerForm.invalid ? signUp() : null)" part="button" [disabled]="registerForm.invalid" class="jacobi-button auth-primary" fill="clear">
+                                                    Sign Up
+                                                </ion-button>
+                                            </ion-col>
+                                        </ion-row>
+
+                                        <ion-row *ngIf="hasFacebookButton" class="fb-btn-wrapper">
+                                            <ion-col>
+                                              <ion-button
+                                                (click)="signUpWithFacebook()"
+                                                class="facebook-sign-in-button"
+                                              >
+                                                <ion-icon name="logo-facebook"></ion-icon>Sign up with Facebook
+                                            </ion-button>
+                                        </ion-col>
+                                        </ion-row>
+
+                                        <ion-row *ngIf="hasAppleButton" class="apple-btn-wrapper">
+                                            <ion-col>
+                                              <ion-button
+                                                (click)="signUpWithApple()"
+                                                class="apple-sign-in-button"
+                                              >
+                                                <ion-icon name="logo-apple"></ion-icon>Sign up with Apple
+                                            </ion-button>
+                                        </ion-col>
+                                        </ion-row>
+
+                                          
+                                        <ion-row>
+                                            <ion-col class="ion-margin-top cancel-btn-wrapper">
+                                                <ion-button (click)="dismiss()"  part="button" class="jacobi-button ghost-auth-secondary" fill="clear">
+                                                    Cancel
+                                                </ion-button>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-col>
+                                </ion-row>
+                            </form>
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                        <ion-col class="have-existing-account-col">
+                                <p class="text-center">Have an account? <strong class="clickable"
+                                        routerLink="/auth-flow/sign-in">Sign in</strong></p>
+
+                            <p *ngIf="legalLinks" class="legal-links">
+                                By creating a account you agree to the <br><a [routerLink]="legalLinks.termsAndConditions">Terms and
+                                    Conditions</a> and <a [routerLink]="legalLinks.privacyPolicy">Privacy Policy</a>
+                            </p>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-col>
+
+        <!-- split-screen -->
+        <ion-col *ngIf="splitScreenBgImage"
+        size-lg="6"
+        class="hide-lg-and-below split-page-banner"
+        [ngStyle]="{
+            'background-image': 'url('+ splitScreenBgImage +')',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center center',
+            'background-size': 'cover'
+        }"
+        >
+        <div class="img-overlay"></div>
+    </ion-col>
+    </ion-row>
+</ion-grid>
+</ion-content>

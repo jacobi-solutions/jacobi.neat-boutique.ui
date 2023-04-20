@@ -1,0 +1,85 @@
+
+<ion-grid>
+  <!-- <ion-row>
+    <ion-col>
+      <div class="poll-heading">
+        <h3>Make A Poll</h3>
+      </div>
+    </ion-col>
+  </ion-row> -->
+  <ion-row class="post-wrapper">
+    <ion-col>
+      <ion-row>
+        <ion-col>
+          <!-- <app-nb-avatar
+            [username]="vendor?.name + ' (Sponsored)'"
+            [altStyleClass]="'force-center-items'"
+            [imageSrc]="vendor?.avatarSourceURL || defaultLogoImg"
+            ></app-nb-avatar> -->
+
+
+            <!-- <ion-item [lines]="'none'" class="input-choice" [formGroup]="pollForm"> -->
+              <div class="input-choice" [formGroup]="pollForm">
+                <ion-input type="text" >
+                  <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: pollForm.value.community}">
+                      <ion-label class="label-placeholder">Community</ion-label>
+    
+                      <ion-select
+                          css="select-poll-community"
+                          formControlName="community"
+                          multiple="false"
+                          cancelText="Cancel"
+                          okText="Done"
+                          interface="popover">
+    
+                          <ion-select-option *ngFor="let community of vendor?.communities" [value]="community">{{ community }}</ion-select-option>
+                      </ion-select>
+                  </ion-item>
+                </ion-input>
+              </div>
+              
+            <!-- </ion-item> -->
+
+
+        </ion-col>
+      </ion-row>
+      
+      <ion-row class="input-row">
+        <ion-col>
+
+          <app-input-field
+            [formGroupInstance]="pollForm"
+            [inputName]="'pollQuestion'"
+            [label]="'Poll Question'"
+          ></app-input-field>
+
+          <ion-item-divider class="question-divider"></ion-item-divider>
+
+          <div class="answer-outter-wrapper" *ngFor="let answer of pollFormFields; index as i;">
+            <div class="answer-inner-wrapper" *ngIf="!['pollQuestion', 'community'].includes(answer) && ((i-1) <= currentQuestions) && (currentQuestions <= maxQuestions)">
+              <app-input-field
+                [formGroupInstance]="pollForm"
+                [inputName]="'pollAnswer' + (i-1)"
+                [label]="'Answer ' + (i-1)"
+                [icon]=" (minQuestions < (i-1)) ? 'trash-outline' : null"
+                (iconClick)="removeAnswer(answer, (i-1))"
+              ></app-input-field>
+            </div>
+          </div>
+          
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div class="add-answer-btn">
+            <app-jacobi-button  [disabled]="(currentQuestions >= maxQuestions)" [buttonType]="'ghost-green-primary hover-auth paragraph'" (click)="addAnswer()">
+              {{ (currentQuestions >= maxQuestions) ? 'Max Answers Reached' : 'Add Answer' }}
+            </app-jacobi-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+

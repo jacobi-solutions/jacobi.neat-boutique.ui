@@ -1,0 +1,141 @@
+
+
+<ion-content #content [scrollEvents]="true">
+
+  <ion-grid fixed>
+    <ion-row>
+
+      <!-- selection -->
+      <ion-col *ngIf="adIsCreated" size-xs="12" 
+        size-md="6" offset-md="6" pull-md="3"
+        size-lg="6" offset-lg="0" pull-lg="0"
+        class="form-col">
+        
+          <h1>You're Ad is now live!</h1>
+          <p>Your Ad will now show in your community feed. Check back for updates on your ad's interactions.</p>
+            
+      </ion-col>
+      <ion-col *ngIf="!adIsCreated" class="form-section" size-xs="12" size-lg="6">
+
+        <ion-row class="title-section">
+          <ion-col>
+            <h2>Hero Ad Selection</h2>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <div class="input-choice" >
+              <ion-input type="text" >
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.communityName}">
+                    <ion-label class="label-placeholder">Community</ion-label>
+      
+                    <ion-select
+                      [(ngModel)]="selectedHeroAd.communityName"
+                      (ionChange)="selectHeroTemplateByCommunity()"
+                      css="select-poll-community"
+                      multiple="false"
+                      cancelText="Cancel"
+                      okText="Done"
+                      interface="popover">
+      
+                      <ion-select-option *ngFor="let community of vendor?.communities" [value]="community">{{ community }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                
+              </ion-input>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <div class="input-choice" >
+              <ion-input type="text" >
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.adTagline}">
+                    <ion-label class="label-placeholder">Tagline</ion-label>
+      
+                    <ion-select
+                      [(ngModel)]="selectedHeroAd.adTagline"
+                      css="select-poll-community"
+                      multiple="false"
+                      cancelText="Cancel"
+                      okText="Done"
+                      interface="popover">
+      
+                      <ion-select-option *ngFor="let tagline of selectedHeroTemplate?.adTaglines" [value]="tagline">{{ tagline.primaryAdTagline }} {{ tagline.secondaryAdTagline }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                
+              </ion-input>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="thumbnail-row">
+          <ion-col
+            size-xs="6" size-sm="4" size-md="3"
+            class="thumbnail-col clickable"
+            *ngFor="let imageUrl of selectedHeroTemplate?.imageUrls">
+
+            <!-- <div (click)="selectHero(imageUrl)" class="border-wrapper" [ngClass]="{ 'has-border': (selectedHeroTemplate?.communityName === selectedHeroTemplate?.communityName) }">
+              <p>{{ selectedHeroTemplate?.communityName }}</p>
+            </div> -->
+            <div>
+              <ion-img (click)="selectedHeroAd.imageUrl = imageUrl;" [src]="imageUrl"></ion-img>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="hide-lg-and-below">
+          <ion-col>
+            <div class="action-btn-wrapper">
+              <app-jacobi-button
+                [buttonType]="'auth-primary width-fit-content'"
+                (click)="submitAd()"
+                >Post Now</app-jacobi-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <!-- preview -->
+      <ion-col class="preview-section" size-xs="12" size-lg="6">
+        <ion-row class="title-section">
+          <ion-col>
+            <h2>Ad Preview</h2>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <div class="demo-template-wrapper">
+              <app-marquee-ad *ngIf="selectedHeroAd" [heroAd]="selectedHeroAd" [isDemo]="true"></app-marquee-ad>
+              
+              <div class="successful-post" *ngIf="postedAd && !selectedHeroTemplate">
+                <h2>Successfully Posted Your Ad</h2>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="hide-lg-and-above">
+          <ion-col>
+            <div class="action-btn-wrapper">
+              <app-jacobi-button
+                [buttonType]="'auth-primary'"
+                (click)="submitAd()"
+                >Post Now</app-jacobi-button>
+            </div>
+          </ion-col>
+        </ion-row>
+
+
+      </ion-col>
+    </ion-row>    
+  </ion-grid>
+  <app-nb-footer></app-nb-footer>
+</ion-content>
+
+
+

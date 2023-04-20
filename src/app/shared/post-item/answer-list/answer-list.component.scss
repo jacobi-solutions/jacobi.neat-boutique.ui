@@ -1,0 +1,175 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+
+ion-grid,
+ion-col {
+    padding: 0;
+    margin: 0;
+}
+
+
+.no-answers {
+    // background: var(--nb-light-grey);
+    padding: 0.05rem;
+    border-radius: var(--nb-border-radius);
+
+    p {
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+}
+
+.btn-show-all {
+    cursor: pointer;
+}
+
+.answer-item-row {
+    margin: 0.5rem 0;
+
+    &:first-of-type {
+        margin-top: 0;
+    }
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+
+// ======== new answer form ===============
+$custom-input-padding: 1.75;
+
+.form-search-answer {
+    .search-for-vendor-answer {
+        display: grid;
+        grid-template-columns: 5rem auto;
+        align-items: center;
+    }
+
+    color: var(--nb-primary) !important;
+    @include input-styles(false, false, auto);
+    @include label-as-placeholder($top: 0.5rem, $left: 0.5rem, $transformTop: -0.3rem);
+
+    form {
+        position: relative;
+
+        .input-wrapper {
+            position: relative;
+    
+            ion-input.no-border {
+                
+                border: none !important;
+                box-shadow: none !important;
+                color: var(--nb-primary) !important;
+                font-size: 1.1rem !important;
+                
+                ion-label {
+                    // white-space: nowrap;
+                    font-weight: 700;
+                }
+            }
+        }
+        
+        // ::== icon size & center ==::
+        & > ion-icon {
+            color: var(--nb-light-grey);
+            font-size: 1.8rem;
+            position: absolute;
+            right: 1rem;
+            top: calc(50% - .9rem);
+            bottom: calc(50% - .9rem);
+            z-index: 100;
+    
+            &.paper-plane {
+                animation: fade-over 0.5s linear;
+                color: var(--nb-primary);
+            }
+    
+            @keyframes fade-over {
+                0% { opacity: 0%; }
+                40% {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    opacity: 100%;
+                    transform: rotate(-25deg);
+                }
+                60% {
+                    transform: rotate(0deg);
+                }
+                70% {
+                    transform: rotate(25deg);
+                }
+                80% {
+                    transform: rotate(0deg);
+                }
+                90% {
+                    transform: rotate(-25deg);
+                }
+                100% {
+                    transform: rotate(0deg);
+                }
+            }            
+        }
+    }
+    
+    .vendor-results {
+        .vendor-result {
+            margin-bottom: 1rem;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+
+            .vendor-search-option {
+                padding: 0.5rem;
+                @include clickable;
+    
+                &:hover {
+                    background: var(--nb-primary-quarter-opacity);
+                    border-radius: var(--nb-border-radius);
+                }
+            }
+        }
+        
+    }
+}
+
+
+
+// selected answer vendor
+.selected-vendor {
+    // background: rgba(var(--nb-primary), 0.25);
+    color: var(--nb-light-grey);
+    border-radius: var(--nb-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 2rem;
+
+    .buttons-wrapper {
+        display: flex;
+
+        app-jacobi-button {
+            width: 10rem;
+
+            &:first-of-type {
+                margin-right: 1rem;
+            }
+        }
+        @include screen-sm-and-below {
+            margin-top: 1rem;
+        }
+    }
+}
+
+
+// ======================= Mobile =============================
+@include screen-lg-and-below {
+    .answers {
+
+    }
+}

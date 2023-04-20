@@ -1,0 +1,17 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+h2 {
+    color: var(--nb-primary);
+    // --ion-font-family: "#{font-families(kabel)}" !important;
+    // font-family: font-families(kabel) !important;
+    // font-size: font-sizes(h2);
+}
+
+h3 {
+    color: var(--nb-primary);
+    // --ion-font-family: "#{font-families(kabel)}" !important;
+    // font-family: font-families(kabel) !important;
+    // font-size: font-sizes(3);
+    margin-bottom: 0;
+}

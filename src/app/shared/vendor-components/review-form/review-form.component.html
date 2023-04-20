@@ -1,0 +1,100 @@
+<div class="vendor-review-form-wrapper">
+  <ion-row class="form-header">
+    <ion-col>
+      <app-nb-avatar [imageSrc]="currentUser?.consumer.avatarSourceURL" [username]="currentUser?.consumer.name" [altStyleClass]="'force-center-items'">
+      </app-nb-avatar>
+    </ion-col>
+
+    <ion-col class="hide-md-and-below">
+      <ion-row>
+        <ion-col class="rating-input-label-wrapper">
+          <p class="rating-input-label">Your Rating:</p>
+        </ion-col>
+        <ion-col>
+          <app-vendor-review-input-rating [formGroupInstance]="reviewForm" [inputName]="'rating'"></app-vendor-review-input-rating>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="form-new-review-wrapper">
+    <ion-col>
+      <div class="new-reviews-form">
+        <form (ngSubmit)="addNewReview()" [formGroup]="reviewForm">
+          <ion-row class="hide-md-and-above mobile-star-rating">
+            <ion-col>
+              <p class="rating-input-label">Your Rating:</p>
+              <app-vendor-review-input-rating class="stars" [formGroupInstance]="reviewForm" [inputName]="'rating'" [altSize]="'mobile-size'"></app-vendor-review-input-rating>
+            </ion-col>
+          </ion-row>
+
+          <!-- web -->
+          <app-input-field class="hide-md-and-below ion-text-left" [formGroupInstance]="reviewForm" [inputName]="'title'" [inputType]="'text'"
+            [label]="'Review title'" [icon]="null"  [invalidInputWarnings]=""></app-input-field>
+          <!-- mobile  -->
+          <!-- [altStyle]="'mobile-input'" -->
+          <div class="mobile-input-field">
+            <app-input-field class="hide-md-and-above ion-text-left" [formGroupInstance]="reviewForm" [inputName]="'title'" [inputType]="'text'"
+            [label]="'Review title'" [icon]="null"  [invalidInputWarnings]="" [altStyle]="'mobile-input'"></app-input-field>
+          </div>
+
+          <ion-row class="textarea-container">
+            <ion-col class="hide-md-and-below">
+              <div class="textarea-wrapper ion-text-left" [formGroup]="reviewForm">
+                <ion-textarea [ngClass]="{ hasValue: reviewForm.value.body?.trim() }" class="no-border ion-text-left"
+                  formControlName="body" required auto-grow="true">
+                  <ion-label position="floating">Review body...</ion-label>
+
+                  <div *ngIf="!reviewToEdit" class="submit-icon-wrapper">
+                    <ion-icon class="{{ submitIcon }}" [ngClass]="{'paper-plane': reviewForm.value.body}" (click)="addNewReview()"
+                      (mouseenter)="submitIcon = 'paper-plane'" (mouseleave)="submitIcon = 'paper-plane-outline'" [name]="submitIcon">
+                    </ion-icon>
+                  </div>
+                </ion-textarea>
+              </div>
+            </ion-col>
+
+            <ion-col class="hide-md-and-above mobile-textarea-col">
+              <div class="textarea-wrapper" [formGroup]="reviewForm">
+                <ion-textarea [ngClass]="{ hasValue: reviewForm.value.body?.trim() }" class="no-border"
+                  formControlName="body" required auto-grow="true">
+                  <ion-label position="floating">Review body...</ion-label>
+
+                  <div *ngIf="!reviewToEdit" class="submit-icon-wrapper">
+                    <ion-icon class="{{ submitIcon }}" [ngClass]="{'paper-plane': reviewForm.value.body}" (click)="addNewReview()"
+                      (mouseenter)="submitIcon = 'paper-plane'" (mouseleave)="submitIcon = 'paper-plane-outline'" [name]="submitIcon">
+                    </ion-icon>
+                  </div>
+                  
+                </ion-textarea>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <button type="submit" style="display:none" [disabled]="reviewForm.invalid">hidden submit</button>
+
+          <ion-row *ngIf="reviewToEdit">
+            <ion-col>
+              <div class="edit-btn-wrapper">
+                <app-jacobi-button class="cancel-edit-btn" [buttonType]="'ghost-auth-secondary'" (click)="cancelUpdateReview()">Cancel</app-jacobi-button>
+                <app-jacobi-button class="update-edit-btn" [buttonType]="'auth-secondary'" (click)="updateReview()">Update</app-jacobi-button>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-row class="submit-icon-wrapper">
+            <ion-col *ngIf="!reviewToEdit">
+              <ion-icon *ngIf="!reviewToEdit" class="{{ submitIcon }}" [ngClass]="{'paper-plane': reviewForm.value.body}" (click)="addNewReview()"
+                (mouseenter)="submitIcon = 'paper-plane'" (mouseleave)="submitIcon = 'paper-plane-outline'" [name]="submitIcon">
+              </ion-icon>
+            </ion-col>
+          </ion-row> -->
+          
+        </form>
+      </div>
+
+      <ion-item-divider *ngIf="!reviewToEdit"></ion-item-divider>
+    </ion-col>
+  </ion-row>
+
+</div>

@@ -1,0 +1,51 @@
+
+
+
+<ion-row class="vendor-details-container">
+  <ion-col class="vendor-details-description" size-xs="12" size-md="7">
+    <ion-card>
+      <ion-card-content>
+        <div class="description" [innerHtml]="vendor?.description || 'This vendor has not yet created a description.'"></div>
+      </ion-card-content>
+    </ion-card>
+  </ion-col>
+  <ion-col class="hide-md-and-below vendor-details-info" size-xs="12" size-md="5">
+    <ion-row *ngIf="vendor?.websiteURL">
+      <ion-col class="nb-vertical-center">
+        <ion-icon name="globe-outline"></ion-icon>
+        &nbsp; <a [href]="vendor?.websiteURL" target="_blank" >{{ vendor?.websiteURL }}</a>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="vendor?.phoneNumber">
+      <ion-col class="nb-vertical-center">
+        <ion-icon name="call-outline"></ion-icon>
+        &nbsp; <a class="clickable" href="tel:+{{ vendor?.phoneFormatted }}">{{ vendor?.phoneFormatted }}</a>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row class="social-icons-row">
+      <ion-col>
+        <ion-row class="social-icons">
+          <ion-col *ngIf="vendor?.facebookLink">
+            <a [href]="vendor?.facebookLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-facebook"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col *ngIf="vendor?.instagramLink">
+            <a [href]="vendor?.instagramLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-instagram"></ion-icon>
+            </a>
+          </ion-col>
+
+          <ion-col *ngIf="vendor?.twitterLink">
+            <a [href]="vendor?.twitterLink" target="_blank">
+              <ion-icon class="social-icon clickable" name="logo-twitter"></ion-icon>
+            </a>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+  </ion-col>
+</ion-row>

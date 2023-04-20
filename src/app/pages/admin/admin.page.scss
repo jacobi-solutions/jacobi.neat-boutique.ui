@@ -1,0 +1,58 @@
+@use "sass:math";
+
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+h2 {
+    padding-left: 1rem;;
+    font-family: font-families(kabel) !important;
+    color: var(--nb-primary) !important;
+}
+.multiple-choice-row {
+    @include label-as-placeholder($top: 0rem !important, $left: 0rem !important, $transformTop: -0.75rem !important);
+    
+    ion-input {
+        color: var(--nb-primary) !important;
+        font-weight: 500 !important;
+        @include input-styles;
+        
+        border: 1px solid #f0f0f0 !important;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 1px #f8f8f8 !important;
+        height: 4rem;
+        padding-left: 0 !important;
+
+        ion-item {
+            width: 100%;
+            position: relative;
+            color: var(--nb-primary) !important;
+            font-weight: 500 !important;
+            // ::== icon size & center ==::
+            & > ion-icon {
+                color: var(--nb-light-grey);
+                font-size: 1.8rem;
+                position: absolute;
+                right: 0.35rem;
+                top: calc(50% - .9rem);
+                bottom: calc(50% - .9rem);
+            }
+    
+            ion-label,
+            ion-select {
+                font-size: 1.5rem;
+                font-weight: 500 !important;
+            }
+        
+            ion-select {
+                padding: 0;
+                
+                &::part(icon) {
+                    display: none;
+                }
+            }
+
+            &.hasValue ion-select {
+                color: var(--nb-primary) !important;
+            }
+        }
+    }    
+}
