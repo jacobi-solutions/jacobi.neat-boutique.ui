@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  neatBoutiqueApiBaseUrl: 'http://localhost',
-  // neatBoutiqueApiBaseUrl: 'https://neat-boutique-api-ot6bwzgzjq-ue.a.run.app',
+  // neatBoutiqueApiBaseUrl: 'http://localhost',
+  neatBoutiqueApiBaseUrl: 'https://neat-boutique-api-ot6bwzgzjq-ue.a.run.app',
   neatBoutiqueUIBaseUrl: 'http://localhost:8101',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',

@@ -40,7 +40,7 @@ export class AnswerItemComponent implements OnInit {
   ngOnInit() {
     this._customersService.currentUserSubject.subscribe((user) => {
       this.currentUser = user;
-      this.currentUserVote = this.answer.votes.find(x => this.currentUser.hasId(x.voter.id));
+      this.currentUserVote = this.answer.votes.find(x => this.currentUser?.hasId(x.voter.id));
       if(this.currentUserVote) {
         this.borderColor = AnswerVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
       } else if(this.answer.entity.isGooglePlaceEntity) {
