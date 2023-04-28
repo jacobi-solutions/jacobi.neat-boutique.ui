@@ -6,8 +6,16 @@ export const environment = {
   neatBoutiqueUIBaseUrl: 'https://lociknows.com',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
-  firebaseApiKey: 'AIzaSyCvFs7NwQ_qvX9L9te3JJKQprzTFps7ur0',
-  firebaseAuthDomain: 'citric-inkwell-330122.firebaseapp.com',
+
+  firebaseConfig: {
+    apiKey: "AIzaSyBxreSfUWgDYfOT4H8A0pmPnuoeGJiGoxI",
+    authDomain: "citric-inkwell-330122.firebaseapp.com",
+    projectId: "citric-inkwell-330122",
+    storageBucket: "citric-inkwell-330122.appspot.com",
+    messagingSenderId: "529820257802",
+    appId: "1:529820257802:web:5f48a537442e238a97d9f3",
+    measurementId: "G-EFT2LTNEFP"
+  },
   
   vendorSubscriptionStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
   vendorSubscriptionPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",

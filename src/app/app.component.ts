@@ -12,6 +12,8 @@ import { NotificationsService } from './services/notifications.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { AuthService } from './auth/auth.service';
 
+import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
+
 
 @Component({
   selector: 'app-root',

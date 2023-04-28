@@ -17,14 +17,13 @@ import { AuthConfig } from './auth/auth.config';
 import { AuthFlowPageModule } from './auth/auth-flow/auth-flow.module';
 import { AuthModule } from './auth/auth.module';
 
+import { FIREBASE_APP } from './auth/auth.service';
+import { FirebaseApp, initializeApp } from 'firebase/app';
 
-const firebaseConfig = {
-  apiKey: environment.firebaseApiKey,
-  authDomain: environment.firebaseAuthDomain,
-};
+
 
 const authConfig = new AuthConfig({
-  firebaseConfig: firebaseConfig,
+  firebaseConfig: environment.firebaseConfig,
   appUiBaseUrl: environment.neatBoutiqueUIBaseUrl,
   appApiBaseUrl: environment.neatBoutiqueApiBaseUrl,
   signInRedirectUrl: '/home',
@@ -44,6 +43,10 @@ const authConfig = new AuthConfig({
 
 export function getAPIBaseUrl(): string {
   return environment.neatBoutiqueApiBaseUrl;
+}
+
+export function getFirebaseApp(): FirebaseApp {
+  return initializeApp(environment.firebaseConfig);
 }
 
 @NgModule({
@@ -66,7 +69,8 @@ export function getAPIBaseUrl(): string {
         Storage,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         { provide: API_BASE_URL, useFactory: getAPIBaseUrl },
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }, 
+        { provide: FIREBASE_APP, useFactory: getFirebaseApp }
     ],
     bootstrap: [AppComponent]
 })

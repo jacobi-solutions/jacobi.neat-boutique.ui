@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Inject, Injectable, InjectionToken, TemplateRef } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import 'firebase/compat/auth';
 import { getAuth, onAuthStateChanged, initializeAuth, updateProfile, verifyBeforeUpdateEmail, updatePassword,
@@ -11,6 +11,8 @@ import { Platform } from '@ionic/angular';
 import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 import { sha256 } from 'js-sha256';
 
+export const FIREBASE_APP = new InjectionToken<FirebaseApp>('FIREBASE_APP');
+
 import {
   SignInWithApple,
   SignInWithAppleResponse,
@@ -18,6 +20,8 @@ import {
 } from '@capacitor-community/apple-sign-in';
 import { AuthSplitScreenVersionConfig, AuthConfig } from './auth.config';
 import { AccountsService } from '../services/accounts.service';
+import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
+import { FirebaseEventTypes } from '../models/firebase-event-types';
 export type AuthPageButtons = {
   // ctaButton?: TemplateRef<any>,
   cancelButton?: TemplateRef<any>
@@ -47,6 +51,7 @@ export class AuthService {
 
   private _auth: Auth;
 
+  private _analytics: Analytics;
   // auth page buttons
   // public authPageButtonsSubject: BehaviorSubject<AuthPageButtons> = new BehaviorSubject<AuthPageButtons>(null);
 
@@ -54,9 +59,10 @@ export class AuthService {
 
 
 
-  constructor(private _router: Router, private _config: AuthConfig, private _platform: Platform,
+  constructor(@Inject(FIREBASE_APP) _firebaseApp: FirebaseApp, private _router: Router, private _config: AuthConfig, private _platform: Platform,
       private _facebook: Facebook, private _accountsService: AccountsService) {
 
+    this._analytics = getAnalytics(_firebaseApp);
     this.signInRedirectUrl = <string>this._config.signInRedirectUrl;
     this.signUpRedirectUrl = <string>this._config.signUpRedirectUrl;
     this.unauthenticatedRedirect = this._config.unauthenticatedRedirect;
@@ -102,12 +108,19 @@ export class AuthService {
     getRedirectResult(this._auth)
     .then((credential) => {
       if (credential?.user) {
-        
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+          name: "Facebook Redirect",
+          credential: credential
+        });
         console.log("facebook redirect");
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var token = credential.user.refreshToken;
         var additionalUserInfo = getAdditionalUserInfo(credential);
         if(additionalUserInfo?.isNewUser) {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+            name: "Facebook New User",
+            credential: credential
+          });
           this._accountsService.createAccount(credential.user.uid, credential.user.displayName, credential.user.email).then((customer) => {
             if(customer) {
               this._router.navigateByUrl(this.signUpRedirectUrl);
@@ -115,11 +128,19 @@ export class AuthService {
           });
           
         } else {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+            name: "Facebook User Login",
+            credential: credential
+          });
           this._router.navigateByUrl(this.signInRedirectUrl);
         }
         // ...
       }
     }).catch((error) => {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+        name: "Facebook Redirect Error",
+        error: error
+      });
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -137,20 +158,32 @@ export class AuthService {
   }
 
   public changeUsername(username: string) {
-    
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+        name: "Change Username",
+        currentAuthUser: this._currentAuthUser,
+        newUsername: username
+      });
       updateProfile(this._currentAuthUser as User, {
         displayName: username
       }).then(() => {
         this._auth.currentUser?.getIdToken(true)
         this._accountsService.updateUsername(username);
       }).catch((error) => {
-       
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Change Username Error",
+          error: error
+        });
       });
     
     
   }
   
   public changePhotoURL(photoUrl: string) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Change PhotoUrl",
+      currentAuthUser: this._currentAuthUser,
+      newPhotoUrl: photoUrl
+    });
     const promise = new Promise((resolve, reject) => {
       updateProfile(this._currentAuthUser as User, {
         photoURL: photoUrl
@@ -158,6 +191,10 @@ export class AuthService {
       .then(() => {
         this._auth.currentUser?.getIdToken(true)
       }).catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Change Photo Error",
+          error: error
+        });
         reject(error);
       });
     });
@@ -165,6 +202,11 @@ export class AuthService {
   }
 
   changeEmail(email: string) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Change Email",
+      currentAuthUser: this._currentAuthUser,
+      newEmail: email
+    });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/sign-in`,
       handleCodeInApp: true
@@ -173,6 +215,10 @@ export class AuthService {
       verifyBeforeUpdateEmail(this._currentAuthUser as User, email, actionCodeSettings).then(() => {
         resolve(true);
       }).catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Change Email Error",
+          error: error
+        });
         // console.log(error)
       });
     });
@@ -180,6 +226,10 @@ export class AuthService {
   }
 
   deleteAccountInit() {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Delete Account Init",
+      currentAuthUser: this._currentAuthUser
+    });
     var userId = this._auth.currentUser?.uid;
     var accountDeletion = new AccountDeletion();
     accountDeletion.token = this._uniqueStr(32);
@@ -189,6 +239,10 @@ export class AuthService {
   }
 
   deleteAccountFinal(accountDeletion: AccountDeletion|null) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Delete Account Final",
+      currentAuthUser: this._currentAuthUser
+    });
     this._accountsService.deleteAuthUserInit(accountDeletion);
     
     const promise = new Promise<void>((resolve, reject) => {
@@ -196,6 +250,10 @@ export class AuthService {
         this._accountsService.deleteAuthUserFinal(accountDeletion);
         resolve();
       }).catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Delete Account Final Error",
+          error: error
+        });
         this.deleteAccountRollback(accountDeletion);
         reject();
       });
@@ -204,14 +262,26 @@ export class AuthService {
   }
 
   deleteAccountRollback(accountDeletion: AccountDeletion|null) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Delete Account Rollback",
+      currentAuthUser: this._currentAuthUser
+    });
     this._accountsService.deleteAccountRollBack(accountDeletion);
   }
 
   resetPassword(password: string) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Reset Password",
+      currentAuthUser: this._currentAuthUser
+    });
     const promise = new Promise((resolve, reject) => {
       updatePassword(this._currentAuthUser as User, password).then(() => {
         resolve(true);
       }).catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Reset Password Error",
+          error: error
+        });
         var test = error;
       });
     });
@@ -227,7 +297,11 @@ export class AuthService {
     return result.join('');
   }
   
-  async _createFirebaseuserFromApple(identityToken, givenName, familyName, rawNonce) {
+  async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Apple: Create User",
+      currentAuthUser: this._currentAuthUser
+    });
     // Create a custom OAuth provider    
     const provider = new OAuthProvider('apple.com');
  
@@ -256,11 +330,19 @@ export class AuthService {
       }
     })
     .catch(error => {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+        name: "Apple: Create User Error",
+        error: error
+      });
       console.log(error);
     });
   }
 
   signInUserWithApple() {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Apple: Sign In User",
+      currentAuthUser: this._currentAuthUser
+    });
     var rawNonce = this._uniqueStr(10);
     var hashedNonce = sha256(rawNonce);
 
@@ -275,9 +357,13 @@ export class AuthService {
       
       SignInWithApple.authorize(options)
         .then(async (res: SignInWithAppleResponse) => {
-          await this._createFirebaseuserFromApple(res.response.identityToken, res.response.givenName, res.response.familyName, rawNonce);
+          await this._createFirebaseUserFromApple(res.response.identityToken, res.response.givenName, res.response.familyName, rawNonce);
         })
         .catch(error => {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+            name: "Apple Device: Sign In User Error",
+            error: error
+          });
           console.log("error: " + error)
         });
     } else {
@@ -297,12 +383,20 @@ export class AuthService {
         }
         })
         .catch(error => {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+            name: "Apple: Sign In User Error",
+            error: error
+          });
           // Handle error
         });
     }
   }
 
   signInUserWithFacebook(): void {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Facebook: Sign In User User",
+      currentAuthUser: this._currentAuthUser
+    });
     console.log("facebook auth");
     if (this._platform.is("capacitor")) {
       this.nativeFacebookAuth();
@@ -312,6 +406,10 @@ export class AuthService {
   }
   async nativeFacebookAuth(): Promise<void> {
     try {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+        name: "Facebook: Native Facebook Sign In",
+        currentAuthUser: this._currentAuthUser
+      });
       console.log("native facebook auth");
       const response = await 
       this._facebook.login(["public_profile"]).then((response) => {
@@ -356,8 +454,12 @@ export class AuthService {
       });
       
       
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+        name: "Facebook: Native Facebook Sign In Error",
+        error: error
+      });
+      console.log(error);
     }
   }
 
@@ -381,6 +483,10 @@ export class AuthService {
   }
 
   browserFacebookAuth() {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Facebook: Browser Facebook Sign In",
+      currentAuthUser: this._currentAuthUser
+    });
     console.log("browser facebook auth");
     var provider = new FacebookAuthProvider();
     
@@ -400,6 +506,10 @@ export class AuthService {
       // ...
     })
     .catch((error) => {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+        name: "Facebook: Browswer Facebook Sign In Error",
+        error: error
+      });
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -413,27 +523,43 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign Out User",
+      currentAuthUser: this._currentAuthUser
+    });
     if (this._platform.is("capacitor")) {
       try {
         await this._facebook.logout(); // Unauth with Facebook
         await this._auth.signOut(); // Unauth with Firebase
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign Out User Error",
+          error: error
+        });
+        console.log(error);
       }
     } else {
       try {
         await this._auth.signOut();
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign Out User Error",
+          error: error
+        });
+        console.log(error);
       }
     }
   }
 
   signInUser(email: string, password: string, rememberMe: boolean) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In User",
+      currentAuthUser: this._currentAuthUser
+    });
     if(rememberMe) {
       var persistence = browserLocalPersistence;
     } else {
@@ -454,12 +580,20 @@ export class AuthService {
           resolve(true);
         })
         .catch((error) => {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+            name: "Sign In User Error",
+            error: error
+          });
           var errorCode = error.code;
           var errorMessage = error.message;
           reject(errorMessage);
         });
       })
       .catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign In User Error",
+          error: error
+        });
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -471,6 +605,10 @@ export class AuthService {
   }
 
   passwordResetSignInWithLink(email)  {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In With Link: Password Reset",
+      currentAuthUser: this._currentAuthUser
+    });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-password-final?email=${email}`,
       handleCodeInApp: true
@@ -479,6 +617,10 @@ export class AuthService {
   }
 
   emailResetSignInWithLink() {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In With Link: Email Reset",
+      currentAuthUser: this._currentAuthUser
+    });
     var email = this._auth.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-email-final?email=${email}`,
@@ -489,6 +631,10 @@ export class AuthService {
   }
 
   deleteAccountSignInWithLink() {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In With Link: Delete Account",
+      currentAuthUser: this._currentAuthUser
+    });
     var email = this._auth.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/delete-account-final?email=${email}`,
@@ -498,6 +644,10 @@ export class AuthService {
   }
   
   signInUserWithLink(email: string, actionCodeSettings: ActionCodeSettings) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In With Link",
+      currentAuthUser: this._currentAuthUser
+    });
     const promise = new Promise((resolve, reject) => {
       fetchSignInMethodsForEmail(this._auth, email).then((signInMethods) => {
         if(signInMethods?.length > 0) {
@@ -506,6 +656,10 @@ export class AuthService {
             resolve(true);
           })
           .catch((error) => {
+            logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+              name: "Sign In User With Link Error",
+              error: error
+            });
             var errorCode = error.code;
             var errorMessage = error.message;
             reject(errorMessage);
@@ -514,6 +668,10 @@ export class AuthService {
           reject("unknown user");
         }
       }).catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign In User With Link Error",
+          error: error
+        });
         var errorCode = error.code;
         var errorMessage = error.message;
         reject(errorMessage);
@@ -524,12 +682,20 @@ export class AuthService {
   }
 
   signInWithEmailLink(email) {
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign In With Email Link",
+      currentAuthUser: this._currentAuthUser
+    });
     const promise = new Promise((resolve, reject) => {
       signInWithEmailLink(this._auth, email)
       .then(() => {
         resolve(true);
       })
       .catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign In User With Email Link Error",
+          error: error
+        });
         var errorCode = error.code;
         var errorMessage = error.message;
         reject(errorMessage);
@@ -539,6 +705,11 @@ export class AuthService {
   }
 
   signUpUser(username: string, email: string, password: string) {
+
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_EVENT,  { 
+      name: "Sign Up User",
+      currentAuthUser: this._currentAuthUser
+    });
     var actionCodeSettings = {
       url: this._config.appUiBaseUrl,
     };
@@ -559,16 +730,27 @@ export class AuthService {
           });
           resolve(user.uid);
         }).catch((error) => {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+            name: "Sign Up User Error",
+            error: error
+          });
           reject(error.message);
         });
 
         sendEmailVerification(this._currentAuthUser as User, actionCodeSettings).then(function() {
           // Email sent.
         }).catch((error) => {
-          
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+            name: "Sign Up User Send Email Verification Error",
+            error: error
+          });
         });
       })
       .catch((error) => {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR,  { 
+          name: "Sign Up User Error",
+          error: error
+        });
         var errorCode = error.code;
         var errorMessage = error.message;
         reject(error.message);

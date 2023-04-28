@@ -9,8 +9,15 @@ export const environment = {
   neatBoutiqueUIBaseUrl: 'http://localhost:8101',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
-  firebaseApiKey: "AIzaSyD6QphHnx3bvAH4NjS8h5Dy2mPd0dJHocg",
-  firebaseAuthDomain: "neat-boutique.firebaseapp.com",
+
+  firebaseConfig : {
+    apiKey: "AIzaSyDiUhrgtpbuAoqr_QrWqrWP0pv2kYQx5sw",
+    authDomain: "neat-boutique.firebaseapp.com",
+    projectId: "neat-boutique",
+    storageBucket: "neat-boutique.appspot.com",
+    messagingSenderId: "801710531417",
+    appId: "1:801710531417:web:6f3ffcd1723087058f6248"
+  },
 
   vendorSubscriptionStandardStripePriceId: "price_1LUzlFIuBnHBFjIosHRQpWj6",
   vendorSubscriptionPremiumStripePriceId : "price_1LUzlzIuBnHBFjIo3tJpJP3n",
