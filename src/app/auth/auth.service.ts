@@ -108,7 +108,7 @@ export class AuthService {
     getRedirectResult(this._auth)
     .then((credential) => {
       if (credential?.user) {
-        logEvent(this._analytics, FirebaseEventTypes.FACEBOOK_REDIRECT,  {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
           LC_user: credential.user.displayName,
           LC_operationType: credential.operationType,
           LC_providerId: credential.providerId
@@ -118,7 +118,7 @@ export class AuthService {
         var token = credential.user.refreshToken;
         var additionalUserInfo = getAdditionalUserInfo(credential);
         if(additionalUserInfo?.isNewUser) {
-          logEvent(this._analytics, FirebaseEventTypes.NEW_FACEBOOK_USER,  {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
             LC_user: credential.user.displayName,
             LC_operationType: credential.operationType,
             LC_providerId: credential.providerId
@@ -130,7 +130,7 @@ export class AuthService {
           });
           
         } else {
-          logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_FACEBOOK_USER,  {
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
             LC_user: credential.user.displayName,
             LC_operationType: credential.operationType,
             LC_providerId: credential.providerId
@@ -140,7 +140,7 @@ export class AuthService {
         // ...
       }
     }).catch((error) => {
-      logEvent(this._analytics, FirebaseEventTypes.ERROR_FACEBOOK_REDIRECT,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
         LC_error: error,
         LC_errorCode: error.code,
         LC_errorMessage: error.message
@@ -162,7 +162,7 @@ export class AuthService {
   }
 
   public changeUsername(username: string) {
-      logEvent(this._analytics, FirebaseEventTypes.CHANGE_USERNAME,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
         LC_currentAuthUser: this._auth.currentUser.displayName,
         LC_newUsername: username
       });
@@ -172,7 +172,7 @@ export class AuthService {
         this._auth.currentUser?.getIdToken(true)
         this._accountsService.updateUsername(username);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_CHANGE_USERNAME,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_USERNAME,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -183,7 +183,7 @@ export class AuthService {
   }
   
   public changePhotoURL(photoUrl: string) {
-    logEvent(this._analytics, FirebaseEventTypes.CHANGE_USERNAME,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName,
       LC_newPhotoUrl: photoUrl
     });
@@ -194,7 +194,7 @@ export class AuthService {
       .then(() => {
         this._auth.currentUser?.getIdToken(true)
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_CHANGE_PHOTO_URL,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_PHOTO_URL,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -206,7 +206,7 @@ export class AuthService {
   }
 
   changeEmail(email: string) {
-    logEvent(this._analytics, FirebaseEventTypes.CHANGE_USERNAME,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName,
       LC_newEmail: email
     });
@@ -218,7 +218,7 @@ export class AuthService {
       verifyBeforeUpdateEmail(this._currentAuthUser as User, email, actionCodeSettings).then(() => {
         resolve(true);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_CHANGE_EMAIL,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_EMAIL,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -230,7 +230,7 @@ export class AuthService {
   }
 
   deleteAccountInit() {
-    logEvent(this._analytics, FirebaseEventTypes.DELETE_ACCOUNT_INIT,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_INIT,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     var userId = this._auth.currentUser?.uid;
@@ -242,7 +242,7 @@ export class AuthService {
   }
 
   deleteAccountFinal(accountDeletion: AccountDeletion|null) {
-    logEvent(this._analytics, FirebaseEventTypes.DELETE_ACCOUNT_FINAL,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_FINAL,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     this._accountsService.deleteAuthUserInit(accountDeletion);
@@ -252,7 +252,7 @@ export class AuthService {
         this._accountsService.deleteAuthUserFinal(accountDeletion);
         resolve();
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_DELETE_ACCOUNT_FINAL,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_DELETE_ACCOUNT_FINAL,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -265,21 +265,21 @@ export class AuthService {
   }
 
   deleteAccountRollback(accountDeletion: AccountDeletion|null) {
-    logEvent(this._analytics, FirebaseEventTypes.DELETE_USER_ACCOUNT_ROLLBACK,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_USER_ACCOUNT_ROLLBACK,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     this._accountsService.deleteAccountRollBack(accountDeletion);
   }
 
   resetPassword(password: string) {
-    logEvent(this._analytics, FirebaseEventTypes.RESET_PASSWORD,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_RESET_PASSWORD,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     const promise = new Promise((resolve, reject) => {
       updatePassword(this._currentAuthUser as User, password).then(() => {
         resolve(true);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_RESET_PASSWORD,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_RESET_PASSWORD,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -300,7 +300,7 @@ export class AuthService {
   }
   
   async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
-    logEvent(this._analytics, FirebaseEventTypes.CREATE_APPLE_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName,
     });
     // Create a custom OAuth provider    
@@ -331,7 +331,7 @@ export class AuthService {
       }
     })
     .catch(error => {
-      logEvent(this._analytics, FirebaseEventTypes.ERROR_CREATE_APPLE_USER,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
         LC_error: error,
         LC_errorCode: error.code,
         LC_errorMessage: error.message
@@ -341,7 +341,7 @@ export class AuthService {
   }
 
   signInUserWithApple() {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_APPLE_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     var rawNonce = this._uniqueStr(10);
@@ -361,7 +361,7 @@ export class AuthService {
           await this._createFirebaseUserFromApple(res.response.identityToken, res.response.givenName, res.response.familyName, rawNonce);
         })
         .catch(error => {
-          logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
             LC_error: error,
             LC_errorCode: error.code,
             LC_errorMessage: error.message
@@ -385,7 +385,7 @@ export class AuthService {
         }
         })
         .catch(error => {
-          logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_USER_APPLE,  { 
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
             LC_error: error,
             LC_errorCode: error.code,
             LC_errorMessage: error.message
@@ -396,7 +396,7 @@ export class AuthService {
   }
 
   signInUserWithFacebook(): void {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_FACEBOOK_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     console.log("facebook auth");
@@ -408,7 +408,7 @@ export class AuthService {
   }
   async nativeFacebookAuth(): Promise<void> {
     try {
-      logEvent(this._analytics, FirebaseEventTypes.CHANGE_USERNAME,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
         LC_currentAuthUser: this._auth.currentUser.displayName
       });
       console.log("native facebook auth");
@@ -456,7 +456,7 @@ export class AuthService {
       
       
     } catch (error) {
-      logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
         LC_error: error,
         LC_errorCode: error.code,
         LC_errorMessage: error.message
@@ -485,7 +485,7 @@ export class AuthService {
   }
 
   browserFacebookAuth() {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     
@@ -508,7 +508,7 @@ export class AuthService {
       // ...
     })
     .catch((error) => {
-      logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
         LC_error: error,
         LC_errorCode: error.code,
         LC_errorMessage: error.message
@@ -526,7 +526,7 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_OUT_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_OUT_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     if (this._platform.is("capacitor")) {
@@ -536,7 +536,7 @@ export class AuthService {
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
       } catch (error) {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_OUT_USER,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -549,7 +549,7 @@ export class AuthService {
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
       } catch (error) {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_OUT_USER,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -560,7 +560,7 @@ export class AuthService {
   }
 
   signInUser(email: string, password: string, rememberMe: boolean) {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     if(rememberMe) {
@@ -583,7 +583,7 @@ export class AuthService {
           resolve(true);
         })
         .catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_USER,  { 
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
             LC_error: error,
             LC_errorCode: error.code,
             LC_errorMessage: error.message
@@ -594,7 +594,7 @@ export class AuthService {
         });
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_USER,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -610,7 +610,7 @@ export class AuthService {
   }
 
   passwordResetSignInWithLink(email)  {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     var actionCodeSettings = {
@@ -621,7 +621,7 @@ export class AuthService {
   }
 
   emailResetSignInWithLink() {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     var email = this._auth.currentUser?.email || '';
@@ -634,7 +634,7 @@ export class AuthService {
   }
 
   deleteAccountSignInWithLink() {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     var email = this._auth.currentUser?.email || '';
@@ -646,7 +646,7 @@ export class AuthService {
   }
   
   signInUserWithLink(email: string, actionCodeSettings: ActionCodeSettings) {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_WITH_LINK,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     const promise = new Promise((resolve, reject) => {
@@ -657,7 +657,7 @@ export class AuthService {
             resolve(true);
           })
           .catch((error) => {
-            logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_WITH_LINK,  { 
+            logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
               LC_error: error,
               LC_errorCode: error.code,
               LC_errorMessage: error.message
@@ -670,7 +670,7 @@ export class AuthService {
           reject("unknown user");
         }
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_WITH_LINK,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -685,7 +685,7 @@ export class AuthService {
   }
 
   signInWithEmailLink(email) {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_IN_WITH_EMAIL_LINK,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_EMAIL_LINK,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName
     });
     const promise = new Promise((resolve, reject) => {
@@ -694,7 +694,7 @@ export class AuthService {
         resolve(true);
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
@@ -708,7 +708,7 @@ export class AuthService {
   }
 
   signUpUser(username: string, email: string, password: string) {
-    logEvent(this._analytics, FirebaseEventTypes.SIGN_UP_USER,  { 
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
       LC_currentAuthUser: this._auth.currentUser.displayName,
       LC_username: username,
       LC_email: email
@@ -733,7 +733,7 @@ export class AuthService {
           });
           resolve(user.uid);
         }).catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_UP_USER,  { 
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
             LC_error: error,
             LC_errorCode: error.code,
             LC_errorMessage: error.message
@@ -744,7 +744,7 @@ export class AuthService {
         sendEmailVerification(this._currentAuthUser as User, actionCodeSettings).then(function() {
           // Email sent.
         }).catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
+          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
             LC_error: error,
             LC_errorCode: error.code,
             LC_errorMessage: error.message
@@ -752,7 +752,7 @@ export class AuthService {
         });
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.ERROR_SIGN_UP_USER,  { 
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
           LC_error: error,
           LC_errorCode: error.code,
           LC_errorMessage: error.message
