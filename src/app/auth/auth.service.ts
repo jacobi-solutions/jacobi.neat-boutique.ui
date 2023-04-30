@@ -163,7 +163,7 @@ export class AuthService {
 
   public changeUsername(username: string) {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth.currentUser.displayName,
+        LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
         LC_newUsername: username
       });
       updateProfile(this._currentAuthUser as User, {
@@ -184,7 +184,7 @@ export class AuthService {
   
   public changePhotoURL(photoUrl: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName,
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
       LC_newPhotoUrl: photoUrl
     });
     const promise = new Promise((resolve, reject) => {
@@ -207,7 +207,7 @@ export class AuthService {
 
   changeEmail(email: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName,
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
       LC_newEmail: email
     });
     var actionCodeSettings = {
@@ -231,7 +231,7 @@ export class AuthService {
 
   deleteAccountInit() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_INIT,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     var userId = this._auth.currentUser?.uid;
     var accountDeletion = new AccountDeletion();
@@ -243,7 +243,7 @@ export class AuthService {
 
   deleteAccountFinal(accountDeletion: AccountDeletion|null) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_FINAL,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     this._accountsService.deleteAuthUserInit(accountDeletion);
     
@@ -266,14 +266,14 @@ export class AuthService {
 
   deleteAccountRollback(accountDeletion: AccountDeletion|null) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_USER_ACCOUNT_ROLLBACK,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     this._accountsService.deleteAccountRollBack(accountDeletion);
   }
 
   resetPassword(password: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_RESET_PASSWORD,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     const promise = new Promise((resolve, reject) => {
       updatePassword(this._currentAuthUser as User, password).then(() => {
@@ -301,7 +301,7 @@ export class AuthService {
   
   async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName,
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
     });
     // Create a custom OAuth provider    
     const provider = new OAuthProvider('apple.com');
@@ -342,7 +342,7 @@ export class AuthService {
 
   signInUserWithApple() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     var rawNonce = this._uniqueStr(10);
     var hashedNonce = sha256(rawNonce);
@@ -397,7 +397,7 @@ export class AuthService {
 
   signInUserWithFacebook(): void {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     console.log("facebook auth");
     if (this._platform.is("capacitor")) {
@@ -409,7 +409,7 @@ export class AuthService {
   async nativeFacebookAuth(): Promise<void> {
     try {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth.currentUser.displayName
+        LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
       });
       console.log("native facebook auth");
       const response = await 
@@ -486,7 +486,7 @@ export class AuthService {
 
   browserFacebookAuth() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     
     console.log("browser facebook auth");
@@ -527,7 +527,7 @@ export class AuthService {
 
   async signOut(): Promise<void> {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_OUT_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     if (this._platform.is("capacitor")) {
       try {
@@ -561,7 +561,7 @@ export class AuthService {
 
   signInUser(email: string, password: string, rememberMe: boolean) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     if(rememberMe) {
       var persistence = browserLocalPersistence;
@@ -611,7 +611,7 @@ export class AuthService {
 
   passwordResetSignInWithLink(email)  {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-password-final?email=${email}`,
@@ -622,7 +622,7 @@ export class AuthService {
 
   emailResetSignInWithLink() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     var email = this._auth.currentUser?.email || '';
     var actionCodeSettings = {
@@ -635,7 +635,7 @@ export class AuthService {
 
   deleteAccountSignInWithLink() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     var email = this._auth.currentUser?.email || '';
     var actionCodeSettings = {
@@ -647,7 +647,7 @@ export class AuthService {
   
   signInUserWithLink(email: string, actionCodeSettings: ActionCodeSettings) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     const promise = new Promise((resolve, reject) => {
       fetchSignInMethodsForEmail(this._auth, email).then((signInMethods) => {
@@ -686,7 +686,7 @@ export class AuthService {
 
   signInWithEmailLink(email) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_EMAIL_LINK,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     const promise = new Promise((resolve, reject) => {
       signInWithEmailLink(this._auth, email)
@@ -709,7 +709,7 @@ export class AuthService {
 
   signUpUser(username: string, email: string, password: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser.displayName,
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
       LC_username: username,
       LC_email: email
     });
