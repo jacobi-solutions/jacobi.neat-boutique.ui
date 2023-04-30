@@ -142,8 +142,8 @@ export class AuthService {
     }).catch((error) => {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
         LC_error: error,
-        LC_errorCode: error.code,
-        LC_errorMessage: error.message
+        LC_errorCode: error?.code,
+        LC_errorMessage: error?.message
       });
       // Handle Errors here.
       var errorCode = error.code;
@@ -174,8 +174,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_USERNAME,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
       });
     
@@ -196,8 +196,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_PHOTO_URL,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         reject(error);
       });
@@ -220,8 +220,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_EMAIL,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         // console.log(error)
       });
@@ -254,8 +254,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_DELETE_ACCOUNT_FINAL,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         this.deleteAccountRollback(accountDeletion);
         reject();
@@ -281,8 +281,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_RESET_PASSWORD,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         var test = error;
       });
@@ -333,8 +333,8 @@ export class AuthService {
     .catch(error => {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
         LC_error: error,
-        LC_errorCode: error.code,
-        LC_errorMessage: error.message
+        LC_errorCode: error?.code,
+        LC_errorMessage: error?.message
       });
       console.log(error);
     });
@@ -363,8 +363,8 @@ export class AuthService {
         .catch(error => {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
             LC_error: error,
-            LC_errorCode: error.code,
-            LC_errorMessage: error.message
+            LC_errorCode: error?.code,
+            LC_errorMessage: error?.message
           });
           console.log("error: " + error)
         });
@@ -387,8 +387,8 @@ export class AuthService {
         .catch(error => {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
             LC_error: error,
-            LC_errorCode: error.code,
-            LC_errorMessage: error.message
+            LC_errorCode: error?.code,
+            LC_errorMessage: error?.message
           });
           // Handle error
         });
@@ -458,8 +458,8 @@ export class AuthService {
     } catch (error) {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
         LC_error: error,
-        LC_errorCode: error.code,
-        LC_errorMessage: error.message
+        LC_errorCode: error?.code,
+        LC_errorMessage: error?.message
       });
       console.log(error);
     }
@@ -510,8 +510,8 @@ export class AuthService {
     .catch((error) => {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
         LC_error: error,
-        LC_errorCode: error.code,
-        LC_errorMessage: error.message
+        LC_errorCode: error?.code,
+        LC_errorMessage: error?.message
       });
       // Handle Errors here.
       var errorCode = error.code;
@@ -538,8 +538,8 @@ export class AuthService {
       } catch (error) {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         console.log(error);
       }
@@ -551,8 +551,8 @@ export class AuthService {
       } catch (error) {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         console.log(error);
       }
@@ -585,8 +585,8 @@ export class AuthService {
         .catch((error) => {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
             LC_error: error,
-            LC_errorCode: error.code,
-            LC_errorMessage: error.message
+            LC_errorCode: error?.code,
+            LC_errorMessage: error?.message
           });
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -596,8 +596,8 @@ export class AuthService {
       .catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         // Handle Errors here.
         var errorCode = error.code;
@@ -659,8 +659,8 @@ export class AuthService {
           .catch((error) => {
             logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
               LC_error: error,
-              LC_errorCode: error.code,
-              LC_errorMessage: error.message
+              LC_errorCode: error?.code,
+              LC_errorMessage: error?.message
             });
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -672,8 +672,8 @@ export class AuthService {
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -696,8 +696,8 @@ export class AuthService {
       .catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -735,8 +735,8 @@ export class AuthService {
         }).catch((error) => {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
             LC_error: error,
-            LC_errorCode: error.code,
-            LC_errorMessage: error.message
+            LC_errorCode: error?.code,
+            LC_errorMessage: error?.message
           });
           reject(error.message);
         });
@@ -746,16 +746,16 @@ export class AuthService {
         }).catch((error) => {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
             LC_error: error,
-            LC_errorCode: error.code,
-            LC_errorMessage: error.message
+            LC_errorCode: error?.code,
+            LC_errorMessage: error?.message
           });
         });
       })
       .catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
           LC_error: error,
-          LC_errorCode: error.code,
-          LC_errorMessage: error.message
+          LC_errorCode: error?.code,
+          LC_errorMessage: error?.message
         });
         var errorCode = error.code;
         var errorMessage = error.message;
