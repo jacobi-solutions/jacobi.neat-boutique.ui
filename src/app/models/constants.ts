@@ -42,7 +42,7 @@ export const AnswerVoteRankingColorsMap = new Map([
 ]);
 
 export const LociConstants = {
-    VERSION_NUMBER: "1.0.5"
+    VERSION_NUMBER: "1.0.6"
 }
 
 
