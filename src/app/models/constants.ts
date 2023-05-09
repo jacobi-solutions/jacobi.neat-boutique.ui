@@ -39,6 +39,10 @@ export const AnswerVoteRankingColorsMap = new Map([
     ['First', '#c69934'],
     ['Second', '#919191'],
     ['Third', '#825a26'],
-  ]);
+]);
+
+export const LociConstants = {
+    VERSION_NUMBER: "1.0.5"
+}
 
 

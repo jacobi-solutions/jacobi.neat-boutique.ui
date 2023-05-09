@@ -22,6 +22,7 @@ import { AuthSplitScreenVersionConfig, AuthConfig } from './auth.config';
 import { AccountsService } from '../services/accounts.service';
 import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 import { FirebaseEventTypes } from '../models/firebase-event-types';
+import { LociConstants } from '../models/constants';
 export type AuthPageButtons = {
   // ctaButton?: TemplateRef<any>,
   cancelButton?: TemplateRef<any>
@@ -560,9 +561,15 @@ export class AuthService {
   }
 
   signInUser(email: string, password: string, rememberMe: boolean) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
-    });
+    try {
+      logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
+        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+        LC_versionNumber: LociConstants.VERSION_NUMBER
+      });
+    } catch {
+
+    }
+    
     if(rememberMe) {
       var persistence = browserLocalPersistence;
     } else {
@@ -611,7 +618,8 @@ export class AuthService {
 
   passwordResetSignInWithLink(email)  {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
+      LC_email: email
     });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-password-final?email=${email}`,
@@ -650,9 +658,9 @@ export class AuthService {
       LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
     });
     const promise = new Promise((resolve, reject) => {
-      fetchSignInMethodsForEmail(this._auth, email).then((signInMethods) => {
+      fetchSignInMethodsForEmail(this._auth, email.trim()).then((signInMethods) => {
         if(signInMethods?.length > 0) {
-          sendSignInLinkToEmail(this._auth, email, actionCodeSettings)
+          sendSignInLinkToEmail(this._auth, email.trim(), actionCodeSettings)
           .then(() => {
             resolve(true);
           })

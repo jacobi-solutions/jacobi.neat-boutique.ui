@@ -13,6 +13,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { AuthService } from './auth/auth.service';
 
 import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
+import { LociConstants } from './models/constants';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public selectedPageName: string;
   public communities: CommunityCategory[];
   public showPricing = false;
+  lociConstants = LociConstants;
   constructor(
     
     private _accountService: AccountsService, // keep this here, please (it is to initialize the AccountsService early)
