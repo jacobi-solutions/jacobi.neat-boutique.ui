@@ -561,14 +561,7 @@ export class AuthService {
   }
 
   signInUser(email: string, password: string, rememberMe: boolean) {
-    try {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
-        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-        LC_versionNumber: LociConstants.VERSION_NUMBER
-      });
-    } catch {
-
-    }
+    
     
     if(rememberMe) {
       var persistence = browserLocalPersistence;
@@ -577,6 +570,14 @@ export class AuthService {
     }
 
     const promise = new Promise((resolve, reject) => {
+      try {
+        logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
+          LC_currentAuthUser: email,
+          LC_versionNumber: LociConstants.VERSION_NUMBER
+        });
+      } catch (error) {
+        reject(error)
+      }
       setPersistence(this._auth, persistence)
       .then(() => {
         // Existing and future Auth states are now persisted in the current
