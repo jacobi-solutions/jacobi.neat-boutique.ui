@@ -30,8 +30,8 @@ npm-debug.log*
 /plugins
 /www
 /.angular
-/android
-/ios
+# /android
+# /ios
 
 
 # mobile idk?

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="app_name">Loci</string>
+  <string name="title_activity_main">Loci</string>
+  <string name="package_name">ui.neatboutique.jacobi</string>
+  <string name="custom_url_scheme">ui.neatboutique.jacobi</string>
+  <string name="fb_app_id">650833970113710</string>
+  <string name="fb_app_name">Loci Knows</string>
+  <string name="ionic_app_id">266f7bbf</string>
+  <string name="ionic_channel_name">Production</string>
+  <string name="ionic_update_method">background</string>
+  <string name="ionic_max_versions">2</string>
+  <string name="ionic_min_background_duration">30</string>
+  <string name="ionic_update_api">https://api.ionicjs.com</string>
+</resources>

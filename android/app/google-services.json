@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "529820257802",
+    "project_id": "citric-inkwell-330122",
+    "storage_bucket": "citric-inkwell-330122.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529820257802:android:be7503ce4f33a3c897d9f3",
+        "android_client_info": {
+          "package_name": "ui.neatboutique.jacobi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529820257802-mpm498blnbdhc3l5b3e431ektfqprv1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYsi2_CI_CCumFrnFaR-axLhaFFyIEh5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529820257802-mpm498blnbdhc3l5b3e431ektfqprv1l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
