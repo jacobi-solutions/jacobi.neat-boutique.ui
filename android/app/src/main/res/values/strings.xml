@@ -5,7 +5,7 @@
   <string name="package_name">ui.neatboutique.jacobi</string>
   <string name="custom_url_scheme">ui.neatboutique.jacobi</string>
   <string name="fb_app_id">1125645084621710</string>
-  <string name="fb_app_name">Loci Knows</string>
+  <string name="fb_app_name">Loci</string>
   <string name="ionic_app_id">266f7bbf</string>
   <string name="ionic_channel_name">Production</string>
   <string name="ionic_update_method">background</string>
