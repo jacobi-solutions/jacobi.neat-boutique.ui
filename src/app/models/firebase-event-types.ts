@@ -1,4 +1,5 @@
 export const FirebaseEventTypes = {
+    AUTH_FIREBASE_ANALYTICS_LOADED: "Auth Firebase analytics loaded",
     AUTH_FACEBOOK_REDIRECT: "Auth Facebook Redirect",
     AUTH_NEW_FACEBOOK_USER: "Auth New Facebook User",
     AUTH_CHANGE_USERNAME: "Auth Change Username",    

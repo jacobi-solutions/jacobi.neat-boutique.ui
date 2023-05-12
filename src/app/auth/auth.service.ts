@@ -64,6 +64,9 @@ export class AuthService {
       private _facebook: Facebook, private _accountsService: AccountsService) {
 
     this._analytics = getAnalytics(_firebaseApp);
+    logEvent(this._analytics, FirebaseEventTypes.AUTH_FIREBASE_ANALYTICS_LOADED,  {
+      LC_version_number: LociConstants.VERSION_NUMBER
+    });
     this.signInRedirectUrl = <string>this._config.signInRedirectUrl;
     this.signUpRedirectUrl = <string>this._config.signUpRedirectUrl;
     this.unauthenticatedRedirect = this._config.unauthenticatedRedirect;
@@ -112,7 +115,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
           LC_user: credential.user.displayName,
           LC_operationType: credential.operationType,
-          LC_providerId: credential.providerId
+          LC_providerId: credential.providerId,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         console.log("facebook redirect");
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -122,7 +126,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
             LC_user: credential.user.displayName,
             LC_operationType: credential.operationType,
-            LC_providerId: credential.providerId
+            LC_providerId: credential.providerId,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           this._accountsService.createAccount(credential.user.uid, credential.user.displayName, credential.user.email).then((customer) => {
             if(customer) {
@@ -134,7 +139,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
             LC_user: credential.user.displayName,
             LC_operationType: credential.operationType,
-            LC_providerId: credential.providerId
+            LC_providerId: credential.providerId,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           this._router.navigateByUrl(this.signInRedirectUrl);
         }
@@ -144,7 +150,8 @@ export class AuthService {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
         LC_error: error,
         LC_errorCode: error?.code,
-        LC_errorMessage: error?.message
+        LC_errorMessage: error?.message,
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       // Handle Errors here.
       var errorCode = error.code;
@@ -159,24 +166,26 @@ export class AuthService {
 
  
   getEmail() {
-    return this._auth.currentUser?.email;
+    return this._auth?.currentUser?.email;
   }
 
   public changeUsername(username: string) {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
-        LC_newUsername: username
+        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+        LC_newUsername: username,
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       updateProfile(this._currentAuthUser as User, {
         displayName: username
       }).then(() => {
-        this._auth.currentUser?.getIdToken(true)
+        this._auth?.currentUser?.getIdToken(true)
         this._accountsService.updateUsername(username);
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_USERNAME,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
       });
     
@@ -185,7 +194,7 @@ export class AuthService {
   
   public changePhotoURL(photoUrl: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
       LC_newPhotoUrl: photoUrl
     });
     const promise = new Promise((resolve, reject) => {
@@ -193,12 +202,13 @@ export class AuthService {
         photoURL: photoUrl
       })
       .then(() => {
-        this._auth.currentUser?.getIdToken(true)
+        this._auth?.currentUser?.getIdToken(true)
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_PHOTO_URL,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         reject(error);
       });
@@ -208,8 +218,9 @@ export class AuthService {
 
   changeEmail(email: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
-      LC_newEmail: email
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_newEmail: email,
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/sign-in`,
@@ -222,7 +233,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_EMAIL,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         // console.log(error)
       });
@@ -232,9 +244,10 @@ export class AuthService {
 
   deleteAccountInit() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_INIT,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
-    var userId = this._auth.currentUser?.uid;
+    var userId = this._auth?.currentUser?.uid;
     var accountDeletion = new AccountDeletion();
     accountDeletion.token = this._uniqueStr(32);
     accountDeletion.userId = userId;
@@ -244,19 +257,21 @@ export class AuthService {
 
   deleteAccountFinal(accountDeletion: AccountDeletion|null) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_FINAL,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     this._accountsService.deleteAuthUserInit(accountDeletion);
     
     const promise = new Promise<void>((resolve, reject) => {
-      this._auth.currentUser?.delete().then(() => {
+      this._auth?.currentUser?.delete().then(() => {
         this._accountsService.deleteAuthUserFinal(accountDeletion);
         resolve();
       }).catch((error) => {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_DELETE_ACCOUNT_FINAL,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         this.deleteAccountRollback(accountDeletion);
         reject();
@@ -267,14 +282,16 @@ export class AuthService {
 
   deleteAccountRollback(accountDeletion: AccountDeletion|null) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_USER_ACCOUNT_ROLLBACK,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     this._accountsService.deleteAccountRollBack(accountDeletion);
   }
 
   resetPassword(password: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_RESET_PASSWORD,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     const promise = new Promise((resolve, reject) => {
       updatePassword(this._currentAuthUser as User, password).then(() => {
@@ -283,7 +300,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_RESET_PASSWORD,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         var test = error;
       });
@@ -302,7 +320,8 @@ export class AuthService {
   
   async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     // Create a custom OAuth provider    
     const provider = new OAuthProvider('apple.com');
@@ -335,7 +354,8 @@ export class AuthService {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
         LC_error: error,
         LC_errorCode: error?.code,
-        LC_errorMessage: error?.message
+        LC_errorMessage: error?.message,
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       console.log(error);
     });
@@ -343,7 +363,8 @@ export class AuthService {
 
   signInUserWithApple() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     var rawNonce = this._uniqueStr(10);
     var hashedNonce = sha256(rawNonce);
@@ -365,7 +386,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
             LC_error: error,
             LC_errorCode: error?.code,
-            LC_errorMessage: error?.message
+            LC_errorMessage: error?.message,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           console.log("error: " + error)
         });
@@ -389,7 +411,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
             LC_error: error,
             LC_errorCode: error?.code,
-            LC_errorMessage: error?.message
+            LC_errorMessage: error?.message,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           // Handle error
         });
@@ -398,7 +421,7 @@ export class AuthService {
 
   signInUserWithFacebook(): void {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user"
     });
     console.log("facebook auth");
     if (this._platform.is("capacitor")) {
@@ -410,7 +433,8 @@ export class AuthService {
   async nativeFacebookAuth(): Promise<void> {
     try {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       console.log("native facebook auth");
       const response = await 
@@ -460,7 +484,8 @@ export class AuthService {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
         LC_error: error,
         LC_errorCode: error?.code,
-        LC_errorMessage: error?.message
+        LC_errorMessage: error?.message,
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       console.log(error);
     }
@@ -487,7 +512,8 @@ export class AuthService {
 
   browserFacebookAuth() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     
     console.log("browser facebook auth");
@@ -512,7 +538,8 @@ export class AuthService {
       logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
         LC_error: error,
         LC_errorCode: error?.code,
-        LC_errorMessage: error?.message
+        LC_errorMessage: error?.message,
+        LC_version_number: LociConstants.VERSION_NUMBER
       });
       // Handle Errors here.
       var errorCode = error.code;
@@ -528,7 +555,8 @@ export class AuthService {
 
   async signOut(): Promise<void> {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_OUT_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     if (this._platform.is("capacitor")) {
       try {
@@ -540,7 +568,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         console.log(error);
       }
@@ -553,7 +582,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         console.log(error);
       }
@@ -594,7 +624,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
             LC_error: error,
             LC_errorCode: error?.code,
-            LC_errorMessage: error?.message
+            LC_errorMessage: error?.message,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -605,7 +636,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         // Handle Errors here.
         var errorCode = error.code;
@@ -619,8 +651,9 @@ export class AuthService {
 
   passwordResetSignInWithLink(email)  {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
-      LC_email: email
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_email: email,
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-password-final?email=${email}`,
@@ -631,9 +664,10 @@ export class AuthService {
 
   emailResetSignInWithLink() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
-    var email = this._auth.currentUser?.email || '';
+    var email = this._auth?.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-email-final?email=${email}`,
       handleCodeInApp: true
@@ -644,9 +678,10 @@ export class AuthService {
 
   deleteAccountSignInWithLink() {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
-    var email = this._auth.currentUser?.email || '';
+    var email = this._auth?.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/delete-account-final?email=${email}`,
       handleCodeInApp: true
@@ -656,7 +691,8 @@ export class AuthService {
   
   signInUserWithLink(email: string, actionCodeSettings: ActionCodeSettings) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     const promise = new Promise((resolve, reject) => {
       fetchSignInMethodsForEmail(this._auth, email.trim()).then((signInMethods) => {
@@ -669,7 +705,8 @@ export class AuthService {
             logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
               LC_error: error,
               LC_errorCode: error?.code,
-              LC_errorMessage: error?.message
+              LC_errorMessage: error?.message,
+              LC_version_number: LociConstants.VERSION_NUMBER
             });
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -682,7 +719,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -695,7 +733,8 @@ export class AuthService {
 
   signInWithEmailLink(email) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_EMAIL_LINK,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user"
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     const promise = new Promise((resolve, reject) => {
       signInWithEmailLink(this._auth, email)
@@ -706,7 +745,8 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -718,9 +758,10 @@ export class AuthService {
 
   signUpUser(username: string, email: string, password: string) {
     logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
-      LC_currentAuthUser: this._auth.currentUser?.displayName ?? "no signed in user",
+      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
       LC_username: username,
-      LC_email: email
+      LC_email: email,
+      LC_version_number: LociConstants.VERSION_NUMBER
     });
     var actionCodeSettings = {
       url: this._config.appUiBaseUrl,
@@ -745,7 +786,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
             LC_error: error,
             LC_errorCode: error?.code,
-            LC_errorMessage: error?.message
+            LC_errorMessage: error?.message,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
           reject(error.message);
         });
@@ -756,7 +798,8 @@ export class AuthService {
           logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
             LC_error: error,
             LC_errorCode: error?.code,
-            LC_errorMessage: error?.message
+            LC_errorMessage: error?.message,
+            LC_version_number: LociConstants.VERSION_NUMBER
           });
         });
       })
@@ -764,10 +807,9 @@ export class AuthService {
         logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
           LC_error: error,
           LC_errorCode: error?.code,
-          LC_errorMessage: error?.message
+          LC_errorMessage: error?.message,
+          LC_version_number: LociConstants.VERSION_NUMBER
         });
-        var errorCode = error.code;
-        var errorMessage = error.message;
         reject(error.message);
       });
     });
