@@ -20,7 +20,7 @@ import {
 } from '@capacitor-community/apple-sign-in';
 import { AuthSplitScreenVersionConfig, AuthConfig } from './auth.config';
 import { AccountsService } from '../services/accounts.service';
-import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
+// import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 import { FirebaseEventTypes } from '../models/firebase-event-types';
 import { LociConstants } from '../models/constants';
 export type AuthPageButtons = {
@@ -52,7 +52,7 @@ export class AuthService {
 
   private _auth: Auth;
 
-  private _analytics: Analytics;
+  // private _analytics: Analytics;
   // auth page buttons
   // public authPageButtonsSubject: BehaviorSubject<AuthPageButtons> = new BehaviorSubject<AuthPageButtons>(null);
 
@@ -63,10 +63,10 @@ export class AuthService {
   constructor(@Inject(FIREBASE_APP) _firebaseApp: FirebaseApp, private _router: Router, private _config: AuthConfig, private _platform: Platform,
       private _facebook: Facebook, private _accountsService: AccountsService) {
 
-    this._analytics = getAnalytics(_firebaseApp);
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_FIREBASE_ANALYTICS_LOADED,  {
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // this._analytics = getAnalytics(_firebaseApp);
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_FIREBASE_ANALYTICS_LOADED,  {
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     this.signInRedirectUrl = <string>this._config.signInRedirectUrl;
     this.signUpRedirectUrl = <string>this._config.signUpRedirectUrl;
     this.unauthenticatedRedirect = this._config.unauthenticatedRedirect;
@@ -112,23 +112,23 @@ export class AuthService {
     getRedirectResult(this._auth)
     .then((credential) => {
       if (credential?.user) {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
-          LC_user: credential.user.displayName,
-          LC_operationType: credential.operationType,
-          LC_providerId: credential.providerId,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
+        //   LC_user: credential.user.displayName,
+        //   LC_operationType: credential.operationType,
+        //   LC_providerId: credential.providerId,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         console.log("facebook redirect");
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var token = credential.user.refreshToken;
         var additionalUserInfo = getAdditionalUserInfo(credential);
         if(additionalUserInfo?.isNewUser) {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
-            LC_user: credential.user.displayName,
-            LC_operationType: credential.operationType,
-            LC_providerId: credential.providerId,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
+          //   LC_user: credential.user.displayName,
+          //   LC_operationType: credential.operationType,
+          //   LC_providerId: credential.providerId,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           this._accountsService.createAccount(credential.user.uid, credential.user.displayName, credential.user.email).then((customer) => {
             if(customer) {
               this._router.navigateByUrl(this.signUpRedirectUrl);
@@ -136,23 +136,23 @@ export class AuthService {
           });
           
         } else {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
-            LC_user: credential.user.displayName,
-            LC_operationType: credential.operationType,
-            LC_providerId: credential.providerId,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
+          //   LC_user: credential.user.displayName,
+          //   LC_operationType: credential.operationType,
+          //   LC_providerId: credential.providerId,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           this._router.navigateByUrl(this.signInRedirectUrl);
         }
         // ...
       }
     }).catch((error) => {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
-        LC_error: error,
-        LC_errorCode: error?.code,
-        LC_errorMessage: error?.message,
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -170,33 +170,33 @@ export class AuthService {
   }
 
   public changeUsername(username: string) {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-        LC_newUsername: username,
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
+      //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      //   LC_newUsername: username,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       updateProfile(this._currentAuthUser as User, {
         displayName: username
       }).then(() => {
         this._auth?.currentUser?.getIdToken(true)
         this._accountsService.updateUsername(username);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_USERNAME,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_USERNAME,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
       });
     
     
   }
   
   public changePhotoURL(photoUrl: string) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_newPhotoUrl: photoUrl
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_newPhotoUrl: photoUrl
+    // });
     const promise = new Promise((resolve, reject) => {
       updateProfile(this._currentAuthUser as User, {
         photoURL: photoUrl
@@ -204,12 +204,12 @@ export class AuthService {
       .then(() => {
         this._auth?.currentUser?.getIdToken(true)
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_PHOTO_URL,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_PHOTO_URL,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         reject(error);
       });
     });
@@ -217,11 +217,11 @@ export class AuthService {
   }
 
   changeEmail(email: string) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_newEmail: email,
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_newEmail: email,
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/sign-in`,
       handleCodeInApp: true
@@ -230,12 +230,12 @@ export class AuthService {
       verifyBeforeUpdateEmail(this._currentAuthUser as User, email, actionCodeSettings).then(() => {
         resolve(true);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_EMAIL,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CHANGE_EMAIL,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         // console.log(error)
       });
     });
@@ -243,10 +243,10 @@ export class AuthService {
   }
 
   deleteAccountInit() {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_INIT,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_INIT,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var userId = this._auth?.currentUser?.uid;
     var accountDeletion = new AccountDeletion();
     accountDeletion.token = this._uniqueStr(32);
@@ -256,10 +256,10 @@ export class AuthService {
   }
 
   deleteAccountFinal(accountDeletion: AccountDeletion|null) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_FINAL,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_ACCOUNT_FINAL,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     this._accountsService.deleteAuthUserInit(accountDeletion);
     
     const promise = new Promise<void>((resolve, reject) => {
@@ -267,12 +267,12 @@ export class AuthService {
         this._accountsService.deleteAuthUserFinal(accountDeletion);
         resolve();
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_DELETE_ACCOUNT_FINAL,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_DELETE_ACCOUNT_FINAL,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         this.deleteAccountRollback(accountDeletion);
         reject();
       });
@@ -281,28 +281,28 @@ export class AuthService {
   }
 
   deleteAccountRollback(accountDeletion: AccountDeletion|null) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_USER_ACCOUNT_ROLLBACK,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_DELETE_USER_ACCOUNT_ROLLBACK,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     this._accountsService.deleteAccountRollBack(accountDeletion);
   }
 
   resetPassword(password: string) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_RESET_PASSWORD,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_RESET_PASSWORD,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     const promise = new Promise((resolve, reject) => {
       updatePassword(this._currentAuthUser as User, password).then(() => {
         resolve(true);
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_RESET_PASSWORD,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_RESET_PASSWORD,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         var test = error;
       });
     });
@@ -319,10 +319,10 @@ export class AuthService {
   }
   
   async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     // Create a custom OAuth provider    
     const provider = new OAuthProvider('apple.com');
  
@@ -351,21 +351,21 @@ export class AuthService {
       }
     })
     .catch(error => {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
-        LC_error: error,
-        LC_errorCode: error?.code,
-        LC_errorMessage: error?.message,
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       console.log(error);
     });
   }
 
   signInUserWithApple() {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var rawNonce = this._uniqueStr(10);
     var hashedNonce = sha256(rawNonce);
 
@@ -383,12 +383,12 @@ export class AuthService {
           await this._createFirebaseUserFromApple(res.response.identityToken, res.response.givenName, res.response.familyName, rawNonce);
         })
         .catch(error => {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
-            LC_error: error,
-            LC_errorCode: error?.code,
-            LC_errorMessage: error?.message,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           console.log("error: " + error)
         });
     } else {
@@ -408,21 +408,22 @@ export class AuthService {
         }
         })
         .catch(error => {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
-            LC_error: error,
-            LC_errorCode: error?.code,
-            LC_errorMessage: error?.message,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           // Handle error
         });
     }
   }
 
   signInUserWithFacebook(): void {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user"
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     console.log("facebook auth");
     if (this._platform.is("capacitor")) {
       this.nativeFacebookAuth();
@@ -432,10 +433,10 @@ export class AuthService {
   }
   async nativeFacebookAuth(): Promise<void> {
     try {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
-        LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_CHANGE_USERNAME,  { 
+      //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       console.log("native facebook auth");
       const response = await 
       this._facebook.login(["public_profile"]).then((response) => {
@@ -481,12 +482,12 @@ export class AuthService {
       
       
     } catch (error) {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
-        LC_error: error,
-        LC_errorCode: error?.code,
-        LC_errorMessage: error?.message,
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_NATIVE_FACEBOOK_USER,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       console.log(error);
     }
   }
@@ -511,10 +512,10 @@ export class AuthService {
   }
 
   browserFacebookAuth() {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_BROWSWER_FACEBOOK_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     
     console.log("browser facebook auth");
     var provider = new FacebookAuthProvider();
@@ -535,12 +536,12 @@ export class AuthService {
       // ...
     })
     .catch((error) => {
-      logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
-        LC_error: error,
-        LC_errorCode: error?.code,
-        LC_errorMessage: error?.message,
-        LC_version_number: LociConstants.VERSION_NUMBER
-      });
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_BROWSER_FACEBOOK_USER,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -554,10 +555,10 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_OUT_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_OUT_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     if (this._platform.is("capacitor")) {
       try {
         await this._facebook.logout(); // Unauth with Facebook
@@ -565,12 +566,12 @@ export class AuthService {
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
       } catch (error) {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         console.log(error);
       }
     } else {
@@ -579,12 +580,12 @@ export class AuthService {
         this._currentAuthUser = null;
         this._accountsService.unLoadAccounts();
       } catch (error) {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_OUT_USER,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         console.log(error);
       }
     }
@@ -601,10 +602,10 @@ export class AuthService {
 
     const promise = new Promise((resolve, reject) => {
       try {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
-          LC_currentAuthUser: email,
-          LC_versionNumber: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_USER,  { 
+        //   LC_currentAuthUser: email,
+        //   LC_versionNumber: LociConstants.VERSION_NUMBER
+        // });
       } catch (error) {
         reject(error)
       }
@@ -621,24 +622,24 @@ export class AuthService {
           resolve(true);
         })
         .catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
-            LC_error: error,
-            LC_errorCode: error?.code,
-            LC_errorMessage: error?.message,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           var errorCode = error.code;
           var errorMessage = error.message;
           reject(errorMessage);
         });
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -650,11 +651,11 @@ export class AuthService {
   }
 
   passwordResetSignInWithLink(email)  {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_email: email,
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_PASSWORD_RESET,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_email: email,
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-password-final?email=${email}`,
       handleCodeInApp: true
@@ -663,10 +664,10 @@ export class AuthService {
   }
 
   emailResetSignInWithLink() {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_EMAIL_RESET,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var email = this._auth?.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/change-email-final?email=${email}`,
@@ -677,10 +678,10 @@ export class AuthService {
   }
 
   deleteAccountSignInWithLink() {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK_DELETE_ACCOUNT,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var email = this._auth?.currentUser?.email || '';
     var actionCodeSettings = {
       url: `${this._config.appUiBaseUrl}/auth-flow/delete-account-final?email=${email}`,
@@ -690,10 +691,10 @@ export class AuthService {
   }
   
   signInUserWithLink(email: string, actionCodeSettings: ActionCodeSettings) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_LINK,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     const promise = new Promise((resolve, reject) => {
       fetchSignInMethodsForEmail(this._auth, email.trim()).then((signInMethods) => {
         if(signInMethods?.length > 0) {
@@ -702,12 +703,12 @@ export class AuthService {
             resolve(true);
           })
           .catch((error) => {
-            logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
-              LC_error: error,
-              LC_errorCode: error?.code,
-              LC_errorMessage: error?.message,
-              LC_version_number: LociConstants.VERSION_NUMBER
-            });
+            // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
+            //   LC_error: error,
+            //   LC_errorCode: error?.code,
+            //   LC_errorMessage: error?.message,
+            //   LC_version_number: LociConstants.VERSION_NUMBER
+            // });
             var errorCode = error.code;
             var errorMessage = error.message;
             reject(errorMessage);
@@ -716,12 +717,12 @@ export class AuthService {
           reject("unknown user");
         }
       }).catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_LINK,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         var errorCode = error.code;
         var errorMessage = error.message;
         reject(errorMessage);
@@ -732,22 +733,22 @@ export class AuthService {
   }
 
   signInWithEmailLink(email) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_EMAIL_LINK,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_WITH_EMAIL_LINK,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     const promise = new Promise((resolve, reject) => {
       signInWithEmailLink(this._auth, email)
       .then(() => {
         resolve(true);
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_WITH_EMAIL_LINK,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         var errorCode = error.code;
         var errorMessage = error.message;
         reject(errorMessage);
@@ -757,12 +758,12 @@ export class AuthService {
   }
 
   signUpUser(username: string, email: string, password: string) {
-    logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
-      LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
-      LC_username: username,
-      LC_email: email,
-      LC_version_number: LociConstants.VERSION_NUMBER
-    });
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_username: username,
+    //   LC_email: email,
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
     var actionCodeSettings = {
       url: this._config.appUiBaseUrl,
     };
@@ -783,33 +784,33 @@ export class AuthService {
           });
           resolve(user.uid);
         }).catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
-            LC_error: error,
-            LC_errorCode: error?.code,
-            LC_errorMessage: error?.message,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
           reject(error.message);
         });
 
         sendEmailVerification(this._currentAuthUser as User, actionCodeSettings).then(function() {
           // Email sent.
         }).catch((error) => {
-          logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
-            LC_error: error,
-            LC_errorCode: error?.code,
-            LC_errorMessage: error?.message,
-            LC_version_number: LociConstants.VERSION_NUMBER
-          });
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
         });
       })
       .catch((error) => {
-        logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
-          LC_error: error,
-          LC_errorCode: error?.code,
-          LC_errorMessage: error?.message,
-          LC_version_number: LociConstants.VERSION_NUMBER
-        });
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
+        //   LC_error: error,
+        //   LC_errorCode: error?.code,
+        //   LC_errorMessage: error?.message,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
         reject(error.message);
       });
     });
