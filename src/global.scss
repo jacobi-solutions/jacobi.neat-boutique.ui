@@ -497,7 +497,7 @@ h4 {
 }
 @include screen-md-and-above {
   .custom-modal::part(content) {
-    max-width: 50%;
+    max-width: 50%; 
   }
 }
 
