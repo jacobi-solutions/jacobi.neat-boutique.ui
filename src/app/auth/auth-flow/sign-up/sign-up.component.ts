@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncaps
 import { Validators, ValidatorFn, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController, NavParams, Platform } from '@ionic/angular';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
 import { passwordConfirmMustMatchValidator } from '../password-confirm-must-match.directive';
 import { AccountsService } from 'src/app/services/accounts.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-sign-up',
@@ -43,14 +44,15 @@ export class SignUpComponent implements OnInit {
 
   constructor(private _router: Router, private _modalCtrl: ModalController, private _authService: AuthService,
     private _platform: Platform) {
-    this.legalLinks = this._authService?.legalLinks;
+      
     this.passwordInputType = 'password';
     this.passwordEyeIcon = 'eye-off-outline';
-    this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.signUp;
-    this.hasFacebookButton = this._authService.hasFacebookButton;
-    
+    this.hasFacebookButton = environment.production;
+    this.legalLinks = { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
+    this.splitScreenBgImage = environment.splitScreenOptions?.images?.signIn;
+
     if (!this._platform.is('android')){
-      this.hasAppleButton = this._authService.hasAppleButton;
+      this.hasAppleButton = environment.production;
     }
   }
 
@@ -60,7 +62,7 @@ export class SignUpComponent implements OnInit {
 
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   signUpWithFacebook() {
@@ -76,7 +78,7 @@ export class SignUpComponent implements OnInit {
       this.setIsSuccess(`Thank you for signing up. A confirmation email has been sent to ${this.registerForm.controls.email.value} with instructions.`);
       
       
-      this._router.navigateByUrl(this._authService.signUpRedirectUrl);
+      this._router.navigateByUrl(environment.signUpRedirectUrl);
     }).catch((errorMessage: string) => {
       this.setIsFailure(errorMessage);
     });

@@ -2,7 +2,8 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, ViewEnc
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-sign-in',
@@ -37,12 +38,12 @@ export class SignInComponent implements OnInit {
     private _platform: Platform) {
     this.passwordInputType = 'password';
     this.passwordEyeIcon = 'eye-off-outline';
-    this.hasFacebookButton = this._authService.hasFacebookButton;
-    this.legalLinks = this._authService?.legalLinks;
-    this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.signIn;
+    this.hasFacebookButton = environment.production;
+    this.legalLinks = { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
+    this.splitScreenBgImage = environment.splitScreenOptions?.images?.signIn;
 
     if (!this._platform.is('android')){
-      this.hasAppleButton = this._authService.hasAppleButton;
+      this.hasAppleButton = environment.production;
     }
   }
 
@@ -66,7 +67,7 @@ export class SignInComponent implements OnInit {
     this.isFailure = false;
    
     this._authService.signInUser(this.loginForm.controls.email.value, this.loginForm.controls.password.value, this.rememberMe).then(() => {
-      this._router.navigateByUrl(this._authService.signInRedirectUrl);
+      this._router.navigateByUrl(environment.signInRedirectUrl);
       // this.dismiss();
     }).catch(() => {
       this.setIsFailure(`We didn't find matching credentials.  Check for typos and try again.`);
@@ -74,7 +75,7 @@ export class SignInComponent implements OnInit {
   }
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   goToLegal() {

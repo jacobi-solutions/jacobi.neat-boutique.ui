@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncaps
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 // import { AccountsService } from 'src/app/services/accounts.service';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-change-password-init',
@@ -26,7 +27,7 @@ export class ChangePasswordInitComponent implements OnInit {
   constructor(private _router: Router, private _authService: AuthService,
     // private customerService: AccountsService
     ) {
-      this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordInit;
+      //this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordInit;
     }
 
   ngOnInit() {
@@ -71,7 +72,7 @@ export class ChangePasswordInitComponent implements OnInit {
   }
   
 dismiss() {
-  this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+  this._router.navigateByUrl(environment.unauthenticatedRedirect);
 }  
 
 }

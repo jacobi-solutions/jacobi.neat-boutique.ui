@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncaps
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { AccountsService } from 'src/app/services/accounts.service';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
 import { passwordConfirmMustMatchValidator } from '../password-confirm-must-match.directive';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-change-email-init',
@@ -21,7 +22,7 @@ export class ChangeEmailInitComponent implements OnInit {
 
   
   constructor(private _router: Router, private _activatedRoute: ActivatedRoute, private _authService: AuthService) { 
-    this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordInit;
+    // this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordInit;
 
     this._activatedRoute.queryParams.subscribe(params => {
 
@@ -62,7 +63,7 @@ export class ChangeEmailInitComponent implements OnInit {
   setIsLoggingIn(){}
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   

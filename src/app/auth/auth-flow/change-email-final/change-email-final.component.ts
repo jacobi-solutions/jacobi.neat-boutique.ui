@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncaps
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { AccountsService } from 'src/app/services/accounts.service';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-change-email-final',
@@ -25,7 +26,7 @@ export class ChangeEmailFinalComponent implements OnInit {
   });
   
   constructor(private _router: Router, private _activatedRoute: ActivatedRoute, private _authService: AuthService) { 
-    this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.changeEmailFinal;
+    // this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.changeEmailFinal;
 
     this._activatedRoute.queryParams.subscribe(params => {
       var resetEmailAddressEmail = params['email'];
@@ -66,7 +67,7 @@ export class ChangeEmailFinalComponent implements OnInit {
   }
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   

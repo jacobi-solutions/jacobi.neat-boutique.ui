@@ -16,33 +16,40 @@ import { SharedModule } from './shared/shared.module';
 import { AuthConfig } from './auth/auth.config';
 import { AuthFlowPageModule } from './auth/auth-flow/auth-flow.module';
 import { AuthModule } from './auth/auth.module';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { Capacitor } from '@capacitor/core';
+import { getApp } from 'firebase/app';
+import { initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
+import { Facebook } from '@awesome-cordova-plugins/facebook';
 
 // import { FIREBASE_APP } from './auth/auth.service';
 // import { FirebaseApp, initializeApp } from 'firebase/app';
 
 
 
-const authConfig = new AuthConfig({
-  firebaseConfig: environment.firebaseConfig,
-  appUiBaseUrl: environment.neatBoutiqueUIBaseUrl,
-  appApiBaseUrl: environment.neatBoutiqueApiBaseUrl,
-  signInRedirectUrl: '/home',
-  signUpRedirectUrl: '/home',
-  unauthenticatedRedirect: '/auth-flow/sign-in',
-  hasFacebookButton: environment.production,
-  hasAppleButton: environment.production,
-  legalLinks: { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
-  splitScreenOptions: {
-    images: {
-      signIn: 'https://storage.googleapis.com/neat-boutique-dev/images/clark-street-mercantile-qnKhZJPKFD8-unsplash.jpg',
-      signUp: 'https://storage.googleapis.com/neat-boutique-dev/images/clark-street-mercantile-qnKhZJPKFD8-unsplash.jpg',
-    }
-  }
-});
+// const authConfig = new AuthConfig({
+//   firebaseConfig: environment.firebaseConfig,
+//   appUiBaseUrl: environment.neatBoutiqueUIBaseUrl,
+//   appApiBaseUrl: environment.neatBoutiqueApiBaseUrl,
+//   signInRedirectUrl: '/home',
+//   signUpRedirectUrl: '/home',
+//   unauthenticatedRedirect: '/auth-flow/sign-in',
+//   hasFacebookButton: environment.production,
+//   hasAppleButton: environment.production,
+//   legalLinks: { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
+//   splitScreenOptions: {
+//     images: {
+//       signIn: 'https://storage.googleapis.com/neat-boutique-dev/images/clark-street-mercantile-qnKhZJPKFD8-unsplash.jpg',
+//       signUp: 'https://storage.googleapis.com/neat-boutique-dev/images/clark-street-mercantile-qnKhZJPKFD8-unsplash.jpg',
+//     }
+//   }
+// });
 
 
 export function getAPIBaseUrl(): string {
-  return environment.neatBoutiqueApiBaseUrl;
+  return environment.lociApiBaseUrl;
 }
 
 // export function getFirebaseApp(): FirebaseApp {
@@ -59,17 +66,30 @@ export function getAPIBaseUrl(): string {
         AppRoutingModule,
         IonicStorageModule.forRoot(),
         //AuthFlowPageModule,
-        AuthModule.forRoot(authConfig),
+        //AuthModule.forRoot(authConfig),
         HttpClientModule,
         SharedModule,
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAnalytics(() => getAnalytics()),
+        provideAuth(() => {
+          if (Capacitor.isNativePlatform()) {
+            return initializeAuth(getApp(), {
+              persistence: indexedDBLocalPersistence
+            });
+          } else {
+            return getAuth();
+          }
+        }),
     ],
     providers: [
         StatusBar,
         NeatBoutiqueApiService,
         Storage,
+        Facebook,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         { provide: API_BASE_URL, useFactory: getAPIBaseUrl },
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }, 
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },
+        ScreenTrackingService,UserTrackingService, 
         //{ provide: FIREBASE_APP, useFactory: getFirebaseApp }
     ],
     bootstrap: [AppComponent]

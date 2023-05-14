@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthPageButtons, AuthService } from '../../auth.service';
+import { AuthService } from '../../auth.service';
 import { passwordConfirmMustMatchValidator } from '../password-confirm-must-match.directive';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-change-password-final',
@@ -39,7 +40,7 @@ export class ChangePasswordFinalComponent implements OnInit {
   constructor(private _authService: AuthService, private _router: Router, private _activatedRoute: ActivatedRoute) { 
     this.passwordInputType = 'password';
     this.passwordEyeIcon = 'eye-off-outline';
-    this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordFinal;
+    // this.splitScreenBgImage = this._authService?.splitScreenOptions?.images?.resetPasswordFinal;
     
     this._activatedRoute.queryParams.subscribe(params => {
       var resetPasswordEmail = params['email'];
@@ -94,7 +95,7 @@ export class ChangePasswordFinalComponent implements OnInit {
   setIsLoggingIn(){}
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   resetResponse() {

@@ -16,7 +16,7 @@ export class TokenInterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = this._authService.getToken();
 
-        if (token && req.url.includes(environment.neatBoutiqueApiBaseUrl)) {
+        if (token && req.url.includes(environment.lociApiBaseUrl)) {
             let newHeaders = req.headers;
             newHeaders = newHeaders.append('Authorization', `bearer ${token}`);
             const crossDomainReq = req.clone({headers: newHeaders});

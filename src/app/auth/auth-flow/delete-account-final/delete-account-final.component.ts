@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncaps
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { AccountsService } from 'src/app/services/accounts.service';
-import { AccountDeletion, AuthPageButtons, AuthService } from '../../auth.service';
+import { AccountDeletion, AuthService } from '../../auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'jacobi-delete-account-final',
@@ -92,7 +93,7 @@ export class DeleteAccountFinalComponent implements OnInit {
   }
 
   dismiss() {
-    this._router.navigateByUrl(this._authService.unauthenticatedRedirect);
+    this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
   

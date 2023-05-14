@@ -37,3 +37,7 @@ npm-debug.log*
 # mobile idk?
 # /android
 # /ios
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "citric-inkwell-330122": {
+      "hosting": {
+        "app": [
+          "citric-inkwell-330122"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "citric-inkwell-330122"
+  }
+}
