@@ -13,10 +13,11 @@ import {
   signInWithRedirect,
   signInWithCredential,
   getAdditionalUserInfo,
+  getRedirectResult,
+  ActionCodeSettings, FacebookAuthProvider, OAuthProvider, signInWithPopup,
   User,
 	signOut
 } from '@angular/fire/auth';
-import { ActionCodeSettings, FacebookAuthProvider } from 'firebase/auth';
 import { environment } from 'src/environments/environment';
 import { AccountsService } from '../services/accounts.service';
 import { BehaviorSubject } from 'rxjs';
@@ -29,6 +30,7 @@ import {
   SignInWithAppleResponse,
   SignInWithAppleOptions,
 } from '@capacitor-community/apple-sign-in';
+import { sha256 } from 'js-sha256';
 
 export class AccountDeletion {
   userId: string | undefined;
@@ -45,6 +47,7 @@ export class AuthService {
 	constructor(private _auth: Auth, private _accountsService: AccountsService, private _platform: Platform,
     private _facebook: Facebook, private _router: Router) {
 
+    this.listenForFacebookRedirect();
     onAuthStateChanged(this._auth, (user) => {
       if (user) {
         var firebaseUser: any = user;
@@ -221,8 +224,160 @@ export class AuthService {
     });
   }
 
-  async signInUserWithApple() {
+  private listenForFacebookRedirect() {
+    getRedirectResult(this._auth)
+    .then((credential) => {
+      if (credential?.user) {
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
+        //   LC_user: credential.user.displayName,
+        //   LC_operationType: credential.operationType,
+        //   LC_providerId: credential.providerId,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
+        console.log("facebook redirect");
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var token = credential.user.refreshToken;
+        var additionalUserInfo = getAdditionalUserInfo(credential);
+        if(additionalUserInfo?.isNewUser) {
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
+          //   LC_user: credential.user.displayName,
+          //   LC_operationType: credential.operationType,
+          //   LC_providerId: credential.providerId,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
+          this._accountsService.createAccount(credential.user.uid, credential.user.displayName, credential.user.email).then((customer) => {
+            if(customer) {
+              this._router.navigateByUrl(environment.signUpRedirectUrl);
+            }
+          });
+          
+        } else {
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
+          //   LC_user: credential.user.displayName,
+          //   LC_operationType: credential.operationType,
+          //   LC_providerId: credential.providerId,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
+          this._router.navigateByUrl(environment.signInRedirectUrl);
+        }
+        // ...
+      }
+    }).catch((error) => {
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  } 
+  signInUserWithApple() {
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
+    var rawNonce = this._uniqueStr(10);
+    var hashedNonce = sha256(rawNonce);
 
+    if (this._platform.is('ios') || this._platform.is('ipad') || this._platform.is('iphone')){
+      let options: SignInWithAppleOptions = {
+        clientId: "ui.neatboutique.jacobi",
+        redirectURI: environment.signInRedirectUrl,
+        scopes: 'email name',
+        state: '12345',
+        nonce: hashedNonce,
+      };
+      
+      SignInWithApple.authorize(options)
+        .then(async (res: SignInWithAppleResponse) => {
+          await this._createFirebaseUserFromApple(res.response.identityToken, res.response.givenName, res.response.familyName, rawNonce);
+        })
+        .catch(error => {
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE_DEVICE,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
+          console.log("error: " + error)
+        });
+    } else {
+      var provider = new OAuthProvider('apple.com');
+      provider.addScope('email');
+      provider.addScope('name');
+      signInWithPopup(this._auth, provider).then((userCredential) => {
+        var additionalUserInfo = getAdditionalUserInfo(userCredential);
+        if(additionalUserInfo?.isNewUser) {
+          this._accountsService.createAccount(userCredential.user.uid, userCredential.user.displayName, userCredential.user.email).then((customer) => {
+            if(customer) {
+              this._router.navigateByUrl(environment.signUpRedirectUrl);
+            }
+          });
+        } else {
+          this._router.navigateByUrl(environment.signInRedirectUrl);
+        }
+        })
+        .catch(error => {
+          // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER_APPLE,  { 
+          //   LC_error: error,
+          //   LC_errorCode: error?.code,
+          //   LC_errorMessage: error?.message,
+          //   LC_version_number: LociConstants.VERSION_NUMBER
+          // });
+          // Handle error
+        });
+    }
+  }
+
+  async _createFirebaseUserFromApple(identityToken, givenName, familyName, rawNonce) {
+    // logEvent(this._analytics, FirebaseEventTypes.AUTH_CREATE_APPLE_USER,  { 
+    //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+    //   LC_version_number: LociConstants.VERSION_NUMBER
+    // });
+    // Create a custom OAuth provider    
+    const provider = new OAuthProvider('apple.com');
+ 
+    // Create sign in credentials with our token
+    const credential = provider.credential({
+      idToken: identityToken,
+      rawNonce: rawNonce, 
+    });
+    
+    // Call the sign in with our created credentials
+    signInWithCredential(this._auth, credential).then((userCredential) => {
+      if(givenName !== '' && familyName !== '') {
+        updateProfile(this._currentAuthUser as User, {
+          displayName: givenName + familyName
+        });
+      }
+      var additionalUserInfo = getAdditionalUserInfo(userCredential);
+      if(additionalUserInfo?.isNewUser) {
+        this._accountsService.createAccount(userCredential.user.uid, userCredential.user.displayName, userCredential.user.email).then((success) => {
+          if(success) {
+            this._router.navigateByUrl(environment.signUpRedirectUrl);
+          }
+        });
+      } else {
+        this._router.navigateByUrl(environment.signInRedirectUrl);
+      }
+    })
+    .catch(error => {
+      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_CREATE_APPLE_USER,  { 
+      //   LC_error: error,
+      //   LC_errorCode: error?.code,
+      //   LC_errorMessage: error?.message,
+      //   LC_version_number: LociConstants.VERSION_NUMBER
+      // });
+      console.log(error);
+    });
   }
 
   deleteAccountSignInWithLink() {

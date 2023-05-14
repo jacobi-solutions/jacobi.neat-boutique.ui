@@ -22,7 +22,7 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { Capacitor } from '@capacitor/core';
 import { getApp } from 'firebase/app';
 import { initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
-import { Facebook } from '@awesome-cordova-plugins/facebook';
+import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 
 // import { FIREBASE_APP } from './auth/auth.service';
 // import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -82,10 +82,10 @@ export function getAPIBaseUrl(): string {
         }),
     ],
     providers: [
+        Facebook,
         StatusBar,
         NeatBoutiqueApiService,
         Storage,
-        Facebook,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         { provide: API_BASE_URL, useFactory: getAPIBaseUrl },
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },

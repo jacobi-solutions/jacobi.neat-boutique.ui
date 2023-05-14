@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { PasswordConfirmMustMatchDirective } from './auth-flow/password-confirm-must-match.directive';
 import { AuthConfig } from './auth.config';
-import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 import { SharedModule } from '../shared/shared.module';
 
 
@@ -31,7 +30,6 @@ import { SharedModule } from '../shared/shared.module';
     AuthFlowPage
   ],
   providers: [
-    Facebook
   ]
 })
 export class AuthModule {
