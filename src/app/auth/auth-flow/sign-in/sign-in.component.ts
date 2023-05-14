@@ -59,10 +59,12 @@ export class SignInComponent implements OnInit {
   }
 
   signIn() {
+    
+    
     // this.resetResponse();
     this.isSuccess = false;
     this.isFailure = false;
-
+   
     this._authService.signInUser(this.loginForm.controls.email.value, this.loginForm.controls.password.value, this.rememberMe).then(() => {
       this._router.navigateByUrl(this._authService.signInRedirectUrl);
       // this.dismiss();
