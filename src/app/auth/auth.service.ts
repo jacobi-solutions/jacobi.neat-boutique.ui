@@ -5,13 +5,13 @@ import { getAuth, onAuthStateChanged, initializeAuth, updateProfile, verifyBefor
   browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword, fetchSignInMethodsForEmail, 
   sendSignInLinkToEmail, signInWithEmailLink, createUserWithEmailAndPassword, sendEmailVerification,
   Auth, User, ActionCodeSettings, getRedirectResult, OAuthProvider, signInWithCredential, getAdditionalUserInfo, signInWithPopup, FacebookAuthProvider, signInWithRedirect, setPersistence } from "firebase/auth";
-import { initializeApp, FirebaseApp } from 'firebase/app';
+import { initializeApp, FirebaseApp, getApp } from 'firebase/app';
 import { Router, UrlTree } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 import { sha256 } from 'js-sha256';
 
-export const FIREBASE_APP = new InjectionToken<FirebaseApp>('FIREBASE_APP');
+//export const FIREBASE_APP = new InjectionToken<FirebaseApp>('FIREBASE_APP');
 
 import {
   SignInWithApple,
@@ -60,7 +60,8 @@ export class AuthService {
 
 
 
-  constructor(@Inject(FIREBASE_APP) _firebaseApp: FirebaseApp, private _router: Router, private _config: AuthConfig, private _platform: Platform,
+  //constructor(@Inject(FIREBASE_APP) _firebaseApp: FirebaseApp, private _router: Router, private _config: AuthConfig, private _platform: Platform,
+  constructor(private _router: Router, private _config: AuthConfig, private _platform: Platform,
       private _facebook: Facebook, private _accountsService: AccountsService) {
 
     // this._analytics = getAnalytics(_firebaseApp);
@@ -606,16 +607,10 @@ export class AuthService {
         //   LC_currentAuthUser: email,
         //   LC_versionNumber: LociConstants.VERSION_NUMBER
         // });
-      } catch (error) {
-        reject(error)
-      }
-      setPersistence(this._auth, persistence)
-      .then(() => {
-        // Existing and future Auth states are now persisted in the current
-        // session only. Closing the window would clear any existing state even
-        // if a user forgets to sign out.
-        // ...
-        // New sign-in will be persisted with session persistence.
+      
+      // setPersistence(this._auth, persistence)
+      // .then(() => {
+      
         signInWithEmailAndPassword(this._auth, email, password)
         .then((userCredential) => {
           var user = userCredential.user;
@@ -632,19 +627,22 @@ export class AuthService {
           var errorMessage = error.message;
           reject(errorMessage);
         });
-      })
-      .catch((error) => {
-        // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
-        //   LC_error: error,
-        //   LC_errorCode: error?.code,
-        //   LC_errorMessage: error?.message,
-        //   LC_version_number: LociConstants.VERSION_NUMBER
-        // });
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        reject(errorMessage);
-      });
+      // })
+      // .catch((error) => {
+      //   // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_IN_USER,  { 
+      //   //   LC_error: error,
+      //   //   LC_errorCode: error?.code,
+      //   //   LC_errorMessage: error?.message,
+      //   //   LC_version_number: LociConstants.VERSION_NUMBER
+      //   // });
+      //   // Handle Errors here.
+      //   var errorCode = error.code;
+      //   var errorMessage = error.message;
+      //   reject(errorMessage);
+      // });
+    } catch (error) {
+      reject(error)
+    }
       
     });
     return promise;

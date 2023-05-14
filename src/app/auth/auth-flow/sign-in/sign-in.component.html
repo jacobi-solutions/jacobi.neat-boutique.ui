@@ -102,7 +102,7 @@
                 <ion-row>
                   <ion-col class="ion-margin-top sign-in-btn-wrapper">
                     <div>
-                      <ion-button (click)="(!loginForm.invalid ? signIn() : null)" part="button" [disabled]="loginForm.invalid" class="jacobi-button auth-primary" fill="clear">
+                      <ion-button (click)="signIn()" part="button" [disabled]="loginForm.invalid" class="jacobi-button auth-primary" fill="clear">
                         Sign In
                       </ion-button>
                     </div>

@@ -25,7 +25,7 @@
     "@capacitor-community/apple-sign-in": "^1.0.1",
     "@capacitor/android": "3.5.0",
     "@capacitor/app": "^1.0.2",
-    "@capacitor/core": "^3.5.0",
+    "@capacitor/core": "^3.5.1",
     "@capacitor/haptics": "^1.0.2",
     "@capacitor/ios": "3.5.1",
     "@capacitor/keyboard": "^1.0.2",
