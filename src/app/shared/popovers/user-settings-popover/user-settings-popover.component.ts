@@ -88,7 +88,7 @@ export class UserSettingsPopoverComponent implements OnInit {
       //   }
       // },
       {
-        label: "Link sign in methods",
+        label: "Connect sign in methods",
         isClickable: true,
         url: '/auth-flow/link-sign-in-methods',
         callback(event) {

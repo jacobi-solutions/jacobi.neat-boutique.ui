@@ -332,7 +332,7 @@ export class AuthService {
     const html = `
       <h1>Oops</h1>
       <p class="text-left-align modal-p-min">
-      ${email} is already associated with an account. Sign in with ${ providerType } and then if you want, you can link your account to additional sign in methods by clicking "Link sign in methods" in the gear dropdown menu.
+      ${email} is already associated with an account. Sign in with ${ providerType } and then if you want, you can link your account to additional sign in methods by clicking "Connect sign in methods" in the gear dropdown menu.
       </p>
     `;
 
