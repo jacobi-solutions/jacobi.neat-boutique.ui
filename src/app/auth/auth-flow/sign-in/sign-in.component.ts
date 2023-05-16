@@ -38,13 +38,13 @@ export class SignInComponent implements OnInit {
     private _platform: Platform) {
     this.passwordInputType = 'password';
     this.passwordEyeIcon = 'eye-off-outline';
-    this.hasFacebookButton = environment.production;
+    this.hasFacebookButton = true;//environment.production;
     this.legalLinks = { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
     this.splitScreenBgImage = environment.splitScreenOptions?.images?.signIn;
 
-    if (!this._platform.is('android')){
+    
       this.hasAppleButton = environment.production;
-    }
+    
   }
 
   ngOnInit() {

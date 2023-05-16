@@ -833,13 +833,13 @@ ion-checkbox {
 }
 
 // popover
-.popover-content {
-  --box-shadow: $box-shadow;
+ion-popover {
+  //--box-shadow: $box-shadow;
   --width: fit-content;
 
   .popover-viewport {
     background: white;
-
+    // padding-bottom: 1rem;
     border-radius: var(--nb-border-radius);
 
     ion-item::part(native) .item-inner {
@@ -854,6 +854,7 @@ ion-checkbox {
       ion-list {
         padding-bottom: 1rem;
       }
+      padding-bottom: 1rem;
     }
 
     

@@ -88,6 +88,15 @@ export class UserSettingsPopoverComponent implements OnInit {
       //   }
       // },
       {
+        label: "Link sign in methods",
+        isClickable: true,
+        url: '/auth-flow/link-sign-in-methods',
+        callback(event) {
+          self._router.navigateByUrl('/auth-flow/link-sign-in-methods');
+          self._popoverController.dismiss();
+        }
+      },
+      {
         label: "Contact Loci",
         isClickable: true,
         url: '',

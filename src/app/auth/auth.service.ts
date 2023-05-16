@@ -14,7 +14,8 @@ import {
   signInWithCredential,
   getAdditionalUserInfo,
   getRedirectResult,
-  ActionCodeSettings, FacebookAuthProvider, OAuthProvider, signInWithPopup,
+  linkWithRedirect,
+  ActionCodeSettings, FacebookAuthProvider, OAuthProvider, signInWithPopup, EmailAuthProvider,
   User,
 	signOut
 } from '@angular/fire/auth';
@@ -28,14 +29,17 @@ import { Router, UrlTree } from '@angular/router';
 import {
   SignInWithApple,
   SignInWithAppleResponse,
-  SignInWithAppleOptions,
+  SignInWithAppleOptions
 } from '@capacitor-community/apple-sign-in';
 import { sha256 } from 'js-sha256';
+import { ModalService } from '../services/modal.service';
 
 export class AccountDeletion {
   userId: string | undefined;
   token: string;
 }
+
+
 
 @Injectable({
 	providedIn: 'root'
@@ -44,8 +48,9 @@ export class AuthService {
   private _firebaseHasloadedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _firebaseAuthToken: string;
   private _currentAuthUser: User;
+  private _linkAccountsInfoModal: HTMLIonModalElement;
 	constructor(private _auth: Auth, private _accountsService: AccountsService, private _platform: Platform,
-    private _facebook: Facebook, private _router: Router) {
+    private _facebook: Facebook, private _router: Router, private _modalService: ModalService) {
 
     this.listenForFacebookRedirect();
     onAuthStateChanged(this._auth, (user) => {
@@ -70,7 +75,18 @@ export class AuthService {
     });
   }
 
-	async signUpUser(username: string, email: string, password: string) {
+  linkToEmailAndPassword() {
+    linkWithRedirect(this._auth.currentUser, new EmailAuthProvider).then((result) => {
+      // Accounts successfully linked.
+      this._router.navigateByUrl(environment.signInRedirectUrl);
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      // ...
+    });
+  }
+
+	async linkUserToEmailAndPasswordSignInMethod(username: string, email: string, password: string) {
     // todo-now add username
 		try {
 			const user = await createUserWithEmailAndPassword(this._auth, email, password);
@@ -88,6 +104,17 @@ export class AuthService {
 			return null;
 		}
 	}
+
+  linkUserToFacebookSignInMethod() {
+    linkWithRedirect(this._auth.currentUser, new FacebookAuthProvider()).then((result) => {
+      // Accounts successfully linked.
+      this._router.navigateByUrl(environment.signInRedirectUrl);
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      // ...
+    });
+  }
 
   signInUserWithFacebook(): void {
     // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  { 
@@ -262,7 +289,7 @@ export class AuthService {
         }
         // ...
       }
-    }).catch((error) => {
+    }).catch(async (error) => {
       // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
       //   LC_error: error,
       //   LC_errorCode: error?.code,
@@ -270,6 +297,9 @@ export class AuthService {
       //   LC_version_number: LociConstants.VERSION_NUMBER
       // });
       // Handle Errors here.
+      if(error.code === "auth/account-exists-with-different-credential") {
+        this._confirmLinkAccountsNotice(error.customData.email);
+      }
       var errorCode = error.code;
       var errorMessage = error.message;
       // The email of the user's account used.
@@ -279,6 +309,56 @@ export class AuthService {
       // ...
     });
   } 
+
+  async getAvailableSignInMethodsToLinkTo() {
+    var email = this._auth.currentUser.email;
+    return fetchSignInMethodsForEmail(this._auth, email);
+    
+  }
+
+  private async _confirmLinkAccountsNotice(email: string) {
+    const providers = await fetchSignInMethodsForEmail(this._auth, email);
+    var providerType = "";
+    if(providers.includes(EmailAuthProvider.PROVIDER_ID)) {
+      providerType = "email and password";
+    } else if (providers.includes((new OAuthProvider('apple.com')).providerId)) {
+      providerType = "apple sign in";
+    } else if(providers.includes(FacebookAuthProvider.PROVIDER_ID)) {
+      providerType = "facebook sign in"
+    }
+    
+    const self = this;
+    const showCancelBtn = true;
+    const html = `
+      <h1>Oops</h1>
+      <p class="text-left-align modal-p-min">
+      ${email} is already associated with an account. Sign in with ${ providerType } and then if you want, you can link your account to additional sign in methods by clicking "Link sign in methods" in the gear dropdown menu.
+      </p>
+    `;
+
+    const confirmBtn = {
+      label: 'OK',
+      // callback: this.addNewPost
+      callback() {
+        self._linkAccountsInfoModal.dismiss();
+      }
+    };
+
+    this._linkAccountsInfoModal = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
+  }
+
+  linkUserToAppleSignInMethod() {
+    linkWithRedirect(this._auth.currentUser, new OAuthProvider('apple.com')).then((result) => {
+      // Accounts successfully linked.
+      this._router.navigateByUrl(environment.signInRedirectUrl);
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      // ...
+    });
+  }
+
+
   signInUserWithApple() {
     // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_APPLE_USER,  { 
     //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",

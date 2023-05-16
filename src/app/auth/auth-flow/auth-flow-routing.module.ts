@@ -9,6 +9,7 @@ import { DeleteAccountFinalComponent } from './delete-account-final/delete-accou
 import { DeleteAccountInitComponent } from './delete-account-init/delete-account-init.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { LinkSignInMethodsComponent } from './link-sign-in-methods/link-sign-in-methods.component';
 
 const routes: Routes = [
   {
@@ -53,7 +54,11 @@ const routes: Routes = [
     component: DeleteAccountFinalComponent,
     canActivate: [ AuthGuard ]
   },
-
+  {
+    path: 'link-sign-in-methods',
+    component: LinkSignInMethodsComponent,
+    canActivate: [ AuthGuard ]
+  }
 ];
 
 @NgModule({

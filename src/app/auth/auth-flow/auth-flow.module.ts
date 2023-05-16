@@ -13,6 +13,7 @@ import { ChangePasswordFinalComponent } from './change-password-final/change-pas
 import { ChangePasswordInitComponent } from './change-password-init/change-password-init.component';
 import { DeleteAccountFinalComponent } from './delete-account-final/delete-account-final.component';
 import { DeleteAccountInitComponent } from './delete-account-init/delete-account-init.component';
+import { LinkSignInMethodsComponent } from './link-sign-in-methods/link-sign-in-methods.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { DeleteAccountInitComponent } from './delete-account-init/delete-account
     ChangeEmailInitComponent,
     ChangeEmailFinalComponent,
     DeleteAccountInitComponent,
-    DeleteAccountFinalComponent
+    DeleteAccountFinalComponent,
+    LinkSignInMethodsComponent
   ],
   
   exports: [
@@ -43,7 +45,8 @@ import { DeleteAccountInitComponent } from './delete-account-init/delete-account
     ChangeEmailInitComponent,
     ChangeEmailFinalComponent,
     DeleteAccountInitComponent,
-    DeleteAccountFinalComponent
+    DeleteAccountFinalComponent,
+    LinkSignInMethodsComponent
   ]
 })
 export class AuthFlowPageModule {}

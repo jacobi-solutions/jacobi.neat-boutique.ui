@@ -11,9 +11,9 @@ import { CommunityCategory } from './models/community-category';
 import { NotificationsService } from './services/notifications.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { AuthService } from './auth/auth.service';
+import { LociConstants } from 'src/app.version';
 
 // import { Analytics, getAnalytics, logEvent } from "firebase/analytics";
-import { LociConstants } from './models/constants';
 
 
 @Component({

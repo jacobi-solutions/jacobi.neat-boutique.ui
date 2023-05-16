@@ -94,7 +94,6 @@ export class CommunityService {
 
   constructor(
     private _neatBoutiqueApiService: NeatBoutiqueApiService,
-    private _authService: AuthService,
     private _accountsService: AccountsService,
     private _util: UtilService,
     private _answersService: AnswersService,

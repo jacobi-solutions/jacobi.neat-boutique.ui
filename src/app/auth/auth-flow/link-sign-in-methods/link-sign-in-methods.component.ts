@@ -6,14 +6,15 @@ import { AuthService } from '../../auth.service';
 import { passwordConfirmMustMatchValidator } from '../password-confirm-must-match.directive';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { environment } from 'src/environments/environment';
+import { EmailAuthProvider, OAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 
 @Component({
-  selector: 'jacobi-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['../auth-flow.page.scss', './sign-up.component.scss'],
+  selector: 'jacobi-link-sign-in-methods',
+  templateUrl: './link-sign-in-methods.component.html',
+  styleUrls: ['../auth-flow.page.scss', './link-sign-in-methods.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SignUpComponent implements OnInit {
+export class LinkSignInMethodsComponent implements OnInit {
 
   public isSuccess = false;
   public successMessage: string;
@@ -28,6 +29,7 @@ export class SignUpComponent implements OnInit {
   public splitScreenBgImage?: string;
   public hasFacebookButton?: boolean;
   public hasAppleButton?: boolean;
+  public hasEmailAndPassword?: boolean;
 
   private _showPassword = false;
 
@@ -47,12 +49,25 @@ export class SignUpComponent implements OnInit {
       
     this.passwordInputType = 'password';
     this.passwordEyeIcon = 'eye-off-outline';
-    this.hasFacebookButton = environment.production;
     this.legalLinks = { privacyPolicy: '/legal/privacy-policy', termsAndConditions: '/legal/terms-of-service' },
     this.splitScreenBgImage = environment.splitScreenOptions?.images?.signIn;
-
-    this.hasAppleButton = environment.production;
     
+    this._loadAvailableProvidersToLinkTo();
+    
+    
+  }
+
+  async _loadAvailableProvidersToLinkTo() {
+    var providers = await this._authService.getAvailableSignInMethodsToLinkTo();
+    if(!providers.includes(EmailAuthProvider.PROVIDER_ID)) {
+      this.hasEmailAndPassword = true;
+    } 
+    if (!providers.includes((new OAuthProvider('apple.com')).providerId)) {
+      this.hasAppleButton = true;
+    } 
+    if(!providers.includes(FacebookAuthProvider.PROVIDER_ID)) {
+      this.hasFacebookButton = true;
+    }
   }
 
   ngOnInit() {
@@ -64,17 +79,17 @@ export class SignUpComponent implements OnInit {
     this._router.navigateByUrl(environment.unauthenticatedRedirect);
   }
 
-  signUpWithFacebook() {
-    this._authService.signInUserWithFacebook();
+  linkToFacebook() {
+    this._authService.linkUserToFacebookSignInMethod();
   }
 
-  signUpWithApple() {
-    this._authService.signInUserWithApple();
+  linkToApple() {
+    this._authService.linkUserToAppleSignInMethod();
   }
 
-  signUp() {
+  linkToEmailAndPassword() {
     this._authService.linkUserToEmailAndPasswordSignInMethod(this.registerForm.controls.username.value, this.registerForm.controls.email.value, this.registerForm.controls.password.value).then(() => {
-      this.setIsSuccess(`Thank you for signing up. A confirmation email has been sent to ${this.registerForm.controls.email.value} with instructions.`);
+      this.setIsSuccess(`Great! now you can sign in both ways.`);
       
       
       this._router.navigateByUrl(environment.signUpRedirectUrl);
