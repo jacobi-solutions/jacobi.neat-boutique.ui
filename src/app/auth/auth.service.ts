@@ -17,7 +17,9 @@ import {
   linkWithRedirect,
   ActionCodeSettings, FacebookAuthProvider, OAuthProvider, signInWithPopup, EmailAuthProvider,
   User,
-	signOut
+	signOut,
+  sendEmailVerification,
+  linkWithCredential
 } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
 import { AccountsService } from '../services/accounts.service';
@@ -75,10 +77,14 @@ export class AuthService {
     });
   }
 
-  linkToEmailAndPassword() {
-    linkWithRedirect(this._auth.currentUser, new EmailAuthProvider).then((result) => {
-      // Accounts successfully linked.
-      this._router.navigateByUrl(environment.signInRedirectUrl);
+  linkUserToEmailAndPasswordSignInMethod(email: string, password: string) {
+    const credential = EmailAuthProvider.credential(email, password);
+
+    linkWithCredential(this._auth.currentUser, credential)
+      .then((usercred) => {
+        const user = usercred.user;
+        this._router.navigateByUrl(environment.signInRedirectUrl);
+     
       // ...
     }).catch((error) => {
       // Handle Errors here.
@@ -86,15 +92,75 @@ export class AuthService {
     });
   }
 
-	async linkUserToEmailAndPasswordSignInMethod(username: string, email: string, password: string) {
-    // todo-now add username
-		try {
-			const user = await createUserWithEmailAndPassword(this._auth, email, password);
-			return user;
-		} catch (e) {
-			return null;
-		}
-	}
+	// async linkUserToEmailAndPasswordSignInMethod(username: string, email: string, password: string) {
+  //   // todo-now add username
+	// 	try {
+	// 		const user = await createUserWithEmailAndPassword(this._auth, email, password);
+	// 		return user;
+	// 	} catch (e) {
+	// 		return null;
+	// 	}
+	// }
+
+  signUpUser(username: string, email: string, password: string) {
+        // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
+        //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
+        //   LC_username: username,
+        //   LC_email: email,
+        //   LC_version_number: LociConstants.VERSION_NUMBER
+        // });
+        var actionCodeSettings = {
+          url: environment.lociUIBaseUrl,
+        }
+    
+        const promise = new Promise<string>((resolve, reject) => {
+          createUserWithEmailAndPassword(this._auth, email, password)
+          .then((userCredential) => {
+            // Signed in 
+            var user = userCredential.user;
+            updateProfile(this._currentAuthUser as User, {
+              displayName: username
+            }).then((x) => {
+              this._accountsService.createAccount(userCredential.user.uid, username, email).then((customer) => {
+                if(customer) {
+                  this._accountsService.preloadConsumerProfile(this._auth.currentUser);
+                  this._router.navigateByUrl(environment.signUpRedirectUrl);
+                }
+              });
+              resolve(user.uid);
+            }).catch((error) => {
+              // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
+              //   LC_error: error,
+              //   LC_errorCode: error?.code,
+              //   LC_errorMessage: error?.message,
+              //   LC_version_number: LociConstants.VERSION_NUMBER
+              // });
+              reject(error.message);
+            });
+    
+            sendEmailVerification(this._currentAuthUser as User, actionCodeSettings).then(function() {
+              // Email sent.
+            }).catch((error) => {
+              // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER_SEND_EMAIL_VERIFCIATION,  { 
+              //   LC_error: error,
+              //   LC_errorCode: error?.code,
+              //   LC_errorMessage: error?.message,
+              //   LC_version_number: LociConstants.VERSION_NUMBER
+              // });
+            });
+          })
+          .catch((error) => {
+            // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_SIGN_UP_USER,  { 
+            //   LC_error: error,
+            //   LC_errorCode: error?.code,
+            //   LC_errorMessage: error?.message,
+            //   LC_version_number: LociConstants.VERSION_NUMBER
+            // });
+            reject(error.message);
+          });
+        });
+        return promise;
+      }
 
 	async signInUser(email: string, password: string, rememberMe: boolean) {
 		try {

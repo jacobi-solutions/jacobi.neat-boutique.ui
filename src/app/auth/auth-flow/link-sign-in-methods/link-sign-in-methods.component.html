@@ -54,27 +54,7 @@
                     <ion-row class="form-row jacobi-auth-form-row">
                         <ion-col>
                             <form (ngSubmit)="linkToEmailAndPassword()" [formGroup]="registerForm" class="form-register">
-                                <ion-row *ngIf="hasEmailAndPassword">
-                                    <ion-col class="ion-margin-top username-input-wrapper">
-                                        <ion-item class="input-item">
-                                            <ion-label position="floating">Username</ion-label>
-                                            <ion-input [formControlName]="'username'"></ion-input>
-                                            <ion-icon class="form-icon" slot="end" name="person-circle-outline"></ion-icon>
-                                        </ion-item>
-                                        <div *ngIf="registerForm.controls.username.invalid && registerForm.controls.username.touched">
-                                        
-                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['required']">
-                                                Username is required.
-                                            </ion-text>
-                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['minlength']">
-                                                Username must be at least {{ minUsernameLength }} characters long.
-                                            </ion-text>
-                                            <ion-text color="danger" *ngIf="registerForm.controls.username.errors?.['maxlength']">
-                                                Username is limited to {{ maxUsernameLength }} characters.
-                                            </ion-text>
-                                        </div>
-                                    </ion-col>
-                                </ion-row>
+                                
     
                                 <ion-row *ngIf="hasEmailAndPassword">
                                     <ion-col class="ion-margin-top email-input-wrapper">

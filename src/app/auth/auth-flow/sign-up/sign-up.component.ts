@@ -73,7 +73,7 @@ export class SignUpComponent implements OnInit {
   }
 
   signUp() {
-    this._authService.linkUserToEmailAndPasswordSignInMethod(this.registerForm.controls.username.value, this.registerForm.controls.email.value, this.registerForm.controls.password.value).then(() => {
+    this._authService.signUpUser(this.registerForm.controls.username.value, this.registerForm.controls.email.value, this.registerForm.controls.password.value).then(() => {
       this.setIsSuccess(`Thank you for signing up. A confirmation email has been sent to ${this.registerForm.controls.email.value} with instructions.`);
       
       

@@ -34,7 +34,7 @@ export class LinkSignInMethodsComponent implements OnInit {
   private _showPassword = false;
 
   public registerForm = new FormGroup({
-    username: new FormControl('', [ Validators.required, Validators.minLength(this.minUsernameLength), Validators.maxLength(this.maxUsernameLength) ]),
+    // username: new FormControl('', [ Validators.required, Validators.minLength(this.minUsernameLength), Validators.maxLength(this.maxUsernameLength) ]),
     email: new FormControl('', [ Validators.required, Validators.email ]),
     password: new FormControl('', [ Validators.required, Validators.minLength(this.minPasswordLength) ]),
     passwordConfirm: new FormControl('', Validators.required)
@@ -88,14 +88,7 @@ export class LinkSignInMethodsComponent implements OnInit {
   }
 
   linkToEmailAndPassword() {
-    this._authService.linkUserToEmailAndPasswordSignInMethod(this.registerForm.controls.username.value, this.registerForm.controls.email.value, this.registerForm.controls.password.value).then(() => {
-      this.setIsSuccess(`Great! now you can sign in both ways.`);
-      
-      
-      this._router.navigateByUrl(environment.signUpRedirectUrl);
-    }).catch((errorMessage: string) => {
-      this.setIsFailure(errorMessage);
-    });
+    this._authService.linkUserToEmailAndPasswordSignInMethod(this.registerForm.controls.email.value, this.registerForm.controls.password.value);
   }
 
   goToLegal() {

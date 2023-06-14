@@ -40,8 +40,8 @@
 export const environment = {
   
   production: false,
-  // lociApiBaseUrl: 'http://localhost',
-  lociApiBaseUrl: 'https://neat-boutique-api-zhal3rygga-ue.a.run.app',
+  lociApiBaseUrl: 'http://localhost:9070',
+  // lociApiBaseUrl: 'https://neat-boutique-api-zhal3rygga-ue.a.run.app',
   lociUIBaseUrl: 'https://lociknows.com',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
