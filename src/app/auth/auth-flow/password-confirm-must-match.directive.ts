@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { ValidatorFn, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import { ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 
 @Directive({
   selector: '[appPasswordConfirmMustMatch]'
@@ -11,9 +11,22 @@ export class PasswordConfirmMustMatchDirective {
 }
 
 // export const passwordConfirmMustMatchValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-export const passwordConfirmMustMatchValidator: any = (control: UntypedFormGroup): ValidationErrors | null => {
-  const password = control.get('password');
-  const passwordConfirm = control.get('passwordConfirm');
-
-  return password && passwordConfirm && password.value !== passwordConfirm.value ? { passwordConfirmMustMatch: true } : null;
-};
+  export const passwordConfirmMustMatchValidator: any = (control: FormGroup): ValidationErrors | null => {
+    const password = control.get('password');
+    const passwordConfirm = control.get('passwordConfirm');
+    var misMatch = password && passwordConfirm && password.value !== passwordConfirm.value;
+    if(misMatch) {
+      passwordConfirm.setErrors({ 'passwordConfirmMustMatch': true });
+    }
+    return misMatch ? { passwordConfirmMustMatch: true } : null;
+  };
+  
+  export const emailConfirmMustMatchValidator: any = (control: FormGroup): ValidationErrors | null => {
+    const email = control.get('email');
+    const emailConfirm = control.get('emailConfirm');
+    var misMatch = email && emailConfirm && email.value !== emailConfirm.value;
+    if(misMatch) {
+      emailConfirm.setErrors({ 'passwordConfirmMustMatch': true });
+    }
+    return misMatch ? { passwordConfirmMustMatch: true } : null;
+  };

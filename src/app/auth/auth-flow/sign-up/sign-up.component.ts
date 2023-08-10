@@ -19,7 +19,7 @@ export class SignUpComponent implements OnInit {
   public successMessage: string;
   public isFailure = false;
   public failureMessage: string;
-  public maxUsernameLength = 15;
+  public maxUsernameLength = 64;
   public minUsernameLength = 3;
   public minPasswordLength = 8;
   public passwordInputType: string;

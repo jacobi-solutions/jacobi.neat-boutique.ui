@@ -51,6 +51,7 @@ export class AuthService {
   private _firebaseAuthToken: string;
   private _currentAuthUser: User;
   private _linkAccountsInfoModal: HTMLIonModalElement;
+  private _isCreatingAccount: boolean = false;
 	constructor(private _auth: Auth, private _accountsService: AccountsService, private _platform: Platform,
     private _facebook: Facebook, private _router: Router, private _modalService: ModalService) {
 
@@ -62,7 +63,7 @@ export class AuthService {
         this._currentAuthUser = user;
         this._accountsService.preloadConsumerProfile(this._currentAuthUser);
         this._firebaseAuthToken = firebaseUser.accessToken;
-        if(this._firebaseAuthToken) {
+        if(this._firebaseAuthToken && !this._isCreatingAccount) {
           this._accountsService.loadAccounts();
         } else {
           this._accountsService.unLoadAccounts();
@@ -103,6 +104,7 @@ export class AuthService {
 	// }
 
   signUpUser(username: string, email: string, password: string) {
+        this._isCreatingAccount = true;
         // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_UP_USER,  { 
         //   LC_currentAuthUser: this._auth?.currentUser?.displayName ?? "no signed in user",
         //   LC_username: username,
@@ -124,6 +126,7 @@ export class AuthService {
               this._accountsService.createAccount(userCredential.user.uid, username, email).then((customer) => {
                 if(customer) {
                   this._accountsService.preloadConsumerProfile(this._auth.currentUser);
+                  this._isCreatingAccount = false;
                   this._router.navigateByUrl(environment.signUpRedirectUrl);
                 }
               });

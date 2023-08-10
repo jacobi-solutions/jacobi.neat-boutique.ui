@@ -11,7 +11,7 @@ import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
 })
 export class UsernameAndEmailModalComponent implements OnInit {
   @Input() currentUser: CurrentUserDisplay;
-  public maxUsernameLength = 15;
+  public maxUsernameLength = 64;
   public minUsernameLength = 3;
   
   public usernameForm = new FormGroup({

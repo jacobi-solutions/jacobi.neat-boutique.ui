@@ -109,7 +109,7 @@
                                             <ion-text color="danger" *ngIf="registerForm.controls.password.errors?.['required']">
                                                 Password is required.
                                             </ion-text>
-                                            <ion-text color="danger" *ngIf="registerForm.controls.password.errors?.['minLength']">
+                                            <ion-text color="danger" *ngIf="registerForm.controls.password.errors?.['minlength']">
                                                 Password must be at least 8 characters.
                                             </ion-text>
                                         </div>
@@ -123,7 +123,7 @@
                                         </ion-item>
                                         <div *ngIf="registerForm.controls.passwordConfirm.invalid && registerForm.controls.passwordConfirm.touched">
                                             <ion-text color="danger" *ngIf="registerForm.controls.passwordConfirm.errors?.['passwordConfirmMustMatch']">
-                                                The confirmation password does not match.'
+                                                The confirmation password does not match.
                                             </ion-text>
                                         </div>
                                     </ion-col>
