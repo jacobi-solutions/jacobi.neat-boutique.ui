@@ -166,12 +166,7 @@ export class AuthService {
       }
 
 	async signInUser(email: string, password: string, rememberMe: boolean) {
-		try {
-			const user = await signInWithEmailAndPassword(this._auth, email, password);
-			return user;
-		} catch (e) {
-			return null;
-		}
+    return await signInWithEmailAndPassword(this._auth, email, password);
 	}
 
   linkUserToFacebookSignInMethod() {
