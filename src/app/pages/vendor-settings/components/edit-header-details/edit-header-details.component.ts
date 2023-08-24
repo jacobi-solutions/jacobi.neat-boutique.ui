@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
@@ -24,7 +25,7 @@ export class EditHeaderDetailsComponent implements OnInit {
   public showChangeVendorSubscription: boolean;
 
   constructor(private _modelService: ModalService, private _vendorSettings: VendorSettingsService, 
-    private _modalService: ModalService, private _platform: Platform) {}
+    private _modalService: ModalService, private _platform: Platform, private _router: Router) {}
 
   ngOnInit() {
     if (!this._platform.is("capacitor")) {
@@ -64,6 +65,10 @@ export class EditHeaderDetailsComponent implements OnInit {
         this.vendor = await this._vendorSettings.uploadVendorLogo(imgBase64Path);
       }  
     }  
+  }
+
+  addAnotherBusiness() {
+    this._router.navigateByUrl('/pricing');
   }
 }
 
