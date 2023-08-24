@@ -4997,7 +4997,7 @@ export class ProfilesResponse implements IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfile?: VendorProfile;
+    vendorProfile?: VendorProfile[];
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
@@ -5074,7 +5074,7 @@ export interface IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfile?: VendorProfile;
+    vendorProfile?: VendorProfile[];
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
