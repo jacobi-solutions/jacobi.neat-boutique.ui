@@ -8,12 +8,12 @@ export class CurrentUserDisplay {
     feedCategoriesToShow?: string[];
     notificationsForAnsweredQuestions?: boolean;
     public consumer: ConsumerProfile = null;
-    public vendor: VendorProfile[] = null;
+    public vendor: VendorProfile = null;
     public ids: [StringOrNull, StringOrNull] = [null, null];
     private _uiVendorsInMyList: string[] = [];
     public isAdmin: boolean = false;
 
-    constructor(consumer: ConsumerProfile, vendor: VendorProfile[]) {        
+    constructor(consumer: ConsumerProfile, vendor: VendorProfile) {        
         this.consumer = consumer;
         this.vendor = (vendor?.id !== undefined) ? vendor : null;
         this.ids = [
