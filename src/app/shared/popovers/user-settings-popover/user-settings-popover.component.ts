@@ -8,6 +8,7 @@ import { ModalService } from 'src/app/services/modal.service';
 import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { PopoverItem } from '../types/popover-types';
 import { AuthService } from 'src/app/auth/auth.service';
+import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
 
 @Component({
   selector: 'app-user-settings-popover',
@@ -32,8 +33,10 @@ export class UserSettingsPopoverComponent implements OnInit {
       this._accountsService.currentUserSubject.subscribe((user) => {
         if(user) {
           this.currentUser = user;
-          if(this.currentUser.vendor) {
+          if(this.currentUser?.vendors?.length === 1) {
             this.promoteMyBusinessLabel = 'Manage My Business';
+          } else if(this.currentUser?.vendors?.length > 1) {
+            this.promoteMyBusinessLabel = 'Manage My Businesses';
           }
         }
       });
@@ -108,8 +111,10 @@ export class UserSettingsPopoverComponent implements OnInit {
         label: "Delete Account",
         isClickable: true,
         callback(event) {
-          if(self.currentUser.vendor) {
-            self.confirmCancdelSubscription();
+          if(self.currentUser.vendors.length === 1) {
+            self.confirmCancelSubscription(self.currentUser.vendors[0]);
+          } else if(self.currentUser.vendors.length > 1) {
+            self.confirmCancelSubscriptions();
           } else {
             self._router.navigateByUrl('/auth-flow/delete-account-init');
           }
@@ -138,11 +143,13 @@ export class UserSettingsPopoverComponent implements OnInit {
         isClickable: true,
         url: '/vendor-settings',
         callback(event) {
-          self._popoverController.dismiss();          
-          if(!self.currentUser?.vendor?.hasVendorSubscription) {
-            self._router.navigateByUrl('/pricing');
+          self._popoverController.dismiss();  
+          if(self.currentUser.vendors.length === 1) {
+            self._router.navigateByUrl('/vendor-settings', { state: self.currentUser.vendors[0] });
+          } else if(self.currentUser.vendors.length > 1) {
+            self._router.navigateByUrl('/vendor-businesses');
           } else {
-            self._router.navigateByUrl('/vendor-settings');
+            self._router.navigateByUrl('/pricing');
           }
         }
       };
@@ -180,7 +187,7 @@ export class UserSettingsPopoverComponent implements OnInit {
 
   }
 
-  async confirmCancdelSubscription() {
+  async confirmCancelSubscription(vendor: VendorProfile) {
     const self = this;
     const showCancelBtn = true;
     const html = `
@@ -196,7 +203,32 @@ export class UserSettingsPopoverComponent implements OnInit {
       callback() {
         // self.userHasSeenNonEditableModal = true;
         // self._communityService.userHasSeenNonEditableModal = true;
-        self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
+        self._vendorSubscriptionService.startVendorSubscriptionCancelation(vendor);
+        self._postNoticeModal.dismiss();
+      }
+    };
+
+    this._postNoticeModal = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
+  }
+
+  async confirmCancelSubscriptions() {
+    const self = this;
+    const showCancelBtn = true;
+    const html = `
+      <h1>Sorry to see you go.</h1>
+      <p class="text-left-align modal-p-min">
+        Before you can delete your account, you must first cancel your Vendor Subscriptions. To do that, go to your businesses management page.
+      </p>
+    `;
+
+    const confirmBtn = {
+      label: 'Manage my Businesses',
+      // callback: this.addNewPost
+      callback() {
+        // self.userHasSeenNonEditableModal = true;
+        // self._communityService.userHasSeenNonEditableModal = true;
+        // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
+        self._router.navigateByUrl('/vendor-businesses');
         self._postNoticeModal.dismiss();
       }
     };

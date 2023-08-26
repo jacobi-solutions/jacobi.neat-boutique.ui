@@ -67,7 +67,7 @@ export class ModalService {
 
 
     async displayChooseProfileModal(): Promise<{ accountRole: string, user: ConsumerProfile | VendorProfile }> {
-      if(this._currentUser?.vendor) {
+      if(this._currentUser?.vendors?.length > 0) {
         const modal = await this._chooseAccountModal();
         const { data: { accountRole, user} } = await modal.onDidDismiss();
         return { accountRole, user };
@@ -147,10 +147,10 @@ export class ModalService {
     };
   }
 
-  async displayEditSocialMediaModal() {
+  async displayEditSocialMediaModal(vendor: VendorProfile) {
     const modalHandle = await this._modalController.create({
       component: EditSocialMediaLinksModalComponent,
-      componentProps: { vendor: this._currentUser?.vendor },
+      componentProps: { vendor: vendor },
       cssClass: 'custom-modal confirm-action-warning-modal',
     });
     modalHandle.present();
@@ -166,7 +166,7 @@ export class ModalService {
   async displayUsernameAndEmailModal() {
     const modalHandle = await this._modalController.create({
       component: UsernameAndEmailModalComponent,
-      componentProps: { currentUser: this._currentUser },
+      componentProps: {  },
       cssClass: 'custom-modal confirm-action-warning-modal',
     });
     modalHandle.present();

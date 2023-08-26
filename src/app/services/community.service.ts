@@ -8,7 +8,7 @@ import { CommunityCategory } from "../models/community-category";
 import { ConsumerPostDisplay } from "../models/consumer-post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
-import { CommunityTypes } from "../models/constants";
+import { CommunityTypes, UserRoleTypes } from "../models/constants";
 import { PollAnswerDisplay } from "../models/poll-answer-display";
 import { VendorDisplay } from "../models/vendor-display";
 import { VendorPostDisplay } from "../models/vendor-post-display";
@@ -344,11 +344,11 @@ export class CommunityService {
     return promise;
   }
 
-  likeComment(comment: Comment, likerId: string, likerRole) {
+  likeComment(comment: Comment, likerId: string) {
     const request = new CommentLikeAddRequest();
     request.commentId = comment.id;
     request.likerId = likerId;
-    request.likerRole = likerRole;
+    request.likerRole = UserRoleTypes.CONSUMER;
     const promise = new Promise<CommentDisplay>((resolve, reject) => {
       this._neatBoutiqueApiService
         .addLikeToComment(request)
@@ -373,7 +373,7 @@ export class CommunityService {
 
     const request = new CommentLikeRemoveRequest();
     request.commentId = comment.id;
-    request.likerId = comment.likers.find(x => x?.id === this._currentUser?.consumer?.id || x.id === this._currentUser.vendor?.id).id;
+    request.likerId = this._currentUser?.consumer?.id
 
     const promise = new Promise<CommentDisplay>((resolve, reject) => {
       this._neatBoutiqueApiService

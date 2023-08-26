@@ -19,9 +19,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./poll-ad.component.scss'],
 })
 export class PollAdComponent implements OnInit {
-
-  @Input() pageName: string = 'Manage Polls';
-  @Input() vendor: VendorDisplay;
+  vendor: VendorDisplay;
 
   @ViewChild('content', { read: ElementRef }) content: IonContent;
   
@@ -34,10 +32,13 @@ export class PollAdComponent implements OnInit {
 
   constructor(private _utilService: UtilService, private _accountsService: AccountsService,
     private _vendorSettingsService: VendorSettingsService, private _router: Router) {
+    this.vendor = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
+
     // create temp live preview poll post
     this.pollLivePreview = new VendorPostDisplay(new VendorPost({
       id: 'demo-poll',
       createdDateUtc: new Date(),
+      author: this.vendor,
       lastUpdatedDateUtc: new Date(),
       comments: (new Array(2).fill(null)).map(el => {
         // create some demo comments        
@@ -58,24 +59,21 @@ export class PollAdComponent implements OnInit {
         }),
     }));
     
-    this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
-      if(user) {        
-        this.vendor = new VendorDisplay(user.vendor);  
-        this.hasPremiumSubscription = this.vendor.hasVendorPremiumSubscription;  
-        this.pollLivePreview.author = new NeatBoutiqueEntity({
-          profilePath: this.vendor.profilePath, 
-          name: this.vendor.name,
-          role: UserRoleTypes.VENDOR
-        });
-      }
-    });
+    
 
-    this._vendorSettingsService.observeCurrentPollAd().subscribe(pollFrom => {
+    this._vendorSettingsService.newPollAdSubject.subscribe(pollFrom => {
       this.pollAdToSubmit = pollFrom;      
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { 
+    this.hasPremiumSubscription = this.vendor.hasVendorPremiumSubscription;  
+    this.pollLivePreview.author = new NeatBoutiqueEntity({
+      profilePath: this.vendor.profilePath, 
+      name: this.vendor.name,
+      role: UserRoleTypes.VENDOR
+    });
+  }
 
   updateLivePreview(pollForm) {    
     if(pollForm) {

@@ -120,7 +120,7 @@ export class VendorSubscriptionService {
     this._neatBoutiqueApiService.createStripeCheckout(request).subscribe((response: StripeCheckoutResponse) => {
       if(response.isSuccess) {
         if(response.isStripeBypassFreeForever) {
-          this._router.navigateByUrl('/vendor-settings');
+          this._router.navigateByUrl('/vendor-settings', { state: this._vendor });
         } else if(response.stripeSessionUrl) {
           window.open(response.stripeSessionUrl, "_self")
         }
@@ -143,22 +143,22 @@ export class VendorSubscriptionService {
   // }
 
 
-  private _getVendorSubscriptionId() {
-    var request = new Request();
-    const promise = new Promise<string>((resolve, reject) => {
-      this._neatBoutiqueApiService
-          .getVendorSubscriptionId(request)
-          .subscribe((response: VendorSubscriptionResponse) => {
-            if (response.isSuccess) {
-              resolve(response.vendorSubscriptionId);
-            } else if (response.errors.find((x) => x.errorCode === "409")) {
-              // failed search
-              reject(null);
-            }
-          });
-      });
-      return promise;
-  }
+  // private _getVendorSubscriptionId() {
+  //   var request = new Request();
+  //   const promise = new Promise<string>((resolve, reject) => {
+  //     this._neatBoutiqueApiService
+  //         .getVendorSubscriptionId(request)
+  //         .subscribe((response: VendorSubscriptionResponse) => {
+  //           if (response.isSuccess) {
+  //             resolve(response.vendorSubscriptionId);
+  //           } else if (response.errors.find((x) => x.errorCode === "409")) {
+  //             // failed search
+  //             reject(null);
+  //           }
+  //         });
+  //     });
+  //     return promise;
+  // }
 
   startVendorSubscriptionWithPremium () {
     this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM);
@@ -199,16 +199,16 @@ export class VendorSubscriptionService {
   // }
 
   completeVendorSubscriptionCancelation() {
-    return this._accountsService.cancelVendorSubscription();
+    return this._accountsService.cancelVendorSubscription(this._vendor.id);
   }
   
   completeVendorRevise(vendorPackage: VendorSubscriptionPackage) {
     if(vendorPackage.planTier === SubscriptionPlanTypes.VENDOR_PREMIUM) {
-      return this._accountsService.changeVendorSubscriptionToPremium(vendorPackage);
+      return this._accountsService.changeVendorSubscriptionToPremium(this._vendor.id, vendorPackage);
     } else if (vendorPackage.planTier === SubscriptionPlanTypes.VENDOR_STANDARD) {
-      return this._accountsService.changeVendorSubscriptionToStandard(vendorPackage);
+      return this._accountsService.changeVendorSubscriptionToStandard(this._vendor.id, vendorPackage);
     } else if (vendorPackage.planTier === SubscriptionPlanTypes.CONSUMER_BASIC) {
-      return this._accountsService.cancelVendorSubscription();
+      return this._accountsService.cancelVendorSubscription(this._vendor.id);
     }
   }
 

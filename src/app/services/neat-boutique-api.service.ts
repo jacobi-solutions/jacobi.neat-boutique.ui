@@ -49,7 +49,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    cancelVendorSubscription(body: Request | undefined): Observable<VendorProfileResponse>;
+    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -194,7 +194,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getHeroAdTemplatesForVendor(body: Request | undefined): Observable<HeroAdTemplatesResponse>;
+    getHeroAdTemplatesForVendor(body: VendorProfileRequest | undefined): Observable<HeroAdTemplatesResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -734,7 +734,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    cancelVendorSubscription(body: Request | undefined): Observable<VendorProfileResponse> {
+    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse> {
         let url_ = this.baseUrl + "/Accounts/CancelVendorSubscriptionAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2358,7 +2358,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getHeroAdTemplatesForVendor(body: Request | undefined): Observable<HeroAdTemplatesResponse> {
+    getHeroAdTemplatesForVendor(body: VendorProfileRequest | undefined): Observable<HeroAdTemplatesResponse> {
         let url_ = this.baseUrl + "/HeroAd/GetHeroAdTemplatesForVendorAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4727,6 +4727,7 @@ export class VendorProfile implements IVendorProfile {
     googlePlaceSearchReference?: string | undefined;
     hasVendorSubscription?: boolean;
     hasVendorPremiumSubscription?: boolean;
+    vendorSubscriptionPlan?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -4767,6 +4768,7 @@ export class VendorProfile implements IVendorProfile {
             this.googlePlaceSearchReference = _data["googlePlaceSearchReference"];
             this.hasVendorSubscription = _data["hasVendorSubscription"];
             this.hasVendorPremiumSubscription = _data["hasVendorPremiumSubscription"];
+            this.vendorSubscriptionPlan = _data["vendorSubscriptionPlan"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.city = _data["city"];
@@ -4817,6 +4819,7 @@ export class VendorProfile implements IVendorProfile {
         data["googlePlaceSearchReference"] = this.googlePlaceSearchReference;
         data["hasVendorSubscription"] = this.hasVendorSubscription;
         data["hasVendorPremiumSubscription"] = this.hasVendorPremiumSubscription;
+        data["vendorSubscriptionPlan"] = this.vendorSubscriptionPlan;
         data["name"] = this.name;
         data["address"] = this.address;
         data["city"] = this.city;
@@ -4860,6 +4863,7 @@ export interface IVendorProfile {
     googlePlaceSearchReference?: string | undefined;
     hasVendorSubscription?: boolean;
     hasVendorPremiumSubscription?: boolean;
+    vendorSubscriptionPlan?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -4887,7 +4891,7 @@ export class ProfilesResponse implements IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfile?: VendorProfile;
+    vendorProfiles?: VendorProfile[] | undefined;
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
@@ -4911,7 +4915,11 @@ export class ProfilesResponse implements IProfilesResponse {
             }
             this.isSuccess = _data["isSuccess"];
             this.consumerProfile = _data["consumerProfile"] ? ConsumerProfile.fromJS(_data["consumerProfile"]) : <any>undefined;
-            this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
+            if (Array.isArray(_data["vendorProfiles"])) {
+                this.vendorProfiles = [] as any;
+                for (let item of _data["vendorProfiles"])
+                    this.vendorProfiles!.push(VendorProfile.fromJS(item));
+            }
             if (Array.isArray(_data["notificationCategories"])) {
                 this.notificationCategories = [] as any;
                 for (let item of _data["notificationCategories"])
@@ -4943,7 +4951,11 @@ export class ProfilesResponse implements IProfilesResponse {
         }
         data["isSuccess"] = this.isSuccess;
         data["consumerProfile"] = this.consumerProfile ? this.consumerProfile.toJSON() : <any>undefined;
-        data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
+        if (Array.isArray(this.vendorProfiles)) {
+            data["vendorProfiles"] = [];
+            for (let item of this.vendorProfiles)
+                data["vendorProfiles"].push(item.toJSON());
+        }
         if (Array.isArray(this.notificationCategories)) {
             data["notificationCategories"] = [];
             for (let item of this.notificationCategories)
@@ -4964,7 +4976,7 @@ export interface IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfile?: VendorProfile;
+    vendorProfiles?: VendorProfile[] | undefined;
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
@@ -5105,6 +5117,7 @@ export interface IResponse {
 
 export class ChangeVendorSubscriptionRequest implements IChangeVendorSubscriptionRequest {
     stripePriceId?: string | undefined;
+    vendorProfileId?: string | undefined;
 
     constructor(data?: IChangeVendorSubscriptionRequest) {
         if (data) {
@@ -5118,6 +5131,7 @@ export class ChangeVendorSubscriptionRequest implements IChangeVendorSubscriptio
     init(_data?: any) {
         if (_data) {
             this.stripePriceId = _data["stripePriceId"];
+            this.vendorProfileId = _data["vendorProfileId"];
         }
     }
 
@@ -5131,12 +5145,14 @@ export class ChangeVendorSubscriptionRequest implements IChangeVendorSubscriptio
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["stripePriceId"] = this.stripePriceId;
+        data["vendorProfileId"] = this.vendorProfileId;
         return data; 
     }
 }
 
 export interface IChangeVendorSubscriptionRequest {
     stripePriceId?: string | undefined;
+    vendorProfileId?: string | undefined;
 }
 
 export class VendorProfileResponse implements IVendorProfileResponse {
@@ -5189,6 +5205,42 @@ export interface IVendorProfileResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorProfile?: VendorProfile;
+}
+
+export class VendorProfileCancelRequest implements IVendorProfileCancelRequest {
+    vendorProfileId?: string | undefined;
+
+    constructor(data?: IVendorProfileCancelRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vendorProfileId = _data["vendorProfileId"];
+        }
+    }
+
+    static fromJS(data: any): VendorProfileCancelRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorProfileCancelRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vendorProfileId"] = this.vendorProfileId;
+        return data; 
+    }
+}
+
+export interface IVendorProfileCancelRequest {
+    vendorProfileId?: string | undefined;
 }
 
 export class VendorSubscriptionResponse implements IVendorSubscriptionResponse {
@@ -7327,6 +7379,46 @@ export interface IContactUsRequest {
     reCaptchaToken?: string | undefined;
 }
 
+export class VendorProfileRequest implements IVendorProfileRequest {
+    vendorId?: string | undefined;
+    profilePath?: string | undefined;
+
+    constructor(data?: IVendorProfileRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vendorId = _data["vendorId"];
+            this.profilePath = _data["profilePath"];
+        }
+    }
+
+    static fromJS(data: any): VendorProfileRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorProfileRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vendorId"] = this.vendorId;
+        data["profilePath"] = this.profilePath;
+        return data; 
+    }
+}
+
+export interface IVendorProfileRequest {
+    vendorId?: string | undefined;
+    profilePath?: string | undefined;
+}
+
 export class HeroAdTemplate implements IHeroAdTemplate {
     id?: string | undefined;
     createdDateUtc?: Date;
@@ -7476,6 +7568,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
+    vendorProfileId?: string | undefined;
 
     constructor(data?: ICreateHeroAdRequest) {
         if (data) {
@@ -7492,6 +7585,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
             this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
             this.callToAction = _data["callToAction"];
             this.imageUrl = _data["imageUrl"];
+            this.vendorProfileId = _data["vendorProfileId"];
         }
     }
 
@@ -7508,6 +7602,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
         data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
         data["callToAction"] = this.callToAction;
         data["imageUrl"] = this.imageUrl;
+        data["vendorProfileId"] = this.vendorProfileId;
         return data; 
     }
 }
@@ -7517,6 +7612,7 @@ export interface ICreateHeroAdRequest {
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
+    vendorProfileId?: string | undefined;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
@@ -8981,46 +9077,6 @@ export interface IVendorProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorProfiles?: VendorProfile[] | undefined;
-}
-
-export class VendorProfileRequest implements IVendorProfileRequest {
-    vendorId?: string | undefined;
-    profilePath?: string | undefined;
-
-    constructor(data?: IVendorProfileRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.vendorId = _data["vendorId"];
-            this.profilePath = _data["profilePath"];
-        }
-    }
-
-    static fromJS(data: any): VendorProfileRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorProfileRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["vendorId"] = this.vendorId;
-        data["profilePath"] = this.profilePath;
-        return data; 
-    }
-}
-
-export interface IVendorProfileRequest {
-    vendorId?: string | undefined;
-    profilePath?: string | undefined;
 }
 
 export class VendorProfileWithReviewsResponse implements IVendorProfileWithReviewsResponse {

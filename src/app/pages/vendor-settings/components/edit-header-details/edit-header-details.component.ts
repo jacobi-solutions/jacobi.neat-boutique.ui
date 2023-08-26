@@ -40,7 +40,7 @@ export class EditHeaderDetailsComponent implements OnInit {
     }
 
     if(updatedCommunities) {
-      this.vendor = await this._vendorSettings.updateVendorCommunities(updatedCommunities);
+      this.vendor = await this._vendorSettings.updateVendorCommunities(this.vendor.id, updatedCommunities);
       return EditVendorExitCodes.SUCCESS;
     }
   }
@@ -53,7 +53,7 @@ export class EditHeaderDetailsComponent implements OnInit {
     const { data: { openPictureModal, newBorderColor } } = await this._modalService.displayChangeAvatarModal(this.vendor);
 
     if(newBorderColor) {
-      var vendor = await this._vendorSettings.updateBorderColor(newBorderColor);
+      var vendor = await this._vendorSettings.updateBorderColor(this.vendor.id, newBorderColor);
       this.vendor = new VendorDisplay(vendor);
     }
 
@@ -62,11 +62,14 @@ export class EditHeaderDetailsComponent implements OnInit {
     
       if(imgBase64Path) {
         this.vendor.avatarSourceURL = imgBase64Path;
-        this.vendor = await this._vendorSettings.uploadVendorLogo(imgBase64Path);
+        this.vendor = await this._vendorSettings.uploadVendorLogo(this.vendor.id, imgBase64Path);
       }  
     }  
   }
 
+  goToPricing() {
+    this._router.navigateByUrl('/pricing', { state: this.vendor });
+  }
   addAnotherBusiness() {
     this._router.navigateByUrl('/pricing');
   }

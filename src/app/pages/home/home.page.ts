@@ -86,10 +86,12 @@ export class HomePage implements AfterViewInit {
       this._accountService.currentUserSubject.subscribe((user) => {
         if(user) {
           this.currentUser = user;
-          if(this.currentUser.vendor) {
+          if(this.currentUser?.vendors?.length === 0) {
             this.promoteMyBusinessLabel = 'Promote My Business';
-          } else {
+          } else if(this.currentUser?.vendors?.length === 1) {
             this.promoteMyBusinessLabel = 'Manage My Business';
+          } else if(this.currentUser?.vendors?.length > 1) {
+            this.promoteMyBusinessLabel = 'Manage My Businesses';
           }
         }
       });
@@ -153,10 +155,12 @@ export class HomePage implements AfterViewInit {
   }
 
   promoteMyBusiness() {
-    if(!this.currentUser?.vendor?.hasVendorSubscription) {
+    if(this.currentUser?.vendors?.length === 0) {
       this._router.navigateByUrl('/pricing');
-    } else {
-      this._router.navigateByUrl('/vendor-settings');
+    } else if(this.currentUser?.vendors?.length === 1) {
+      this._router.navigateByUrl('/vendor-settings', { state: this.currentUser?.vendors[0] });
+    } else if(this.currentUser?.vendors?.length > 1) {
+      this._router.navigateByUrl('/vendor-businesses');
     }
   }
   

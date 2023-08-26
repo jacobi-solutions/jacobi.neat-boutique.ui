@@ -1,0 +1,32 @@
+
+<ion-content>
+
+  <ion-grid>
+    
+    <ion-row>
+      <ion-col *ngIf="currentUserDisplay?.vendors; else elseShowLoadSpinner">
+        <ion-row *ngFor="let vendor of currentUserDisplay.vendors">
+          <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
+            <app-vendor-list-item [vendor]="vendor"></app-vendor-list-item>
+          </ion-col>
+        </ion-row>
+        
+    
+        
+      </ion-col>
+    </ion-row>
+    
+  </ion-grid>
+
+
+  <app-nb-footer></app-nb-footer>
+</ion-content>
+
+<!-- Crescent loader -->
+<ng-template #elseShowLoadSpinner>
+  <ion-col>
+    <div class="load-spinner-wrapper">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </ion-col>
+</ng-template>

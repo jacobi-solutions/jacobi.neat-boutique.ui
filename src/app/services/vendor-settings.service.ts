@@ -35,7 +35,7 @@ export class VendorSettingsService {
   public vendorEditsSubject: BehaviorSubject<VendorEdits> = new BehaviorSubject<VendorEdits>(null);
 
   private _currentUser: CurrentUserDisplay;
-  private _newPollAdSubject: BehaviorSubject<UntypedFormGroup> = new BehaviorSubject<UntypedFormGroup>(null);
+  newPollAdSubject: BehaviorSubject<UntypedFormGroup> = new BehaviorSubject<UntypedFormGroup>(null);
   
   // public trackAnswerVotesSubject: BehaviorSubject<AnswerToPollAssociation[]> = new BehaviorSubject<AnswerToPollAssociation[]>(null);
   // private _trackAnswerVotesList: AnswerToPollAssociation[] = []
@@ -46,9 +46,9 @@ export class VendorSettingsService {
     });
   }
 
-  public updateVendorDescription(description: string) {
+  public updateVendorDescription(vendorId: string, description: string) {
     var request = new VendorDescriptionRequest();
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.description = description;
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
@@ -62,10 +62,10 @@ export class VendorSettingsService {
     return promise;
   }
 
-  public updateVendorSocialLinks(facebookURL: string, instagramURL: string, twitterURL: string) {
+  public updateVendorSocialLinks(vendorId: string, facebookURL: string, instagramURL: string, twitterURL: string) {
     // it's ok if one or more of the url's are empty. the backend will only update non-empty fields
     var request = new VendorSocialLinksRequest();
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.facebookURL = facebookURL;
     request.instagramURL = instagramURL;
     request.twitterURL = twitterURL;
@@ -81,9 +81,9 @@ export class VendorSettingsService {
     return promise;
   }
 
-  public updateVendorCommunities(communities: string[]) {
+  public updateVendorCommunities(vendorId: string, communities: string[]) {
     var request = new VendorCommunitiesRequest();
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.communities = communities;
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
@@ -98,9 +98,9 @@ export class VendorSettingsService {
   }
 
 
-  public uploadVendorLogo(logoBase64Path: string) {    
+  public uploadVendorLogo(vendorId: string, logoBase64Path: string) {    
     var request = new VendorImageRequest();
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.base64Image = logoBase64Path;
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
@@ -117,10 +117,10 @@ export class VendorSettingsService {
     return promise;
   }
 
-  public uploadPhoto(imgBase64Path: string, position: number) {
+  public uploadPhoto(vendorId: string, imgBase64Path: string, position: number) {
     var request = new VendorImageRequest();
     request.photoPosition = position;
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.base64Image = imgBase64Path;
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
@@ -134,15 +134,17 @@ export class VendorSettingsService {
     return promise;
   }
 
-  public updateBorderColor(color: string) {
+  public updateBorderColor(vendorId: string, color: string) {
     var request = new VendorBorderColorRequest();
-    request.vendorId = this._currentUser.vendor.id;
+    request.vendorId = vendorId;
     request.borderColor = color;
 
     const promise = new Promise<VendorProfile>((resolve, reject) => {
       this._neatBoutiqueApi.updateVendorBorderColor(request).subscribe((response: VendorProfileResponse) => {
         if (response.isSuccess) {
-          this._accountsService.setCurrentVendor(response.vendorProfile);
+          var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
+          currentVendors = [ response.vendorProfile, ...currentVendors]
+          this._accountsService.setCurrentVendors(currentVendors);
           resolve(response.vendorProfile);
         }
       });
@@ -205,12 +207,13 @@ export class VendorSettingsService {
   }
 
 
-  public createHeroAdForVendor(communityName: string, adTagline: AdTagline, callToAction: string, imageUrl: string) {
+  public createHeroAdForVendor(vendorId: string, communityName: string, adTagline: AdTagline, callToAction: string, imageUrl: string) {
     const request = new CreateHeroAdRequest();
     request.communityName = communityName;
     request.adTagline = adTagline;
     request.callToAction = callToAction;
     request.imageUrl = imageUrl;
+    request.vendorProfileId = vendorId;
     return new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApi.createHeroAdForVendor(request).subscribe((response: Response) => {
         if(response.isSuccess) {
@@ -225,12 +228,10 @@ export class VendorSettingsService {
   // polls ads ======================
   
   public updateCurrentPollAd(pollForm: UntypedFormGroup) {
-    this._newPollAdSubject.next(pollForm);
+    this.newPollAdSubject.next(pollForm);
   }
 
-  public observeCurrentPollAd() {
-    return this._newPollAdSubject;
-  }
+  
 
   public createVendorPost(pollPost: VendorPost) {
     const request = new VendorPostRequest();

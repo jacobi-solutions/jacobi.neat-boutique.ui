@@ -11,14 +11,14 @@
         <div class="action-content-wrapper">          
             <div class="choice clickable" (click)="getConsumerProfile()">
               <app-nb-avatar
-                [borderColor]="consumer?.borderColor"
-                [imageSrc]="consumer?.avatarSourceURL"
-                [username]="consumer?.name"
+                [borderColor]="currentUser.consumer?.borderColor"
+                [imageSrc]="currentUser.consumer?.avatarSourceURL"
+                [username]="currentUser.consumer?.name"
                 [altStyleClass]="'force-center-items flex-text-wrapper'">
               </app-nb-avatar>
             </div>
   
-            <div class="choice clickable" (click)="getVendorProfile()">
+            <div *ngFor="let vendor of currentUser.vendors" class="choice clickable" (click)="getVendorProfile(vendor)">
               <app-nb-avatar
                 [borderColor]="vendor?.borderColor"
                 [imageSrc]="vendor?.avatarSourceURL"

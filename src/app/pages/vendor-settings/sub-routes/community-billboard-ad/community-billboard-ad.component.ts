@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -19,26 +20,22 @@ export class CommunityBillboardAdComponent implements OnInit {
   public postedAd: boolean;
   public selectedHeroTemplate: HeroAdTemplate;
   public selectedHeroAd: HeroAd = new HeroAd;
-  public hasPremiumSubscription: boolean;
   public adIsCreated = false;
   constructor(private _accountsService: AccountsService, private _vendorSettingsService: VendorSettingsService,
-      private _router: Router) { }
+      private _router: Router) {
+        this.vendor = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
+        this._loadHeroAds();
+       }
 
   ngOnInit() {
-    this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
-      if(user) {
-        this.vendor = new VendorDisplay(user.vendor);  
-        this.hasPremiumSubscription = this.vendor.hasVendorPremiumSubscription;
-        this._loadHeroAds();
-      }
-    });  
+     
 
     
   }
 
   public async submitAd() {
-    if (this.hasPremiumSubscription) {
-      this.postedAd = await this._vendorSettingsService.createHeroAdForVendor(this.selectedHeroAd.communityName, 
+    if (this.vendor.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM) {
+      this.postedAd = await this._vendorSettingsService.createHeroAdForVendor(this.vendor.id, this.selectedHeroAd.communityName, 
       this.selectedHeroAd.adTagline, this.selectedHeroAd.callToAction, this.selectedHeroAd.imageUrl);
       this.adIsCreated = true;
     } else {

@@ -43,7 +43,7 @@ export class VendorPhotosComponent implements OnInit {
   async showUploadPhotoModal(i: number) {
     const { data: { imgBase64Path } } = await this._modalService.displayPhotoUploadModal(false);
     if(imgBase64Path) {
-      this.vendor = await this._vendorSettings.uploadPhoto(imgBase64Path, i);
+      this.vendor = await this._vendorSettings.uploadPhoto(this.vendor.id, imgBase64Path, i);
       this._loadPhotos(); 
     }    
   }

@@ -18,7 +18,7 @@ export class ConsumerGuard implements CanActivate {
         let redirect = route.data["redirect"] as string;
 
         const promise = new Promise<boolean | UrlTree>((resolve, reject) => {
-          if(this._currentUser?.vendor?.hasVendorSubscription) {
+          if(this._currentUser?.vendors?.length > 0) {
             resolve(this.router.parseUrl(redirect));
           } else {
             resolve(true);

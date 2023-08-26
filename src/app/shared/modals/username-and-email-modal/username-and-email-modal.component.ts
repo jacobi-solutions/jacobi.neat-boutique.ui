@@ -10,7 +10,7 @@ import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
   styleUrls: ['./username-and-email-modal.component.scss'],
 })
 export class UsernameAndEmailModalComponent implements OnInit {
-  @Input() currentUser: CurrentUserDisplay;
+
   public maxUsernameLength = 64;
   public minUsernameLength = 3;
   

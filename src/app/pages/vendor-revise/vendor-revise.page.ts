@@ -22,7 +22,7 @@ export class VendorRevisePage implements OnInit {
 
   async changeVendorSubscription(vendorPackage: VendorSubscriptionPackage) {
     await this._vendorSubscriptionService.completeVendorRevise(vendorPackage);
-    this._router.navigateByUrl('/vendor-settings');
+    this._router.navigateByUrl('/vendor-settings', { state: this._vendorSubscriptionService.getVendor() });
   }
 
   async cancelVendorSubscription(shouldCancelSubscription: boolean) {

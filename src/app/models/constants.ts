@@ -24,7 +24,8 @@ export const UserRoleTypes = {
 export const SubscriptionPlanTypes = {
     CONSUMER_BASIC: "basic",
     VENDOR_STANDARD: "standard",
-    VENDOR_PREMIUM: "premium"
+    VENDOR_PREMIUM: "premium",
+    VENDOR_NO_SUBSCRIPTION: "no subscription"
 }
 
 export const AnswerVoteRankingTypes = {

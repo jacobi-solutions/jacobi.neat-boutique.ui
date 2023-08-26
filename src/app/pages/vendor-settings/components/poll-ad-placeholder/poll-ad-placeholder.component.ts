@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
-import { CommunityTypes } from 'src/app/models/constants';
+import { CommunityTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
-import { NeatBoutiqueEntity, PollAnswer, Comment, VendorPost } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, PollAnswer, Comment, VendorPost, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { CurrentUserDisplay } from 'src/app/models/current-user-display';
+import { VendorDisplay } from 'src/app/models/vendor-display';
 
 @Component({
   selector: 'app-poll-ad-placeholder',
@@ -16,30 +16,36 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
   styleUrls: ['./poll-ad-placeholder.component.scss'],
 })
 export class PollAdPlaceholderComponent implements OnInit {
-
+  @Input() vendor: VendorDisplay;
   public examplePoll: VendorPostDisplay;
-  public currentUser: CurrentUserDisplay;
+  private _subscriptionPlanTypes = SubscriptionPlanTypes;
+  public get subscriptionPlanTypes() {
+    return this._subscriptionPlanTypes;
+  }
+  public set subscriptionPlanTypes(value) {
+    this._subscriptionPlanTypes = value;
+  }
 
 
   constructor(private _utilService: UtilService, private _communityService: CommunityService,
     private _accountsService: AccountsService, private _router: Router) {
 
-      this._accountsService.currentUserSubject.subscribe((currentUser: CurrentUserDisplay) => {
-        if(currentUser) {
-          this.currentUser = currentUser
-        }
-      });
+     
   }
   ngOnInit() {
     this._loadExamplePoll();    
   }
 
   goToPollAds() {
-    if(!this.currentUser?.vendor?.hasVendorPremiumSubscription) {
-      this._router.navigateByUrl('/pricing');
+    if(this.vendor?.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_STANDARD) {
+      this.goToPricing();
     } else {
-      this._router.navigateByUrl('/vendor-settings/poll-ads');
+      this._router.navigateByUrl('/vendor-settings/poll-ads', { state: this.vendor });
     }
+  }
+
+  goToPricing() {
+    this._router.navigateByUrl('/pricing', { state: this.vendor });
   }
 
   private _loadExamplePoll() {

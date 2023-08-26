@@ -82,6 +82,12 @@ const routes: Routes = [
     data: { redirect: '/pricing', title: 'Vendor Settings', showNbHeader2: true, showNbHeader3: true }
   },
   {
+    path: 'vendor-businesses',
+    loadChildren: () => import('./pages/vendor-businesses/vendor-businesses.module').then( m => m.VendorBusinessesPageModule),
+    canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
+    data: { redirect: '/pricing', title: 'Vendor Settings', showNbHeader2: true, showNbHeader3: true }
+  },
+  {
     path: 'my-questions',
     loadChildren: () => import('./pages/my-questions/my-questions.module').then( m => m.MyQuestionsPageModule),
     canActivate: [ AuthGuard, HeaderGuard ],

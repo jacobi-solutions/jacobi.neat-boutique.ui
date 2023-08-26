@@ -39,14 +39,14 @@ export class EditBioComponent implements OnInit {
 
   public async saveEditDescription() {
     this.editDescription = !this.editDescription;
-    this.vendor = await this._vendorSettings.updateVendorDescription(this.descriptionForm.value.description)
+    this.vendor = await this._vendorSettings.updateVendorDescription(this.vendor.id, this.descriptionForm.value.description)
   }
 
 
   public async editSocialMediaLinks() {
-    const { data } = await this._modelService.displayEditSocialMediaModal();
+    const { data } = await this._modelService.displayEditSocialMediaModal(this.vendor);
     const { facebookURL, instagramURL, twitterURL } = data;
-    this.vendor = await this._vendorSettings.updateVendorSocialLinks(facebookURL, instagramURL, twitterURL);
+    this.vendor = await this._vendorSettings.updateVendorSocialLinks(this.vendor.id, facebookURL, instagramURL, twitterURL);
     console.log(this.vendor);
     
     return EditVendorExitCodes.SUCCESS;

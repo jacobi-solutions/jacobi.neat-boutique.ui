@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { user } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
+import { SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
+import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
+import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 
 @Component({
@@ -11,36 +16,48 @@ import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.
 })
 export class PricingPage implements OnInit {
   public isAuthenticated: boolean;
-  public isVendor: boolean;
-  public isPremiumVendor: boolean;
-  private _currentUser: CurrentUserDisplay;
-  constructor(private _vendorSubscriptionService: VendorSubscriptionService, private _accountsService: AccountsService,
-    private _router: Router) { }
+  singleVendor: VendorDisplay = null;
+  hasNoSubscription = false;
+  hasAtLeastOneVendor = false;
+  subscriptionPlanTypes = SubscriptionPlanTypes;
+
+  constructor(private _vendorSubscriptionService: VendorSubscriptionService, private _authService: AuthService,
+    private _router: Router, private _accountsService: AccountsService) { 
+      var vendorProfile = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
+      if(vendorProfile) {
+        this.singleVendor = new VendorDisplay(vendorProfile);
+      } else {
+        this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
+          if(userDisplay.vendors?.length === 0) {
+            this.hasNoSubscription = true;
+          } 
+          else if(userDisplay.vendors?.length > 0) {
+            this.hasAtLeastOneVendor = true
+          }
+        });
+      }
+
+      this._authService.isAuthenticated().then((isAuthenticated) => {
+        if(isAuthenticated) {
+          this.isAuthenticated = true;
+        }
+      });
+    }
 
   async ngOnInit() {
-    
-    this._accountsService.currentUserSubject.subscribe((currentUser: CurrentUserDisplay) => {
-      if(currentUser) {
-        this._currentUser = currentUser;
-        this.isAuthenticated = true;
-        if(currentUser.vendor) {
-          this.isVendor = true;
-          this.isPremiumVendor = currentUser.vendor.hasVendorPremiumSubscription;
-        }
-      }
-    })
+   
   }
 
   upgradeVendorSubscriptionToPremium() {
-    this._vendorSubscriptionService.upgradeVendorSubscriptionToPremium(this._currentUser.vendor);
+    this._vendorSubscriptionService.upgradeVendorSubscriptionToPremium(this.singleVendor);
   }
 
   downgradeVendorSubscriptionToStandard() {
-    this._vendorSubscriptionService.downgradeVendorSubscriptionToStandard(this._currentUser.vendor);
+    this._vendorSubscriptionService.downgradeVendorSubscriptionToStandard(this.singleVendor);
   }
 
   cancelVendorSubscription() {
-    this._vendorSubscriptionService.startVendorSubscriptionCancelation(this._currentUser.vendor);
+    this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.singleVendor);
   }
 
   startVendorSubscriptionWithPremium() {

@@ -8,18 +8,21 @@ export class CurrentUserDisplay {
     feedCategoriesToShow?: string[];
     notificationsForAnsweredQuestions?: boolean;
     public consumer: ConsumerProfile = null;
-    public vendor: VendorProfile = null;
-    public ids: [StringOrNull, StringOrNull] = [null, null];
+    public vendors: VendorProfile[] = null;
+    public ids: string[];
     private _uiVendorsInMyList: string[] = [];
     public isAdmin: boolean = false;
 
-    constructor(consumer: ConsumerProfile, vendor: VendorProfile) {        
+    constructor(consumer: ConsumerProfile, vendors: VendorProfile[]) {        
         this.consumer = consumer;
-        this.vendor = (vendor?.id !== undefined) ? vendor : null;
-        this.ids = [
-            consumer?.id,
-            (vendor?.id !== undefined) ? vendor?.id : null
-        ];
+        this.vendors = vendors
+        this.ids = [];
+        if(consumer) {
+            this.ids.push(consumer.id);
+        }
+        if(vendors) {
+            this.ids = [...this.ids, ...(vendors?.map(x => x.id))];
+        }
     }
 
     
@@ -46,11 +49,17 @@ export class CurrentUserDisplay {
     }
 
     public hasIdInList(ids: string[]): boolean {   
-        return ids.some(id => (id === this.vendor?.id) || (id === this.consumer.id));
+        var hasId = false;
+        for (let id of ids) {
+            var hasId = this.hasId(id);
+            if(hasId) break;
+        }
+        
+        return hasId;
     }
 
     public hasId(id: string): boolean { 
-        return ((id === this.vendor?.id) || (id === this.consumer.id))
+        return this.ids.some(x => x === id);
     }
 
     

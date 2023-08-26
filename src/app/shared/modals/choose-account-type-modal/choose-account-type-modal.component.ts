@@ -4,6 +4,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { UserRoleTypes } from 'src/app/models/constants';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { VendorDisplay } from 'src/app/models/vendor-display';
 
 @Component({
   selector: 'app-choose-account-type-modal-modal',
@@ -15,9 +16,7 @@ import { ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-a
 export class ChooseAccountModalComponent implements OnInit {
   @Input() noticeInnerHTML: Function;
 
-  public consumer: ConsumerProfile;
-  public vendor: VendorProfile;
-  private _currentUser: CurrentUserDisplay = null;
+  currentUser: CurrentUserDisplay = null;
 
   constructor(private _modalController: ModalController, private _customersService: AccountsService) {}
     
@@ -34,11 +33,8 @@ export class ChooseAccountModalComponent implements OnInit {
     document.documentElement.style.setProperty('--current-modal-card-width', `${modalCardWidth}px`);
 
     this._customersService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
-      this._currentUser = user;
-      if(user) {
-        this.consumer = user.consumer;
-        this.vendor = user.vendor;        
-      }
+      this.currentUser = user;
+      
     });
   }
 
@@ -49,21 +45,21 @@ export class ChooseAccountModalComponent implements OnInit {
   }
 
   getConsumerProfile() {
-    if(this._currentUser) {
+    if(this.currentUser) {
       this._modalController.dismiss({
         canceled: false,
         accountRole: UserRoleTypes.CONSUMER,
-        user: this._currentUser?.consumer,
+        user: this.currentUser?.consumer,
       });
     }
   }
 
-  getVendorProfile() {
-    if(this._currentUser) {
+  getVendorProfile(vendor: VendorProfile) {
+    if(this.currentUser) {
       this._modalController.dismiss({
         canceled: false,
         accountRole: UserRoleTypes.VENDOR,
-        user: this._currentUser.vendor,
+        user: vendor,
       });
     }
   }

@@ -92,8 +92,8 @@ export class CommentItemComponent implements OnInit {
       return null;
     }
 
-    const commentAccount = await this._modalService.displayChooseProfileModal();
-    return await this._communityService.likeComment(this.comment, commentAccount?.user.id, commentAccount.accountRole);
+    // const commentAccount = await this._modalService.displayChooseProfileModal();
+    return await this._communityService.likeComment(this.comment, this.currentUser.consumer.id);
   }
 
   

@@ -18,7 +18,8 @@ import {
   ConsumerProfileResponse,
   NotificationTokenRequest,
   Response,
-  AccountCreateRequest
+  AccountCreateRequest,
+  VendorProfileCancelRequest
 } from './neat-boutique-api.service';
 import { Router, UrlTree } from '@angular/router';
 import { VendorSubscriptionPackage } from './vendor-subscription.service';
@@ -46,7 +47,7 @@ export class AccountsService {
       this._neatBoutiqueApiService.createAccount(request).subscribe((response) => {
         if(response.isSuccess) {
           
-          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfile);
+          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfiles);
           this._currentUser.feedCategoriesToShow = response.feedCategoriesToShow;
           this._currentUser.notificationCategories = response.notificationCategories;
           this._currentUser.notificationsForAnsweredQuestions = response.notificationsForAnsweredQuestions;
@@ -131,7 +132,7 @@ export class AccountsService {
           if(this._currentUser?.consumer) {
             response.consumerProfile.name = this._currentUser?.consumer.name;
           }
-          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfile);
+          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfiles);
           this._currentUser.isAdmin = response.isAdmin;
           this._currentUser.feedCategoriesToShow = response.feedCategoriesToShow;
           this._currentUser.notificationCategories = response.notificationCategories;
@@ -155,27 +156,27 @@ export class AccountsService {
   private _promptUserForNameAndEmail() {
 
   }
-  private _setCurrentUser(consumer: ConsumerProfile, vendor: VendorProfile) {    
+  private _setCurrentUser(consumer: ConsumerProfile, vendors: VendorProfile[]) {    
     // preserve consumer name from Firebase User
     if(this._currentUser?.consumer) {
       consumer.name = this._currentUser?.consumer.name;
     }
 
-    this._currentUser = new CurrentUserDisplay(consumer, vendor);
+    this._currentUser = new CurrentUserDisplay(consumer, vendors);
     this.currentUserSubject.next(this._currentUser);
   }
 
   public setCurrentConsumer(consumer: ConsumerProfile) {
     var promise = new Promise<boolean>((resolve, reject) => {
-      this._setCurrentUser(consumer, this._currentUser?.vendor);
+      this._setCurrentUser(consumer, this._currentUser?.vendors);
       resolve(true);
     });
     return promise;
   } 
 
-  public setCurrentVendor(vendor: VendorProfile) {
+  public setCurrentVendors(vendors: VendorProfile[]) {
     var promise = new Promise<boolean>((resolve, reject) => {
-      this._setCurrentUser(this._currentUser?.consumer, vendor);
+      this._setCurrentUser(this._currentUser?.consumer, vendors);
       resolve(true);
     });
     return promise;
@@ -187,7 +188,7 @@ export class AccountsService {
 
   updateUsername(username: string) {
     this._currentUser.consumer.name = username;
-    this._setCurrentUser(this._currentUser.consumer, this._currentUser.vendor)
+    this._setCurrentUser(this._currentUser.consumer, this._currentUser.vendors)
     
     this._neatBoutiqueApiService.updateUsername(new Request());
   }
@@ -215,15 +216,17 @@ export class AccountsService {
   //     return promise;
   // }
 
-  cancelVendorSubscription() {
-    const request = new Request();
+  cancelVendorSubscription(vendorId: string) {
+    const request = new VendorProfileCancelRequest();
+    request.vendorProfileId = vendorId;
     
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService
         .cancelVendorSubscription(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-            this.setCurrentVendor(null).then(() => {
+            var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
+            this.setCurrentVendors(currentVendors).then(() => {
               resolve(true);
             });
           } else if (response.errors.find((x) => x.errorCode === "409")) {
@@ -235,15 +238,18 @@ export class AccountsService {
   }
 
 
-  changeVendorSubscriptionToPremium(vendorPackage: VendorSubscriptionPackage) {
+  changeVendorSubscriptionToPremium(vendorId: string, vendorPackage: VendorSubscriptionPackage) {
     const request = new ChangeVendorSubscriptionRequest();
+    request.vendorProfileId = vendorId;
     request.stripePriceId = vendorPackage.stripePriceId;
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService
         .changeVendorSubscriptionToPremium(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-              this.setCurrentVendor(response.vendorProfile);
+              var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
+              currentVendors = [ response.vendorProfile, ...currentVendors]
+              this.setCurrentVendors(currentVendors);
               resolve(true);
           } else if (response.errors.find((x) => x.errorCode === "420")) {
             reject();
@@ -253,15 +259,18 @@ export class AccountsService {
       return promise;
   }
 
-  changeVendorSubscriptionToStandard(vendorPackage: VendorSubscriptionPackage) {
+  changeVendorSubscriptionToStandard(vendorId: string, vendorPackage: VendorSubscriptionPackage) {
     const request = new ChangeVendorSubscriptionRequest();
+    request.vendorProfileId = vendorId;
     request.stripePriceId = vendorPackage.stripePriceId;
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService
         .changeVendorSubscriptionToStandard(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-              this.setCurrentVendor(response.vendorProfile);
+            var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
+            currentVendors = [ response.vendorProfile, ...currentVendors]
+            this.setCurrentVendors(currentVendors);
               resolve(true);
           } else if (response.errors.find((x) => x.errorCode === "420")) {
             reject();

@@ -84,9 +84,7 @@ export class PostItemComponent implements OnInit {
 
   // for vendor polls
   goToVendor() {
-    if(this.isDemo && this.post && (this.post.postType === PostType.POLL)) {
-      this._router.navigateByUrl('/vendor-profile/' + this.currentUser.vendor.profilePath);
-    } else if(this.post && (this.post.postType === PostType.POLL)) {
+    if(this.post && (this.post.postType === PostType.POLL)) {
       this._router.navigateByUrl('/vendor-profile/' + this.post?.author.profilePath);
     }
   }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
+import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
@@ -11,15 +13,10 @@ import { VendorSettingsService } from 'src/app/services/vendor-settings.service'
   styleUrls: ['./edit-hero-ad.component.scss'],
 })
 export class EditHeroAdComponent implements OnInit {
-  
-
-  public currentUser: CurrentUserDisplay;
+  @Input() vendor: VendorDisplay;
+  subscriptionPlanTypes = SubscriptionPlanTypes;
   constructor(private _accountsService: AccountsService, private _router: Router) {
-    this._accountsService.currentUserSubject.subscribe((currentUser: CurrentUserDisplay) => {
-      if(currentUser) {
-        this.currentUser = currentUser
-      }
-    });
+    
   }
 
   ngOnInit() {}
@@ -29,11 +26,15 @@ export class EditHeroAdComponent implements OnInit {
   // }
 
   goToBillboardAds() {
-    if(!this.currentUser?.vendor?.hasVendorPremiumSubscription) {
-      this._router.navigateByUrl('/pricing');
+    if(this.vendor?.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_STANDARD) {
+      this.goToPricing();
     } else {
-      this._router.navigateByUrl('/vendor-settings/community-billboard-ads');
+      this._router.navigateByUrl('/vendor-settings/community-billboard-ads', { state: this.vendor });
     }
     
+  }
+
+  goToPricing() {
+    this._router.navigateByUrl('/pricing', { state: this.vendor });
   }
 }
