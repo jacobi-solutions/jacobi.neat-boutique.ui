@@ -4,8 +4,9 @@ import { NavController } from '@ionic/angular';
 import { debounceTime } from 'rxjs/operators';
 import { SubscriptionPlanTypes } from 'src/app/models/constants';
 import { GooglePlacesEntityDisplay } from 'src/app/models/google-entity-display';
+import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 import { GooglePlaceDetailsResponse, GooglePlacesEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
-import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 
 @Component({
   selector: 'app-connect-business',
@@ -14,7 +15,7 @@ import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/se
 })
 export class ConnectBusinessComponent implements OnInit {
   public googlePlacesResults: GooglePlacesEntityDisplay[] = null;
-  public vendorPackage: VendorSubscriptionPackage;
+  public vendorPackage: SubscriptionPackage;
   public selectedGooglePlace: GooglePlaceDetailsResponse;
   public webHeaderHeight: number;
   public subscriptionPlanTypes = SubscriptionPlanTypes;
@@ -27,10 +28,17 @@ export class ConnectBusinessComponent implements OnInit {
 
   public showVendorAlreadyAccociatedError: boolean;
   private _googlePlaceToSave: GooglePlacesEntity = null;
+  numberOfBusinessesConnected: number = 0;
 
   constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService) {
     this.vendorPackage = _vendorSubscriptionService.getVendorPackage();
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
+
+    this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+      if(numberOfBusinessesAlreadyConnected) {
+        this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+      }
+    });
   }
 
   ngOnInit() {

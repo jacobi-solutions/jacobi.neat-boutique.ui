@@ -20,13 +20,20 @@ export class BusinessCommunityComponent implements OnInit {
     twitterLink: new UntypedFormControl('', []),
   });
   private _vendor: VendorProfile;
+  numberOfBusinessesConnected: number = 0;
 
-  constructor(private _navCtrl: NavController, private _vendorUpgradeService: VendorSubscriptionService, 
-      private _communityService: CommunityService) { }
+  constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService, 
+      private _communityService: CommunityService) { 
+        this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+          if(numberOfBusinessesAlreadyConnected) {
+            this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+          }
+        });
+      }
 
   ngOnInit() {
     this.communityDropDown = this._communityService.communities.map(community => ({ label: community.name, value: community.name }));
-    this._vendor = this._vendorUpgradeService.getVendor();
+    this._vendor = this._vendorSubscriptionService.getVendor();
     this.businessCommunity.value.email = this._vendor?.businessEmail || null;
     this.businessCommunity.value.communityCategory = this._vendor?.communities || [];
     this.businessCommunity.value.facebookLink = this._vendor?.facebookURL || null;
@@ -50,7 +57,7 @@ export class BusinessCommunityComponent implements OnInit {
     this._vendor.instagramURL = this.businessCommunity.value.instagramLink;
     this._vendor.twitterURL = this.businessCommunity.value.twitterLink;
     
-    this._vendorUpgradeService.setVendor(this._vendor);
+    this._vendorSubscriptionService.setVendor(this._vendor);
     this.businessCommunity.reset();
     this._navCtrl.navigateForward('vendor-connect/vendor-package-pricing');
   }

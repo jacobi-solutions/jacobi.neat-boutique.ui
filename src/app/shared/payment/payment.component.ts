@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { timeInterval } from 'rxjs/operators';
 import { SubscriptionPlanTypes } from 'src/app/models/constants';
+import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 import { VendorPackagePricingComponent } from 'src/app/pages/vendor-connect/new-vendor-flow/vendor-package-pricing/vendor-package-pricing.component';
 import { ChangeVendorSubscriptionRequest, NeatBoutiqueApiService } from 'src/app/services/neat-boutique-api.service';
-import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { environment } from 'src/environments/environment';
 
 
@@ -21,9 +22,9 @@ import { environment } from 'src/environments/environment';
 export class PaymentComponent implements OnInit {
   @Input() isRevise: boolean;
   @Output() OnCancel: EventEmitter<boolean> =  new EventEmitter<boolean>(null);
-  @Output() OnSubscribe: EventEmitter<VendorSubscriptionPackage> =  new EventEmitter<VendorSubscriptionPackage>(null);
+  @Output() OnSubscribe: EventEmitter<SubscriptionPackage> =  new EventEmitter<SubscriptionPackage>(null);
   @Output() OnCancelSubscription: EventEmitter<boolean> =  new EventEmitter<boolean>(null);
-  vendorPackage: VendorSubscriptionPackage;
+  vendorPackage: SubscriptionPackage;
   showPromoCodeForm: boolean;
   promoCodeMessage: string;
   isPromoCodeApplied: boolean;

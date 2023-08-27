@@ -19,8 +19,14 @@ export const environment = {
     messagingSenderId: '529820257802',
     measurementId: 'G-EFT2LTNEFP',
   },
-  vendorSubscriptionStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
-  vendorSubscriptionPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
+  
+  subscriptionGrandfatherStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
+  subscriptionGrandfatherPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
+
+  subscriptionStandardStripePriceId: "price_1Njl2WIuBnHBFjIoR2lmLYXD",
+  subscriptionStandardAdditionalBusinessesStripePriceId: "price_1Njl2WIuBnHBFjIocG26dntj",
+  subscriptionPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
+  subscriptionPremiumAdditionalBusinessesStripePriceId : "price_1NjkrKIuBnHBFjIoOts3Ko8d",
   
   appleAppstoreListingUrl: "https://apps.apple.com/us/app/neat-boutique/id1627565588",
   googlePlayListingUrl: "https://play.google.com/store/apps/details?id=ui.neatboutique.jacobi",

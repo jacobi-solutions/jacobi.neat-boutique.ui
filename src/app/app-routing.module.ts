@@ -60,7 +60,7 @@ const routes: Routes = [
   {
     path: 'vendor-connect',
     loadChildren: () => import('./pages/vendor-connect/vendor-connect.module').then( m => m.VendorConnectPageModule),
-    canActivate: [ AuthGuard, ConsumerOnlyGuard, HeaderGuard ],
+    canActivate: [ AuthGuard, HeaderGuard ],
     data: { redirect: '/vendor-settings', title: 'Vendor Connect' }
   },
   {

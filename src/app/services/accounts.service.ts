@@ -22,9 +22,9 @@ import {
   VendorProfileCancelRequest
 } from './neat-boutique-api.service';
 import { Router, UrlTree } from '@angular/router';
-import { VendorSubscriptionPackage } from './vendor-subscription.service';
 import { AccountDeletion, AuthService } from '../auth/auth.service';
 import { User } from 'firebase/auth';
+import { SubscriptionPackage } from '../models/vendor-subscription-package';
 
 @Injectable({
   providedIn: 'root'
@@ -238,7 +238,7 @@ export class AccountsService {
   }
 
 
-  changeVendorSubscriptionToPremium(vendorId: string, vendorPackage: VendorSubscriptionPackage) {
+  changeVendorSubscriptionToPremium(vendorId: string, vendorPackage: SubscriptionPackage) {
     const request = new ChangeVendorSubscriptionRequest();
     request.vendorProfileId = vendorId;
     request.stripePriceId = vendorPackage.stripePriceId;
@@ -259,7 +259,7 @@ export class AccountsService {
       return promise;
   }
 
-  changeVendorSubscriptionToStandard(vendorId: string, vendorPackage: VendorSubscriptionPackage) {
+  changeVendorSubscriptionToStandard(vendorId: string, vendorPackage: SubscriptionPackage) {
     const request = new ChangeVendorSubscriptionRequest();
     request.vendorProfileId = vendorId;
     request.stripePriceId = vendorPackage.stripePriceId;

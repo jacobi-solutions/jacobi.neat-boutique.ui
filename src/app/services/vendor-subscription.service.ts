@@ -8,22 +8,10 @@ import { VendorPackagePricingComponent } from '../pages/vendor-connect/new-vendo
 import { AccountsService } from './accounts.service';
 // import { Storage } from '@ionic/storage-angular';
 import { ChangeVendorSubscriptionRequest, CreatePromotionalDiscountRequest, GetVendorProfileByInfoRequest, GooglePlaceDetailsResponse, GooglePlaceRequest, GooglePlaceSearchResponse, GooglePlacesEntity, GooglePlacesSearchRequest, NeatBoutiqueApiService, PromoCodeReqeust, PromotionalDiscount, PromotionalDiscountResponse, Request, StripeCheckoutRequest, StripeCheckoutResponse, VendorProfile, VendorProfileResponse, VendorSubscriptionResponse } from './neat-boutique-api.service';
+import { SubscriptionPackage } from '../models/vendor-subscription-package';
+import { CurrentUserDisplay } from '../models/current-user-display';
 
-export class VendorSubscriptionPackage {
-  constructor(planTier: string) {
-    this.planTier = planTier;
-    if(planTier === SubscriptionPlanTypes.VENDOR_STANDARD) {
-      this.stripePriceId = environment.vendorSubscriptionStandardStripePriceId;
-    } else if(planTier === SubscriptionPlanTypes.VENDOR_PREMIUM) {
-      this.stripePriceId = environment.vendorSubscriptionPremiumStripePriceId;
-    }
-  }
-  public promoCode: string;
-  public stripePriceId: string;
-  public planTier: string; 
 
- 
-}
 
 @Injectable({
   providedIn: 'root',
@@ -31,20 +19,26 @@ export class VendorSubscriptionPackage {
 export class VendorSubscriptionService {
   
   public vendorProfileSubject: BehaviorSubject<VendorProfile> = new BehaviorSubject<VendorProfile>(null);
-  private _vendor: VendorProfile = null;
+  private _currentVendor: VendorProfile = null;
   private _googlePlace: GooglePlacesEntity = null;
   private _sessionToken: string = null;
-  public vendorPackage: VendorSubscriptionPackage;
+  public vendorPackage: SubscriptionPackage;
+  // numberOfBusinessesAlreadyConnected: number;
+  numberOfBusinessesAlreadyConnectedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+
   // private _vendorSubscriptionId: string;
 
   constructor(private _neatBoutiqueApiService: NeatBoutiqueApiService, private _accountsService: AccountsService,
     private _router: Router) {
-    this._vendor = new VendorProfile();
+    this._currentVendor = new VendorProfile();
+    this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
+      this.numberOfBusinessesAlreadyConnectedSubject.next(userDisplay?.vendors?.length);
+    });
   }
 
   setVendor(vendor: VendorProfile) {
-    this._vendor = vendor;
-    this.vendorProfileSubject.next(this._vendor);
+    this._currentVendor = vendor;
+    this.vendorProfileSubject.next(this._currentVendor);
   }
 
   setGooglePlace(googlePlace: GooglePlacesEntity) {
@@ -52,7 +46,7 @@ export class VendorSubscriptionService {
   }
 
   getVendor() {
-    return this._vendor;
+    return this._currentVendor;
   }
 
   getGooglePlace() {
@@ -60,8 +54,8 @@ export class VendorSubscriptionService {
   }
 
   clearVendor() {
-    this._vendor = null;
-    this.vendorProfileSubject.next(this._vendor);
+    this._currentVendor = null;
+    this.vendorProfileSubject.next(this._currentVendor);
   }
 
   clearGooglePlace() {
@@ -96,31 +90,44 @@ export class VendorSubscriptionService {
     return promise;
   }
 
-  async upgradeVendorSubscriptionToPremium (vendor: VendorProfile) {
-    this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM);
+  async upgradeOnlyVendorSubscriptionToPremium (vendor: VendorProfile) {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumStripePriceId);
 
     this.setVendor(vendor);
     this._router.navigateByUrl('/vendor-revise');
   };
 
-  async downgradeVendorSubscriptionToStandard (vendor: VendorProfile) {
-    this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD);
+  async downgradeOnlyVendorSubscriptionToStandard (vendor: VendorProfile) {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardStripePriceId);
     this.setVendor(vendor);
     this._router.navigateByUrl('/vendor-revise');
   };
 
-  createStripeCheckout(vendorPackage: VendorSubscriptionPackage) {
+  async upgradeAdditionalVendorSubscriptionToPremium (vendor: VendorProfile) {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
+
+    this.setVendor(vendor);
+    this._router.navigateByUrl('/vendor-revise');
+  };
+
+  async downgradeAdditonalVendorSubscriptionToStandard (vendor: VendorProfile) {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
+    this.setVendor(vendor);
+    this._router.navigateByUrl('/vendor-revise');
+  };
+
+  createStripeCheckout(vendorPackage: SubscriptionPackage) {
 
     var request = new StripeCheckoutRequest();
     request.googlePlace = this._googlePlace;
-    request.vendorProfile = this._vendor;
+    request.vendorProfile = this._currentVendor;
     request.planTier = vendorPackage.planTier;
     request.stripePriceId = vendorPackage.stripePriceId;
     request.promoCode = vendorPackage.promoCode;
     this._neatBoutiqueApiService.createStripeCheckout(request).subscribe((response: StripeCheckoutResponse) => {
       if(response.isSuccess) {
         if(response.isStripeBypassFreeForever) {
-          this._router.navigateByUrl('/vendor-settings', { state: this._vendor });
+          this._router.navigateByUrl('/vendor-settings', { state: this._currentVendor });
         } else if(response.stripeSessionUrl) {
           window.open(response.stripeSessionUrl, "_self")
         }
@@ -130,7 +137,7 @@ export class VendorSubscriptionService {
   }
 
   async startVendorSubscriptionCancelation(vendor: VendorProfile) {
-    this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.CONSUMER_BASIC);
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.CONSUMER_BASIC, null);
     this.setVendor(vendor);
     this._router.navigateByUrl('/vendor-revise');
  }
@@ -161,12 +168,23 @@ export class VendorSubscriptionService {
   // }
 
   startVendorSubscriptionWithPremium () {
-    this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM);
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumStripePriceId);
+    this._router.navigateByUrl('/vendor-connect');
+  };
+
+  addVendorSubscriptionWithPremium () {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
     this._router.navigateByUrl('/vendor-connect');
   };
 
   startVendorSubscriptionWithStandard () {
-    this.vendorPackage = new VendorSubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD);
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardStripePriceId);
+    
+    this._router.navigateByUrl('/vendor-connect');
+  };
+
+  addVendorSubscriptionWithStandard () {
+    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
     
     this._router.navigateByUrl('/vendor-connect');
   };
@@ -193,22 +211,22 @@ export class VendorSubscriptionService {
   }
 
   
-  // completeVendorConnect(vendorPackage: VendorSubscriptionPackage) {
+  // completeVendorConnect(vendorPackage: SubscriptionPackage) {
   //   this._vendor.borderColor = '#013e43';
   //   return this._accountsService.connectVendor(this.paypalPackage.vendorSubscriptionId, vendorPackage.selectedPayPalPlan.id, this._googlePlace, this._vendor);
   // }
 
   completeVendorSubscriptionCancelation() {
-    return this._accountsService.cancelVendorSubscription(this._vendor.id);
+    return this._accountsService.cancelVendorSubscription(this._currentVendor.id);
   }
   
-  completeVendorRevise(vendorPackage: VendorSubscriptionPackage) {
+  completeVendorRevise(vendorPackage: SubscriptionPackage) {
     if(vendorPackage.planTier === SubscriptionPlanTypes.VENDOR_PREMIUM) {
-      return this._accountsService.changeVendorSubscriptionToPremium(this._vendor.id, vendorPackage);
+      return this._accountsService.changeVendorSubscriptionToPremium(this._currentVendor.id, vendorPackage);
     } else if (vendorPackage.planTier === SubscriptionPlanTypes.VENDOR_STANDARD) {
-      return this._accountsService.changeVendorSubscriptionToStandard(this._vendor.id, vendorPackage);
+      return this._accountsService.changeVendorSubscriptionToStandard(this._currentVendor.id, vendorPackage);
     } else if (vendorPackage.planTier === SubscriptionPlanTypes.CONSUMER_BASIC) {
-      return this._accountsService.cancelVendorSubscription(this._vendor.id);
+      return this._accountsService.cancelVendorSubscription(this._currentVendor.id);
     }
   }
 
@@ -216,7 +234,7 @@ export class VendorSubscriptionService {
   getVendorProfileHasSubscription() {
     const request = new GetVendorProfileByInfoRequest();
     request.googlePlace = this._googlePlace;
-    request.vendorProfile = this._vendor;
+    request.vendorProfile = this._currentVendor;
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService
         .getVendorProfileByVendorInfo(request)

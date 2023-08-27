@@ -23,9 +23,17 @@ export class ManualBusinessDetailsComponent implements OnInit {
   });
   public showVendorAlreadyAccociatedError: boolean;
   private _vendor: VendorProfile;
+  numberOfBusinessesConnected: number = 0;
   
   // public previousPage: any
-  constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService) { }
+  constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService) { 
+
+    this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+      if(numberOfBusinessesAlreadyConnected) {
+        this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+      }
+    });
+  }
 
   ngOnInit() {
     this._vendor = new VendorProfile();

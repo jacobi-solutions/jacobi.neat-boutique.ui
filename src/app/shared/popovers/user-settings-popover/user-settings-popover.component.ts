@@ -5,7 +5,7 @@ import { Platform, PopoverController } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
+import {  VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { PopoverItem } from '../types/popover-types';
 import { AuthService } from 'src/app/auth/auth.service';
 import { VendorProfile } from 'src/app/services/neat-boutique-api.service';

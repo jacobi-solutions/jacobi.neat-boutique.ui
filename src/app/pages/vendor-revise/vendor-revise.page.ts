@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { VendorSubscriptionPackage, VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { SubscriptionPlanTypes } from '../../models/constants';
+import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 
 @Component({
   selector: 'app-vendor-revise',
@@ -20,7 +21,7 @@ export class VendorRevisePage implements OnInit {
   }
 
 
-  async changeVendorSubscription(vendorPackage: VendorSubscriptionPackage) {
+  async changeVendorSubscription(vendorPackage: SubscriptionPackage) {
     await this._vendorSubscriptionService.completeVendorRevise(vendorPackage);
     this._router.navigateByUrl('/vendor-settings', { state: this._vendorSubscriptionService.getVendor() });
   }

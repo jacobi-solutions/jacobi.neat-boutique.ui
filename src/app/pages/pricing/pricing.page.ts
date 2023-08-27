@@ -17,22 +17,18 @@ import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.
 export class PricingPage implements OnInit {
   public isAuthenticated: boolean;
   singleVendor: VendorDisplay = null;
-  hasNoSubscription = false;
-  hasAtLeastOneVendor = false;
+  numberOfBusinessesConnected: number = 0;
   subscriptionPlanTypes = SubscriptionPlanTypes;
 
   constructor(private _vendorSubscriptionService: VendorSubscriptionService, private _authService: AuthService,
-    private _router: Router, private _accountsService: AccountsService) { 
+    private _router: Router) { 
       var vendorProfile = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
       if(vendorProfile) {
         this.singleVendor = new VendorDisplay(vendorProfile);
       } else {
-        this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
-          if(userDisplay.vendors?.length === 0) {
-            this.hasNoSubscription = true;
-          } 
-          else if(userDisplay.vendors?.length > 0) {
-            this.hasAtLeastOneVendor = true
+        this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+          if(numberOfBusinessesAlreadyConnected) {
+            this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
           }
         });
       }
@@ -49,11 +45,20 @@ export class PricingPage implements OnInit {
   }
 
   upgradeVendorSubscriptionToPremium() {
-    this._vendorSubscriptionService.upgradeVendorSubscriptionToPremium(this.singleVendor);
+    if(this.numberOfBusinessesConnected === 1) {
+      this._vendorSubscriptionService.upgradeOnlyVendorSubscriptionToPremium(this.singleVendor);
+    } else if(this.numberOfBusinessesConnected > 1)  {
+      this._vendorSubscriptionService.upgradeAdditionalVendorSubscriptionToPremium(this.singleVendor);
+    }
   }
 
   downgradeVendorSubscriptionToStandard() {
-    this._vendorSubscriptionService.downgradeVendorSubscriptionToStandard(this.singleVendor);
+    if(this.numberOfBusinessesConnected === 1) {
+      this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.singleVendor);
+    } else if(this.numberOfBusinessesConnected > 1)  {
+      this._vendorSubscriptionService.downgradeAdditonalVendorSubscriptionToStandard(this.singleVendor);
+    }
+    
   }
 
   cancelVendorSubscription() {
@@ -64,7 +69,14 @@ export class PricingPage implements OnInit {
     this._vendorSubscriptionService.startVendorSubscriptionWithPremium();
   }
 
+  addVendorSubscriptionWithPremium() {
+    this._vendorSubscriptionService.addVendorSubscriptionWithPremium();
+  }
+
   startVendorSubscriptionWithStandard() {
     this._vendorSubscriptionService.startVendorSubscriptionWithStandard();
+  }
+  addVendorSubscriptionWithStandard() {
+    this._vendorSubscriptionService.addVendorSubscriptionWithStandard();
   }
 }
