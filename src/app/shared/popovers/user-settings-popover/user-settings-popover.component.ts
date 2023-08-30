@@ -111,9 +111,9 @@ export class UserSettingsPopoverComponent implements OnInit {
         label: "Delete Account",
         isClickable: true,
         callback(event) {
-          if(self.currentUser.vendors.length === 1) {
+          if(self.currentUser?.vendors?.length === 1) {
             self.confirmCancelSubscription(self.currentUser.vendors[0]);
-          } else if(self.currentUser.vendors.length > 1) {
+          } else if(self.currentUser?.vendors?.length > 1) {
             self.confirmCancelSubscriptions();
           } else {
             self._router.navigateByUrl('/auth-flow/delete-account-init');
@@ -144,9 +144,9 @@ export class UserSettingsPopoverComponent implements OnInit {
         url: '/vendor-settings',
         callback(event) {
           self._popoverController.dismiss();  
-          if(self.currentUser.vendors.length === 1) {
+          if(self.currentUser?.vendors?.length === 1) {
             self._router.navigateByUrl('/vendor-settings', { state: self.currentUser.vendors[0] });
-          } else if(self.currentUser.vendors.length > 1) {
+          } else if(self.currentUser?.vendors?.length > 1) {
             self._router.navigateByUrl('/vendor-businesses');
           } else {
             self._router.navigateByUrl('/pricing');
