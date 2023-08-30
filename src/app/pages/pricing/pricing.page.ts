@@ -22,17 +22,19 @@ export class PricingPage implements OnInit {
 
   constructor(private _vendorSubscriptionService: VendorSubscriptionService, private _authService: AuthService,
     private _router: Router) { 
-      var vendorProfile = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
-      if(vendorProfile) {
-        this.singleVendor = new VendorDisplay(vendorProfile);
-      } else {
+      
+    }
+
+    ionViewDidEnter() {
+    this.singleVendor = this._vendorSubscriptionService.getVendorForPricingPage();
+     if(!this.singleVendor) {
         this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
           if(numberOfBusinessesAlreadyConnected) {
             this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
           }
         });
       }
-
+  
       this._authService.isAuthenticated().then((isAuthenticated) => {
         if(isAuthenticated) {
           this.isAuthenticated = true;
@@ -40,8 +42,12 @@ export class PricingPage implements OnInit {
       });
     }
 
+    ionViewDidLeave() {
+      this._vendorSubscriptionService.clearVendorForPricingPage();
+    }
+
   async ngOnInit() {
-   
+    
   }
 
   upgradeVendorSubscriptionToPremium() {

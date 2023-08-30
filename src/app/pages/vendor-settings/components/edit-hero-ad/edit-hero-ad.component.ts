@@ -6,6 +6,7 @@ import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 
 @Component({
   selector: 'app-edit-hero-ad',
@@ -15,7 +16,7 @@ import { VendorSettingsService } from 'src/app/services/vendor-settings.service'
 export class EditHeroAdComponent implements OnInit {
   @Input() vendor: VendorDisplay;
   subscriptionPlanTypes = SubscriptionPlanTypes;
-  constructor(private _accountsService: AccountsService, private _router: Router) {
+  constructor(private _router: Router, private _vendorSubscriptionService: VendorSubscriptionService) {
     
   }
 
@@ -27,14 +28,15 @@ export class EditHeroAdComponent implements OnInit {
 
   goToBillboardAds() {
     if(this.vendor?.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_STANDARD) {
-      this.goToPricing();
+      this.changeSubscription();
     } else {
       this._router.navigateByUrl('/vendor-settings/community-billboard-ads', { state: this.vendor });
     }
     
   }
 
-  goToPricing() {
-    this._router.navigateByUrl('/pricing', { state: this.vendor });
+  changeSubscription() {
+    this._vendorSubscriptionService.setVendorForPricingPage(this.vendor);
+    this._router.navigateByUrl('/pricing');
   }
 }

@@ -9,6 +9,7 @@ import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 
 @Component({
   selector: 'app-poll-ad-placeholder',
@@ -28,7 +29,7 @@ export class PollAdPlaceholderComponent implements OnInit {
 
 
   constructor(private _utilService: UtilService, private _communityService: CommunityService,
-    private _accountsService: AccountsService, private _router: Router) {
+    private _vendorSubscriptionService: VendorSubscriptionService, private _router: Router) {
 
      
   }
@@ -38,14 +39,15 @@ export class PollAdPlaceholderComponent implements OnInit {
 
   goToPollAds() {
     if(this.vendor?.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_STANDARD) {
-      this.goToPricing();
+      this.changeSubscription();
     } else {
       this._router.navigateByUrl('/vendor-settings/poll-ads', { state: this.vendor });
     }
   }
 
-  goToPricing() {
-    this._router.navigateByUrl('/pricing', { state: this.vendor });
+  changeSubscription() {
+    this._vendorSubscriptionService.setVendorForPricingPage(this.vendor);
+    this._router.navigateByUrl('/pricing');
   }
 
   private _loadExamplePoll() {

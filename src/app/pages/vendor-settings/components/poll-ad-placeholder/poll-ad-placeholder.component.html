@@ -3,7 +3,7 @@
     <ion-col>
       <div class="poll-placeholder-heading">
         <h3 *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM">Make A Poll</h3>
-        <h3 *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_STANDARD">Make A Poll <span class="pricing-link">(Available with <a (click)="goToPricing()">premium subscription</a>)</span></h3>
+        <h3 *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_STANDARD">Make A Poll <span class="pricing-link">(Available with <a (click)="changeSubscription()">premium subscription</a>)</span></h3>
       </div>
     </ion-col>
   </ion-row>

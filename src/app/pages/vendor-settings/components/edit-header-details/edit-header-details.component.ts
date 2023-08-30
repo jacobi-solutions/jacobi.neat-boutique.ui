@@ -6,7 +6,9 @@ import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { ModalService } from 'src/app/services/modal.service';
+import { VendorSubscriptionResponse } from 'src/app/services/neat-boutique-api.service';
 import { EditVendorExitCodes, VendorSettingsService } from 'src/app/services/vendor-settings.service';
+import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { THEME } from 'src/theme/theme-constants';
 
 
@@ -25,7 +27,8 @@ export class EditHeaderDetailsComponent implements OnInit {
   public showChangeVendorSubscription: boolean;
 
   constructor(private _modelService: ModalService, private _vendorSettings: VendorSettingsService, 
-    private _modalService: ModalService, private _platform: Platform, private _router: Router) {}
+    private _modalService: ModalService, private _platform: Platform, private _router: Router,
+    private _vendorSubscriptionService: VendorSubscriptionService) {}
 
   ngOnInit() {
     if (!this._platform.is("capacitor")) {
@@ -67,8 +70,9 @@ export class EditHeaderDetailsComponent implements OnInit {
     }  
   }
 
-  goToPricing() {
-    this._router.navigateByUrl('/pricing', { state: this.vendor });
+  changeSubscription() {
+    this._vendorSubscriptionService.setVendorForPricingPage(this.vendor);
+    this._router.navigateByUrl('/pricing');
   }
   addAnotherBusiness() {
     this._router.navigateByUrl('/pricing');

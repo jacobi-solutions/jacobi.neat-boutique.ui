@@ -24,10 +24,10 @@ export const environment = {
   subscriptionGrandfatherStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
   subscriptionGrandfatherPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
   
-  subscriptionStandardStripePriceId: "price_1Njks3IuBnHBFjIot0b0EFXh",
-  subscriptionStandardAdditionalBusinessesStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
-  subscriptionPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
-  subscriptionPremiumAdditionalBusinessesStripePriceId : "price_1NjkrKIuBnHBFjIoOts3Ko8d",
+  subscriptionStandardStripePriceId: "price_1NkqHyIuBnHBFjIonmVuWadI",
+  subscriptionStandardAdditionalBusinessesStripePriceId: "price_1NkqHyIuBnHBFjIodPLjr7BA",
+  subscriptionPremiumStripePriceId : "price_1NkqJXIuBnHBFjIo93bRPhQX",
+  subscriptionPremiumAdditionalBusinessesStripePriceId : "price_1NkqJXIuBnHBFjIoqt8pOIte",
   
   appleAppstoreListingUrl: "https://apps.apple.com/us/app/neat-boutique/id1627565588",
   googlePlayListingUrl: "https://play.google.com/store/apps/details?id=ui.neatboutique.jacobi",

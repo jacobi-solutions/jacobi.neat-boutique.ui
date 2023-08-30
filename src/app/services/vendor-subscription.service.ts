@@ -10,6 +10,7 @@ import { AccountsService } from './accounts.service';
 import { ChangeVendorSubscriptionRequest, CreatePromotionalDiscountRequest, GetVendorProfileByInfoRequest, GooglePlaceDetailsResponse, GooglePlaceRequest, GooglePlaceSearchResponse, GooglePlacesEntity, GooglePlacesSearchRequest, NeatBoutiqueApiService, PromoCodeReqeust, PromotionalDiscount, PromotionalDiscountResponse, Request, StripeCheckoutRequest, StripeCheckoutResponse, VendorProfile, VendorProfileResponse, VendorSubscriptionResponse } from './neat-boutique-api.service';
 import { SubscriptionPackage } from '../models/vendor-subscription-package';
 import { CurrentUserDisplay } from '../models/current-user-display';
+import { VendorDisplay } from '../models/vendor-display';
 
 
 
@@ -20,6 +21,7 @@ export class VendorSubscriptionService {
   
   public vendorProfileSubject: BehaviorSubject<VendorProfile> = new BehaviorSubject<VendorProfile>(null);
   private _currentVendor: VendorProfile = null;
+  private vendorForPricingPage: VendorProfile = null;
   private _googlePlace: GooglePlacesEntity = null;
   private _sessionToken: string = null;
   public vendorPackage: SubscriptionPackage;
@@ -39,6 +41,17 @@ export class VendorSubscriptionService {
   setVendor(vendor: VendorProfile) {
     this._currentVendor = vendor;
     this.vendorProfileSubject.next(this._currentVendor);
+  }
+
+  setVendorForPricingPage(vendor: VendorProfile) {
+    this.vendorForPricingPage = vendor;
+  }
+  clearVendorForPricingPage() {
+    this.vendorForPricingPage = null;
+  }
+  getVendorForPricingPage() {
+    
+    return this.vendorForPricingPage ? new VendorDisplay(this.vendorForPricingPage) : null;
   }
 
   setGooglePlace(googlePlace: GooglePlacesEntity) {
