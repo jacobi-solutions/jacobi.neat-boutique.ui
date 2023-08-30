@@ -1,7 +1,7 @@
  steps:
  # build the container image
  - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'gcr.io/$_PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA', '$_PATH_TO_DOCKERFILE']
+   args: ['build', '-t', 'gcr.io/$_PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA', '-f', '$_PATH_TO_DOCKERFILE', '$_PATH_TO_DOCKERFILE_BUILD_CONTEXT' ]
  # push the container image to Container Registry
  - name: 'gcr.io/cloud-builders/docker'
    args: ['push', 'gcr.io/$_PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA']

@@ -69,7 +69,7 @@ export class SignInComponent implements OnInit {
     this._authService.signInUser(this.loginForm.controls.email.value, this.loginForm.controls.password.value, this.rememberMe).then(() => {
       this._router.navigateByUrl(environment.signInRedirectUrl);
       // this.dismiss();
-    }).catch(() => {
+    }).catch((error) => {
       this.setIsFailure(`We didn't find matching credentials.  Check for typos and try again.`);
     });
   }
