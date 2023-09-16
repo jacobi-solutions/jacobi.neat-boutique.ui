@@ -34,7 +34,8 @@ export class PricingPage implements OnInit {
 
     ionViewDidEnter() {
       this.vendorForSubscriptionChange = this._vendorSubscriptionService.getVendorForPricingPage();
-      
+      this.standardPricing = "$65";
+      this.premiumPricing = "$95";
 
       this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
         if(numberOfBusinessesAlreadyConnected) {
