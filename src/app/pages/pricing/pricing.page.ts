@@ -84,12 +84,15 @@ export class PricingPage implements OnInit {
   }
 
   downgradeSelectedVendorSubscriptionToStandard() {
-    if(this.numberOfBusinessesConnected === 1) {
-      this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
-    } else if(this.numberOfBusinessesConnected > 1)  {
-      this._vendorSubscriptionService.downgradeSelectedVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
+      if(this.numberOfBusinessesConnected === 1) {
+        this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+      } else if(this.numberOfBusinessesConnected > 1)  {
+        this._vendorSubscriptionService.downgradeSelectedVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+      }
+    } else {
+      this.needsPremiumAccountForChangeConfirm();
     }
-    
   }
 
   cancelVendorSubscription() {
