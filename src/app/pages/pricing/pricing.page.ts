@@ -159,7 +159,7 @@ export class PricingPage implements OnInit {
     const html = `
       <h1>We're glad to help.</h1>
       <p class="text-left-align modal-p-min">
-        In order to continue managing multiple bussinesses from this account, you need to keep the premium subscription. In order to downgrade to standard or cancel this subscription, you must first cancel the other busieness subscriptions.
+        In order to continue managing multiple bussinesses from this account, you need to keep the premium subscription. In order to downgrade to standard or cancel this subscription, you must first cancel the other business subscriptions.
       </p>
     `;
 
