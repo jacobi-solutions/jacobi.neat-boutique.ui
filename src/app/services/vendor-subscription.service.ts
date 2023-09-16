@@ -27,6 +27,7 @@ export class VendorSubscriptionService {
   public vendorPackage: SubscriptionPackage;
   // numberOfBusinessesAlreadyConnected: number;
   numberOfBusinessesAlreadyConnectedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  hasPremiumAccountSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
   // private _vendorSubscriptionId: string;
 
@@ -35,6 +36,8 @@ export class VendorSubscriptionService {
     this._currentVendor = new VendorProfile();
     this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
       this.numberOfBusinessesAlreadyConnectedSubject.next(userDisplay?.vendors?.length);
+      var hasPremiumAccount = userDisplay?.vendors?.some(x => x.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM);
+      this.hasPremiumAccountSubject.next(hasPremiumAccount);
     });
   }
 
@@ -116,14 +119,14 @@ export class VendorSubscriptionService {
     this._router.navigateByUrl('/vendor-revise');
   };
 
-  async upgradeAdditionalVendorSubscriptionToPremium (vendor: VendorProfile) {
+  async upgradeSelectedVendorSubscriptionToPremium (vendor: VendorProfile) {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
 
     this.setVendor(vendor);
     this._router.navigateByUrl('/vendor-revise');
   };
 
-  async downgradeAdditonalVendorSubscriptionToStandard (vendor: VendorProfile) {
+  async downgradeSelectedVendorSubscriptionToStandard (vendor: VendorProfile) {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
     this.setVendor(vendor);
     this._router.navigateByUrl('/vendor-revise');
@@ -145,6 +148,24 @@ export class VendorSubscriptionService {
           window.open(response.stripeSessionUrl, "_self")
         }
         
+      }
+    });
+  }
+
+  completeAddAdditionalBusiness(vendorPackage: SubscriptionPackage) {
+
+    var request = new StripeCheckoutRequest();
+    request.googlePlace = this._googlePlace;
+    request.vendorProfile = this._currentVendor;
+    request.planTier = vendorPackage.planTier;
+    request.stripePriceId = vendorPackage.stripePriceId;
+    request.promoCode = vendorPackage.promoCode;
+    this._neatBoutiqueApiService.addVendorSubscriptionToAccount(request).subscribe((response: VendorProfileResponse) => {
+      if(response.isSuccess) {
+        var vendors = this._accountsService.getCurrentUser().vendors;
+        vendors = [ ...vendors, response.vendorProfile ];
+        this._accountsService.setCurrentVendors(vendors);
+        this._router.navigateByUrl('/vendor-businesses');
       }
     });
   }
@@ -180,23 +201,23 @@ export class VendorSubscriptionService {
   //     return promise;
   // }
 
-  startVendorSubscriptionWithPremium () {
+  startFirstVendorSubscriptionWithPremium () {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumStripePriceId);
     this._router.navigateByUrl('/vendor-connect');
   };
 
-  addVendorSubscriptionWithPremium () {
+  startAdditionalVendorSubscriptionWithPremium () {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
     this._router.navigateByUrl('/vendor-connect');
   };
 
-  startVendorSubscriptionWithStandard () {
+  startFirstVendorSubscriptionWithStandard () {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardStripePriceId);
     
     this._router.navigateByUrl('/vendor-connect');
   };
 
-  addVendorSubscriptionWithStandard () {
+  startAdditionalVendorSubscriptionWithStandard () {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
     
     this._router.navigateByUrl('/vendor-connect');
@@ -252,7 +273,7 @@ export class VendorSubscriptionService {
       this._neatBoutiqueApiService
         .getVendorProfileByVendorInfo(request)
         .subscribe((response: VendorProfileResponse) => {
-          if (response?.vendorProfile?.hasVendorSubscription) {
+          if (response?.vendorProfile && response.vendorProfile.vendorSubscriptionPlan !== SubscriptionPlanTypes.VENDOR_NO_SUBSCRIPTION) {
             resolve(true)
           } else {
             resolve(false);

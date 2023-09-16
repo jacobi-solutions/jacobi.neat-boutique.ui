@@ -47,11 +47,11 @@
           <h4 class="review-count">{{ vendor?.reviewCount }} {{ (vendor?.reviewCount === 1) ? 'Review' : 'Reviews' }}</h4>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="showChangeVendorSubscription">
+      <!-- <ion-row *ngIf="showChangeVendorSubscription">
         <ion-col class="nb-vertical-center">
          <a (click)="changeSubscription()" class="pointy-cursor">Change Vendor Subscription</a>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
   
       <ion-row class="hide-md-and-above social-icons-row">
         <ion-col>
@@ -80,6 +80,7 @@
     </ion-col>
     <ion-col>
       <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="addAnotherBusiness()">Add Another Business</app-jacobi-button>
+      <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="changeSubscription()">Change Subscription</app-jacobi-button>
     </ion-col>
   </ion-row>
 </ion-grid>

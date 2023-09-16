@@ -1,6 +1,6 @@
 <ion-grid>
   
-  <ion-row (click)="goToVendorProfile(vendor)" class="vendor-splash-container clickable">
+  <ion-row (click)="goToVendor(vendor)" class="vendor-splash-container clickable">
     <ion-col class="vendor-splash-photo hide-md-and-below" size-sm="4" size-md="3" size-lg="3.5" size-xl="3">
       <div class="img-wrapper">
         <app-nb-avatar
@@ -36,7 +36,11 @@
               </ion-col>
             </ion-row>
           </ion-col>
-
+          <!-- <ion-col *ngIf="canShowVendorActions" class="settings-buttons">
+            <ion-icon slot="start" name="settings-outline" (click)="showVendorActions = !showVendorActions"></ion-icon>
+            <app-jacobi-button *ngIf="showVendorActions" [buttonType]="'green-primary secondary'" (click)="viewVendorSettings(vendor)">Manage This Business</app-jacobi-button>
+            <app-jacobi-button *ngIf="showVendorActions" [buttonType]="'green-primary secondary'" (click)="changeSubscription(vendor)">Change Subscription</app-jacobi-button>
+          </ion-col> -->
         </ion-row>
         <ion-row class="review-stars-row">
           <ion-col class="review-stars nb-vertical-center">
@@ -49,5 +53,6 @@
         </ion-row>
       </ion-card>
     </ion-col>
+    
   </ion-row>
 </ion-grid>

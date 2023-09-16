@@ -2,6 +2,11 @@
 <ion-content>
 
   <ion-grid>
+    <ion-row>
+      <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7" class="ion-text-center">
+        <h1>My Businesses</h1>
+      </ion-col>
+    </ion-row>
     
     <ion-row>
       <ion-col *ngIf="currentUserDisplay?.vendors; else elseShowLoadSpinner">
@@ -9,10 +14,8 @@
           <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
             <app-vendor-list-item [vendor]="vendor"></app-vendor-list-item>
           </ion-col>
+          
         </ion-row>
-        
-    
-        
       </ion-col>
     </ion-row>
     

@@ -3,7 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { IonContent } from '@ionic/angular';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { UserRoleTypes } from 'src/app/models/constants';
+import { SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
 import { PollAnswerDisplay } from 'src/app/models/poll-answer-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
@@ -67,7 +67,7 @@ export class PollAdComponent implements OnInit {
   }
 
   ngOnInit() { 
-    this.hasPremiumSubscription = this.vendor.hasVendorPremiumSubscription;  
+    this.hasPremiumSubscription = this.vendor.vendorSubscriptionPlan !== SubscriptionPlanTypes.VENDOR_NO_SUBSCRIPTION;  
     this.pollLivePreview.author = new NeatBoutiqueEntity({
       profilePath: this.vendor.profilePath, 
       name: this.vendor.name,

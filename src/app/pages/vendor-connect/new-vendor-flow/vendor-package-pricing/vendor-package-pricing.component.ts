@@ -47,8 +47,13 @@ export class VendorPackagePricingComponent implements OnInit {
   }
   
   async createStripeCheckout(vendorPackage: SubscriptionPackage ) {
-    await this._vendorSubscriptionService.createStripeCheckout(vendorPackage);
-    // this._router.navigateByUrl('/vendor-settings');
+    if(this.numberOfBusinessesConnected === 0) {
+      await this._vendorSubscriptionService.createStripeCheckout(vendorPackage);
+    } else if(this.numberOfBusinessesConnected > 0) {
+      await this._vendorSubscriptionService.completeAddAdditionalBusiness(vendorPackage);
+      this._router.navigateByUrl('/home');
+    }
+    
   }
 
   cancel() {

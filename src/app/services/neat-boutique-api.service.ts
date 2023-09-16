@@ -44,26 +44,6 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    changeVendorSubscriptionToPremium(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    changeVendorSubscriptionToStandard(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    getVendorSubscriptionId(body: Request | undefined): Observable<VendorSubscriptionResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
     updateEmail(body: Request | undefined): Observable<ProfilesResponse>;
     /**
      * @param body (optional) 
@@ -225,6 +205,31 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     createFreeForeverPromotionalDiscount(body: CreatePromotionalDiscountRequest | undefined): Observable<PromotionalDiscountResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    changeVendorSubscriptionToPremium(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    changeVendorSubscriptionToStandard(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addVendorSubscriptionToAccount(body: StripeCheckoutRequest | undefined): Observable<VendorProfileResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getVendorSubscriptionId(body: Request | undefined): Observable<VendorSubscriptionResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -672,230 +677,6 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<Response>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    changeVendorSubscriptionToPremium(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse> {
-        let url_ = this.baseUrl + "/Accounts/ChangeVendorSubscriptionToPremiumAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangeVendorSubscriptionToPremium(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processChangeVendorSubscriptionToPremium(<any>response_);
-                } catch (e) {
-                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processChangeVendorSubscriptionToPremium(response: HttpResponseBase): Observable<VendorProfileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorProfileResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VendorProfileResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse> {
-        let url_ = this.baseUrl + "/Accounts/CancelVendorSubscriptionAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCancelVendorSubscription(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCancelVendorSubscription(<any>response_);
-                } catch (e) {
-                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCancelVendorSubscription(response: HttpResponseBase): Observable<VendorProfileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorProfileResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VendorProfileResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    changeVendorSubscriptionToStandard(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse> {
-        let url_ = this.baseUrl + "/Accounts/ChangeVendorSubscriptionToStandardAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangeVendorSubscriptionToStandard(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processChangeVendorSubscriptionToStandard(<any>response_);
-                } catch (e) {
-                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processChangeVendorSubscriptionToStandard(response: HttpResponseBase): Observable<VendorProfileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorProfileResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VendorProfileResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    getVendorSubscriptionId(body: Request | undefined): Observable<VendorSubscriptionResponse> {
-        let url_ = this.baseUrl + "/Accounts/GetVendorSubscriptionIdAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetVendorSubscriptionId(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetVendorSubscriptionId(<any>response_);
-                } catch (e) {
-                    return <Observable<VendorSubscriptionResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VendorSubscriptionResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetVendorSubscriptionId(response: HttpResponseBase): Observable<VendorSubscriptionResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorSubscriptionResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VendorSubscriptionResponse>(<any>null);
     }
 
     /**
@@ -2744,6 +2525,286 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<PromotionalDiscountResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    changeVendorSubscriptionToPremium(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse> {
+        let url_ = this.baseUrl + "/Payments/ChangeVendorSubscriptionToPremiumAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeVendorSubscriptionToPremium(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeVendorSubscriptionToPremium(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeVendorSubscriptionToPremium(response: HttpResponseBase): Observable<VendorProfileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorProfileResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorProfileResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    cancelVendorSubscription(body: VendorProfileCancelRequest | undefined): Observable<VendorProfileResponse> {
+        let url_ = this.baseUrl + "/Payments/CancelVendorSubscriptionAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancelVendorSubscription(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancelVendorSubscription(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCancelVendorSubscription(response: HttpResponseBase): Observable<VendorProfileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorProfileResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorProfileResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    changeVendorSubscriptionToStandard(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse> {
+        let url_ = this.baseUrl + "/Payments/ChangeVendorSubscriptionToStandardAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeVendorSubscriptionToStandard(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeVendorSubscriptionToStandard(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeVendorSubscriptionToStandard(response: HttpResponseBase): Observable<VendorProfileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorProfileResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorProfileResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addVendorSubscriptionToAccount(body: StripeCheckoutRequest | undefined): Observable<VendorProfileResponse> {
+        let url_ = this.baseUrl + "/Payments/AddVendorSubscriptionToAccountAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddVendorSubscriptionToAccount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddVendorSubscriptionToAccount(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddVendorSubscriptionToAccount(response: HttpResponseBase): Observable<VendorProfileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorProfileResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorProfileResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getVendorSubscriptionId(body: Request | undefined): Observable<VendorSubscriptionResponse> {
+        let url_ = this.baseUrl + "/Payments/GetVendorSubscriptionIdAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVendorSubscriptionId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVendorSubscriptionId(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorSubscriptionResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorSubscriptionResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetVendorSubscriptionId(response: HttpResponseBase): Observable<VendorSubscriptionResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorSubscriptionResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorSubscriptionResponse>(<any>null);
     }
 
     /**
@@ -4725,9 +4786,8 @@ export class VendorProfile implements IVendorProfile {
     lastUpdatedDateUtc?: Date;
     googlePlaceId?: string | undefined;
     googlePlaceSearchReference?: string | undefined;
-    hasVendorSubscription?: boolean;
-    hasVendorPremiumSubscription?: boolean;
     vendorSubscriptionPlan?: string | undefined;
+    stripeSubscriptionItemId?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -4766,9 +4826,8 @@ export class VendorProfile implements IVendorProfile {
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.googlePlaceId = _data["googlePlaceId"];
             this.googlePlaceSearchReference = _data["googlePlaceSearchReference"];
-            this.hasVendorSubscription = _data["hasVendorSubscription"];
-            this.hasVendorPremiumSubscription = _data["hasVendorPremiumSubscription"];
             this.vendorSubscriptionPlan = _data["vendorSubscriptionPlan"];
+            this.stripeSubscriptionItemId = _data["stripeSubscriptionItemId"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.city = _data["city"];
@@ -4817,9 +4876,8 @@ export class VendorProfile implements IVendorProfile {
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["googlePlaceId"] = this.googlePlaceId;
         data["googlePlaceSearchReference"] = this.googlePlaceSearchReference;
-        data["hasVendorSubscription"] = this.hasVendorSubscription;
-        data["hasVendorPremiumSubscription"] = this.hasVendorPremiumSubscription;
         data["vendorSubscriptionPlan"] = this.vendorSubscriptionPlan;
+        data["stripeSubscriptionItemId"] = this.stripeSubscriptionItemId;
         data["name"] = this.name;
         data["address"] = this.address;
         data["city"] = this.city;
@@ -4861,9 +4919,8 @@ export interface IVendorProfile {
     lastUpdatedDateUtc?: Date;
     googlePlaceId?: string | undefined;
     googlePlaceSearchReference?: string | undefined;
-    hasVendorSubscription?: boolean;
-    hasVendorPremiumSubscription?: boolean;
     vendorSubscriptionPlan?: string | undefined;
+    stripeSubscriptionItemId?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -5113,186 +5170,6 @@ export class Response implements IResponse {
 export interface IResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-}
-
-export class ChangeVendorSubscriptionRequest implements IChangeVendorSubscriptionRequest {
-    stripePriceId?: string | undefined;
-    vendorProfileId?: string | undefined;
-
-    constructor(data?: IChangeVendorSubscriptionRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.stripePriceId = _data["stripePriceId"];
-            this.vendorProfileId = _data["vendorProfileId"];
-        }
-    }
-
-    static fromJS(data: any): ChangeVendorSubscriptionRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new ChangeVendorSubscriptionRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["stripePriceId"] = this.stripePriceId;
-        data["vendorProfileId"] = this.vendorProfileId;
-        return data; 
-    }
-}
-
-export interface IChangeVendorSubscriptionRequest {
-    stripePriceId?: string | undefined;
-    vendorProfileId?: string | undefined;
-}
-
-export class VendorProfileResponse implements IVendorProfileResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorProfile?: VendorProfile;
-
-    constructor(data?: IVendorProfileResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): VendorProfileResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorProfileResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IVendorProfileResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorProfile?: VendorProfile;
-}
-
-export class VendorProfileCancelRequest implements IVendorProfileCancelRequest {
-    vendorProfileId?: string | undefined;
-
-    constructor(data?: IVendorProfileCancelRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.vendorProfileId = _data["vendorProfileId"];
-        }
-    }
-
-    static fromJS(data: any): VendorProfileCancelRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorProfileCancelRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["vendorProfileId"] = this.vendorProfileId;
-        return data; 
-    }
-}
-
-export interface IVendorProfileCancelRequest {
-    vendorProfileId?: string | undefined;
-}
-
-export class VendorSubscriptionResponse implements IVendorSubscriptionResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorSubscriptionId?: string | undefined;
-
-    constructor(data?: IVendorSubscriptionResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            this.vendorSubscriptionId = _data["vendorSubscriptionId"];
-        }
-    }
-
-    static fromJS(data: any): VendorSubscriptionResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorSubscriptionResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        data["vendorSubscriptionId"] = this.vendorSubscriptionId;
-        return data; 
-    }
-}
-
-export interface IVendorSubscriptionResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorSubscriptionId?: string | undefined;
 }
 
 export class AccountNotificationCategoriesRequest implements IAccountNotificationCategoriesRequest {
@@ -7899,6 +7776,186 @@ export interface ICreatePromotionalDiscountRequest {
     message?: string | undefined;
 }
 
+export class ChangeVendorSubscriptionRequest implements IChangeVendorSubscriptionRequest {
+    stripePriceId?: string | undefined;
+    vendorProfileId?: string | undefined;
+
+    constructor(data?: IChangeVendorSubscriptionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.stripePriceId = _data["stripePriceId"];
+            this.vendorProfileId = _data["vendorProfileId"];
+        }
+    }
+
+    static fromJS(data: any): ChangeVendorSubscriptionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangeVendorSubscriptionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["stripePriceId"] = this.stripePriceId;
+        data["vendorProfileId"] = this.vendorProfileId;
+        return data; 
+    }
+}
+
+export interface IChangeVendorSubscriptionRequest {
+    stripePriceId?: string | undefined;
+    vendorProfileId?: string | undefined;
+}
+
+export class VendorProfileResponse implements IVendorProfileResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorProfile?: VendorProfile;
+
+    constructor(data?: IVendorProfileResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): VendorProfileResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorProfileResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IVendorProfileResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorProfile?: VendorProfile;
+}
+
+export class VendorProfileCancelRequest implements IVendorProfileCancelRequest {
+    vendorProfileId?: string | undefined;
+
+    constructor(data?: IVendorProfileCancelRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vendorProfileId = _data["vendorProfileId"];
+        }
+    }
+
+    static fromJS(data: any): VendorProfileCancelRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorProfileCancelRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vendorProfileId"] = this.vendorProfileId;
+        return data; 
+    }
+}
+
+export interface IVendorProfileCancelRequest {
+    vendorProfileId?: string | undefined;
+}
+
+export class VendorSubscriptionResponse implements IVendorSubscriptionResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorSubscriptionId?: string | undefined;
+
+    constructor(data?: IVendorSubscriptionResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.vendorSubscriptionId = _data["vendorSubscriptionId"];
+        }
+    }
+
+    static fromJS(data: any): VendorSubscriptionResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorSubscriptionResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["vendorSubscriptionId"] = this.vendorSubscriptionId;
+        return data; 
+    }
+}
+
+export interface IVendorSubscriptionResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorSubscriptionId?: string | undefined;
+}
+
 export class VendorPostRequest implements IVendorPostRequest {
     post?: VendorPost;
 
@@ -8870,6 +8927,9 @@ export class StripeSettings implements IStripeSettings {
     couponCode3FreeMonths?: string | undefined;
     couponCode6FreeMonths?: string | undefined;
     couponCodeFreeForever?: string | undefined;
+    couponCode3FreeMonthsGF?: string | undefined;
+    couponCode6FreeMonthsGF?: string | undefined;
+    couponCodeFreeForeverGF?: string | undefined;
     stripeBypassFreeForeverId?: string | undefined;
 
     constructor(data?: IStripeSettings) {
@@ -8889,6 +8949,9 @@ export class StripeSettings implements IStripeSettings {
             this.couponCode3FreeMonths = _data["couponCode3FreeMonths"];
             this.couponCode6FreeMonths = _data["couponCode6FreeMonths"];
             this.couponCodeFreeForever = _data["couponCodeFreeForever"];
+            this.couponCode3FreeMonthsGF = _data["couponCode3FreeMonthsGF"];
+            this.couponCode6FreeMonthsGF = _data["couponCode6FreeMonthsGF"];
+            this.couponCodeFreeForeverGF = _data["couponCodeFreeForeverGF"];
             this.stripeBypassFreeForeverId = _data["stripeBypassFreeForeverId"];
         }
     }
@@ -8908,6 +8971,9 @@ export class StripeSettings implements IStripeSettings {
         data["couponCode3FreeMonths"] = this.couponCode3FreeMonths;
         data["couponCode6FreeMonths"] = this.couponCode6FreeMonths;
         data["couponCodeFreeForever"] = this.couponCodeFreeForever;
+        data["couponCode3FreeMonthsGF"] = this.couponCode3FreeMonthsGF;
+        data["couponCode6FreeMonthsGF"] = this.couponCode6FreeMonthsGF;
+        data["couponCodeFreeForeverGF"] = this.couponCodeFreeForeverGF;
         data["stripeBypassFreeForeverId"] = this.stripeBypassFreeForeverId;
         return data; 
     }
@@ -8920,6 +8986,9 @@ export interface IStripeSettings {
     couponCode3FreeMonths?: string | undefined;
     couponCode6FreeMonths?: string | undefined;
     couponCodeFreeForever?: string | undefined;
+    couponCode3FreeMonthsGF?: string | undefined;
+    couponCode6FreeMonthsGF?: string | undefined;
+    couponCodeFreeForeverGF?: string | undefined;
     stripeBypassFreeForeverId?: string | undefined;
 }
 

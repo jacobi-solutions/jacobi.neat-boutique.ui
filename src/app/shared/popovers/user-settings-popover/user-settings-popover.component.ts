@@ -222,7 +222,7 @@ export class UserSettingsPopoverComponent implements OnInit {
     `;
 
     const confirmBtn = {
-      label: 'Manage my Businesses',
+      label: 'Manage Businesses',
       // callback: this.addNewPost
       callback() {
         // self.userHasSeenNonEditableModal = true;

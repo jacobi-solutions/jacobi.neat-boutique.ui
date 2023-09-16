@@ -77,6 +77,8 @@ export class EditHeaderDetailsComponent implements OnInit {
   addAnotherBusiness() {
     this._router.navigateByUrl('/pricing');
   }
+  
 }
+
 
 
