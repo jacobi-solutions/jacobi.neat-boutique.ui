@@ -40,8 +40,8 @@ export class PricingPage implements OnInit {
         if(numberOfBusinessesAlreadyConnected) {
           this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
           if(this.vendorForSubscriptionChange) {
-            if(this.vendorForSubscriptionChange.stripeSubscriptionItemId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
-              this.vendorForSubscriptionChange.stripeSubscriptionItemId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
+            if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
+              this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
                 this.standardPricing = "$45";
                 this.premiumPricing = "$75";
             }

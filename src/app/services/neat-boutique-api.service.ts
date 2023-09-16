@@ -4787,7 +4787,7 @@ export class VendorProfile implements IVendorProfile {
     googlePlaceId?: string | undefined;
     googlePlaceSearchReference?: string | undefined;
     vendorSubscriptionPlan?: string | undefined;
-    stripeSubscriptionItemId?: string | undefined;
+    stripePriceId?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -4827,7 +4827,7 @@ export class VendorProfile implements IVendorProfile {
             this.googlePlaceId = _data["googlePlaceId"];
             this.googlePlaceSearchReference = _data["googlePlaceSearchReference"];
             this.vendorSubscriptionPlan = _data["vendorSubscriptionPlan"];
-            this.stripeSubscriptionItemId = _data["stripeSubscriptionItemId"];
+            this.stripePriceId = _data["stripePriceId"];
             this.name = _data["name"];
             this.address = _data["address"];
             this.city = _data["city"];
@@ -4877,7 +4877,7 @@ export class VendorProfile implements IVendorProfile {
         data["googlePlaceId"] = this.googlePlaceId;
         data["googlePlaceSearchReference"] = this.googlePlaceSearchReference;
         data["vendorSubscriptionPlan"] = this.vendorSubscriptionPlan;
-        data["stripeSubscriptionItemId"] = this.stripeSubscriptionItemId;
+        data["stripePriceId"] = this.stripePriceId;
         data["name"] = this.name;
         data["address"] = this.address;
         data["city"] = this.city;
@@ -4920,7 +4920,7 @@ export interface IVendorProfile {
     googlePlaceId?: string | undefined;
     googlePlaceSearchReference?: string | undefined;
     vendorSubscriptionPlan?: string | undefined;
-    stripeSubscriptionItemId?: string | undefined;
+    stripePriceId?: string | undefined;
     name?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
