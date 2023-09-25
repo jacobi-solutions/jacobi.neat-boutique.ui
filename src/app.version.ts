@@ -1,3 +1,3 @@
 export const LociConstants = {
-    VERSION_NUMBER: "1.0.17"
+    VERSION_NUMBER: "1.0.18"
 }
