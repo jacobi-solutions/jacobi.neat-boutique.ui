@@ -7,10 +7,10 @@ import { ConsumerService } from 'src/app/services/consumer.service';
 
 @Component({
   selector: 'app-my-list',
-  templateUrl: './my-list.page.html',
-  styleUrls: ['./my-list.page.scss'],
+  templateUrl: './my-list.component.html',
+  styleUrls: ['./my-list.component.scss'],
 })
-export class MyListPage implements OnInit {
+export class MyListComponent  implements OnInit {
 
   public pageName: string = 'My List';
   public vendors: VendorDisplay[] = [];

@@ -101,24 +101,26 @@
           <ion-col size="12">
             <h2>Recent Activity</h2>
           </ion-col>
-          <ion-col class="ion-text-center" size="4">
+          <ion-col class="ion-text-center" size="3">
             <h4 (click)="selectedActivity = 'recent-questions'">
               <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-questions'}">Questions</strong>
             </h4>
           </ion-col>
-          <ion-col class="ion-text-center" size="4">
+          <ion-col class="ion-text-center" size="3">
             <h4 (click)="selectedActivity = 'recent-answers'">
               <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-answers'}">Answers</strong>
             </h4>
           </ion-col>
-          <ion-col class="ion-text-center" size="4">
+          <ion-col class="ion-text-center" size="3">
             <h4 (click)="selectedActivity = 'recent-reviews'">
               <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-reviews'}">Reviews</strong>
             </h4>
           </ion-col>
-
-
-          
+          <ion-col class="ion-text-center" size="3">
+            <h4 (click)="selectedActivity = 'my-list'">
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'my-list'}">My List</strong>
+            </h4>
+          </ion-col>
         </ion-row>
         <div class="activity">
           <div *ngIf="selectedActivity === 'recent-questions'">
@@ -139,6 +141,13 @@
             <ion-row class="recent-review" *ngFor="let review of recentActivity.recentReviews">
               <ion-col>
                 <app-review-item [review]="review"></app-review-item>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div *ngIf="selectedActivity === 'my-list'">
+            <ion-row class="my-list">
+              <ion-col>
+                <app-my-list></app-my-list>
               </ion-col>
             </ion-row>
           </div>

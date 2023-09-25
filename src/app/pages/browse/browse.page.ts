@@ -5,7 +5,7 @@ import { CommunityCategory } from 'src/app/models/community-category';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { UtilService } from 'src/app/services/util.service';
-import { VendorService } from 'src/app/services/vendor.service';
+import { VendorService } from 'src/app/vendor.service';
 
 @Component({
   selector: 'app-browse',

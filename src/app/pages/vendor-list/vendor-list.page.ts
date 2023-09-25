@@ -3,7 +3,7 @@ import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { CommunityTypes } from 'src/app/models/constants';
-import { VendorService } from 'src/app/services/vendor.service';
+import { VendorService } from 'src/app/vendor.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { CommunityService } from 'src/app/services/community.service';
 import { CommunityCategory } from 'src/app/models/community-category';
@@ -31,17 +31,19 @@ export class VendorListPage implements OnInit {
 
   
   ngOnInit() {
+    
+  }
+
+  ionViewWillEnter() {
+    
+    // set this here for calls to to change page content 
+    this.vendorsHaveLoaded = false;
     const categoryWords = this._nbRouter.getCategoryNameFromRoute(this._activatedRoute)   
     if(categoryWords) {
       this.category = this._communityService.getCommunityCategoryByNameDisplay(categoryWords);      
       this.pageName = 'Browse ' + this.category.name;
       this._loadVendors(this.category.name);      
     }
-  }
-
-  ionViewWillEnter() {
-    // set this here for calls to to change page content 
-    this.vendorsHaveLoaded = false;
   }
 
   private async  _loadVendors(category: string) {

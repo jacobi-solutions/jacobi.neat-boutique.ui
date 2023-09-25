@@ -113,8 +113,10 @@ export class AnswersService {
 
   refreshCurrentUserVotesOnPosts(posts: ConsumerPostDisplay[] | VendorPostDisplay[]) {
     posts.forEach((post: ConsumerPostDisplay | VendorPostDisplay) => {
+      
       post.answers.forEach((answer) => {
-        answer.didVoteFor = this._currentUser.hasId(answer.votes.map(x => x.voter.id));
+        var answerVoteIds: string[] = answer.votes.map(x => x.voter.id);
+        answer.didVoteFor = this._currentUser.hasIdInList(answerVoteIds);
       }); 
       post.hasAnswered =  post.answers.some(x => x.didVoteFor);
     });

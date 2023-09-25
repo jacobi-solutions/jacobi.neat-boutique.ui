@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CurrentUserDisplay } from '../models/current-user-display';
-import { VendorDisplay } from '../models/vendor-display';
-import { NeatBoutiqueApiService, VendorProfileRequest, Request, VendorProfilesRequest, VendorProfilesResponse, VendorProfileWithReviewsResponse } from './neat-boutique-api.service';
+import { CurrentUserDisplay } from './models/current-user-display';
+import { VendorDisplay } from './models/vendor-display';
+import { NeatBoutiqueApiService, VendorProfileRequest, Request, VendorProfilesRequest, VendorProfilesResponse, VendorProfileWithReviewsResponse } from './services/neat-boutique-api.service';
 
 @Injectable({
   providedIn: 'root',

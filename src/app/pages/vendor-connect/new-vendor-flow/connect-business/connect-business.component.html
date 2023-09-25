@@ -52,6 +52,13 @@
                             <ion-input hidden="true" formControlName="businessEntity" [value]="selectedGooglePlace"></ion-input>
                             
                         </form>
+                        <ion-row class="legal-links-row">
+                            <ion-col>
+                                <p class="alt-vendor-sign-up">
+                                    <a [routerLink]="'/vendor-connect/manual-business-details'">Is your business not listed?</a>
+                                </p>
+                            </ion-col>
+                        </ion-row>
 
                         <ion-row class="google-places-selection-row">
                             <ion-col *ngIf="googlePlacesResults" class="business-search-results">
@@ -109,9 +116,9 @@
 
                         <ion-row class="legal-links-row">
                             <ion-col>
-                                <p class="alt-vendor-sign-up">
+                                <!-- <p class="alt-vendor-sign-up">
                                     <a [routerLink]="'/vendor-connect/manual-business-details'">Is your business not listed?</a>
-                                </p>
+                                </p> -->
 
                                 <p>
                                     By creating a account you agree to the <br /><a [routerLink]="'/legal'">Terms and

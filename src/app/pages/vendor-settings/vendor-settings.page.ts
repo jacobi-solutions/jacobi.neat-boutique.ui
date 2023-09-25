@@ -4,7 +4,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
-import { VendorService as VendorService } from 'src/app/services/vendor.service';
+import { VendorService as VendorService } from 'src/app/vendor.service';
 
 @Component({
   selector: 'app-vendor-settings',

@@ -8,7 +8,7 @@ import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorReview } from 'src/app/models/vendor-review';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
-import { VendorService } from 'src/app/services/vendor.service';
+import { VendorService } from 'src/app/vendor.service';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({

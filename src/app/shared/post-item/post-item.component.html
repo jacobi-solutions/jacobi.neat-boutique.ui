@@ -24,7 +24,7 @@
         </ion-col>
       </ion-row>
   
-      <ion-row *ngIf="post?.comments?.length > 0 || post.hasAnswered">
+      <ion-row *ngIf="post.hasAnswered">
         <ion-col class="ion-margin-end">
           <div class="comment-icon-wrapper">
             <ion-icon class="ion-float-right" (click)="toggleComments()" [name]="iconShowComments"></ion-icon>

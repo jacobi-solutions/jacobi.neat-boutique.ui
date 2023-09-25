@@ -12,7 +12,7 @@ import { THEME } from 'src/theme/theme-constants';
 import { CommunityCategory } from 'src/app/models/community-category';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { VendorDisplay } from 'src/app/models/vendor-display';
-import { VendorService } from 'src/app/services/vendor.service';
+import { VendorService } from 'src/app/vendor.service';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 

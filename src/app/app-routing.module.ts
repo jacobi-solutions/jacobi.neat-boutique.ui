@@ -69,12 +69,12 @@ const routes: Routes = [
     canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
     data: { redirect: '/pricing', title: 'Vendor Revise' }
   },
-  {
-    path: 'my-list',
-    loadChildren: () => import('./pages/my-list/my-list.module').then( m => m.MyListPageModule),
-    canActivate: [ AuthGuard, HeaderGuard ],
-    data: { title: 'My List', showNbHeader2: true, showNbHeader3: true }
-  },
+  // {
+  //   path: 'my-list',
+  //   loadChildren: () => import('./pages/consumer-profile/my-list/my-list.module').then( m => m.MyListPageModule),
+  //   canActivate: [ AuthGuard, HeaderGuard ],
+  //   data: { title: 'My List', showNbHeader2: true, showNbHeader3: true }
+  // },
   {
     path: 'vendor-settings',
     loadChildren: () => import('./pages/vendor-settings/vendor-settings.module').then( m => m.VendorSettingsPageModule),
@@ -87,12 +87,12 @@ const routes: Routes = [
     canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
     data: { redirect: '/pricing', title: 'Vendor Settings', showNbHeader2: true, showNbHeader3: true }
   },
-  {
-    path: 'my-questions',
-    loadChildren: () => import('./pages/my-questions/my-questions.module').then( m => m.MyQuestionsPageModule),
-    canActivate: [ AuthGuard, HeaderGuard ],
-    data: { title: 'My Questions', showNbHeader2: true, showNbHeader3: true }
-  },
+  // {
+  //   path: 'my-questions',
+  //   loadChildren: () => import('./pages/my-questions/my-questions.module').then( m => m.MyQuestionsPageModule),
+  //   canActivate: [ AuthGuard, HeaderGuard ],
+  //   data: { title: 'My Questions', showNbHeader2: true, showNbHeader3: true }
+  // },
   {
     path: 'legal',
     loadChildren: () => import('./pages/legal/legal.module').then( m => m.LegalPageModule),

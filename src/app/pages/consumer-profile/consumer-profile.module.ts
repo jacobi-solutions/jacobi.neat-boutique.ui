@@ -8,6 +8,7 @@ import { ConsumerProfilePageRoutingModule } from './consumer-profile-routing.mod
 
 import { ConsumerProfilePage } from './consumer-profile.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MyListComponent } from '../../shared/my-list/my-list.component';
 
 @NgModule({
   imports: [
@@ -15,8 +16,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     ConsumerProfilePageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [ConsumerProfilePage]
+  declarations: [
+    ConsumerProfilePage
+  ]
 })
 export class ConsumerProfilePageModule {}

@@ -8,7 +8,7 @@ import { HeroAd } from 'src/app/services/neat-boutique-api.service';
 import { PromptComponent } from './prompt/prompt.component';
 import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
 import { UtilService } from 'src/app/services/util.service';
-import { VendorService } from 'src/app/services/vendor.service';
+import { VendorService } from 'src/app/vendor.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
