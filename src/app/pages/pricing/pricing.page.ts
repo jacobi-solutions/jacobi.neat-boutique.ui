@@ -84,7 +84,14 @@ export class PricingPage implements OnInit {
   }
 
   downgradeSelectedVendorSubscriptionToStandard() {
-    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
+    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
+       this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
+        if(this.numberOfBusinessesConnected === 1) {
+          this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+        } else {
+          this.needsPremiumAccountForChangeConfirm();
+        }
+    } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
       if(this.numberOfBusinessesConnected === 1) {
         this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
       } else if(this.numberOfBusinessesConnected > 1)  {
@@ -96,7 +103,14 @@ export class PricingPage implements OnInit {
   }
 
   cancelVendorSubscription() {
-    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
+    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
+      this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
+       if(this.numberOfBusinessesConnected === 1) {
+         this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.vendorForSubscriptionChange);
+       } else {
+         this.needsPremiumAccountForChangeConfirm();
+       }
+    } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
       this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId ||
       this.numberOfBusinessesConnected === 1) {
         this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.vendorForSubscriptionChange);
