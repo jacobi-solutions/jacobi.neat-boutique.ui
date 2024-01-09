@@ -38,6 +38,12 @@ const routes: Routes = [
     data: { title: 'Feed', showNbHeader2: true, showNbHeader3: false }
   },
   {
+    path: 'routes',
+    loadChildren: () => import('./pages/routes/routes.module').then( m => m.RoutesPageModule),
+    canActivate: [ HeaderGuard ],
+    data: { title: 'Routes', showNbHeader2: true, showNbHeader3: false }
+  },
+  {
     path: 'vendor-profile/:vendorPath',
     loadChildren: () => import('./pages/vendor-profile/vendor-profile.module').then( m => m.VendorProfilePageModule),
     canActivate: [ HeaderGuard ],

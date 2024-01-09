@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AnswerDisplay } from "../models/answer-display";
-import { PollAnswerDisplay } from "../models/poll-answer-display";
+import { Answer } from "./neat-boutique-api.service";
 
 @Injectable({
   providedIn: "root",
@@ -61,7 +61,7 @@ export class UtilService {
   }
 
   // used to normalize given domain to a set range
-  public normalizedAnswersForChartMinMax(answers: any[], rangeMax: number = 100) {    
+  public normalizedAnswersForChartMinMax(answers: AnswerDisplay[], rangeMax: number = 100) {    
     let displayAnswers = answers || [];
 
     if(answers?.length > 1) {

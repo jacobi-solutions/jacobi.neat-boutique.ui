@@ -3785,7 +3785,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @return Success
      */
     getSettings(body: Request | undefined): Observable<Settings> {
-        let url_ = this.baseUrl + "/Settings/GetSettingsAsync";
+        let url_ = this.baseUrl + "/Settings/GetSettings";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -5581,6 +5581,7 @@ export class Answer implements IAnswer {
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postId?: string | undefined;
+    freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
     googlePlace?: GooglePlacesEntity;
     votes?: AnswerVote[] | undefined;
@@ -5600,6 +5601,7 @@ export class Answer implements IAnswer {
             this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.postId = _data["postId"];
+            this.freeFormAnswer = _data["freeFormAnswer"];
             this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
             this.googlePlace = _data["googlePlace"] ? GooglePlacesEntity.fromJS(_data["googlePlace"]) : <any>undefined;
             if (Array.isArray(_data["votes"])) {
@@ -5623,6 +5625,7 @@ export class Answer implements IAnswer {
         data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["postId"] = this.postId;
+        data["freeFormAnswer"] = this.freeFormAnswer;
         data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
         data["googlePlace"] = this.googlePlace ? this.googlePlace.toJSON() : <any>undefined;
         if (Array.isArray(this.votes)) {
@@ -5639,6 +5642,7 @@ export interface IAnswer {
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postId?: string | undefined;
+    freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
     googlePlace?: GooglePlacesEntity;
     votes?: AnswerVote[] | undefined;
@@ -6184,58 +6188,6 @@ export interface ICommunityRequest {
     includeRecentPostsCount?: number;
 }
 
-export class PollAnswer implements IPollAnswer {
-    id?: string | undefined;
-    answerText?: string | undefined;
-    voters?: NeatBoutiqueEntity[] | undefined;
-
-    constructor(data?: IPollAnswer) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.answerText = _data["answerText"];
-            if (Array.isArray(_data["voters"])) {
-                this.voters = [] as any;
-                for (let item of _data["voters"])
-                    this.voters!.push(NeatBoutiqueEntity.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PollAnswer {
-        data = typeof data === 'object' ? data : {};
-        let result = new PollAnswer();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["answerText"] = this.answerText;
-        if (Array.isArray(this.voters)) {
-            data["voters"] = [];
-            for (let item of this.voters)
-                data["voters"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IPollAnswer {
-    id?: string | undefined;
-    answerText?: string | undefined;
-    voters?: NeatBoutiqueEntity[] | undefined;
-}
-
 export class VendorPost implements IVendorPost {
     id?: string | undefined;
     createdDateUtc?: Date;
@@ -6245,7 +6197,7 @@ export class VendorPost implements IVendorPost {
     campaignStartDateUtc?: Date;
     campaignEndDateUtc?: Date;
     author?: NeatBoutiqueEntity;
-    answers?: PollAnswer[] | undefined;
+    answers?: Answer[] | undefined;
     comments?: Comment[] | undefined;
 
     constructor(data?: IVendorPost) {
@@ -6270,7 +6222,7 @@ export class VendorPost implements IVendorPost {
             if (Array.isArray(_data["answers"])) {
                 this.answers = [] as any;
                 for (let item of _data["answers"])
-                    this.answers!.push(PollAnswer.fromJS(item));
+                    this.answers!.push(Answer.fromJS(item));
             }
             if (Array.isArray(_data["comments"])) {
                 this.comments = [] as any;
@@ -6320,7 +6272,7 @@ export interface IVendorPost {
     campaignStartDateUtc?: Date;
     campaignEndDateUtc?: Date;
     author?: NeatBoutiqueEntity;
-    answers?: PollAnswer[] | undefined;
+    answers?: Answer[] | undefined;
     comments?: Comment[] | undefined;
 }
 
@@ -8087,7 +8039,7 @@ export interface IPollAnswerRequest {
 export class PollAnswerResponse implements IPollAnswerResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    pollAnswer?: PollAnswer;
+    pollAnswer?: Answer;
 
     constructor(data?: IPollAnswerResponse) {
         if (data) {
@@ -8106,7 +8058,7 @@ export class PollAnswerResponse implements IPollAnswerResponse {
                     this.errors!.push(ErrorDto.fromJS(item));
             }
             this.isSuccess = _data["isSuccess"];
-            this.pollAnswer = _data["pollAnswer"] ? PollAnswer.fromJS(_data["pollAnswer"]) : <any>undefined;
+            this.pollAnswer = _data["pollAnswer"] ? Answer.fromJS(_data["pollAnswer"]) : <any>undefined;
         }
     }
 
@@ -8133,7 +8085,7 @@ export class PollAnswerResponse implements IPollAnswerResponse {
 export interface IPollAnswerResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    pollAnswer?: PollAnswer;
+    pollAnswer?: Answer;
 }
 
 export class ReviewsResponse implements IReviewsResponse {

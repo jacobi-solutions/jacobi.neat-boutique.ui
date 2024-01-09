@@ -1,7 +1,7 @@
 import { PostType } from "typings/custom-types";
 import { VendorPost } from "../services/neat-boutique-api.service";
 import { CommentDisplay } from "./comment-display";
-import { PollAnswerDisplay } from "./poll-answer-display";
+import { AnswerDisplay } from "./answer-display";
 
 export class VendorPostDisplay extends VendorPost {
     public postType: string;
@@ -10,7 +10,7 @@ export class VendorPostDisplay extends VendorPost {
     public localLastUpdated: string;
     public localCreated: string;
     // overrides
-    public answers: PollAnswerDisplay[];
+    public answers: AnswerDisplay[];
     public comments: CommentDisplay[];
 
     public hasAnswered: boolean;
@@ -21,7 +21,7 @@ export class VendorPostDisplay extends VendorPost {
 
         if(this.answers) {
             this.answers = this.answers.map(x => {
-                const answer = new PollAnswerDisplay(x);
+                const answer = new AnswerDisplay(x);
                 answer.postId = this.id;
                 return answer;
             }).sort(this._sortAnswers);
@@ -40,7 +40,7 @@ export class VendorPostDisplay extends VendorPost {
         this.localCreated = localCreated.toLocaleString();
     }
 
-    private _sortAnswers(answerA: PollAnswerDisplay, answerB: PollAnswerDisplay) {
-        return (answerB.voteTotal - answerA.voteTotal);
+    private _sortAnswers(answerA: AnswerDisplay, answerB: AnswerDisplay) {
+        return (answerB.points - answerA.points);
     }
 }

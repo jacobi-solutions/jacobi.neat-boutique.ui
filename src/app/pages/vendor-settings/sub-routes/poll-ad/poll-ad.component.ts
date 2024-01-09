@@ -4,14 +4,14 @@ import { IonContent } from '@ionic/angular';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
-import { PollAnswerDisplay } from 'src/app/models/poll-answer-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { NeatBoutiqueEntity, Comment, VendorPost, PollAnswer } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, VendorPost, Answer, AnswerVote } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
 import { Router } from '@angular/router';
+import { AnswerDisplay } from 'src/app/models/answer-display';
 
 @Component({
   selector: 'app-poll-ad',
@@ -102,12 +102,13 @@ export class PollAdComponent implements OnInit {
             voterCount = this._utilService.randomRange(0, 9);
         }
 
-        const voters = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new NeatBoutiqueEntity({id: 'demo'})) : [];
+        //const voters = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new NeatBoutiqueEntity({id: 'demo'})) : [];
+        const votes = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new AnswerVote({voter: new NeatBoutiqueEntity({id: 'demo'})}) ) : [];
 
         if(answer) {
-          return new PollAnswerDisplay(new PollAnswer({
-            answerText: answer,
-            voters: voters,
+          return new AnswerDisplay(new Answer({
+            freeFormAnswer: answer,
+            votes: votes,
           }));
         }
         return null;
@@ -123,7 +124,7 @@ export class PollAdComponent implements OnInit {
     if (this.hasPremiumSubscription) {
       const pollAnswers = Object.keys(this.pollAdToSubmit?.value).map(fieldName => {
         if(fieldName.toLowerCase().includes('answer') && this.pollAdToSubmit.value[fieldName]) {
-          return new PollAnswer({ answerText: this.pollAdToSubmit?.value[fieldName], voters: [] });
+          return new Answer({ freeFormAnswer: this.pollAdToSubmit?.value[fieldName], votes: [] });
         }
         return null;
       }).filter(x => x);    

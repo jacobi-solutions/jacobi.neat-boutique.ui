@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { AnswerDisplay } from '../models/answer-display';
 import { ConsumerPostDisplay } from '../models/consumer-post-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
-import { PollAnswerDisplay } from '../models/poll-answer-display';
 import { VendorPostDisplay } from '../models/vendor-post-display';
 import { AccountsService } from './accounts.service';
 import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, ConsumerPostResponse, ConsumerPostsResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity } from './neat-boutique-api.service';

@@ -4,7 +4,6 @@ import { AnswerDisplay } from '../models/answer-display';
 import { ConsumerPostDisplay } from '../models/consumer-post-display';
 import { ConsumerProfileActivityDisplay } from '../models/consumer-profile-activity-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
-import { PollAnswerDisplay } from '../models/poll-answer-display';
 import { ReviewDisplay } from '../models/review-display';
 import { VendorDisplay } from '../models/vendor-display';
 import { AccountsService } from './accounts.service';

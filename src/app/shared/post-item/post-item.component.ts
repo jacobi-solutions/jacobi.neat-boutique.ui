@@ -9,7 +9,6 @@ import { Answer, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.s
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { PostType } from 'typings/custom-types';
 import { Router } from '@angular/router';
-import { PollAnswerDisplay } from 'src/app/models/poll-answer-display';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({

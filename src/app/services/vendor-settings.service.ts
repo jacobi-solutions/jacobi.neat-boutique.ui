@@ -9,7 +9,6 @@ import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, VendorPo
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { PollAnswerDisplay } from '../models/poll-answer-display';
 import { VendorDisplay } from '../models/vendor-display';
 
 // edit enum

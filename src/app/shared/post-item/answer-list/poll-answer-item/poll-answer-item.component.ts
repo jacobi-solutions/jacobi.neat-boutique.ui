@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AnswerDisplay } from 'src/app/models/answer-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { PollAnswerDisplay } from 'src/app/models/poll-answer-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CommunityService } from 'src/app/services/community.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -19,7 +19,7 @@ export class PollAnswerItemComponent implements OnInit {
 
   @Input() expanded: boolean = false;
   @Input() chartColor: string;
-  @Input() answer: PollAnswerDisplay;
+  @Input() answer: AnswerDisplay;
   @Input() chartBar: number = 100;
   @Input() altStyle: string;
   @Input() reportStatusToParentCallback: Function;

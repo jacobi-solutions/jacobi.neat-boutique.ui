@@ -4,7 +4,7 @@ import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
 import { CommunityTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
-import { NeatBoutiqueEntity, PollAnswer, Comment, VendorPost, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, VendorPost, VendorProfile, Answer, AnswerVote } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -72,9 +72,9 @@ export class PollAdPlaceholderComponent implements OnInit {
           // profilePath?: string | undefined;
         }),
         answers: [
-          new PollAnswer({ answerText: 'Chocolate', voters: (new Array(113).fill(new NeatBoutiqueEntity({name: ''}))) }),
-          new PollAnswer({ answerText: 'Vanilla', voters: (new Array(101).fill(new NeatBoutiqueEntity({name: ''}))) }),
-          new PollAnswer({ answerText: 'Strawberry', voters: (new Array(89).fill(new NeatBoutiqueEntity({name: ''}))) }),
+          new Answer({ freeFormAnswer: 'Chocolate', votes: new Array(113).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
+          new Answer({ freeFormAnswer: 'Vanilla', votes: new Array(101).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
+          new Answer({ freeFormAnswer: 'Strawberry', votes: new Array(89).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
         ],
         comments: (new Array(1).fill(null)).map((el, i) => {
           // create some demo comments        

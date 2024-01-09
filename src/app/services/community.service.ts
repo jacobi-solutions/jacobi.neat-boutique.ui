@@ -9,7 +9,6 @@ import { ConsumerPostDisplay } from "../models/consumer-post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
 import { CommunityTypes, UserRoleTypes } from "../models/constants";
-import { PollAnswerDisplay } from "../models/poll-answer-display";
 import { VendorDisplay } from "../models/vendor-display";
 import { VendorPostDisplay } from "../models/vendor-post-display";
 import { AccountsService } from "./accounts.service";
@@ -416,7 +415,7 @@ export class CommunityService {
     return community;
   }
 
-  addVoteToPollAnswer(answer: PollAnswerDisplay) {
+  addVoteToPollAnswer(answer: AnswerDisplay) {
     const request = new PollAnswerRequest();
     request.pollAnswerId = answer.id;
     request.postId = answer.postId;
@@ -425,7 +424,7 @@ export class CommunityService {
       this._neatBoutiqueApiService.addVoteToPollAnswer(request)
         .subscribe((response: PollAnswerResponse) => {
           if (response.isSuccess) {
-            const updatedPollAnswer = new PollAnswerDisplay(response.pollAnswer);
+            const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
             updatedPollAnswer.postId = answer.postId;
             this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
             resolve(true);
@@ -438,7 +437,7 @@ export class CommunityService {
   }
 
 
-  removeVoteFromPollAnswer(answer: PollAnswerDisplay) {
+  removeVoteFromPollAnswer(answer: AnswerDisplay) {
     const request = new PollAnswerRequest();
     request.pollAnswerId = answer.id;
     request.postId = answer.postId;
@@ -447,8 +446,8 @@ export class CommunityService {
       this._neatBoutiqueApiService.removeVoteFromPollAnswer(request)
         .subscribe((response: PollAnswerResponse) => {
           if (response.isSuccess) {
-            const updatedPollAnswer = new PollAnswerDisplay(response.pollAnswer);
-            updatedPollAnswer.postId = answer.postId;
+            const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
+            // updatedPollAnswer.postId = answer.postId;
             this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
             resolve(true);
           } else if (response.errors.length > 0) {
@@ -459,21 +458,21 @@ export class CommunityService {
     return promise;
   }
 
-  private _updateVendorPostWithUpdatedAnswer(answer: PollAnswerDisplay) {
+  private _updateVendorPostWithUpdatedAnswer(answer: AnswerDisplay) {
 
     this._communityDisplay.vendorPosts = this._communityDisplay.vendorPosts.map((post: VendorPostDisplay) => {
       if (post.id === answer.postId) {
         
         // remove previous vote from post
-        post.answers.forEach((answer: PollAnswerDisplay) => {
-          answer.voters = answer.voters.filter(x => !this._currentUser.hasId(x.id));
+        post.answers.forEach((answer: AnswerDisplay) => {
+          answer.votes = answer.votes.filter(x => !this._currentUser.hasId(x.voter.id));
         });
 
         const answers = post.answers.filter(x => x.id !== answer.id);
         post.answers = [...answers, answer];
       }
 
-      post.answers = <PollAnswerDisplay[]>this._util.normalizedAnswersForChartMinMax(post.answers);
+      post.answers = this._util.normalizedAnswersForChartMinMax(post.answers);
 
       return post;
     });

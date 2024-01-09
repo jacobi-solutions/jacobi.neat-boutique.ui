@@ -10,7 +10,6 @@ import { THEME } from 'src/theme/theme-constants';
 import { debounceTime } from 'rxjs/operators';
 import { EntityDisplay } from 'src/app/models/entity-display';
 import { PostType } from 'typings/custom-types';
-import { PollAnswerDisplay } from 'src/app/models/poll-answer-display';
 import { UtilService } from 'src/app/services/util.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { AnswerVoteRankingTypes } from 'src/app/models/constants';
@@ -26,14 +25,14 @@ export class AnswerListComponent implements OnInit {
   @Input() postId: string;
   @Input() chartShowAll: boolean = false;
   @Input() communityName: string;
-  @Input() answers: (AnswerDisplay[] | PollAnswerDisplay[]) = []; // AnswerDisplay[];
+  @Input() answers: AnswerDisplay[] = [];
   @Input() altAnswerStyle: string;
   @Input() isDemo: boolean = false;
   @Input() defaultNumberOfAnswersToShow: number = 5;
 
   public postTypes = PostType;
   public answersChanged: boolean = true;
-  public minimalAnswers: (AnswerDisplay[] | PollAnswerDisplay[]) = [];
+  public minimalAnswers: AnswerDisplay[] = [];
   
   public colors: string[] = THEME.colors.list;
   public viewRangeText: string = 'View all';
