@@ -9,8 +9,8 @@
       </ion-col>
   
       <ion-col size="10" class="bar-wrapper ion-text-left">
-        <div #answerTextEl class="answer-text" [ngClass]="{'nb-vertical-center': answer?.voters?.length === 0}">
-          <p>{{ answer.answerText }}</p>
+        <div #answerTextEl class="answer-text" [ngClass]="{'nb-vertical-center': answer?.votes?.length === 0}">
+          <p>{{ answer.freeFormAnswer }}</p>
         </div>
         <div #chartBar class="bar"></div>
       </ion-col>

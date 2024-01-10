@@ -23,7 +23,6 @@ export type VendorEdits = {
 };
 
 
-export type AnswerToPollAssociation = { answerText: string, postId: string };
 
 
 @Injectable({
