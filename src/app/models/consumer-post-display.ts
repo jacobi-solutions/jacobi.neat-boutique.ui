@@ -1,10 +1,9 @@
-import { PostType } from 'typings/custom-types';
+
 import { ConsumerPost } from '../services/neat-boutique-api.service';
 import { AnswerDisplay } from './answer-display';
 import { CommentDisplay } from './comment-display';
 
 export class ConsumerPostDisplay extends ConsumerPost {
-    public postType: string;
     public expanded: boolean;
     public timeOnly: string;
     public localLastUpdated: string;
@@ -24,12 +23,10 @@ export class ConsumerPostDisplay extends ConsumerPost {
 
     constructor(post: ConsumerPost) {
         super(post);
-
-        this.postType = PostType.COMMUNITY_QUESTION;
         this.elapsedTime = {lastUpdated: {minutes: null}, created: {minutes: null}};
 
         if(this.answers) {
-            this.answers = this.answers.map(x => new AnswerDisplay(x)).sort(this.sortAnswers);
+            this.answers = this.answers.map(x => new AnswerDisplay(x, post.postType)).sort(this.sortAnswers);
         }
 
         if(this.comments) {

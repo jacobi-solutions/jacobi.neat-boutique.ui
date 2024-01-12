@@ -3,7 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { IonContent } from '@ionic/angular';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
+import { PostTypes, SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -109,7 +109,7 @@ export class PollAdComponent implements OnInit {
           return new AnswerDisplay(new Answer({
             freeFormAnswer: answer,
             votes: votes,
-          }));
+          }), PostTypes.POLL);
         }
         return null;
       }).filter(a => a);      

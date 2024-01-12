@@ -14,7 +14,8 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="ion-text-center">How do you rank {{ answer.entity.name }} for this question?</p>
+            <p *ngIf="answer.postType === postTypes.QUESTION" class="ion-text-center">How do you rank "{{ answer.entity.name }}" for this question?</p>
+            <p  *ngIf="answer.postType === postTypes.POLL"class="ion-text-center">How do you rank "{{ answer.freeFormAnswer }}" for this question?</p>
           </ion-col>
         </ion-row>        
         <ion-row class="choice clickable" (click)="chooseRanking(answerVoteRankingTypes.FIRST)">
@@ -23,7 +24,8 @@
           </ion-col>
           <ion-col size="8" class="ion-align-self-center">
             <p *ngIf="!currentUserFirstChoiceAnswer">My Top Choice</p>
-            <p *ngIf="currentUserFirstChoiceAnswer">{{ currentUserFirstChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserFirstChoiceAnswer && currentUserFirstChoiceAnswer.postType === postTypes.QUESTION">{{ currentUserFirstChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserFirstChoiceAnswer && currentUserFirstChoiceAnswer.postType === postTypes.POLL">{{ currentUserFirstChoiceAnswer.freeFormAnswer }}</p>
           </ion-col>
         </ion-row>
         <ion-row class="choice clickable" (click)="chooseRanking(answerVoteRankingTypes.SECOND)">
@@ -32,7 +34,8 @@
           </ion-col>
           <ion-col size="8"  class="ion-align-self-center">
             <p *ngIf="!currentUserSecondChoiceAnswer">My 2nd Choice</p>
-            <p *ngIf="currentUserSecondChoiceAnswer">{{ currentUserSecondChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserSecondChoiceAnswer && currentUserSecondChoiceAnswer.postType === postTypes.QUESTION">{{ currentUserSecondChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserSecondChoiceAnswer && currentUserSecondChoiceAnswer.postType === postTypes.POLL">{{ currentUserSecondChoiceAnswer.freeFormAnswer }}</p>
           </ion-col>
         </ion-row>
         <ion-row class="choice clickable" (click)="chooseRanking(answerVoteRankingTypes.THIRD)">
@@ -41,7 +44,8 @@
           </ion-col>
           <ion-col size="8"  class="ion-align-self-center">
             <p *ngIf="!currentUserThirdChoiceAnswer">My 3rd Choice</p>
-            <p *ngIf="currentUserThirdChoiceAnswer">{{ currentUserThirdChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserThirdChoiceAnswer && currentUserThirdChoiceAnswer.postType === postTypes.QUESTION">{{ currentUserThirdChoiceAnswer.entity.name }}</p>
+            <p *ngIf="currentUserThirdChoiceAnswer && currentUserThirdChoiceAnswer.postType === postTypes.POLL">{{ currentUserThirdChoiceAnswer.freeFormAnswer }}</p>
           </ion-col>
         </ion-row> 
         <ion-row *ngIf="showRemoveAnswer" class="choice clickable" (click)="removeVote()">
@@ -49,7 +53,8 @@
             <ion-icon class="remove" name="close-circle-outline"></ion-icon>
           </ion-col>
           <ion-col size="8"  class="ion-align-self-center">
-            <p>Remove vote for {{ answer.entity.name }}</p>
+            <p *ngIf="answer.postType === postTypes.QUESTION">Remove vote for {{ answer.entity.name }}</p>
+            <p *ngIf="answer.postType === postTypes.POLL">Remove vote for {{ answer.freeFormAnswer }}</p>
           </ion-col>
         </ion-row> 
         <ion-row *ngIf="showCancel && !showRemoveAnswer" class="choice clickable" (click)="onClose()">
@@ -57,7 +62,8 @@
             <ion-icon class="remove" name="close-circle-outline"></ion-icon>
           </ion-col>
           <ion-col size="8"  class="ion-align-self-center">
-            <p>Cancel vote for {{ answer.entity.name }}</p>
+            <p *ngIf="answer.postType === postTypes.QUESTION">Cancel vote for {{ answer.entity.name }}</p>
+            <p *ngIf="answer.postType === postTypes.POLL">Cancel vote for {{ answer.freeFormAnswer }}</p>
           </ion-col>
         </ion-row> 
         <div *ngIf="answer.vendor" class="clickable">

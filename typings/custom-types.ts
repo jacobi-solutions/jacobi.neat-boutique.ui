@@ -5,10 +5,7 @@ export type StringOrNull = string | null;
 
 export type VendorProfileOrNull = VendorProfile | null;
 
-export enum PostType {
-    POLL = 'poll',
-    COMMUNITY_QUESTION = 'community-question',
-};
+
 
 export enum ImageFileEventType {
     WRONG_FILE_TYPE_DETECTED,

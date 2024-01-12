@@ -84,6 +84,16 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<VendorPostResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<VendorPostResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     addCommentToPost(body: CommentRequest | undefined): Observable<CommentResponse>;
     /**
      * @param body (optional) 
@@ -240,16 +250,6 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     createVendorPost(body: VendorPostRequest | undefined): Observable<VendorPostResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<PollAnswerResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    removeVoteFromPollAnswer(body: PollAnswerRequest | undefined): Observable<PollAnswerResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -1125,6 +1125,118 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<ConsumerPostResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<VendorPostResponse> {
+        let url_ = this.baseUrl + "/Answers/AddVoteToPollAnswerAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddVoteToPollAnswer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddVoteToPollAnswer(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorPostResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorPostResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddVoteToPollAnswer(response: HttpResponseBase): Observable<VendorPostResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorPostResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorPostResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<VendorPostResponse> {
+        let url_ = this.baseUrl + "/Answers/RemoveVoteFromPollAnswerAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveVoteFromPollAnswer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveVoteFromPollAnswer(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorPostResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorPostResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRemoveVoteFromPollAnswer(response: HttpResponseBase): Observable<VendorPostResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorPostResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorPostResponse>(<any>null);
     }
 
     /**
@@ -2917,118 +3029,6 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<VendorPostResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<PollAnswerResponse> {
-        let url_ = this.baseUrl + "/Posts/AddVoteToPollAnswerAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddVoteToPollAnswer(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddVoteToPollAnswer(<any>response_);
-                } catch (e) {
-                    return <Observable<PollAnswerResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<PollAnswerResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddVoteToPollAnswer(response: HttpResponseBase): Observable<PollAnswerResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PollAnswerResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<PollAnswerResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    removeVoteFromPollAnswer(body: PollAnswerRequest | undefined): Observable<PollAnswerResponse> {
-        let url_ = this.baseUrl + "/Posts/RemoveVoteFromPollAnswerAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveVoteFromPollAnswer(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRemoveVoteFromPollAnswer(<any>response_);
-                } catch (e) {
-                    return <Observable<PollAnswerResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<PollAnswerResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRemoveVoteFromPollAnswer(response: HttpResponseBase): Observable<PollAnswerResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PollAnswerResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<PollAnswerResponse>(<any>null);
     }
 
     /**
@@ -5652,6 +5652,7 @@ export class ConsumerPost implements IConsumerPost {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
     question?: string | undefined;
     communityName?: string | undefined;
     author?: NeatBoutiqueEntity;
@@ -5672,6 +5673,7 @@ export class ConsumerPost implements IConsumerPost {
             this.id = _data["id"];
             this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postType = _data["postType"];
             this.question = _data["question"];
             this.communityName = _data["communityName"];
             this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
@@ -5700,6 +5702,7 @@ export class ConsumerPost implements IConsumerPost {
         data["id"] = this.id;
         data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postType"] = this.postType;
         data["question"] = this.question;
         data["communityName"] = this.communityName;
         data["author"] = this.author ? this.author.toJSON() : <any>undefined;
@@ -5721,6 +5724,7 @@ export interface IConsumerPost {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
     question?: string | undefined;
     communityName?: string | undefined;
     author?: NeatBoutiqueEntity;
@@ -5862,6 +5866,190 @@ export class AnswerVoteRemoveRequest implements IAnswerVoteRemoveRequest {
 
 export interface IAnswerVoteRemoveRequest {
     answerVote?: AnswerVote;
+}
+
+export class PollAnswerRequest implements IPollAnswerRequest {
+    answerId?: string | undefined;
+    voteRanking?: string | undefined;
+
+    constructor(data?: IPollAnswerRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.answerId = _data["answerId"];
+            this.voteRanking = _data["voteRanking"];
+        }
+    }
+
+    static fromJS(data: any): PollAnswerRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new PollAnswerRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["answerId"] = this.answerId;
+        data["voteRanking"] = this.voteRanking;
+        return data; 
+    }
+}
+
+export interface IPollAnswerRequest {
+    answerId?: string | undefined;
+    voteRanking?: string | undefined;
+}
+
+export class VendorPost implements IVendorPost {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
+    question?: string | undefined;
+    communityName?: string | undefined;
+    campaignStartDateUtc?: Date;
+    campaignEndDateUtc?: Date;
+    author?: NeatBoutiqueEntity;
+    answers?: Answer[] | undefined;
+    comments?: Comment[] | undefined;
+
+    constructor(data?: IVendorPost) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postType = _data["postType"];
+            this.question = _data["question"];
+            this.communityName = _data["communityName"];
+            this.campaignStartDateUtc = _data["campaignStartDateUtc"] ? new Date(_data["campaignStartDateUtc"].toString()) : <any>undefined;
+            this.campaignEndDateUtc = _data["campaignEndDateUtc"] ? new Date(_data["campaignEndDateUtc"].toString()) : <any>undefined;
+            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
+            if (Array.isArray(_data["answers"])) {
+                this.answers = [] as any;
+                for (let item of _data["answers"])
+                    this.answers!.push(Answer.fromJS(item));
+            }
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(Comment.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): VendorPost {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorPost();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postType"] = this.postType;
+        data["question"] = this.question;
+        data["communityName"] = this.communityName;
+        data["campaignStartDateUtc"] = this.campaignStartDateUtc ? this.campaignStartDateUtc.toISOString() : <any>undefined;
+        data["campaignEndDateUtc"] = this.campaignEndDateUtc ? this.campaignEndDateUtc.toISOString() : <any>undefined;
+        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
+        if (Array.isArray(this.answers)) {
+            data["answers"] = [];
+            for (let item of this.answers)
+                data["answers"].push(item.toJSON());
+        }
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IVendorPost {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
+    question?: string | undefined;
+    communityName?: string | undefined;
+    campaignStartDateUtc?: Date;
+    campaignEndDateUtc?: Date;
+    author?: NeatBoutiqueEntity;
+    answers?: Answer[] | undefined;
+    comments?: Comment[] | undefined;
+}
+
+export class VendorPostResponse implements IVendorPostResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    post?: VendorPost;
+
+    constructor(data?: IVendorPostResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.post = _data["post"] ? VendorPost.fromJS(_data["post"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): VendorPostResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorPostResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IVendorPostResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    post?: VendorPost;
 }
 
 export class CommentRequest implements ICommentRequest {
@@ -6186,94 +6374,6 @@ export interface ICommunityRequest {
     pageNumber?: number;
     pageSize?: number;
     includeRecentPostsCount?: number;
-}
-
-export class VendorPost implements IVendorPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    question?: string | undefined;
-    communityName?: string | undefined;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    author?: NeatBoutiqueEntity;
-    answers?: Answer[] | undefined;
-    comments?: Comment[] | undefined;
-
-    constructor(data?: IVendorPost) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.question = _data["question"];
-            this.communityName = _data["communityName"];
-            this.campaignStartDateUtc = _data["campaignStartDateUtc"] ? new Date(_data["campaignStartDateUtc"].toString()) : <any>undefined;
-            this.campaignEndDateUtc = _data["campaignEndDateUtc"] ? new Date(_data["campaignEndDateUtc"].toString()) : <any>undefined;
-            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
-            if (Array.isArray(_data["answers"])) {
-                this.answers = [] as any;
-                for (let item of _data["answers"])
-                    this.answers!.push(Answer.fromJS(item));
-            }
-            if (Array.isArray(_data["comments"])) {
-                this.comments = [] as any;
-                for (let item of _data["comments"])
-                    this.comments!.push(Comment.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): VendorPost {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorPost();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["question"] = this.question;
-        data["communityName"] = this.communityName;
-        data["campaignStartDateUtc"] = this.campaignStartDateUtc ? this.campaignStartDateUtc.toISOString() : <any>undefined;
-        data["campaignEndDateUtc"] = this.campaignEndDateUtc ? this.campaignEndDateUtc.toISOString() : <any>undefined;
-        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
-        if (Array.isArray(this.answers)) {
-            data["answers"] = [];
-            for (let item of this.answers)
-                data["answers"].push(item.toJSON());
-        }
-        if (Array.isArray(this.comments)) {
-            data["comments"] = [];
-            for (let item of this.comments)
-                data["comments"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IVendorPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    question?: string | undefined;
-    communityName?: string | undefined;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    author?: NeatBoutiqueEntity;
-    answers?: Answer[] | undefined;
-    comments?: Comment[] | undefined;
 }
 
 export class AdTagline implements IAdTagline {
@@ -7942,150 +8042,6 @@ export class VendorPostRequest implements IVendorPostRequest {
 
 export interface IVendorPostRequest {
     post?: VendorPost;
-}
-
-export class VendorPostResponse implements IVendorPostResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    post?: VendorPost;
-
-    constructor(data?: IVendorPostResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            this.post = _data["post"] ? VendorPost.fromJS(_data["post"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): VendorPostResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorPostResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IVendorPostResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    post?: VendorPost;
-}
-
-export class PollAnswerRequest implements IPollAnswerRequest {
-    postId?: string | undefined;
-    pollAnswerId?: string | undefined;
-
-    constructor(data?: IPollAnswerRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.postId = _data["postId"];
-            this.pollAnswerId = _data["pollAnswerId"];
-        }
-    }
-
-    static fromJS(data: any): PollAnswerRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new PollAnswerRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["postId"] = this.postId;
-        data["pollAnswerId"] = this.pollAnswerId;
-        return data; 
-    }
-}
-
-export interface IPollAnswerRequest {
-    postId?: string | undefined;
-    pollAnswerId?: string | undefined;
-}
-
-export class PollAnswerResponse implements IPollAnswerResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    pollAnswer?: Answer;
-
-    constructor(data?: IPollAnswerResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            this.pollAnswer = _data["pollAnswer"] ? Answer.fromJS(_data["pollAnswer"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): PollAnswerResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new PollAnswerResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        data["pollAnswer"] = this.pollAnswer ? this.pollAnswer.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IPollAnswerResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    pollAnswer?: Answer;
 }
 
 export class ReviewsResponse implements IReviewsResponse {

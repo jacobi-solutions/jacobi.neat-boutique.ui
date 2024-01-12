@@ -4,7 +4,7 @@
       <ion-col size-xs="1.5" offset-md=".5" size-md="1">
       </ion-col>
       <ion-col size-xs="2" size-md="1">
-        <div class="avatar-container">
+        <div *ngIf="answer.postType === postTypes.QUESTION" class="avatar-container">
           <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.FIRST" class="trophy" src="../../../../../assets/icons/Trophy_Gold_Fill.svg"></ion-icon>
           <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.SECOND" class="trophy" src="../../../../../assets/icons/Trophy_Silver_Fill.svg"></ion-icon>
           <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.THIRD" class="trophy" src="../../../../../assets/icons/Trophy_Bronze_Fill.svg"></ion-icon>
@@ -18,10 +18,17 @@
             [colorAlt]="chartColor">
           </app-nb-avatar>
         </div>
+        <div *ngIf="answer.postType === postTypes.POLL">
+          <span class="vote-for nb-vertical-center" *ngIf="!answer.didVoteFor">vote</span>
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.FIRST" src="../../../../../assets/icons/Trophy_Gold_Fill.svg"></ion-icon>
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.SECOND" src="../../../../../assets/icons/Trophy_Silver_Fill.svg"></ion-icon>
+          <ion-icon *ngIf="currentUserVote?.voteRanking === answerVoteRankingTypes.THIRD" src="../../../../../assets/icons/Trophy_Bronze_Fill.svg"></ion-icon>
+        </div>
       </ion-col> 
       <ion-col class="bar-wrapper ion-text-left" size-xs="8" size-md="8.5">
      
-        <div class="vendor-name">{{ answer.entity.name }}</div>
+        <div *ngIf="answer && answer.postType === postTypes.QUESTION" class="vendor-name">{{ answer.entity.name }}</div>
+        <div *ngIf="answer && answer.postType === postTypes.POLL" class="vendor-name">{{ answer.freeFormAnswer }}</div>
         <!-- [ngStyle]="{ background: chartColor, width: chartBar+'%' }" -->
         <div #chartBar class="bar"></div>
       

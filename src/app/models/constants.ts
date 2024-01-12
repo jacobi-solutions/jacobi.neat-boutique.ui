@@ -28,6 +28,14 @@ export const SubscriptionPlanTypes = {
     VENDOR_NO_SUBSCRIPTION: "no subscription"
 }
 
+export enum PostTypes {
+    QUESTION = "Question",
+    POLL = "Poll",
+    ROUTE = "Route"
+
+}
+
+
 export const AnswerVoteRankingTypes = {
     FIRST: "First",
     SECOND: "Second",

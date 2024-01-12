@@ -3,14 +3,16 @@ import { AnswerVoteRankingTypes } from "./constants";
 import { EntityDisplay } from "./entity-display";
 
 export class AnswerDisplay extends Answer {
+    public postType: string;
     public barChartValue: number;
     public isDeleted: boolean;
     public entity: EntityDisplay;    
     public didVoteFor: boolean;
     public points: number = 0;
-    constructor(answer: Answer) {
+    constructor(answer: Answer, postType: string) {
         super(answer);
         this.isDeleted = false;
+        this.postType = postType;
 
         if(answer.googlePlace?.placeId) {
             this.entity = new EntityDisplay(answer.googlePlace);

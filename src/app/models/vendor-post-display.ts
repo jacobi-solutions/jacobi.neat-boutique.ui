@@ -1,10 +1,9 @@
-import { PostType } from "typings/custom-types";
+
 import { VendorPost } from "../services/neat-boutique-api.service";
 import { CommentDisplay } from "./comment-display";
 import { AnswerDisplay } from "./answer-display";
 
 export class VendorPostDisplay extends VendorPost {
-    public postType: string;
     public expanded: boolean;
     public timeOnly: string;
     public localLastUpdated: string;
@@ -17,11 +16,10 @@ export class VendorPostDisplay extends VendorPost {
 
     constructor(post: VendorPost) {
         super(post);
-        this.postType = PostType.POLL;
 
         if(this.answers) {
             this.answers = this.answers.map(x => {
-                const answer = new AnswerDisplay(x);
+                const answer = new AnswerDisplay(x, post.postType);
                 answer.postId = this.id;
                 return answer;
             }).sort(this._sortAnswers);

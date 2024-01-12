@@ -4,7 +4,7 @@
     <ion-row *ngFor="let answer of normalize(minimalAnswers); index as i" class="answer-item-row">
       <ion-col>
         <!-- community post answer -->
-        <app-answer-item *ngIf="(postType === postTypes.COMMUNITY_QUESTION)"
+        <app-answer-item
         [expanded]="true"
         [chartBar]="answer.barChartValue"
         [answer]="answer"
@@ -15,14 +15,14 @@
       </app-answer-item>
 
         <!-- poll post answer -->
-        <app-poll-answer-item *ngIf="(postType === postTypes.POLL)"
+        <!-- <app-answer-item *ngIf="(postType === postTypes.POLL)"
           [expanded]="true"
           [chartBar]="answer.barChartValue"
           [answer]="answer"
           [chartColor]="colors[i%(colors?.length)]"
           [altStyle]="altAnswerStyle"
           [isDemo]="isDemo">
-        </app-poll-answer-item>
+        </app-answer-item> -->
 
       </ion-col>
     </ion-row>

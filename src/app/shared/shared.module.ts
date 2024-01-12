@@ -32,7 +32,6 @@ import { PostItemComponent } from './post-item/post-item.component';
 import { ReviewFormComponent } from './vendor-components/review-form/review-form.component';
 import { ReviewItemComponent } from './vendor-components/review-list/review-item/review-item.component';
 import { ReviewListComponent } from './vendor-components/review-list/review-list.component';
-import { PollAnswerItemComponent } from './post-item/answer-list/poll-answer-item/poll-answer-item.component';
 import { ToolTipComponent } from './popovers/tool-tip/tool-tip.component';
 import { ImgCropperComponent } from './img-cropper/img-cropper.component';
 import { CropPhotoComponent } from './modals/upload-photo-modal/crop-photo/crop-photo.component';
@@ -78,7 +77,7 @@ import { MyListComponent } from './my-list/my-list.component';
     CommentItemComponent,
     CommentListComponent,
     PostItemComponent,
-    PollAnswerItemComponent,
+    // PollAnswerItemComponent,
     ReviewFormComponent,
     ReviewListComponent,
     ReviewItemComponent,
@@ -131,7 +130,7 @@ import { MyListComponent } from './my-list/my-list.component';
     CommentItemComponent,
     CommentListComponent,
     PostItemComponent,
-    PollAnswerItemComponent,
+    //PollAnswerItemComponent,
     ReviewFormComponent,
     ReviewListComponent,
     ReviewItemComponent,

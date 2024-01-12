@@ -45,7 +45,6 @@ import {
   VendorPostResponse,
   CommunityRequest,
   CommunityResponse,
-  PollAnswerResponse,
   HeroAdTemplate,
   ConsumerFeedSettingsRequest,
   AnswerVote,
@@ -122,6 +121,14 @@ export class CommunityService {
       if(post) {
         var updatedPosts = this.updateConsumerPostInPosts(post, this._communityDisplay.consumerPosts);
         this._communityDisplay.consumerPosts = [...updatedPosts];
+        this.emitCommunityDisplaySubject();
+      }
+    });
+
+    this._answersService.pollVotedOnSubject.subscribe((post: VendorPostDisplay) => {
+      if(post) {
+        var updatedPosts = this.updateVendorPostInPosts(post, this._communityDisplay.vendorPosts);
+        this._communityDisplay.vendorPosts = [...updatedPosts];
         this.emitCommunityDisplaySubject();
       }
     });
@@ -234,6 +241,14 @@ export class CommunityService {
   // }
 
   updateConsumerPostInPosts(post: ConsumerPostDisplay, posts: ConsumerPostDisplay[]) {
+    var currentPost = posts.find(x => x.id === post.id);
+    var indexOfCurrentPost = posts.indexOf(currentPost);
+    posts[indexOfCurrentPost] = post;
+
+    return posts;
+  }
+
+  updateVendorPostInPosts(post: VendorPostDisplay, posts: VendorPostDisplay[]) {
     var currentPost = posts.find(x => x.id === post.id);
     var indexOfCurrentPost = posts.indexOf(currentPost);
     posts[indexOfCurrentPost] = post;
@@ -415,48 +430,7 @@ export class CommunityService {
     return community;
   }
 
-  addVoteToPollAnswer(answer: AnswerDisplay) {
-    const request = new PollAnswerRequest();
-    request.pollAnswerId = answer.id;
-    request.postId = answer.postId;
-    // send request
-    const promise = new Promise<boolean>((resolve, reject) => {
-      this._neatBoutiqueApiService.addVoteToPollAnswer(request)
-        .subscribe((response: PollAnswerResponse) => {
-          if (response.isSuccess) {
-            const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
-            updatedPollAnswer.postId = answer.postId;
-            this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
-            resolve(true);
-          } else if (response.errors.length > 0) {
-            reject(false);
-          }
-        });
-    });
-    return promise;
-  }
-
-
-  removeVoteFromPollAnswer(answer: AnswerDisplay) {
-    const request = new PollAnswerRequest();
-    request.pollAnswerId = answer.id;
-    request.postId = answer.postId;
-    // send request
-    const promise = new Promise<boolean>((resolve, reject) => {
-      this._neatBoutiqueApiService.removeVoteFromPollAnswer(request)
-        .subscribe((response: PollAnswerResponse) => {
-          if (response.isSuccess) {
-            const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
-            // updatedPollAnswer.postId = answer.postId;
-            this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
-            resolve(true);
-          } else if (response.errors.length > 0) {
-            reject(false);
-          }
-        });
-    });
-    return promise;
-  }
+  
 
   private _updateVendorPostWithUpdatedAnswer(answer: AnswerDisplay) {
 

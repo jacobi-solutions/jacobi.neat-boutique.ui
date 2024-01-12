@@ -5,7 +5,7 @@ import { ConsumerPostDisplay } from '../models/consumer-post-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
 import { VendorPostDisplay } from '../models/vendor-post-display';
 import { AccountsService } from './accounts.service';
-import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, ConsumerPostResponse, ConsumerPostsResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity } from './neat-boutique-api.service';
+import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, ConsumerPostResponse, ConsumerPostsResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest, VendorPostResponse } from './neat-boutique-api.service';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -14,6 +14,7 @@ import { UtilService } from './util.service';
 export class AnswersService {
 
   public questionAnsweredOnPostSubject: BehaviorSubject<ConsumerPostDisplay> = new BehaviorSubject<ConsumerPostDisplay>(null);
+  public pollVotedOnSubject: BehaviorSubject<VendorPostDisplay> = new BehaviorSubject<VendorPostDisplay>(null);
   private _currentUser: CurrentUserDisplay;
   constructor(private _accountsService: AccountsService, private _util: UtilService, private _neatBoutiqueApiService: NeatBoutiqueApiService) {
     this._accountsService.accountsHaveBeenLoadedSubject.subscribe((haveBeenLoaded) => {
@@ -64,34 +65,6 @@ export class AnswersService {
       });
   }
 
-  // updateAnswerOnPosts(posts: ConsumerPostDisplay[], answer: AnswerDisplay) {
-  //   return posts.map((post: ConsumerPostDisplay) => {
-  //     if (post.id === answer.postId) {
-  //       let oldAnswerToRemoveId = null;
-  //       // remove previous vote from post
-  //       post.answers.forEach((answer: AnswerDisplay) => {
-  //         answer.votes = answer.votes.filter(x => !this._currentUser.hasId(x.voter.id));
-  //         // answer.voteTotal = answer.votes.length
-  //         if (answer.votes.length === 0) {
-  //           oldAnswerToRemoveId = answer.id;
-  //         }
-  //       });
-
-  //       // remove answer that has 0 votes
-  //       if (oldAnswerToRemoveId) {
-  //         post.answers = post.answers.filter(x => x.id !== oldAnswerToRemoveId);
-  //       }
-
-  //       const answers = post.answers.filter(x => x.id !== answer.id);
-  //       post.answers = [...answers, answer];
-  //     }
-
-  //     post.answers = <AnswerDisplay[]>this._util.normalizedAnswersForChartMinMax(post.answers);
-
-  //     return post;
-  //   });
-  // }
-
   removeAnswerVoteFromAnswer(answerVote: AnswerVote) {
     const request = new AnswerVoteRemoveRequest();
     request.answerVote = answerVote;
@@ -108,6 +81,52 @@ export class AnswersService {
           // reject(false);
         }
       });
+  }
+
+  addVoteToPollAnswer(answerId: string, voteRanking: string) {
+    const request = new PollAnswerRequest();
+    request.answerId = answerId;
+    request.voteRanking = voteRanking;
+    // send request
+    const promise = new Promise<boolean>((resolve, reject) => {
+      this._neatBoutiqueApiService.addVoteToPollAnswer(request)
+        .subscribe((response: VendorPostResponse) => {
+          if (response.isSuccess) {
+            var updatedPost = new VendorPostDisplay(response.post);
+            this.pollVotedOnSubject.next(updatedPost);
+            // const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
+            // updatedPollAnswer.postId = answer.postId;
+            // this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
+            resolve(true);
+          } else if (response.errors.length > 0) {
+            reject(false);
+          }
+        });
+    });
+    return promise;
+  }
+
+
+  removeVoteFromPollAnswer(answerVote: AnswerVote) {
+    const request = new AnswerVoteRemoveRequest();
+    request.answerVote = answerVote;
+    // send request
+    const promise = new Promise<boolean>((resolve, reject) => {
+      this._neatBoutiqueApiService.removeVoteFromPollAnswer(request)
+        .subscribe((response: VendorPostResponse) => {
+          if (response.isSuccess) {
+            var updatedPost = new VendorPostDisplay(response.post);
+            this.pollVotedOnSubject.next(updatedPost);
+          //   const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
+          //   // updatedPollAnswer.postId = answer.postId;
+          //   this._updateVendorPostWithUpdatedAnswer(updatedPollAnswer);
+            resolve(true);
+          } else if (response.errors.length > 0) {
+            reject(false);
+          }
+        });
+    });
+    return promise;
   }
 
   refreshCurrentUserVotesOnPosts(posts: ConsumerPostDisplay[] | VendorPostDisplay[]) {

@@ -7,9 +7,9 @@ import { THEME } from 'src/theme/theme-constants';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 import { Answer, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
-import { PostType } from 'typings/custom-types';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
+import { PostTypes } from 'src/app/models/constants';
 
 @Component({
   selector: 'app-post-item',
@@ -23,7 +23,7 @@ export class PostItemComponent implements OnInit {
   @Input() altAnswerStyle: string;
   @Input() isDemo: boolean = false;
 
-  public postTypes = PostType;
+  public postTypes = PostTypes;
   public currentUser: CurrentUserDisplay;
   // public iconShowChart: string;
   public iconShowComments: string;
@@ -62,7 +62,7 @@ export class PostItemComponent implements OnInit {
   }
 
   getDisplayName() {
-    return this.post.author.name + ((this.post.postType === PostType.POLL) ? ' (Sponsored)' : '');
+    return this.post.author.name + ((this.post.postType === PostTypes.POLL) ? ' (Sponsored)' : '');
   }
 
   goToConsumerProfilePage(author: NeatBoutiqueEntity) {
@@ -83,7 +83,7 @@ export class PostItemComponent implements OnInit {
 
   // for vendor polls
   goToVendor() {
-    if(this.post && (this.post.postType === PostType.POLL)) {
+    if(this.post && (this.post.postType === PostTypes.POLL)) {
       this._router.navigateByUrl('/vendor-profile/' + this.post?.author.profilePath);
     }
   }

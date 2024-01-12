@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { AnswerVoteRankingTypes, UserRoleTypes } from 'src/app/models/constants';
+import { AnswerVoteRankingTypes, PostTypes, UserRoleTypes } from 'src/app/models/constants';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { Answer, AnswerVote, ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class ChooseAnswerRankingModalComponent implements OnInit {
   showRemoveAnswer: boolean;
   showCancel: boolean;
   answerVoteToRemove: AnswerVote;
+  postTypes = PostTypes;
 
   constructor(private _modalController: ModalController, private _router: Router, private _accountsService: AccountsService) {
 

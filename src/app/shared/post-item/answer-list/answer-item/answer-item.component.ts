@@ -5,11 +5,10 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AnswerVote, GooglePlacesEntity, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
-import { PostType } from 'typings/custom-types';
 import { CommunityService } from 'src/app/services/community.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { PopoverController } from '@ionic/angular';
-import { AnswerVoteRankingColorsMap, AnswerVoteRankingTypes } from 'src/app/models/constants';
+import { AnswerVoteRankingColorsMap, AnswerVoteRankingTypes, PostTypes } from 'src/app/models/constants';
 
 @Component({
   selector: 'app-answer-item',
@@ -33,6 +32,7 @@ export class AnswerItemComponent implements OnInit {
   borderColor: string;
   currentUserVote: AnswerVote;
   answerVoteRankingTypes = AnswerVoteRankingTypes;
+  postTypes = PostTypes;
   
   constructor(private _communityService: CommunityService, private _customersService: AccountsService, private _modalService: ModalService,
     private _router: Router, private _answersService: AnswersService, private _popoverController: PopoverController) {}
@@ -41,13 +41,16 @@ export class AnswerItemComponent implements OnInit {
     this._customersService.currentUserSubject.subscribe((user) => {
       this.currentUser = user;
       this.currentUserVote = this.answer.votes.find(x => this.currentUser?.hasId(x.voter.id));
-      if(this.currentUserVote) {
-        this.borderColor = AnswerVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
-      } else if(this.answer.entity.isGooglePlaceEntity) {
-        this.borderColor = '#013e43';
-      } else {
-        this.borderColor = this.answer.vendor.borderColor;
-      }
+      if(this.answer.postType === PostTypes.QUESTION) {
+        if(this.currentUserVote) {
+          this.borderColor = AnswerVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
+        } else if(this.answer.entity.isGooglePlaceEntity) {
+          this.borderColor = '#013e43';
+        } else {
+          this.borderColor = this.answer.vendor.borderColor;
+        }
+      } 
+      
     });   
   }
 
@@ -70,15 +73,26 @@ export class AnswerItemComponent implements OnInit {
     
     if(!this.isDemo) {
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(this.answer, this.answers);
-      if(answerRanking.choice === AnswerVoteRankingTypes.REMOVE) {
-        await this._answersService.removeAnswerVoteFromAnswer(answerRanking.answerToRemove);
-      } else {
-        if(this.answer.entity.isGooglePlaceEntity) {
-          await this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.answer.googlePlace), this.answer.postId, answerRanking.choice);    
+      
+      if(this.answer.postType === PostTypes.QUESTION) {
+        if(answerRanking.choice === AnswerVoteRankingTypes.REMOVE) {
+          await this._answersService.removeAnswerVoteFromAnswer(answerRanking.answerToRemove);
         } else {
-          await this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.answer.vendor), this.answer.postId, answerRanking.choice);
+          if(this.answer.entity.isGooglePlaceEntity) {
+            await this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.answer.googlePlace), this.answer.postId, answerRanking.choice);    
+          } else {
+            await this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.answer.vendor), this.answer.postId, answerRanking.choice);
+          }
         }
+      } else if(this.answer.postType === PostTypes.POLL) {
+        if(answerRanking.choice === AnswerVoteRankingTypes.REMOVE) {
+          await this._answersService.removeVoteFromPollAnswer(answerRanking.answerToRemove);
+        } else { 
+          await this._answersService.addVoteToPollAnswer(this.answer.id, answerRanking.choice);
+        }
+          
       }
+      
     }
   }
 

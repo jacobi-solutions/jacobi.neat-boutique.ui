@@ -9,10 +9,9 @@ import { Answer, GooglePlacesEntity, NeatBoutiqueEntity, VendorProfile } from 's
 import { THEME } from 'src/theme/theme-constants';
 import { debounceTime } from 'rxjs/operators';
 import { EntityDisplay } from 'src/app/models/entity-display';
-import { PostType } from 'typings/custom-types';
 import { UtilService } from 'src/app/services/util.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { AnswerVoteRankingTypes } from 'src/app/models/constants';
+import { AnswerVoteRankingTypes, PostTypes } from 'src/app/models/constants';
 
 
 @Component({
@@ -21,7 +20,7 @@ import { AnswerVoteRankingTypes } from 'src/app/models/constants';
   styleUrls: ['./answer-list.component.scss'],
 })
 export class AnswerListComponent implements OnInit {
-  @Input() postType: string = PostType.COMMUNITY_QUESTION;
+  @Input() postType: string = PostTypes.QUESTION;
   @Input() postId: string;
   @Input() chartShowAll: boolean = false;
   @Input() communityName: string;
@@ -30,7 +29,7 @@ export class AnswerListComponent implements OnInit {
   @Input() isDemo: boolean = false;
   @Input() defaultNumberOfAnswersToShow: number = 5;
 
-  public postTypes = PostType;
+  public postTypes = PostTypes;
   public answersChanged: boolean = true;
   public minimalAnswers: AnswerDisplay[] = [];
   
@@ -101,7 +100,7 @@ export class AnswerListComponent implements OnInit {
     }
 
     if(this.selectedVendor !== null) {
-      var newAnswer = new AnswerDisplay(new Answer());
+      var newAnswer = new AnswerDisplay(new Answer(), this.postType);
       newAnswer.entity = this.selectedVendor;
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(newAnswer, this.answers as AnswerDisplay[]);      
       
