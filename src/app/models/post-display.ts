@@ -1,9 +1,9 @@
 
-import { ConsumerPost } from '../services/neat-boutique-api.service';
+import { Post } from '../services/neat-boutique-api.service';
 import { AnswerDisplay } from './answer-display';
 import { CommentDisplay } from './comment-display';
 
-export class ConsumerPostDisplay extends ConsumerPost {
+export class PostDisplay extends Post {
     public expanded: boolean;
     public timeOnly: string;
     public localLastUpdated: string;
@@ -21,7 +21,7 @@ export class ConsumerPostDisplay extends ConsumerPost {
     public hasAnswered: boolean;
     public comments: CommentDisplay[];
 
-    constructor(post: ConsumerPost) {
+    constructor(post: Post) {
         super(post);
         this.elapsedTime = {lastUpdated: {minutes: null}, created: {minutes: null}};
 

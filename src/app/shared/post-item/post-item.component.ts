@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
+import { PostDisplay } from 'src/app/models/post-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { CommunityService } from 'src/app/services/community.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { THEME } from 'src/theme/theme-constants';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 import { Answer, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
-import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
 import { PostTypes } from 'src/app/models/constants';
@@ -17,7 +16,7 @@ import { PostTypes } from 'src/app/models/constants';
   styleUrls: ['./post-item.component.scss'],
 })
 export class PostItemComponent implements OnInit {
-  @Input() post: (ConsumerPostDisplay | VendorPostDisplay);
+  @Input() post: (PostDisplay);
   // @Input() expandTopVoted: boolean = null;
   @Input() expandComments: boolean;
   @Input() altAnswerStyle: string;

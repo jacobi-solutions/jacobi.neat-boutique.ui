@@ -5,8 +5,8 @@ import { CurrentUserDisplay } from "../models/current-user-display";
 import { CommunityTypes } from "../models/constants";
 import { AccountsService } from "./accounts.service";
 import { CommunityService } from "./community.service";
-import { ConsumerPost, ConsumerPostsResponse, MyQuestionsRequest, NeatBoutiqueApiService } from "./neat-boutique-api.service";
-import { ConsumerPostDisplay } from "../models/consumer-post-display";
+import { Post, MyQuestionsRequest, NeatBoutiqueApiService, ConsumerQuestionsResponse } from "./neat-boutique-api.service";
+import { PostDisplay } from "../models/post-display";
 
 @Injectable({
   providedIn: "root",
@@ -22,10 +22,10 @@ export class MyQuestionsService {
     var request = new MyQuestionsRequest();
     request.pageNumber = 0;
     request.pageSize = 15;
-    var promise = new Promise<ConsumerPostDisplay[]>((resolve, reject) => {
-      this._neatBoutiqueApiService.getMyQuestions(request).subscribe((response: ConsumerPostsResponse) => {
+    var promise = new Promise<PostDisplay[]>((resolve, reject) => {
+      this._neatBoutiqueApiService.getMyQuestions(request).subscribe((response: ConsumerQuestionsResponse) => {
         if (response.isSuccess) {
-          var posts = response.posts.map(x => new ConsumerPostDisplay(x))
+          var posts = response.posts.map(x => new PostDisplay(x))
           resolve(posts);
         } else {
           reject();

@@ -7,7 +7,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CommunityService } from 'src/app/services/community.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { ConsumerPost, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
+import { Post, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 
 @Component({
   selector: 'app-post-question',
@@ -85,7 +85,7 @@ export class PostQuestionComponent implements OnInit {
       }
     } 
     
-    const post =  new ConsumerPost();
+    const post =  new Post();
     post.communityName = this.postForm.value.communityName;
     post.question = this.postForm.value.newQuestion.trim();
     post.author = new NeatBoutiqueEntity({

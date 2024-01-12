@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AnswerDisplay } from '../models/answer-display';
-import { ConsumerPostDisplay } from '../models/consumer-post-display';
+import { PostDisplay } from '../models/post-display';
 import { ConsumerProfileActivityDisplay } from '../models/consumer-profile-activity-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
 import { ReviewDisplay } from '../models/review-display';
@@ -58,8 +58,8 @@ export class ConsumerService {
           activityDisplay.questionsAskedCount = response.questionsAskedCount;
           activityDisplay.questionsAnsweredCount = response.questionsAnsweredCount;
           activityDisplay.reviewsCount = response.reviewsCount;
-          activityDisplay.recentQuestions = response.recentQuestions.map(x => new ConsumerPostDisplay(x));
-          activityDisplay.recentAnswers = response.recentAnswers.map(x => new ConsumerPostDisplay(x));
+          activityDisplay.recentQuestions = response.recentQuestions.map(x => new PostDisplay(x));
+          activityDisplay.recentAnswers = response.recentAnswers.map(x => new PostDisplay(x));
           activityDisplay.recentReviews = response.recentReviews.map(x => new ReviewDisplay(x));
           resolve(activityDisplay);
         } else {

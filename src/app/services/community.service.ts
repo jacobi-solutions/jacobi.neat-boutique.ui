@@ -5,18 +5,16 @@ import { BehaviorSubject } from "rxjs";
 import { AnswerDisplay } from "../models/answer-display";
 import { CommentDisplay } from "../models/comment-display";
 import { CommunityCategory } from "../models/community-category";
-import { ConsumerPostDisplay } from "../models/consumer-post-display";
+import { PostDisplay } from "../models/post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
 import { CommunityTypes, UserRoleTypes } from "../models/constants";
 import { VendorDisplay } from "../models/vendor-display";
-import { VendorPostDisplay } from "../models/vendor-post-display";
 import { AccountsService } from "./accounts.service";
 import {
   Answer,
 
-  ConsumerPost,
-  ConsumerPostRequest,
+  Post,
 
   Comment,
   CommentRequest,
@@ -31,7 +29,7 @@ import {
   CommentRemoveRequest,
   CommentLikeAddRequest,
   CommentLikeRemoveRequest,
-  ConsumerPostResponse,
+  PostResponse,
   AnswerWithVendorRequest,
   GooglePlacesEntity,
   AnswerWithGooglePlaceRequest,
@@ -40,14 +38,13 @@ import {
   VendorProfileResponse,
   VendorProfilesResponse,
   VendorProfilesRequest,
-  VendorPost,
   PollAnswerRequest,
-  VendorPostResponse,
   CommunityRequest,
   CommunityResponse,
   HeroAdTemplate,
   ConsumerFeedSettingsRequest,
   AnswerVote,
+  ConsumerQuestionRequest,
 } from "./neat-boutique-api.service";
 import { UtilService } from "./util.service";
 import { AnswersService } from "./answers.service";
@@ -56,16 +53,16 @@ import { AuthService } from "../auth/auth.service";
 
 
 export class CommunityDisplay {
-  constructor(consumerPosts: ConsumerPostDisplay[] = [], vendorPosts: VendorPostDisplay[] = [],
-      recentConsumerPosts: ConsumerPostDisplay[] = [], heroAds: HeroAdTemplate[] = []) {
+  constructor(consumerPosts: PostDisplay[] = [], vendorPosts: PostDisplay[] = [],
+      recentConsumerPosts: PostDisplay[] = [], heroAds: HeroAdTemplate[] = []) {
     this.consumerPosts = consumerPosts;
     this.vendorPosts = vendorPosts;
     this.recentConsumerPosts = recentConsumerPosts;
     this.heroAds = heroAds;
   }
-  consumerPosts: ConsumerPostDisplay[];
-  vendorPosts: VendorPostDisplay[];
-  recentConsumerPosts: ConsumerPostDisplay[];
+  consumerPosts: PostDisplay[];
+  vendorPosts: PostDisplay[];
+  recentConsumerPosts: PostDisplay[];
   heroAds: HeroAdTemplate[];
   canLoadMorePosts: boolean;
 };
@@ -78,7 +75,7 @@ export class CommunityService {
 
   private _currentUser: CurrentUserDisplay;
   // private _vendorPosts: VendorPostDisplay[] = [];
-  private _recentConsumerPosts: ConsumerPostDisplay[];
+  private _recentConsumerPosts: PostDisplay[];
   private _selectedCommunityNames: string[];
   private _pageCount: number;
   public communities: CommunityCategory[];
@@ -117,7 +114,7 @@ export class CommunityService {
 
     
     this.loadPostsByCommunityNames(this.communities.filter(x => x.isSelected).map(x => x.name));
-    this._answersService.questionAnsweredOnPostSubject.subscribe((post: ConsumerPostDisplay) => {
+    this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
       if(post) {
         var updatedPosts = this.updateConsumerPostInPosts(post, this._communityDisplay.consumerPosts);
         this._communityDisplay.consumerPosts = [...updatedPosts];
@@ -125,7 +122,7 @@ export class CommunityService {
       }
     });
 
-    this._answersService.pollVotedOnSubject.subscribe((post: VendorPostDisplay) => {
+    this._answersService.pollVotedOnSubject.subscribe((post: PostDisplay) => {
       if(post) {
         var updatedPosts = this.updateVendorPostInPosts(post, this._communityDisplay.vendorPosts);
         this._communityDisplay.vendorPosts = [...updatedPosts];
@@ -143,12 +140,12 @@ export class CommunityService {
   }
 
   getConsumerPostById(specificPostId: string) {
-    var promise = new Promise<ConsumerPostDisplay>((resolve, reject) => {
-      var request = new ConsumerPostRequest();
+    var promise = new Promise<PostDisplay>((resolve, reject) => {
+      var request = new ConsumerQuestionRequest();
       request.postId = specificPostId;
-      this._neatBoutiqueApiService .getConsumerPostById(request).subscribe((response: ConsumerPostResponse) => {
+      this._neatBoutiqueApiService.getConsumerQuesitionById(request).subscribe((response: PostResponse) => {
         if(response.isSuccess) {
-          resolve(new ConsumerPostDisplay(response.post))
+          resolve(new PostDisplay(response.post))
         }
       });
     });
@@ -171,10 +168,10 @@ export class CommunityService {
       .subscribe((response: CommunityResponse) => {
 
         if (response.isSuccess) {
-          this._communityDisplay.canLoadMorePosts = response.consumerPosts?.length === this.consumerPostsPerPage;
-          this._communityDisplay.consumerPosts = response.consumerPosts.map(x => new ConsumerPostDisplay(x));
-          this._communityDisplay.recentConsumerPosts = response.recentConsumerPosts.map(x => new ConsumerPostDisplay(x));
-          this._communityDisplay.vendorPosts = response.vendorPosts.map(x => new VendorPostDisplay(x));
+          this._communityDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
+          this._communityDisplay.consumerPosts = response.consumerQuestions.map(x => new PostDisplay(x));
+          this._communityDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
+          this._communityDisplay.vendorPosts = response.vendorPolls.map(x => new PostDisplay(x));
           this._communityDisplay.heroAds = response.heroAds; //.map(ad => new HeroAdTemplate(ad));
 
           this.emitCommunityDisplaySubject();
@@ -205,10 +202,10 @@ export class CommunityService {
       .getAllDataForCommunities(request)
       .subscribe((response: CommunityResponse) => {
         if (response.isSuccess) {
-          this._communityDisplay.canLoadMorePosts = response.consumerPosts?.length === this.consumerPostsPerPage;
-          this._communityDisplay.consumerPosts = [...this._communityDisplay.consumerPosts, ...response.consumerPosts.map(x => new ConsumerPostDisplay(x))];
-          this._communityDisplay.recentConsumerPosts = response.recentConsumerPosts.map(x => new ConsumerPostDisplay(x));
-          this._communityDisplay.vendorPosts = [...this._communityDisplay.vendorPosts, ...response.vendorPosts.map(x => new VendorPostDisplay(x))];
+          this._communityDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
+          this._communityDisplay.consumerPosts = [...this._communityDisplay.consumerPosts, ...response.consumerQuestions.map(x => new PostDisplay(x))];
+          this._communityDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
+          this._communityDisplay.vendorPosts = [...this._communityDisplay.vendorPosts, ...response.vendorPolls.map(x => new PostDisplay(x))];
 
           this.emitCommunityDisplaySubject();
         } else {
@@ -240,7 +237,7 @@ export class CommunityService {
   //   return posts;
   // }
 
-  updateConsumerPostInPosts(post: ConsumerPostDisplay, posts: ConsumerPostDisplay[]) {
+  updateConsumerPostInPosts(post: PostDisplay, posts: PostDisplay[]) {
     var currentPost = posts.find(x => x.id === post.id);
     var indexOfCurrentPost = posts.indexOf(currentPost);
     posts[indexOfCurrentPost] = post;
@@ -248,61 +245,24 @@ export class CommunityService {
     return posts;
   }
 
-  updateVendorPostInPosts(post: VendorPostDisplay, posts: VendorPostDisplay[]) {
+  updateVendorPostInPosts(post: PostDisplay, posts: PostDisplay[]) {
     var currentPost = posts.find(x => x.id === post.id);
     var indexOfCurrentPost = posts.indexOf(currentPost);
     posts[indexOfCurrentPost] = post;
 
     return posts;
   }
-
-  // private _updateConsumerPostWithUpdatedAnswer(answer: AnswerDisplay) {
-
-  //   this._communityDisplay.consumerPosts = this._answersService.updateAnswerOnPosts(this._communityDisplay.consumerPosts, answer);
-    
-  //   this._communityDisplay.consumerPosts = [...this._communityDisplay.consumerPosts];
-  //   this.emitCommunityDisplaySubject();
-  // }
-
-  // updateAnswerOnPosts(posts: ConsumerPostDisplay[], answer: AnswerDisplay) {
-  //   return posts.map((post: ConsumerPostDisplay) => {
-  //     if (post.id === answer.postId) {
-  //       let oldAnswerToRemoveId = null;
-  //       // remove previous vote from post
-  //       post.answers.forEach((answer: AnswerDisplay) => {
-  //         answer.votes = answer.votes.filter(x => !this._currentUser.hasId(x.id));
-  //         // answer.voteTotal = answer.votes.length
-  //         if (answer.votes.length === 0) {
-  //           oldAnswerToRemoveId = answer.id;
-  //         }
-  //       });
-
-  //       // remove answer that has 0 votes
-  //       if (oldAnswerToRemoveId) {
-  //         post.answers = post.answers.filter(x => x.id !== oldAnswerToRemoveId);
-  //       }
-
-  //       const answers = post.answers.filter(x => x.id !== answer.id);
-  //       post.answers = [...answers, answer];
-  //     }
-
-  //     post.answers = <AnswerDisplay[]>this._util.normalizedAnswersForChartMinMax(post.answers);
-
-  //     return post;
-  //   });
-
-  // }
 
   
 
   // needs to be authorized
-  createConsumerPost(post: ConsumerPost) {
-    const request = new ConsumerPostRequest();
+  createConsumerPost(post: Post) {
+    const request = new ConsumerQuestionRequest();
 
     request.post = post;
     this._neatBoutiqueApiService
-      .createConsumerPost(request)
-      .subscribe((response: ConsumerPostResponse) => {
+      .createConsumerQuestion(request)
+      .subscribe((response: PostResponse) => {
 
         if (response.isSuccess) {
           // this.authService.setToken(response.token);
@@ -434,7 +394,7 @@ export class CommunityService {
 
   private _updateVendorPostWithUpdatedAnswer(answer: AnswerDisplay) {
 
-    this._communityDisplay.vendorPosts = this._communityDisplay.vendorPosts.map((post: VendorPostDisplay) => {
+    this._communityDisplay.vendorPosts = this._communityDisplay.vendorPosts.map((post: PostDisplay) => {
       if (post.id === answer.postId) {
         
         // remove previous vote from post

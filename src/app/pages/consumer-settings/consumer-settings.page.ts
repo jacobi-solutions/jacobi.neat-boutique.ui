@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
+import { PostDisplay } from 'src/app/models/post-display';
 import { ConsumerProfileActivityDisplay } from 'src/app/models/consumer-profile-activity-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -56,7 +56,7 @@ export class ConsumerSettingsPage implements OnInit {
         }
         
 
-        this._answersService.questionAnsweredOnPostSubject.subscribe((post: ConsumerPostDisplay) => {
+        this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
           if(post) {
             var updatedQuestions = this._communityService.updateConsumerPostInPosts(post, this.recentActivity.recentQuestions);
             this._answersService.refreshCurrentUserVotesOnPosts(updatedQuestions);

@@ -1,13 +1,13 @@
 import { AnswerDisplay } from "./answer-display";
-import { ConsumerPostDisplay } from "./consumer-post-display";
+import { PostDisplay } from "./post-display";
 import { ReviewDisplay } from "./review-display";
 
 export class ConsumerProfileActivityDisplay {
     questionsAskedCount: number;
     questionsAnsweredCount: number;
     reviewsCount: number;
-    recentQuestions: ConsumerPostDisplay[];
-    recentAnswers: ConsumerPostDisplay[];
+    recentQuestions: PostDisplay[];
+    recentAnswers: PostDisplay[];
     recentReviews: ReviewDisplay[];
 
 }

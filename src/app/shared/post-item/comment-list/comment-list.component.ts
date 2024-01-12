@@ -8,7 +8,7 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { Comment, ConsumerProfile, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
+import { PostDisplay } from 'src/app/models/post-display';
 
 @Component({
   selector: 'app-comment-list',
@@ -17,7 +17,7 @@ import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
 })
 export class CommentListComponent implements OnInit {
   @ViewChild('newComment', { read: ElementRef }) newComment: ElementRef;
-  @Input() post: ConsumerPostDisplay;
+  @Input() post: PostDisplay;
   @Input() isDemo: boolean = false;
     public currentUser: CurrentUserDisplay = null;
   public minCommentToShow: number = 3;

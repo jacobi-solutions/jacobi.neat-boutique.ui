@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
-import { CommunityTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
-import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
+import { PostDisplay as PostDisplay } from 'src/app/models/post-display';
+import { CommunityTypes, PostTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
-import { NeatBoutiqueEntity, Comment, VendorPost, VendorProfile, Answer, AnswerVote } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, VendorProfile, Answer, AnswerVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -18,7 +17,7 @@ import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.
 })
 export class PollAdPlaceholderComponent implements OnInit {
   @Input() vendor: VendorDisplay;
-  public examplePoll: VendorPostDisplay;
+  public examplePoll: PostDisplay;
   private _subscriptionPlanTypes = SubscriptionPlanTypes;
   public get subscriptionPlanTypes() {
     return this._subscriptionPlanTypes;
@@ -56,14 +55,15 @@ export class PollAdPlaceholderComponent implements OnInit {
     // this._communityService.communityDisplaySubject.subscribe((display: CommunityDisplay) => {  
 
       // a post with 5+ answers
-      this.examplePoll = new VendorPostDisplay(new VendorPost({
+      this.examplePoll = new PostDisplay(new Post({
         // id?: string | undefined;
+        postType: PostTypes.POLL,
         createdDateUtc: new Date(),
         lastUpdatedDateUtc: new Date(),
         question: 'What is your favorite flavor',
         communityName: CommunityTypes.FOOD_DRINK,
-        campaignStartDateUtc: new Date(),
-        campaignEndDateUtc: new Date(),
+        startDateUtc: new Date(),
+        endDateUtc: new Date(),
         author: new NeatBoutiqueEntity({
           // id?: string | undefined;
           // role?: string | undefined;

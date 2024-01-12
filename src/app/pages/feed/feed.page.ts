@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
+import { PostDisplay } from 'src/app/models/post-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { CommunityTypes, UserRoleTypes } from 'src/app/models/constants';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ConsumerPost, ContactUsRequest, HeroAdTemplate, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { Post, ContactUsRequest, HeroAdTemplate, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { THEME } from 'src/theme/theme-constants';
@@ -13,7 +13,6 @@ import { CommunityCategory } from 'src/app/models/community-category';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorService } from 'src/app/vendor.service';
-import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 
 
@@ -25,9 +24,9 @@ import { NbRoutingService } from 'src/app/services/nb-routing.service';
 export class FeedPage implements OnInit {
   
   public defaultProfileImg = THEME.avatar.defaultImage;
-  public consumerPosts: ConsumerPostDisplay[] = [];
-  public vendorPosts: VendorPostDisplay[] = [];
-  public recentPosts: ConsumerPostDisplay[];
+  public consumerPosts: PostDisplay[] = [];
+  public vendorPosts: PostDisplay[] = [];
+  public recentPosts: PostDisplay[];
   public heroAd: HeroAdTemplate;
   public communities: CommunityCategory[];
   public vendorPollIntervalPlacement: number = 3;
@@ -39,7 +38,7 @@ export class FeedPage implements OnInit {
   public validQuestionPost: boolean = false;
   public currentUser: CurrentUserDisplay = null;
   public promotedVendors: VendorDisplay[] = null;
-  public specificPost: ConsumerPostDisplay;
+  public specificPost: PostDisplay;
   public alreadyAttemptedToGetSpecificPost: boolean;
   public userHasSeenNonEditableModal: boolean;
   private _consumerPostsBatchCount: number;
@@ -60,7 +59,7 @@ export class FeedPage implements OnInit {
     const routeParams = this._activatedRoute.snapshot.paramMap;    
     const postId = routeParams.get('postId');    
     if(postId) {
-      this._communityService.getConsumerPostById(postId).then((post: ConsumerPostDisplay) => {
+      this._communityService.getConsumerPostById(postId).then((post: PostDisplay) => {
         if(post) {
           this.specificPost = post;
         }

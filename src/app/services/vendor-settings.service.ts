@@ -5,7 +5,7 @@ import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { AccountsService } from "./accounts.service";
 import { promise } from 'protractor';
-import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, VendorPost, VendorPostRequest, VendorPostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCommunitiesRequest, AdTagline, VendorBorderColorRequest, VendorProfile } from './neat-boutique-api.service';
+import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCommunitiesRequest, AdTagline, VendorBorderColorRequest, VendorProfile } from './neat-boutique-api.service';
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -231,12 +231,12 @@ export class VendorSettingsService {
 
   
 
-  public createVendorPost(pollPost: VendorPost) {
+  public createVendorPost(pollPost: Post) {
     const request = new VendorPostRequest();
     request.post = pollPost;
 
-    const promise = new Promise<VendorPost>((resolve, reject) => {
-      this._neatBoutiqueApi.createVendorPost(request).subscribe((response: VendorPostResponse) => {
+    const promise = new Promise<Post>((resolve, reject) => {
+      this._neatBoutiqueApi.createVendorPost(request).subscribe((response: PostResponse) => {
         if (response.isSuccess) {
           resolve(response.post);
         }

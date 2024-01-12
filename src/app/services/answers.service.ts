@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AnswerDisplay } from '../models/answer-display';
-import { ConsumerPostDisplay } from '../models/consumer-post-display';
+import { PostDisplay } from '../models/post-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
-import { VendorPostDisplay } from '../models/vendor-post-display';
 import { AccountsService } from './accounts.service';
-import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, ConsumerPostResponse, ConsumerPostsResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest, VendorPostResponse } from './neat-boutique-api.service';
+import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, PostResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest } from './neat-boutique-api.service';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -13,8 +12,8 @@ import { UtilService } from './util.service';
 })
 export class AnswersService {
 
-  public questionAnsweredOnPostSubject: BehaviorSubject<ConsumerPostDisplay> = new BehaviorSubject<ConsumerPostDisplay>(null);
-  public pollVotedOnSubject: BehaviorSubject<VendorPostDisplay> = new BehaviorSubject<VendorPostDisplay>(null);
+  public questionAnsweredOnPostSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
+  public pollVotedOnSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   private _currentUser: CurrentUserDisplay;
   constructor(private _accountsService: AccountsService, private _util: UtilService, private _neatBoutiqueApiService: NeatBoutiqueApiService) {
     this._accountsService.accountsHaveBeenLoadedSubject.subscribe((haveBeenLoaded) => {
@@ -34,9 +33,9 @@ export class AnswersService {
 
     this._neatBoutiqueApiService
       .answerQuestionWithGooglePlace(request)
-      .subscribe((response: ConsumerPostResponse) => {
+      .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
-          var updatedPost = new ConsumerPostDisplay(response.post);
+          var updatedPost = new PostDisplay(response.post);
           this.questionAnsweredOnPostSubject.next(updatedPost);
 
         } else if (response.errors.find((x) => x.errorCode === "410")) {
@@ -54,9 +53,9 @@ export class AnswersService {
 
     this._neatBoutiqueApiService
       .answerQuestionWithVendor(request)
-      .subscribe((response: ConsumerPostResponse) => {
+      .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
-          var updatedPost = new ConsumerPostDisplay(response.post);
+          var updatedPost = new PostDisplay(response.post);
           this.questionAnsweredOnPostSubject.next(updatedPost);
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();
@@ -71,10 +70,10 @@ export class AnswersService {
 
     this._neatBoutiqueApiService
       .removeAnswerVoteFromAnswer(request)
-      .subscribe((response: ConsumerPostResponse) => {
+      .subscribe((response: PostResponse) => {
 
         if (response.isSuccess) {
-          var updatedPost = new ConsumerPostDisplay(response.post);
+          var updatedPost = new PostDisplay(response.post);
           this.questionAnsweredOnPostSubject.next(updatedPost);
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();
@@ -90,9 +89,9 @@ export class AnswersService {
     // send request
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService.addVoteToPollAnswer(request)
-        .subscribe((response: VendorPostResponse) => {
+        .subscribe((response: PostResponse) => {
           if (response.isSuccess) {
-            var updatedPost = new VendorPostDisplay(response.post);
+            var updatedPost = new PostDisplay(response.post);
             this.pollVotedOnSubject.next(updatedPost);
             // const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
             // updatedPollAnswer.postId = answer.postId;
@@ -113,9 +112,9 @@ export class AnswersService {
     // send request
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService.removeVoteFromPollAnswer(request)
-        .subscribe((response: VendorPostResponse) => {
+        .subscribe((response: PostResponse) => {
           if (response.isSuccess) {
-            var updatedPost = new VendorPostDisplay(response.post);
+            var updatedPost = new PostDisplay(response.post);
             this.pollVotedOnSubject.next(updatedPost);
           //   const updatedPollAnswer = new AnswerDisplay(response.pollAnswer);
           //   // updatedPollAnswer.postId = answer.postId;
@@ -129,8 +128,8 @@ export class AnswersService {
     return promise;
   }
 
-  refreshCurrentUserVotesOnPosts(posts: ConsumerPostDisplay[] | VendorPostDisplay[]) {
-    posts.forEach((post: ConsumerPostDisplay | VendorPostDisplay) => {
+  refreshCurrentUserVotesOnPosts(posts: PostDisplay[]) {
+    posts.forEach((post: PostDisplay) => {
       
       post.answers.forEach((answer) => {
         var answerVoteIds: string[] = answer.votes.map(x => x.voter.id);

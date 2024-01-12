@@ -6,7 +6,7 @@ import { CommunityDisplay, CommunityService } from 'src/app/services/community.s
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { HeroAd } from 'src/app/services/neat-boutique-api.service';
 import { PromptComponent } from './prompt/prompt.component';
-import { ConsumerPostDisplay } from 'src/app/models/consumer-post-display';
+import { PostDisplay } from 'src/app/models/post-display';
 import { UtilService } from 'src/app/services/util.service';
 import { VendorService } from 'src/app/vendor.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';
@@ -40,8 +40,8 @@ export class HomePage implements AfterViewInit {
 
   public communities: CommunityCategory[];
   public pageName = 'Home';
-  public consumerPromptPosts: ConsumerPostDisplay[];
-  public currentPromptPost: ConsumerPostDisplay;
+  public consumerPromptPosts: PostDisplay[];
+  public currentPromptPost: PostDisplay;
   public vendorPromptProfiles: VendorDisplay[];
   public currentPromptVendor: VendorDisplay;
   public reviews: ReviewDisplay[];

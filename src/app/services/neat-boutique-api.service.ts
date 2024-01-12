@@ -69,27 +69,27 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    answerQuestionWithVendor(body: AnswerWithVendorRequest | undefined): Observable<ConsumerPostResponse>;
+    answerQuestionWithVendor(body: AnswerWithVendorRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
-    answerQuestionWithGooglePlace(body: AnswerWithGooglePlaceRequest | undefined): Observable<ConsumerPostResponse>;
+    answerQuestionWithGooglePlace(body: AnswerWithGooglePlaceRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
-    removeAnswerVoteFromAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<ConsumerPostResponse>;
+    removeAnswerVoteFromAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
-    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<VendorPostResponse>;
+    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
-    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<VendorPostResponse>;
+    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -124,7 +124,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getConsumerPostById(body: ConsumerPostRequest | undefined): Observable<ConsumerPostResponse>;
+    getConsumerQuesitionById(body: ConsumerQuestionRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -139,7 +139,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerPostsResponse>;
+    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerQuestionsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -244,12 +244,12 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createConsumerPost(body: ConsumerPostRequest | undefined): Observable<ConsumerPostResponse>;
+    createConsumerQuestion(body: ConsumerQuestionRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
-    createVendorPost(body: VendorPostRequest | undefined): Observable<VendorPostResponse>;
+    createVendorPost(body: VendorPostRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -963,7 +963,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    answerQuestionWithVendor(body: AnswerWithVendorRequest | undefined): Observable<ConsumerPostResponse> {
+    answerQuestionWithVendor(body: AnswerWithVendorRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Answers/AnswerQuestionWithVendorAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -986,14 +986,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processAnswerQuestionWithVendor(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processAnswerQuestionWithVendor(response: HttpResponseBase): Observable<ConsumerPostResponse> {
+    protected processAnswerQuestionWithVendor(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1004,7 +1004,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1012,14 +1012,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    answerQuestionWithGooglePlace(body: AnswerWithGooglePlaceRequest | undefined): Observable<ConsumerPostResponse> {
+    answerQuestionWithGooglePlace(body: AnswerWithGooglePlaceRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Answers/AnswerQuestionWithGooglePlaceAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1042,14 +1042,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processAnswerQuestionWithGooglePlace(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processAnswerQuestionWithGooglePlace(response: HttpResponseBase): Observable<ConsumerPostResponse> {
+    protected processAnswerQuestionWithGooglePlace(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1060,7 +1060,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1068,14 +1068,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    removeAnswerVoteFromAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<ConsumerPostResponse> {
+    removeAnswerVoteFromAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Answers/RemoveAnswerVoteFromAnswerAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1098,14 +1098,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processRemoveAnswerVoteFromAnswer(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRemoveAnswerVoteFromAnswer(response: HttpResponseBase): Observable<ConsumerPostResponse> {
+    protected processRemoveAnswerVoteFromAnswer(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1116,7 +1116,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1124,14 +1124,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<VendorPostResponse> {
+    addVoteToPollAnswer(body: PollAnswerRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Answers/AddVoteToPollAnswerAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1154,14 +1154,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processAddVoteToPollAnswer(<any>response_);
                 } catch (e) {
-                    return <Observable<VendorPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<VendorPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processAddVoteToPollAnswer(response: HttpResponseBase): Observable<VendorPostResponse> {
+    protected processAddVoteToPollAnswer(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1172,7 +1172,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1180,14 +1180,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<VendorPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<VendorPostResponse> {
+    removeVoteFromPollAnswer(body: AnswerVoteRemoveRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Answers/RemoveVoteFromPollAnswerAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1210,14 +1210,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processRemoveVoteFromPollAnswer(<any>response_);
                 } catch (e) {
-                    return <Observable<VendorPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<VendorPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRemoveVoteFromPollAnswer(response: HttpResponseBase): Observable<VendorPostResponse> {
+    protected processRemoveVoteFromPollAnswer(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1228,7 +1228,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1236,7 +1236,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<VendorPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
@@ -1579,8 +1579,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getConsumerPostById(body: ConsumerPostRequest | undefined): Observable<ConsumerPostResponse> {
-        let url_ = this.baseUrl + "/Community/GetConsumerPostByIdAsync";
+    getConsumerQuesitionById(body: ConsumerQuestionRequest | undefined): Observable<PostResponse> {
+        let url_ = this.baseUrl + "/Community/GetConsumerQuesitionByIdAsync";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -1596,20 +1596,20 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetConsumerPostById(response_);
+            return this.processGetConsumerQuesitionById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetConsumerPostById(<any>response_);
+                    return this.processGetConsumerQuesitionById(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetConsumerPostById(response: HttpResponseBase): Observable<ConsumerPostResponse> {
+    protected processGetConsumerQuesitionById(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1620,7 +1620,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1628,7 +1628,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
@@ -1747,7 +1747,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerPostsResponse> {
+    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerQuestionsResponse> {
         let url_ = this.baseUrl + "/Consumers/GetMyQuestionsAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1770,14 +1770,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processGetMyQuestions(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostsResponse>><any>_observableThrow(e);
+                    return <Observable<ConsumerQuestionsResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostsResponse>><any>_observableThrow(response_);
+                return <Observable<ConsumerQuestionsResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetMyQuestions(response: HttpResponseBase): Observable<ConsumerPostsResponse> {
+    protected processGetMyQuestions(response: HttpResponseBase): Observable<ConsumerQuestionsResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1788,7 +1788,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostsResponse.fromJS(resultData200);
+            result200 = ConsumerQuestionsResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1796,7 +1796,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostsResponse>(<any>null);
+        return _observableOf<ConsumerQuestionsResponse>(<any>null);
     }
 
     /**
@@ -2923,8 +2923,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createConsumerPost(body: ConsumerPostRequest | undefined): Observable<ConsumerPostResponse> {
-        let url_ = this.baseUrl + "/Posts/CreateConsumerPostAsync";
+    createConsumerQuestion(body: ConsumerQuestionRequest | undefined): Observable<PostResponse> {
+        let url_ = this.baseUrl + "/Posts/CreateConsumerQuestionAsync";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -2940,20 +2940,20 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateConsumerPost(response_);
+            return this.processCreateConsumerQuestion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreateConsumerPost(<any>response_);
+                    return this.processCreateConsumerQuestion(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreateConsumerPost(response: HttpResponseBase): Observable<ConsumerPostResponse> {
+    protected processCreateConsumerQuestion(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2964,7 +2964,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2972,14 +2972,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    createVendorPost(body: VendorPostRequest | undefined): Observable<VendorPostResponse> {
+    createVendorPost(body: VendorPostRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Posts/CreateVendorPostAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3002,14 +3002,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processCreateVendorPost(<any>response_);
                 } catch (e) {
-                    return <Observable<VendorPostResponse>><any>_observableThrow(e);
+                    return <Observable<PostResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<VendorPostResponse>><any>_observableThrow(response_);
+                return <Observable<PostResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreateVendorPost(response: HttpResponseBase): Observable<VendorPostResponse> {
+    protected processCreateVendorPost(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3020,7 +3020,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorPostResponse.fromJS(resultData200);
+            result200 = PostResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3028,7 +3028,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<VendorPostResponse>(<any>null);
+        return _observableOf<PostResponse>(<any>null);
     }
 
     /**
@@ -5648,18 +5648,20 @@ export interface IAnswer {
     votes?: AnswerVote[] | undefined;
 }
 
-export class ConsumerPost implements IConsumerPost {
+export class Post implements IPost {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     question?: string | undefined;
     communityName?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
     comments?: Comment[] | undefined;
     answers?: Answer[] | undefined;
 
-    constructor(data?: IConsumerPost) {
+    constructor(data?: IPost) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5676,6 +5678,8 @@ export class ConsumerPost implements IConsumerPost {
             this.postType = _data["postType"];
             this.question = _data["question"];
             this.communityName = _data["communityName"];
+            this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
+            this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
             this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
             if (Array.isArray(_data["comments"])) {
                 this.comments = [] as any;
@@ -5690,9 +5694,9 @@ export class ConsumerPost implements IConsumerPost {
         }
     }
 
-    static fromJS(data: any): ConsumerPost {
+    static fromJS(data: any): Post {
         data = typeof data === 'object' ? data : {};
-        let result = new ConsumerPost();
+        let result = new Post();
         result.init(data);
         return result;
     }
@@ -5705,6 +5709,8 @@ export class ConsumerPost implements IConsumerPost {
         data["postType"] = this.postType;
         data["question"] = this.question;
         data["communityName"] = this.communityName;
+        data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
+        data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
         data["author"] = this.author ? this.author.toJSON() : <any>undefined;
         if (Array.isArray(this.comments)) {
             data["comments"] = [];
@@ -5720,24 +5726,26 @@ export class ConsumerPost implements IConsumerPost {
     }
 }
 
-export interface IConsumerPost {
+export interface IPost {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     question?: string | undefined;
     communityName?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
     comments?: Comment[] | undefined;
     answers?: Answer[] | undefined;
 }
 
-export class ConsumerPostResponse implements IConsumerPostResponse {
+export class PostResponse implements IPostResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    post?: ConsumerPost;
+    post?: Post;
 
-    constructor(data?: IConsumerPostResponse) {
+    constructor(data?: IPostResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5754,13 +5762,13 @@ export class ConsumerPostResponse implements IConsumerPostResponse {
                     this.errors!.push(ErrorDto.fromJS(item));
             }
             this.isSuccess = _data["isSuccess"];
-            this.post = _data["post"] ? ConsumerPost.fromJS(_data["post"]) : <any>undefined;
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): ConsumerPostResponse {
+    static fromJS(data: any): PostResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new ConsumerPostResponse();
+        let result = new PostResponse();
         result.init(data);
         return result;
     }
@@ -5778,10 +5786,10 @@ export class ConsumerPostResponse implements IConsumerPostResponse {
     }
 }
 
-export interface IConsumerPostResponse {
+export interface IPostResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    post?: ConsumerPost;
+    post?: Post;
 }
 
 export class AnswerWithGooglePlaceRequest implements IAnswerWithGooglePlaceRequest {
@@ -5906,150 +5914,6 @@ export class PollAnswerRequest implements IPollAnswerRequest {
 export interface IPollAnswerRequest {
     answerId?: string | undefined;
     voteRanking?: string | undefined;
-}
-
-export class VendorPost implements IVendorPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postType?: string | undefined;
-    question?: string | undefined;
-    communityName?: string | undefined;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    author?: NeatBoutiqueEntity;
-    answers?: Answer[] | undefined;
-    comments?: Comment[] | undefined;
-
-    constructor(data?: IVendorPost) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.postType = _data["postType"];
-            this.question = _data["question"];
-            this.communityName = _data["communityName"];
-            this.campaignStartDateUtc = _data["campaignStartDateUtc"] ? new Date(_data["campaignStartDateUtc"].toString()) : <any>undefined;
-            this.campaignEndDateUtc = _data["campaignEndDateUtc"] ? new Date(_data["campaignEndDateUtc"].toString()) : <any>undefined;
-            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
-            if (Array.isArray(_data["answers"])) {
-                this.answers = [] as any;
-                for (let item of _data["answers"])
-                    this.answers!.push(Answer.fromJS(item));
-            }
-            if (Array.isArray(_data["comments"])) {
-                this.comments = [] as any;
-                for (let item of _data["comments"])
-                    this.comments!.push(Comment.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): VendorPost {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorPost();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["postType"] = this.postType;
-        data["question"] = this.question;
-        data["communityName"] = this.communityName;
-        data["campaignStartDateUtc"] = this.campaignStartDateUtc ? this.campaignStartDateUtc.toISOString() : <any>undefined;
-        data["campaignEndDateUtc"] = this.campaignEndDateUtc ? this.campaignEndDateUtc.toISOString() : <any>undefined;
-        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
-        if (Array.isArray(this.answers)) {
-            data["answers"] = [];
-            for (let item of this.answers)
-                data["answers"].push(item.toJSON());
-        }
-        if (Array.isArray(this.comments)) {
-            data["comments"] = [];
-            for (let item of this.comments)
-                data["comments"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IVendorPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postType?: string | undefined;
-    question?: string | undefined;
-    communityName?: string | undefined;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    author?: NeatBoutiqueEntity;
-    answers?: Answer[] | undefined;
-    comments?: Comment[] | undefined;
-}
-
-export class VendorPostResponse implements IVendorPostResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    post?: VendorPost;
-
-    constructor(data?: IVendorPostResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            this.post = _data["post"] ? VendorPost.fromJS(_data["post"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): VendorPostResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorPostResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IVendorPostResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    post?: VendorPost;
 }
 
 export class CommentRequest implements ICommentRequest {
@@ -6495,9 +6359,9 @@ export interface IHeroAd {
 export class CommunityResponse implements ICommunityResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    consumerPosts?: ConsumerPost[] | undefined;
-    vendorPosts?: VendorPost[] | undefined;
-    recentConsumerPosts?: ConsumerPost[] | undefined;
+    consumerQuestions?: Post[] | undefined;
+    vendorPolls?: Post[] | undefined;
+    recentConsumerQuestions?: Post[] | undefined;
     heroAds?: HeroAd[] | undefined;
 
     constructor(data?: ICommunityResponse) {
@@ -6517,20 +6381,20 @@ export class CommunityResponse implements ICommunityResponse {
                     this.errors!.push(ErrorDto.fromJS(item));
             }
             this.isSuccess = _data["isSuccess"];
-            if (Array.isArray(_data["consumerPosts"])) {
-                this.consumerPosts = [] as any;
-                for (let item of _data["consumerPosts"])
-                    this.consumerPosts!.push(ConsumerPost.fromJS(item));
+            if (Array.isArray(_data["consumerQuestions"])) {
+                this.consumerQuestions = [] as any;
+                for (let item of _data["consumerQuestions"])
+                    this.consumerQuestions!.push(Post.fromJS(item));
             }
-            if (Array.isArray(_data["vendorPosts"])) {
-                this.vendorPosts = [] as any;
-                for (let item of _data["vendorPosts"])
-                    this.vendorPosts!.push(VendorPost.fromJS(item));
+            if (Array.isArray(_data["vendorPolls"])) {
+                this.vendorPolls = [] as any;
+                for (let item of _data["vendorPolls"])
+                    this.vendorPolls!.push(Post.fromJS(item));
             }
-            if (Array.isArray(_data["recentConsumerPosts"])) {
-                this.recentConsumerPosts = [] as any;
-                for (let item of _data["recentConsumerPosts"])
-                    this.recentConsumerPosts!.push(ConsumerPost.fromJS(item));
+            if (Array.isArray(_data["recentConsumerQuestions"])) {
+                this.recentConsumerQuestions = [] as any;
+                for (let item of _data["recentConsumerQuestions"])
+                    this.recentConsumerQuestions!.push(Post.fromJS(item));
             }
             if (Array.isArray(_data["heroAds"])) {
                 this.heroAds = [] as any;
@@ -6555,20 +6419,20 @@ export class CommunityResponse implements ICommunityResponse {
                 data["errors"].push(item.toJSON());
         }
         data["isSuccess"] = this.isSuccess;
-        if (Array.isArray(this.consumerPosts)) {
-            data["consumerPosts"] = [];
-            for (let item of this.consumerPosts)
-                data["consumerPosts"].push(item.toJSON());
+        if (Array.isArray(this.consumerQuestions)) {
+            data["consumerQuestions"] = [];
+            for (let item of this.consumerQuestions)
+                data["consumerQuestions"].push(item.toJSON());
         }
-        if (Array.isArray(this.vendorPosts)) {
-            data["vendorPosts"] = [];
-            for (let item of this.vendorPosts)
-                data["vendorPosts"].push(item.toJSON());
+        if (Array.isArray(this.vendorPolls)) {
+            data["vendorPolls"] = [];
+            for (let item of this.vendorPolls)
+                data["vendorPolls"].push(item.toJSON());
         }
-        if (Array.isArray(this.recentConsumerPosts)) {
-            data["recentConsumerPosts"] = [];
-            for (let item of this.recentConsumerPosts)
-                data["recentConsumerPosts"].push(item.toJSON());
+        if (Array.isArray(this.recentConsumerQuestions)) {
+            data["recentConsumerQuestions"] = [];
+            for (let item of this.recentConsumerQuestions)
+                data["recentConsumerQuestions"].push(item.toJSON());
         }
         if (Array.isArray(this.heroAds)) {
             data["heroAds"] = [];
@@ -6582,17 +6446,17 @@ export class CommunityResponse implements ICommunityResponse {
 export interface ICommunityResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    consumerPosts?: ConsumerPost[] | undefined;
-    vendorPosts?: VendorPost[] | undefined;
-    recentConsumerPosts?: ConsumerPost[] | undefined;
+    consumerQuestions?: Post[] | undefined;
+    vendorPolls?: Post[] | undefined;
+    recentConsumerQuestions?: Post[] | undefined;
     heroAds?: HeroAd[] | undefined;
 }
 
-export class ConsumerPostRequest implements IConsumerPostRequest {
+export class ConsumerQuestionRequest implements IConsumerQuestionRequest {
     postId?: string | undefined;
-    post?: ConsumerPost;
+    post?: Post;
 
-    constructor(data?: IConsumerPostRequest) {
+    constructor(data?: IConsumerQuestionRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -6604,13 +6468,13 @@ export class ConsumerPostRequest implements IConsumerPostRequest {
     init(_data?: any) {
         if (_data) {
             this.postId = _data["postId"];
-            this.post = _data["post"] ? ConsumerPost.fromJS(_data["post"]) : <any>undefined;
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): ConsumerPostRequest {
+    static fromJS(data: any): ConsumerQuestionRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new ConsumerPostRequest();
+        let result = new ConsumerQuestionRequest();
         result.init(data);
         return result;
     }
@@ -6623,9 +6487,9 @@ export class ConsumerPostRequest implements IConsumerPostRequest {
     }
 }
 
-export interface IConsumerPostRequest {
+export interface IConsumerQuestionRequest {
     postId?: string | undefined;
-    post?: ConsumerPost;
+    post?: Post;
 }
 
 export class MyPlacesRequest implements IMyPlacesRequest {
@@ -6704,12 +6568,12 @@ export interface IMyQuestionsRequest {
     pageSize?: number;
 }
 
-export class ConsumerPostsResponse implements IConsumerPostsResponse {
+export class ConsumerQuestionsResponse implements IConsumerQuestionsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    posts?: ConsumerPost[] | undefined;
+    posts?: Post[] | undefined;
 
-    constructor(data?: IConsumerPostsResponse) {
+    constructor(data?: IConsumerQuestionsResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -6729,14 +6593,14 @@ export class ConsumerPostsResponse implements IConsumerPostsResponse {
             if (Array.isArray(_data["posts"])) {
                 this.posts = [] as any;
                 for (let item of _data["posts"])
-                    this.posts!.push(ConsumerPost.fromJS(item));
+                    this.posts!.push(Post.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): ConsumerPostsResponse {
+    static fromJS(data: any): ConsumerQuestionsResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new ConsumerPostsResponse();
+        let result = new ConsumerQuestionsResponse();
         result.init(data);
         return result;
     }
@@ -6758,10 +6622,10 @@ export class ConsumerPostsResponse implements IConsumerPostsResponse {
     }
 }
 
-export interface IConsumerPostsResponse {
+export interface IConsumerQuestionsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    posts?: ConsumerPost[] | undefined;
+    posts?: Post[] | undefined;
 }
 
 export class ConsumerProfileRequest implements IConsumerProfileRequest {
@@ -6963,8 +6827,8 @@ export interface IReview {
 export class ConsumerProfileActivityResponse implements IConsumerProfileActivityResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    recentQuestions?: ConsumerPost[] | undefined;
-    recentAnswers?: ConsumerPost[] | undefined;
+    recentQuestions?: Post[] | undefined;
+    recentAnswers?: Post[] | undefined;
     recentReviews?: Review[] | undefined;
     questionsAskedCount?: number;
     questionsAnsweredCount?: number;
@@ -6990,12 +6854,12 @@ export class ConsumerProfileActivityResponse implements IConsumerProfileActivity
             if (Array.isArray(_data["recentQuestions"])) {
                 this.recentQuestions = [] as any;
                 for (let item of _data["recentQuestions"])
-                    this.recentQuestions!.push(ConsumerPost.fromJS(item));
+                    this.recentQuestions!.push(Post.fromJS(item));
             }
             if (Array.isArray(_data["recentAnswers"])) {
                 this.recentAnswers = [] as any;
                 for (let item of _data["recentAnswers"])
-                    this.recentAnswers!.push(ConsumerPost.fromJS(item));
+                    this.recentAnswers!.push(Post.fromJS(item));
             }
             if (Array.isArray(_data["recentReviews"])) {
                 this.recentReviews = [] as any;
@@ -7048,8 +6912,8 @@ export class ConsumerProfileActivityResponse implements IConsumerProfileActivity
 export interface IConsumerProfileActivityResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
-    recentQuestions?: ConsumerPost[] | undefined;
-    recentAnswers?: ConsumerPost[] | undefined;
+    recentQuestions?: Post[] | undefined;
+    recentAnswers?: Post[] | undefined;
     recentReviews?: Review[] | undefined;
     questionsAskedCount?: number;
     questionsAnsweredCount?: number;
@@ -8009,7 +7873,7 @@ export interface IVendorSubscriptionResponse {
 }
 
 export class VendorPostRequest implements IVendorPostRequest {
-    post?: VendorPost;
+    post?: Post;
 
     constructor(data?: IVendorPostRequest) {
         if (data) {
@@ -8022,7 +7886,7 @@ export class VendorPostRequest implements IVendorPostRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.post = _data["post"] ? VendorPost.fromJS(_data["post"]) : <any>undefined;
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
         }
     }
 
@@ -8041,7 +7905,7 @@ export class VendorPostRequest implements IVendorPostRequest {
 }
 
 export interface IVendorPostRequest {
-    post?: VendorPost;
+    post?: Post;
 }
 
 export class ReviewsResponse implements IReviewsResponse {
@@ -8618,7 +8482,7 @@ export interface IGooglePlaceDetailsResponse {
 
 export class NeatBoutiqueSettings implements INeatBoutiqueSettings {
     reCaptchaSecretKey?: string | undefined;
-    consumerPostsPerVendorPostCount?: number;
+    consumerQuestionsPerVendorPostCount?: number;
     heroAdsPerPage?: number;
     neatBoutiqueFrontEndBaseUrl?: string | undefined;
     neatBoutiqueBackEndBaseUrl?: string | undefined;
@@ -8636,7 +8500,7 @@ export class NeatBoutiqueSettings implements INeatBoutiqueSettings {
     init(_data?: any) {
         if (_data) {
             this.reCaptchaSecretKey = _data["reCaptchaSecretKey"];
-            this.consumerPostsPerVendorPostCount = _data["consumerPostsPerVendorPostCount"];
+            this.consumerQuestionsPerVendorPostCount = _data["consumerQuestionsPerVendorPostCount"];
             this.heroAdsPerPage = _data["heroAdsPerPage"];
             this.neatBoutiqueFrontEndBaseUrl = _data["neatBoutiqueFrontEndBaseUrl"];
             this.neatBoutiqueBackEndBaseUrl = _data["neatBoutiqueBackEndBaseUrl"];
@@ -8654,7 +8518,7 @@ export class NeatBoutiqueSettings implements INeatBoutiqueSettings {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["reCaptchaSecretKey"] = this.reCaptchaSecretKey;
-        data["consumerPostsPerVendorPostCount"] = this.consumerPostsPerVendorPostCount;
+        data["consumerQuestionsPerVendorPostCount"] = this.consumerQuestionsPerVendorPostCount;
         data["heroAdsPerPage"] = this.heroAdsPerPage;
         data["neatBoutiqueFrontEndBaseUrl"] = this.neatBoutiqueFrontEndBaseUrl;
         data["neatBoutiqueBackEndBaseUrl"] = this.neatBoutiqueBackEndBaseUrl;
@@ -8665,7 +8529,7 @@ export class NeatBoutiqueSettings implements INeatBoutiqueSettings {
 
 export interface INeatBoutiqueSettings {
     reCaptchaSecretKey?: string | undefined;
-    consumerPostsPerVendorPostCount?: number;
+    consumerQuestionsPerVendorPostCount?: number;
     heroAdsPerPage?: number;
     neatBoutiqueFrontEndBaseUrl?: string | undefined;
     neatBoutiqueBackEndBaseUrl?: string | undefined;
@@ -8735,8 +8599,7 @@ export interface IGoogleCloudPlatformSettings {
 export class MongoDbSettings implements IMongoDbSettings {
     databaseConnectionString?: string | undefined;
     dbName?: string | undefined;
-    consumerPostsCollectionName?: string | undefined;
-    vendorPostsCollectionName?: string | undefined;
+    postsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
     answersCollectionName?: string | undefined;
     answerVotesCollectionName?: string | undefined;
@@ -8763,8 +8626,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         if (_data) {
             this.databaseConnectionString = _data["databaseConnectionString"];
             this.dbName = _data["dbName"];
-            this.consumerPostsCollectionName = _data["consumerPostsCollectionName"];
-            this.vendorPostsCollectionName = _data["vendorPostsCollectionName"];
+            this.postsCollectionName = _data["postsCollectionName"];
             this.commentsCollectionName = _data["commentsCollectionName"];
             this.answersCollectionName = _data["answersCollectionName"];
             this.answerVotesCollectionName = _data["answerVotesCollectionName"];
@@ -8791,8 +8653,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         data = typeof data === 'object' ? data : {};
         data["databaseConnectionString"] = this.databaseConnectionString;
         data["dbName"] = this.dbName;
-        data["consumerPostsCollectionName"] = this.consumerPostsCollectionName;
-        data["vendorPostsCollectionName"] = this.vendorPostsCollectionName;
+        data["postsCollectionName"] = this.postsCollectionName;
         data["commentsCollectionName"] = this.commentsCollectionName;
         data["answersCollectionName"] = this.answersCollectionName;
         data["answerVotesCollectionName"] = this.answerVotesCollectionName;
@@ -8812,8 +8673,7 @@ export class MongoDbSettings implements IMongoDbSettings {
 export interface IMongoDbSettings {
     databaseConnectionString?: string | undefined;
     dbName?: string | undefined;
-    consumerPostsCollectionName?: string | undefined;
-    vendorPostsCollectionName?: string | undefined;
+    postsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
     answersCollectionName?: string | undefined;
     answerVotesCollectionName?: string | undefined;

@@ -5,13 +5,13 @@ import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { PostTypes, SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
 import { VendorDisplay } from 'src/app/models/vendor-display';
-import { VendorPostDisplay } from 'src/app/models/vendor-post-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { NeatBoutiqueEntity, Comment, VendorPost, Answer, AnswerVote } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, Answer, AnswerVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
 import { Router } from '@angular/router';
 import { AnswerDisplay } from 'src/app/models/answer-display';
+import { PostDisplay } from 'src/app/models/post-display';
 
 @Component({
   selector: 'app-poll-ad',
@@ -23,7 +23,7 @@ export class PollAdComponent implements OnInit {
 
   @ViewChild('content', { read: ElementRef }) content: IonContent;
   
-  public pollLivePreview: VendorPostDisplay;
+  public pollLivePreview: PostDisplay;
   public pollAdToSubmit: UntypedFormGroup;
   public clearForm: boolean;
 
@@ -35,8 +35,9 @@ export class PollAdComponent implements OnInit {
     this.vendor = (this._router.getCurrentNavigation().extras.state) as VendorDisplay;  
 
     // create temp live preview poll post
-    this.pollLivePreview = new VendorPostDisplay(new VendorPost({
+    this.pollLivePreview = new PostDisplay(new Post({
       id: 'demo-poll',
+      postType: PostTypes.POLL,
       createdDateUtc: new Date(),
       author: this.vendor,
       lastUpdatedDateUtc: new Date(),
@@ -128,8 +129,11 @@ export class PollAdComponent implements OnInit {
         }
         return null;
       }).filter(x => x);    
+    
+      
 
-      const vendorPost = new VendorPost({
+      const vendorPost = new Post({
+        postType: PostTypes.POLL,
         communityName: this.pollAdToSubmit.value.community,
         question: this.pollAdToSubmit.value.pollQuestion,
         answers: pollAnswers,
