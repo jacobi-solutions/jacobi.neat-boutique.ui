@@ -5516,16 +5516,16 @@ export interface IGooglePlacesEntity {
     description?: string | undefined;
 }
 
-export class AnswerVote implements IAnswerVote {
+export class SelectionVote implements ISelectionVote {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postId?: string | undefined;
-    answerId?: string | undefined;
+    selectionId?: string | undefined;
     voter?: NeatBoutiqueEntity;
     voteRanking?: string | undefined;
 
-    constructor(data?: IAnswerVote) {
+    constructor(data?: ISelectionVote) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5540,15 +5540,15 @@ export class AnswerVote implements IAnswerVote {
             this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.postId = _data["postId"];
-            this.answerId = _data["answerId"];
+            this.selectionId = _data["selectionId"];
             this.voter = _data["voter"] ? NeatBoutiqueEntity.fromJS(_data["voter"]) : <any>undefined;
             this.voteRanking = _data["voteRanking"];
         }
     }
 
-    static fromJS(data: any): AnswerVote {
+    static fromJS(data: any): SelectionVote {
         data = typeof data === 'object' ? data : {};
-        let result = new AnswerVote();
+        let result = new SelectionVote();
         result.init(data);
         return result;
     }
@@ -5559,24 +5559,24 @@ export class AnswerVote implements IAnswerVote {
         data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["postId"] = this.postId;
-        data["answerId"] = this.answerId;
+        data["selectionId"] = this.selectionId;
         data["voter"] = this.voter ? this.voter.toJSON() : <any>undefined;
         data["voteRanking"] = this.voteRanking;
         return data; 
     }
 }
 
-export interface IAnswerVote {
+export interface ISelectionVote {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postId?: string | undefined;
-    answerId?: string | undefined;
+    selectionId?: string | undefined;
     voter?: NeatBoutiqueEntity;
     voteRanking?: string | undefined;
 }
 
-export class Answer implements IAnswer {
+export class Selection implements ISelection {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
@@ -5584,9 +5584,9 @@ export class Answer implements IAnswer {
     freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
     googlePlace?: GooglePlacesEntity;
-    votes?: AnswerVote[] | undefined;
+    votes?: SelectionVote[] | undefined;
 
-    constructor(data?: IAnswer) {
+    constructor(data?: ISelection) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5607,14 +5607,14 @@ export class Answer implements IAnswer {
             if (Array.isArray(_data["votes"])) {
                 this.votes = [] as any;
                 for (let item of _data["votes"])
-                    this.votes!.push(AnswerVote.fromJS(item));
+                    this.votes!.push(SelectionVote.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): Answer {
+    static fromJS(data: any): Selection {
         data = typeof data === 'object' ? data : {};
-        let result = new Answer();
+        let result = new Selection();
         result.init(data);
         return result;
     }
@@ -5637,7 +5637,7 @@ export class Answer implements IAnswer {
     }
 }
 
-export interface IAnswer {
+export interface ISelection {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
@@ -5645,7 +5645,7 @@ export interface IAnswer {
     freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
     googlePlace?: GooglePlacesEntity;
-    votes?: AnswerVote[] | undefined;
+    votes?: SelectionVote[] | undefined;
 }
 
 export class Post implements IPost {
@@ -5653,13 +5653,13 @@ export class Post implements IPost {
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
-    question?: string | undefined;
+    subject?: string | undefined;
     communityName?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
     comments?: Comment[] | undefined;
-    answers?: Answer[] | undefined;
+    selections?: Selection[] | undefined;
 
     constructor(data?: IPost) {
         if (data) {
@@ -5676,7 +5676,7 @@ export class Post implements IPost {
             this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.postType = _data["postType"];
-            this.question = _data["question"];
+            this.subject = _data["subject"];
             this.communityName = _data["communityName"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
@@ -5686,10 +5686,10 @@ export class Post implements IPost {
                 for (let item of _data["comments"])
                     this.comments!.push(Comment.fromJS(item));
             }
-            if (Array.isArray(_data["answers"])) {
-                this.answers = [] as any;
-                for (let item of _data["answers"])
-                    this.answers!.push(Answer.fromJS(item));
+            if (Array.isArray(_data["selections"])) {
+                this.selections = [] as any;
+                for (let item of _data["selections"])
+                    this.selections!.push(Selection.fromJS(item));
             }
         }
     }
@@ -5707,7 +5707,7 @@ export class Post implements IPost {
         data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["postType"] = this.postType;
-        data["question"] = this.question;
+        data["subject"] = this.subject;
         data["communityName"] = this.communityName;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
@@ -5717,10 +5717,10 @@ export class Post implements IPost {
             for (let item of this.comments)
                 data["comments"].push(item.toJSON());
         }
-        if (Array.isArray(this.answers)) {
-            data["answers"] = [];
-            for (let item of this.answers)
-                data["answers"].push(item.toJSON());
+        if (Array.isArray(this.selections)) {
+            data["selections"] = [];
+            for (let item of this.selections)
+                data["selections"].push(item.toJSON());
         }
         return data; 
     }
@@ -5731,13 +5731,13 @@ export interface IPost {
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
-    question?: string | undefined;
+    subject?: string | undefined;
     communityName?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
     comments?: Comment[] | undefined;
-    answers?: Answer[] | undefined;
+    selections?: Selection[] | undefined;
 }
 
 export class PostResponse implements IPostResponse {
@@ -5841,7 +5841,7 @@ export interface IAnswerWithGooglePlaceRequest {
 }
 
 export class AnswerVoteRemoveRequest implements IAnswerVoteRemoveRequest {
-    answerVote?: AnswerVote;
+    answerVote?: SelectionVote;
 
     constructor(data?: IAnswerVoteRemoveRequest) {
         if (data) {
@@ -5854,7 +5854,7 @@ export class AnswerVoteRemoveRequest implements IAnswerVoteRemoveRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.answerVote = _data["answerVote"] ? AnswerVote.fromJS(_data["answerVote"]) : <any>undefined;
+            this.answerVote = _data["answerVote"] ? SelectionVote.fromJS(_data["answerVote"]) : <any>undefined;
         }
     }
 
@@ -5873,7 +5873,7 @@ export class AnswerVoteRemoveRequest implements IAnswerVoteRemoveRequest {
 }
 
 export interface IAnswerVoteRemoveRequest {
-    answerVote?: AnswerVote;
+    answerVote?: SelectionVote;
 }
 
 export class PollAnswerRequest implements IPollAnswerRequest {
@@ -8601,8 +8601,8 @@ export class MongoDbSettings implements IMongoDbSettings {
     dbName?: string | undefined;
     postsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
-    answersCollectionName?: string | undefined;
-    answerVotesCollectionName?: string | undefined;
+    selectionsCollectionName?: string | undefined;
+    selectionVotesCollectionName?: string | undefined;
     consumerProfilesCollectionName?: string | undefined;
     vendorProfilesCollectionName?: string | undefined;
     accountsCollectionName?: string | undefined;
@@ -8628,8 +8628,8 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.dbName = _data["dbName"];
             this.postsCollectionName = _data["postsCollectionName"];
             this.commentsCollectionName = _data["commentsCollectionName"];
-            this.answersCollectionName = _data["answersCollectionName"];
-            this.answerVotesCollectionName = _data["answerVotesCollectionName"];
+            this.selectionsCollectionName = _data["selectionsCollectionName"];
+            this.selectionVotesCollectionName = _data["selectionVotesCollectionName"];
             this.consumerProfilesCollectionName = _data["consumerProfilesCollectionName"];
             this.vendorProfilesCollectionName = _data["vendorProfilesCollectionName"];
             this.accountsCollectionName = _data["accountsCollectionName"];
@@ -8655,8 +8655,8 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["dbName"] = this.dbName;
         data["postsCollectionName"] = this.postsCollectionName;
         data["commentsCollectionName"] = this.commentsCollectionName;
-        data["answersCollectionName"] = this.answersCollectionName;
-        data["answerVotesCollectionName"] = this.answerVotesCollectionName;
+        data["selectionsCollectionName"] = this.selectionsCollectionName;
+        data["selectionVotesCollectionName"] = this.selectionVotesCollectionName;
         data["consumerProfilesCollectionName"] = this.consumerProfilesCollectionName;
         data["vendorProfilesCollectionName"] = this.vendorProfilesCollectionName;
         data["accountsCollectionName"] = this.accountsCollectionName;
@@ -8675,8 +8675,8 @@ export interface IMongoDbSettings {
     dbName?: string | undefined;
     postsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
-    answersCollectionName?: string | undefined;
-    answerVotesCollectionName?: string | undefined;
+    selectionsCollectionName?: string | undefined;
+    selectionVotesCollectionName?: string | undefined;
     consumerProfilesCollectionName?: string | undefined;
     vendorProfilesCollectionName?: string | undefined;
     accountsCollectionName?: string | undefined;

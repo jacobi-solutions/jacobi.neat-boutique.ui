@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AnswerDisplay } from "../models/answer-display";
-import { Answer } from "./neat-boutique-api.service";
+import { Selection } from "./neat-boutique-api.service";
 
 @Injectable({
   providedIn: "root",
@@ -27,8 +27,8 @@ export class UtilService {
 
 
   public sortByAnswersCountAsc(modelA: any, modelB: any) {
-    const aAnswersCount = modelA.answers.length;
-    const baAnswersCount = modelB.answers.length;
+    const aAnswersCount = modelA.selections.length;
+    const baAnswersCount = modelB.selections.length;
     if ( aAnswersCount < baAnswersCount ){
       return -1;
     }

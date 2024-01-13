@@ -11,7 +11,7 @@ import { EditSocialMediaLinksModalComponent } from "../shared/modals/vendor-sett
 import { SelectCommunitiesModalComponent } from "../shared/modals/vendor-settings-modals/select-communities-modal/select-communities-modal.component";
 import { UploadPhotoModalComponent } from "../shared/modals/upload-photo-modal/upload-photo-modal.component";
 import { AccountsService } from "./accounts.service";
-import { Answer, ConsumerProfile, VendorProfile } from "./neat-boutique-api.service";
+import { Selection, ConsumerProfile, VendorProfile } from "./neat-boutique-api.service";
 import { ChangeAvatarModalComponent } from "../shared/modals/change-avatar-modal/change-avatar-modal.component";
 import { LocationModalComponent } from "../shared/modals/location-modal/location-modal.component";
 import { NotificationSettingsModalComponent } from "../shared/modals/notification-settings-modal/notification-settings-modal.component";

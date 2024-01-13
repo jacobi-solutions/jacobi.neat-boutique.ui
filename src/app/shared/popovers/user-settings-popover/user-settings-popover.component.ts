@@ -100,7 +100,7 @@ export class UserSettingsPopoverComponent implements OnInit {
         }
       },
       {
-        label: "Contact Loci",
+        label: "Contact Loçi",
         isClickable: true,
         url: '',
         callback(event) {

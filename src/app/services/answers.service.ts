@@ -4,7 +4,7 @@ import { AnswerDisplay } from '../models/answer-display';
 import { PostDisplay } from '../models/post-display';
 import { CurrentUserDisplay } from '../models/current-user-display';
 import { AccountsService } from './accounts.service';
-import { AnswerVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, PostResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest } from './neat-boutique-api.service';
+import { SelectionVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, PostResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest } from './neat-boutique-api.service';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -64,7 +64,7 @@ export class AnswersService {
       });
   }
 
-  removeAnswerVoteFromAnswer(answerVote: AnswerVote) {
+  removeAnswerVoteFromAnswer(answerVote: SelectionVote) {
     const request = new AnswerVoteRemoveRequest();
     request.answerVote = answerVote;
 
@@ -106,7 +106,7 @@ export class AnswersService {
   }
 
 
-  removeVoteFromPollAnswer(answerVote: AnswerVote) {
+  removeVoteFromPollAnswer(answerVote: SelectionVote) {
     const request = new AnswerVoteRemoveRequest();
     request.answerVote = answerVote;
     // send request
@@ -131,11 +131,11 @@ export class AnswersService {
   refreshCurrentUserVotesOnPosts(posts: PostDisplay[]) {
     posts.forEach((post: PostDisplay) => {
       
-      post.answers.forEach((answer) => {
+      post.selections.forEach((answer) => {
         var answerVoteIds: string[] = answer.votes.map(x => x.voter.id);
         answer.didVoteFor = this._currentUser.hasIdInList(answerVoteIds);
       }); 
-      post.hasAnswered =  post.answers.some(x => x.didVoteFor);
+      post.hasAnswered =  post.selections.some(x => x.didVoteFor);
     });
   }
 }

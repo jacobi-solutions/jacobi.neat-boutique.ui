@@ -3,12 +3,12 @@ import { AnswerDisplay } from 'src/app/models/answer-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { AnswerVote, GooglePlacesEntity, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
+import { SelectionVote, GooglePlacesEntity, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { CommunityService } from 'src/app/services/community.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { PopoverController } from '@ionic/angular';
-import { AnswerVoteRankingColorsMap, AnswerVoteRankingTypes, PostTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingColorsMap, SelectionVoteRankingTypes, PostTypes } from 'src/app/models/constants';
 
 @Component({
   selector: 'app-answer-item',
@@ -30,8 +30,8 @@ export class AnswerItemComponent implements OnInit {
   public votedIcon: string = 'star-outline';
   public currentUser: CurrentUserDisplay;
   borderColor: string;
-  currentUserVote: AnswerVote;
-  answerVoteRankingTypes = AnswerVoteRankingTypes;
+  currentUserVote: SelectionVote;
+  answerVoteRankingTypes = SelectionVoteRankingTypes;
   postTypes = PostTypes;
   
   constructor(private _communityService: CommunityService, private _customersService: AccountsService, private _modalService: ModalService,
@@ -43,7 +43,7 @@ export class AnswerItemComponent implements OnInit {
       this.currentUserVote = this.answer.votes.find(x => this.currentUser?.hasId(x.voter.id));
       if(this.answer.postType === PostTypes.QUESTION) {
         if(this.currentUserVote) {
-          this.borderColor = AnswerVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
+          this.borderColor = SelectionVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
         } else if(this.answer.entity.isGooglePlaceEntity) {
           this.borderColor = '#013e43';
         } else {
@@ -75,7 +75,7 @@ export class AnswerItemComponent implements OnInit {
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(this.answer, this.answers);
       
       if(this.answer.postType === PostTypes.QUESTION) {
-        if(answerRanking.choice === AnswerVoteRankingTypes.REMOVE) {
+        if(answerRanking.choice === SelectionVoteRankingTypes.REMOVE) {
           await this._answersService.removeAnswerVoteFromAnswer(answerRanking.answerToRemove);
         } else {
           if(this.answer.entity.isGooglePlaceEntity) {
@@ -85,7 +85,7 @@ export class AnswerItemComponent implements OnInit {
           }
         }
       } else if(this.answer.postType === PostTypes.POLL) {
-        if(answerRanking.choice === AnswerVoteRankingTypes.REMOVE) {
+        if(answerRanking.choice === SelectionVoteRankingTypes.REMOVE) {
           await this._answersService.removeVoteFromPollAnswer(answerRanking.answerToRemove);
         } else { 
           await this._answersService.addVoteToPollAnswer(this.answer.id, answerRanking.choice);

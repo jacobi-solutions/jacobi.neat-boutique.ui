@@ -12,7 +12,7 @@ import { CommunityTypes, UserRoleTypes } from "../models/constants";
 import { VendorDisplay } from "../models/vendor-display";
 import { AccountsService } from "./accounts.service";
 import {
-  Answer,
+  Selection,
 
   Post,
 
@@ -43,7 +43,7 @@ import {
   CommunityResponse,
   HeroAdTemplate,
   ConsumerFeedSettingsRequest,
-  AnswerVote,
+  SelectionVote,
   ConsumerQuestionRequest,
 } from "./neat-boutique-api.service";
 import { UtilService } from "./util.service";
@@ -398,15 +398,15 @@ export class CommunityService {
       if (post.id === answer.postId) {
         
         // remove previous vote from post
-        post.answers.forEach((answer: AnswerDisplay) => {
+        post.selections.forEach((answer: AnswerDisplay) => {
           answer.votes = answer.votes.filter(x => !this._currentUser.hasId(x.voter.id));
         });
 
-        const answers = post.answers.filter(x => x.id !== answer.id);
-        post.answers = [...answers, answer];
+        const selections = post.selections.filter(x => x.id !== answer.id);
+        post.selections = [...selections, answer];
       }
 
-      post.answers = this._util.normalizedAnswersForChartMinMax(post.answers);
+      post.selections = this._util.normalizedAnswersForChartMinMax(post.selections);
 
       return post;
     });

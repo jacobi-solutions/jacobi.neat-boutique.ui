@@ -17,7 +17,7 @@ export class PostDisplay extends Post {
         },
     };
     // overrides
-    public answers: AnswerDisplay[];
+    public selections: AnswerDisplay[];
     public hasAnswered: boolean;
     public comments: CommentDisplay[];
 
@@ -25,8 +25,8 @@ export class PostDisplay extends Post {
         super(post);
         this.elapsedTime = {lastUpdated: {minutes: null}, created: {minutes: null}};
 
-        if(this.answers) {
-            this.answers = this.answers.map(x => new AnswerDisplay(x, post.postType)).sort(this.sortAnswers);
+        if(this.selections) {
+            this.selections = this.selections.map(x => new AnswerDisplay(x, post.postType)).sort(this.sortAnswers);
         }
 
         if(this.comments) {

@@ -87,7 +87,7 @@ export class PostQuestionComponent implements OnInit {
     
     const post =  new Post();
     post.communityName = this.postForm.value.communityName;
-    post.question = this.postForm.value.newQuestion.trim();
+    post.subject = this.postForm.value.newQuestion.trim();
     post.author = new NeatBoutiqueEntity({
       name: this.currentUser?.consumer.name,
       avatarSourceURL: this.currentUser?.consumer.avatarSourceURL,
@@ -95,13 +95,13 @@ export class PostQuestionComponent implements OnInit {
       id: this.currentUser?.consumer.id
     })
 
-    if(!post.question.endsWith('?')) {
-      post.question += '?';
+    if(!post.subject.endsWith('?')) {
+      post.subject += '?';
     }
 
-    const questionCharArray = [...post.question];
+    const questionCharArray = [...post.subject];
     questionCharArray[0] = questionCharArray[0].toUpperCase();
-    post.question = questionCharArray.join('');
+    post.subject = questionCharArray.join('');
 
     this._communityService.createConsumerPost(post);
     this.postForm.reset();

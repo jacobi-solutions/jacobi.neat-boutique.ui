@@ -5,7 +5,7 @@ import { CommunityService } from 'src/app/services/community.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { THEME } from 'src/theme/theme-constants';
 import { AnswerDisplay } from 'src/app/models/answer-display';
-import { Answer, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
+import { Selection, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
 import { PostTypes } from 'src/app/models/constants';
@@ -52,8 +52,8 @@ export class PostItemComponent implements OnInit {
   }
 
   ngOnChanges() {
-    if(this.post?.answers) {
-      this.post.answers = this._util.normalizedAnswersForChartMinMax(this.post?.answers);
+    if(this.post?.selections) {
+      this.post.selections = this._util.normalizedAnswersForChartMinMax(this.post?.selections);
     }
 
     // this.iconShowChart = this.expandTopVoted ? 'eye-outline' : 'eye-off-outline';

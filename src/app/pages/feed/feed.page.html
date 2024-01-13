@@ -82,7 +82,7 @@
           <ion-row>
             <ion-col>
               <div class="recent-question" *ngFor="let recentPost of recentPosts" (click)="addCommunityToShownPosts(recentPost.communityName)">
-                {{ recentPost.question }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.communityName }}</strong>
+                {{ recentPost.subject }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.communityName }}</strong>
               </div>
             </ion-col>
           </ion-row>

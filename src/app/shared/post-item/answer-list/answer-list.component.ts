@@ -5,13 +5,13 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { CommunityService } from 'src/app/services/community.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { Answer, GooglePlacesEntity, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { Selection, GooglePlacesEntity, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { THEME } from 'src/theme/theme-constants';
 import { debounceTime } from 'rxjs/operators';
 import { EntityDisplay } from 'src/app/models/entity-display';
 import { UtilService } from 'src/app/services/util.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { AnswerVoteRankingTypes, PostTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingTypes, PostTypes } from 'src/app/models/constants';
 
 
 @Component({
@@ -100,7 +100,7 @@ export class AnswerListComponent implements OnInit {
     }
 
     if(this.selectedVendor !== null) {
-      var newAnswer = new AnswerDisplay(new Answer(), this.postType);
+      var newAnswer = new AnswerDisplay(new Selection(), this.postType);
       newAnswer.entity = this.selectedVendor;
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(newAnswer, this.answers as AnswerDisplay[]);      
       

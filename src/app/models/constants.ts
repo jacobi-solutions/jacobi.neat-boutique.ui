@@ -36,7 +36,7 @@ export enum PostTypes {
 }
 
 
-export const AnswerVoteRankingTypes = {
+export const SelectionVoteRankingTypes = {
     FIRST: "First",
     SECOND: "Second",
     THIRD: "Third",
@@ -44,7 +44,7 @@ export const AnswerVoteRankingTypes = {
 }
 
 
-export const AnswerVoteRankingColorsMap = new Map([
+export const SelectionVoteRankingColorsMap = new Map([
     ['First', '#c69934'],
     ['Second', '#919191'],
     ['Third', '#825a26'],

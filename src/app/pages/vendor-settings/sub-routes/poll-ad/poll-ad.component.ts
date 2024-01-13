@@ -6,7 +6,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { PostTypes, SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { NeatBoutiqueEntity, Comment, Answer, AnswerVote, Post } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
 import { Router } from '@angular/router';
@@ -89,8 +89,8 @@ export class PollAdComponent implements OnInit {
       } = pollForm;
   
       this.pollLivePreview.communityName = community;
-      this.pollLivePreview.question = pollQuestion;
-      this.pollLivePreview.answers = [pollAnswer1,pollAnswer2,pollAnswer3,pollAnswer4,pollAnswer5].map((answer, i) => {
+      this.pollLivePreview.subject = pollQuestion;
+      this.pollLivePreview.selections = [pollAnswer1,pollAnswer2,pollAnswer3,pollAnswer4,pollAnswer5].map((answer, i) => {
         let voterCount: number;
         switch(i) {
           case 0:
@@ -104,10 +104,10 @@ export class PollAdComponent implements OnInit {
         }
 
         //const voters = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new NeatBoutiqueEntity({id: 'demo'})) : [];
-        const votes = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new AnswerVote({voter: new NeatBoutiqueEntity({id: 'demo'})}) ) : [];
+        const votes = (voterCount > 0) ? (new Array(voterCount).fill(null)).map(x => new SelectionVote({voter: new NeatBoutiqueEntity({id: 'demo'})}) ) : [];
 
         if(answer) {
-          return new AnswerDisplay(new Answer({
+          return new AnswerDisplay(new Selection({
             freeFormAnswer: answer,
             votes: votes,
           }), PostTypes.POLL);
@@ -125,7 +125,7 @@ export class PollAdComponent implements OnInit {
     if (this.hasPremiumSubscription) {
       const pollAnswers = Object.keys(this.pollAdToSubmit?.value).map(fieldName => {
         if(fieldName.toLowerCase().includes('answer') && this.pollAdToSubmit.value[fieldName]) {
-          return new Answer({ freeFormAnswer: this.pollAdToSubmit?.value[fieldName], votes: [] });
+          return new Selection({ freeFormAnswer: this.pollAdToSubmit?.value[fieldName], votes: [] });
         }
         return null;
       }).filter(x => x);    
@@ -135,8 +135,8 @@ export class PollAdComponent implements OnInit {
       const vendorPost = new Post({
         postType: PostTypes.POLL,
         communityName: this.pollAdToSubmit.value.community,
-        question: this.pollAdToSubmit.value.pollQuestion,
-        answers: pollAnswers,
+        subject: this.pollAdToSubmit.value.pollQuestion,
+        selections: pollAnswers,
         author: new NeatBoutiqueEntity({
           avatarSourceURL: this.vendor.avatarSourceURL,
           id: this.vendor.id,

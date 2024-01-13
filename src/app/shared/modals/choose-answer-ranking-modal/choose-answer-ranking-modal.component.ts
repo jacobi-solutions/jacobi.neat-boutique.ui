@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { AnswerVoteRankingTypes, PostTypes, UserRoleTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingTypes, PostTypes, UserRoleTypes } from 'src/app/models/constants';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { Answer, AnswerVote, ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { Selection, SelectionVote, ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 
@@ -20,13 +20,13 @@ export class ChooseAnswerRankingModalComponent implements OnInit {
   public consumer: ConsumerProfile;
   public vendor: VendorProfile;
   private _currentUser: CurrentUserDisplay = null;
-  answerVoteRankingTypes = AnswerVoteRankingTypes;
+  answerVoteRankingTypes = SelectionVoteRankingTypes;
   currentUserFirstChoiceAnswer: AnswerDisplay;
   currentUserSecondChoiceAnswer: AnswerDisplay;
   currentUserThirdChoiceAnswer: AnswerDisplay;
   showRemoveAnswer: boolean;
   showCancel: boolean;
-  answerVoteToRemove: AnswerVote;
+  answerVoteToRemove: SelectionVote;
   postTypes = PostTypes;
 
   constructor(private _modalController: ModalController, private _router: Router, private _accountsService: AccountsService) {
@@ -95,7 +95,7 @@ export class ChooseAnswerRankingModalComponent implements OnInit {
   removeVote() {
     this._modalController.dismiss({
       canceled: false,
-      choice: AnswerVoteRankingTypes.REMOVE,
+      choice: SelectionVoteRankingTypes.REMOVE,
       answerToRemove: this.answerVoteToRemove
     });
   }

@@ -1,15 +1,15 @@
-import { Answer } from "../services/neat-boutique-api.service";
-import { AnswerVoteRankingTypes } from "./constants";
+import { Selection } from "../services/neat-boutique-api.service";
+import { SelectionVoteRankingTypes } from "./constants";
 import { EntityDisplay } from "./entity-display";
 
-export class AnswerDisplay extends Answer {
+export class AnswerDisplay extends Selection {
     public postType: string;
     public barChartValue: number;
     public isDeleted: boolean;
     public entity: EntityDisplay;    
     public didVoteFor: boolean;
     public points: number = 0;
-    constructor(answer: Answer, postType: string) {
+    constructor(answer: Selection, postType: string) {
         super(answer);
         this.isDeleted = false;
         this.postType = postType;
@@ -24,13 +24,13 @@ export class AnswerDisplay extends Answer {
 
     loadPoints() {
         this.votes?.forEach(vote => {
-            if(vote.voteRanking === AnswerVoteRankingTypes.FIRST) {
+            if(vote.voteRanking === SelectionVoteRankingTypes.FIRST) {
                 this.points += 3;
             }
-            if(vote.voteRanking === AnswerVoteRankingTypes.SECOND) {
+            if(vote.voteRanking === SelectionVoteRankingTypes.SECOND) {
                 this.points += 2;
             }
-            if(vote.voteRanking === AnswerVoteRankingTypes.THIRD) {
+            if(vote.voteRanking === SelectionVoteRankingTypes.THIRD) {
                 this.points += 1;
             }
         });

@@ -20,7 +20,7 @@
   
       <ion-row class="post-title-row">
         <ion-col class=" ion-text-left">
-          <p>{{ post.question }}</p>
+          <p>{{ post.subject }}</p>
         </ion-col>
       </ion-row>
   
@@ -38,8 +38,8 @@
   
             <ion-row>
               <ion-col>
-                <!-- [answers]="normalizedAnswersForChartMinMax(post.answers)" -->
-                <app-answer-list [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.answers?.sort(sortByPointTotals)"></app-answer-list>
+                <!-- [answers]="normalizedAnswersForChartMinMax(post.selections)" -->
+                <app-answer-list [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
               </ion-col>
             </ion-row>
           </div>

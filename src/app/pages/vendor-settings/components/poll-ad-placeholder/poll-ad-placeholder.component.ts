@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PostDisplay as PostDisplay } from 'src/app/models/post-display';
 import { CommunityTypes, PostTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
-import { NeatBoutiqueEntity, Comment, VendorProfile, Answer, AnswerVote, Post } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, VendorProfile, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -60,7 +60,7 @@ export class PollAdPlaceholderComponent implements OnInit {
         postType: PostTypes.POLL,
         createdDateUtc: new Date(),
         lastUpdatedDateUtc: new Date(),
-        question: 'What is your favorite flavor',
+        subject: 'What is your favorite flavor',
         communityName: CommunityTypes.FOOD_DRINK,
         startDateUtc: new Date(),
         endDateUtc: new Date(),
@@ -71,10 +71,10 @@ export class PollAdPlaceholderComponent implements OnInit {
           // avatarSourceURL?: string | undefined;
           // profilePath?: string | undefined;
         }),
-        answers: [
-          new Answer({ freeFormAnswer: 'Chocolate', votes: new Array(113).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
-          new Answer({ freeFormAnswer: 'Vanilla', votes: new Array(101).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
-          new Answer({ freeFormAnswer: 'Strawberry', votes: new Array(89).fill(new AnswerVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
+        selections: [
+          new Selection({ freeFormAnswer: 'Chocolate', votes: new Array(113).fill(new SelectionVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
+          new Selection({ freeFormAnswer: 'Vanilla', votes: new Array(101).fill(new SelectionVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
+          new Selection({ freeFormAnswer: 'Strawberry', votes: new Array(89).fill(new SelectionVote({voter: (new NeatBoutiqueEntity({name: ''})) })) }),
         ],
         comments: (new Array(1).fill(null)).map((el, i) => {
           // create some demo comments        
