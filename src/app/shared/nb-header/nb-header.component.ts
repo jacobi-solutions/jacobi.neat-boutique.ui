@@ -113,10 +113,10 @@ export class NbHeaderComponent implements OnInit {
         name: 'Feed',
         href: '/feed'
       },
-      {
-        name: 'Routes',
-        href: '/routes'
-      },
+      // {
+      //   name: 'Routes',
+      //   href: '/routes'
+      // },
       {
         name: 'Get Started',
         href: '/get-started'
