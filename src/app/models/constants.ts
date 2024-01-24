@@ -31,8 +31,14 @@ export const SubscriptionPlanTypes = {
 export enum PostTypes {
     QUESTION = "Question",
     POLL = "Poll",
-    ROUTE = "Route"
+    ROUTE = "Route",
+    TOP_USERS = "Top Users"
 
+}
+
+export enum FeedTypes {
+    COMMUNITY = "Community",
+    ROUTE = "Route"
 }
 
 

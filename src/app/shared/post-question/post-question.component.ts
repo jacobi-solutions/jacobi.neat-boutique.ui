@@ -1,8 +1,8 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CommunityCategory } from 'src/app/models/community-category';
-import { UserRoleTypes } from 'src/app/models/constants';
+import { FeedTypes, UserRoleTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CommunityService } from 'src/app/services/community.service';
@@ -19,7 +19,11 @@ export class PostQuestionComponent implements OnInit {
   @ViewChild('questionMarkPlaceholder', { read: ElementRef }) questionMarkPlaceholder: ElementRef;
   @ViewChild('categorySelection', { read: ElementRef }) categorySelection: ElementRef;
   @ViewChild('submitPostIcon', { read: ElementRef }) submitPostIcon: ElementRef;
+  @Input() postQuestionPromptText = "Post a question...";
+  @Input() feedType = FeedTypes.COMMUNITY;
+  @Input() feedContextId: string  = null;
   @Output() onPost: EventEmitter<any> = new EventEmitter<any>();
+  feedTypes = FeedTypes;
   public postWithQuestionMark: string = null;
   private _newPostInputMaxWidth: number;
   private _maxNewPostInputLength: number = 0;
@@ -84,6 +88,45 @@ export class PostQuestionComponent implements OnInit {
         return;
       }
     } 
+
+    if(this.feedType === FeedTypes.COMMUNITY) {
+      await this.addNewCommunityPost();
+    } else if(this.feedType === FeedTypes.ROUTE) {
+      await this.addNewRouteQuestion();
+    }
+  }
+
+  async addNewRouteQuestion() {
+    const post =  new Post();
+    post.communityName = this.postForm.value.communityName;
+    post.subject = this.postForm.value.newQuestion.trim();
+    post.feedContextId = this.feedContextId;
+    post.author = new NeatBoutiqueEntity({
+      name: this.currentUser?.consumer.name,
+      avatarSourceURL: this.currentUser?.consumer.avatarSourceURL,
+      role: UserRoleTypes.CONSUMER,
+      id: this.currentUser?.consumer.id
+    })
+
+    if(!post.subject.endsWith('?')) {
+      post.subject += '?';
+    }
+
+    const questionCharArray = [...post.subject];
+    questionCharArray[0] = questionCharArray[0].toUpperCase();
+    post.subject = questionCharArray.join('');
+
+    this._communityService.createRouteQuestion(post);
+    this.postForm.reset();
+    this.newPostIcon = 'paper-plane-outline';
+    this.postWithQuestionMark = null;
+
+    // var community = this.communities.find(x => x.name === post.communityName);
+    // this.updateSelectedCommunities(community);
+    this.onPost.emit();
+  }
+
+  async addNewCommunityPost() {
     
     const post =  new Post();
     post.communityName = this.postForm.value.communityName;
@@ -119,7 +162,7 @@ export class PostQuestionComponent implements OnInit {
   }
 
   async confirmNonEditablePost() {
-    if(this.postForm?.value?.newQuestion === '' || this.postForm?.value?.communityName === '') return;
+    if(this.postForm?.value?.newQuestion === '' || (this.postForm?.value?.communityName === '' && this.feedType === FeedTypes.COMMUNITY)) return;
     const self = this;
     const showCancelBtn = true;
     const html = `

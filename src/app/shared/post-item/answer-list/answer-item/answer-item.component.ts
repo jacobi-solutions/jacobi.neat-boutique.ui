@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { CommunityService } from 'src/app/services/community.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { PopoverController } from '@ionic/angular';
-import { SelectionVoteRankingColorsMap, SelectionVoteRankingTypes, PostTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingColorsMap, SelectionVoteRankingTypes, PostTypes, FeedTypes } from 'src/app/models/constants';
 
 @Component({
   selector: 'app-answer-item',
@@ -25,6 +25,7 @@ export class AnswerItemComponent implements OnInit {
   @Input() chartBar: number = 100;
   @Input() altStyle: string;
   @Input() isDemo: boolean = false;
+  @Input() feedType: string = FeedTypes.COMMUNITY;
 
   public endorsedVendor: string;
   public votedIcon: string = 'star-outline';
@@ -41,7 +42,7 @@ export class AnswerItemComponent implements OnInit {
     this._customersService.currentUserSubject.subscribe((user) => {
       this.currentUser = user;
       this.currentUserVote = this.answer.votes.find(x => this.currentUser?.hasId(x.voter.id));
-      if(this.answer.postType === PostTypes.QUESTION) {
+      if(this.answer.postType === PostTypes.QUESTION || this.answer.postType === PostTypes.ROUTE) {
         if(this.currentUserVote) {
           this.borderColor = SelectionVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
         } else if(this.answer.entity.isGooglePlaceEntity) {
@@ -73,18 +74,19 @@ export class AnswerItemComponent implements OnInit {
     
     if(!this.isDemo) {
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(this.answer, this.answers);
-      
+      if(!answerRanking) return;
+
       if(this.answer.postType === PostTypes.QUESTION) {
         if(answerRanking.choice === SelectionVoteRankingTypes.REMOVE) {
-          await this._answersService.removeAnswerVoteFromAnswer(answerRanking.answerToRemove);
+          await this._answersService.removeAnswerVoteFromAnswer(answerRanking.answerToRemove, this.feedType);
         } else {
           if(this.answer.entity.isGooglePlaceEntity) {
-            await this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.answer.googlePlace), this.answer.postId, answerRanking.choice);    
+            await this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.answer.googlePlace), this.answer.postId, answerRanking.choice, this.feedType);    
           } else {
-            await this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.answer.vendor), this.answer.postId, answerRanking.choice);
+            await this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.answer.vendor), this.answer.postId, answerRanking.choice, this.feedType);
           }
         }
-      } else if(this.answer.postType === PostTypes.POLL) {
+      } else if(this.answer.postType === PostTypes.POLL || this.answer.postType === PostTypes.ROUTE) {
         if(answerRanking.choice === SelectionVoteRankingTypes.REMOVE) {
           await this._answersService.removeVoteFromPollAnswer(answerRanking.answerToRemove);
         } else { 
@@ -105,7 +107,7 @@ export class AnswerItemComponent implements OnInit {
     if(!this.isDemo) {
       var answerVote = this.answer.votes.find(x => this.currentUser.hasId(x.voter.id));
       if(answerVote){
-        await this._answersService.removeAnswerVoteFromAnswer(answerVote);
+        await this._answersService.removeAnswerVoteFromAnswer(answerVote, this.feedType);
       }
       
     }

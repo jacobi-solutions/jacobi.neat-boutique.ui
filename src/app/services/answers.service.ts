@@ -6,6 +6,7 @@ import { CurrentUserDisplay } from '../models/current-user-display';
 import { AccountsService } from './accounts.service';
 import { SelectionVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, PostResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest } from './neat-boutique-api.service';
 import { UtilService } from './util.service';
+import { FeedTypes } from '../models/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import { UtilService } from './util.service';
 export class AnswersService {
 
   public questionAnsweredOnPostSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
+  public questionAnsweredOnRouteQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public pollVotedOnSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   private _currentUser: CurrentUserDisplay;
   constructor(private _accountsService: AccountsService, private _util: UtilService, private _neatBoutiqueApiService: NeatBoutiqueApiService) {
@@ -23,7 +25,7 @@ export class AnswersService {
     });
   }
 
-  answerQuestionWithGoolgePlace(googlePlace: GooglePlacesEntity, postId: string, voteRanking: string) {
+  answerQuestionWithGoolgePlace(googlePlace: GooglePlacesEntity, postId: string, voteRanking: string, feedType: string) {
     const request = new AnswerWithGooglePlaceRequest();
     request.postId = postId;
     request.voteRanking = voteRanking;
@@ -36,7 +38,11 @@ export class AnswersService {
       .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
           var updatedPost = new PostDisplay(response.post);
-          this.questionAnsweredOnPostSubject.next(updatedPost);
+          if(feedType === FeedTypes.COMMUNITY) {
+            this.questionAnsweredOnPostSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.ROUTE) {
+            this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          }
 
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();
@@ -45,7 +51,7 @@ export class AnswersService {
       });
   }
 
-  answerQuestionWithVendor(vendor: NeatBoutiqueEntity, postId: string, voteRanking: string) {
+  answerQuestionWithVendor(vendor: NeatBoutiqueEntity, postId: string, voteRanking: string, feedType: string) {
     const request = new AnswerWithVendorRequest();
     request.postId = postId;
     request.voteRanking = voteRanking;
@@ -56,7 +62,12 @@ export class AnswersService {
       .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
           var updatedPost = new PostDisplay(response.post);
-          this.questionAnsweredOnPostSubject.next(updatedPost);
+          if(feedType === FeedTypes.COMMUNITY) {
+            this.questionAnsweredOnPostSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.ROUTE) {
+            this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          }
+
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();
           // reject(false);
@@ -64,7 +75,7 @@ export class AnswersService {
       });
   }
 
-  removeAnswerVoteFromAnswer(answerVote: SelectionVote) {
+  removeAnswerVoteFromAnswer(answerVote: SelectionVote, feedType: string) {
     const request = new AnswerVoteRemoveRequest();
     request.answerVote = answerVote;
 
@@ -74,7 +85,11 @@ export class AnswersService {
 
         if (response.isSuccess) {
           var updatedPost = new PostDisplay(response.post);
-          this.questionAnsweredOnPostSubject.next(updatedPost);
+          if(feedType === FeedTypes.COMMUNITY) {
+            this.questionAnsweredOnPostSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.ROUTE) {
+            this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          }
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();
           // reject(false);

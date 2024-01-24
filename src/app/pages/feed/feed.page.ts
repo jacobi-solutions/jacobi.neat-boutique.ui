@@ -59,7 +59,7 @@ export class FeedPage implements OnInit {
     const routeParams = this._activatedRoute.snapshot.paramMap;    
     const postId = routeParams.get('postId');    
     if(postId) {
-      this._communityService.getConsumerPostById(postId).then((post: PostDisplay) => {
+      this._communityService.getPostById(postId).then((post: PostDisplay) => {
         if(post) {
           this.specificPost = post;
         }

@@ -44,12 +44,18 @@ import {
   HeroAdTemplate,
   ConsumerFeedSettingsRequest,
   SelectionVote,
-  ConsumerQuestionRequest,
+  PostRequest,
+  RouteResponse,
+  RouteRequest,
+  MyVisitsResponse,
+  RouteSelectionVisit,
 } from "./neat-boutique-api.service";
 import { UtilService } from "./util.service";
 import { AnswersService } from "./answers.service";
 import { ConsumerService } from "./consumer.service";
 import { AuthService } from "../auth/auth.service";
+import { RouteDisplay } from "../models/route-display";
+import { Visitor } from "@angular/compiler";
 
 
 export class CommunityDisplay {
@@ -82,7 +88,7 @@ export class CommunityService {
   public currentPage: number = 0;
   private _communityDisplay = new CommunityDisplay();
   public communityDisplaySubject: BehaviorSubject<CommunityDisplay> = new BehaviorSubject<CommunityDisplay>(null);
-
+  public newRouteQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public consumerPostsPerPage: number = 12;
   public recentPostsPerPage: number = 3;
   public userHasSeenNonEditableModal: boolean;
@@ -139,13 +145,43 @@ export class CommunityService {
     this.loadPostsByCommunityNames(communityNames);
   }
 
-  getConsumerPostById(specificPostId: string) {
+  getPostById(specificPostId: string) {
     var promise = new Promise<PostDisplay>((resolve, reject) => {
-      var request = new ConsumerQuestionRequest();
+      var request = new PostRequest();
       request.postId = specificPostId;
-      this._neatBoutiqueApiService.getConsumerQuesitionById(request).subscribe((response: PostResponse) => {
+      this._neatBoutiqueApiService.getPostById(request).subscribe((response: PostResponse) => {
         if(response.isSuccess) {
           resolve(new PostDisplay(response.post))
+        }
+      });
+    });
+
+    return promise;
+    
+  }
+
+  getRouteById(routeId: string) {
+    var promise = new Promise<RouteDisplay>((resolve, reject) => {
+      var request = new RouteRequest();
+      request.routeId = routeId;
+      this._neatBoutiqueApiService.getRouteById(request).subscribe((response: RouteResponse) => {
+        if(response.isSuccess) {
+          resolve(new RouteDisplay(response.route))
+        }
+      });
+    });
+
+    return promise;
+    
+  }
+
+  getMyVisitsOnRouteByRouteById(routeId: string) {
+    var promise = new Promise<RouteSelectionVisit[]>((resolve, reject) => {
+      var request = new RouteRequest();
+      request.routeId = routeId;
+      this._neatBoutiqueApiService.getMyVisitsOnRouteByRouteId(request).subscribe((response: MyVisitsResponse) => {
+        if(response.isSuccess) {
+          resolve(response.myVisits)
         }
       });
     });
@@ -257,7 +293,7 @@ export class CommunityService {
 
   // needs to be authorized
   createConsumerPost(post: Post) {
-    const request = new ConsumerQuestionRequest();
+    const request = new PostRequest();
 
     request.post = post;
     this._neatBoutiqueApiService
@@ -267,6 +303,23 @@ export class CommunityService {
         if (response.isSuccess) {
           // this.authService.setToken(response.token);
           this.loadPostsByCommunityNames(this._selectedCommunityNames);
+        } else if (response.errors.find((x) => x.errorCode === "409")) {
+          // this.authService.revokeToken();
+          // reject(false);
+        }
+      });
+  }
+
+  createRouteQuestion(post: Post) {
+    const request = new PostRequest();
+
+    request.post = post;
+    this._neatBoutiqueApiService
+      .createRouteFeedQuestion(request)
+      .subscribe((response: PostResponse) => {
+
+        if (response.isSuccess) {
+          this.newRouteQuestionSubject.next(new PostDisplay(response.post));
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           // this.authService.revokeToken();
           // reject(false);

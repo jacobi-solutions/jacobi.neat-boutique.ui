@@ -8,7 +8,7 @@ import { AnswerDisplay } from 'src/app/models/answer-display';
 import { Selection, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
-import { PostTypes } from 'src/app/models/constants';
+import { FeedTypes, PostTypes } from 'src/app/models/constants';
 
 @Component({
   selector: 'app-post-item',
@@ -21,7 +21,8 @@ export class PostItemComponent implements OnInit {
   @Input() expandComments: boolean;
   @Input() altAnswerStyle: string;
   @Input() isDemo: boolean = false;
-
+  @Input() feedType: string = FeedTypes.COMMUNITY;
+  @Input() restrictedAvailableAnswers:  AnswerDisplay[] = null;
   public postTypes = PostTypes;
   public currentUser: CurrentUserDisplay;
   // public iconShowChart: string;

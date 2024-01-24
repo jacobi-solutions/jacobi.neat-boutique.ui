@@ -94,8 +94,13 @@ export class ModalService {
         componentProps: { answer: answer, answers: answers }
       });
       modal.present();
-      const { data: { choice, answerToRemove } } = await modal.onDidDismiss();
-      return { choice, answerToRemove };
+      try {
+        const { data: { choice, answerToRemove } } = await modal.onDidDismiss();
+        return { choice, answerToRemove };
+      } catch (error) {
+        return null;
+      }
+      
     }
 
 

@@ -7,7 +7,7 @@
       <ion-input  #newPost class="ion-text-left"
         [ngClass]="{ hasValue: (postForm.value.newQuestion?.trim() !== '') && (postWithQuestionMark !== null) }"
         (ngModelChange)="newPostChange($event)" formControlName="newQuestion" autocapitalize="true">
-        <ion-label>Post a question...</ion-label>
+        <ion-label>{{ postQuestionPromptText }}</ion-label>
     
         <div *ngIf="postWithQuestionMark" class="clonedInputWrapper">
           <p #questionMarkPlaceholder class="cloned-input">
@@ -18,7 +18,7 @@
         </div>
       </ion-input>
     
-      <span #categorySelection *ngIf="postForm.value.newQuestion?.trim() !== ''" lines="none" class="clickable category-selector" [ngClass]="{hasValue: postForm.value.communityName !== ''}">
+      <span #categorySelection *ngIf="feedType === feedTypes.COMMUNITY && postForm.value.newQuestion?.trim() !== ''" lines="none" class="clickable category-selector" [ngClass]="{hasValue: postForm.value.communityName !== ''}">
         
         <ion-select      
             class="clickable"      

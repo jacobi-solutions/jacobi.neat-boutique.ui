@@ -124,11 +124,6 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getConsumerQuesitionById(body: ConsumerQuestionRequest | undefined): Observable<PostResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
     addVendorToMyPlaces(body: MyPlacesRequest | undefined): Observable<Response>;
     /**
      * @param body (optional) 
@@ -139,7 +134,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerQuestionsResponse>;
+    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<PostsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -244,12 +239,22 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createConsumerQuestion(body: ConsumerQuestionRequest | undefined): Observable<PostResponse>;
+    createConsumerQuestion(body: PostRequest | undefined): Observable<PostResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createRouteFeedQuestion(body: PostRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
      */
     createVendorPost(body: VendorPostRequest | undefined): Observable<PostResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getPostById(body: PostRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -270,6 +275,16 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     updateReviewOnVendor(body: ReviewUpdateRequest | undefined): Observable<ReviewResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getRouteById(body: RouteRequest | undefined): Observable<RouteResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getMyVisitsOnRouteByRouteId(body: RouteRequest | undefined): Observable<MyVisitsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -1579,62 +1594,6 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getConsumerQuesitionById(body: ConsumerQuestionRequest | undefined): Observable<PostResponse> {
-        let url_ = this.baseUrl + "/Community/GetConsumerQuesitionByIdAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetConsumerQuesitionById(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetConsumerQuesitionById(<any>response_);
-                } catch (e) {
-                    return <Observable<PostResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<PostResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetConsumerQuesitionById(response: HttpResponseBase): Observable<PostResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PostResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<PostResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
     addVendorToMyPlaces(body: MyPlacesRequest | undefined): Observable<Response> {
         let url_ = this.baseUrl + "/Consumers/AddVendorToMyPlacesAsync";
         url_ = url_.replace(/[?&]$/, "");
@@ -1747,7 +1706,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<ConsumerQuestionsResponse> {
+    getMyQuestions(body: MyQuestionsRequest | undefined): Observable<PostsResponse> {
         let url_ = this.baseUrl + "/Consumers/GetMyQuestionsAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1770,14 +1729,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processGetMyQuestions(<any>response_);
                 } catch (e) {
-                    return <Observable<ConsumerQuestionsResponse>><any>_observableThrow(e);
+                    return <Observable<PostsResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ConsumerQuestionsResponse>><any>_observableThrow(response_);
+                return <Observable<PostsResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetMyQuestions(response: HttpResponseBase): Observable<ConsumerQuestionsResponse> {
+    protected processGetMyQuestions(response: HttpResponseBase): Observable<PostsResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1788,7 +1747,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ConsumerQuestionsResponse.fromJS(resultData200);
+            result200 = PostsResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1796,7 +1755,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ConsumerQuestionsResponse>(<any>null);
+        return _observableOf<PostsResponse>(<any>null);
     }
 
     /**
@@ -2923,7 +2882,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createConsumerQuestion(body: ConsumerQuestionRequest | undefined): Observable<PostResponse> {
+    createConsumerQuestion(body: PostRequest | undefined): Observable<PostResponse> {
         let url_ = this.baseUrl + "/Posts/CreateConsumerQuestionAsync";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2954,6 +2913,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     protected processCreateConsumerQuestion(response: HttpResponseBase): Observable<PostResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PostResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createRouteFeedQuestion(body: PostRequest | undefined): Observable<PostResponse> {
+        let url_ = this.baseUrl + "/Posts/CreateRouteFeedQuestionAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateRouteFeedQuestion(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateRouteFeedQuestion(<any>response_);
+                } catch (e) {
+                    return <Observable<PostResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PostResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateRouteFeedQuestion(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3010,6 +3025,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     protected processCreateVendorPost(response: HttpResponseBase): Observable<PostResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PostResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getPostById(body: PostRequest | undefined): Observable<PostResponse> {
+        let url_ = this.baseUrl + "/Posts/GetPostByIdAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostById(<any>response_);
+                } catch (e) {
+                    return <Observable<PostResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PostResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPostById(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3253,6 +3324,118 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<ReviewResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getRouteById(body: RouteRequest | undefined): Observable<RouteResponse> {
+        let url_ = this.baseUrl + "/Routes/GetRouteByIdAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRouteById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRouteById(<any>response_);
+                } catch (e) {
+                    return <Observable<RouteResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<RouteResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetRouteById(response: HttpResponseBase): Observable<RouteResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RouteResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<RouteResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getMyVisitsOnRouteByRouteId(body: RouteRequest | undefined): Observable<MyVisitsResponse> {
+        let url_ = this.baseUrl + "/Routes/GetMyVisitsOnRouteByRouteIdAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMyVisitsOnRouteByRouteId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMyVisitsOnRouteByRouteId(<any>response_);
+                } catch (e) {
+                    return <Observable<MyVisitsResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MyVisitsResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetMyVisitsOnRouteByRouteId(response: HttpResponseBase): Observable<MyVisitsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MyVisitsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MyVisitsResponse>(<any>null);
     }
 
     /**
@@ -5472,6 +5655,46 @@ export interface IComment {
     likers?: NeatBoutiqueEntity[] | undefined;
 }
 
+export class GeometryLocation implements IGeometryLocation {
+    latitude?: number;
+    longitude?: number;
+
+    constructor(data?: IGeometryLocation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+        }
+    }
+
+    static fromJS(data: any): GeometryLocation {
+        data = typeof data === 'object' ? data : {};
+        let result = new GeometryLocation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        return data; 
+    }
+}
+
+export interface IGeometryLocation {
+    latitude?: number;
+    longitude?: number;
+}
+
 export class GooglePlacesEntity implements IGooglePlacesEntity {
     placeId?: string | undefined;
     name?: string | undefined;
@@ -5583,6 +5806,7 @@ export class Selection implements ISelection {
     postId?: string | undefined;
     freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
+    geometryLocation?: GeometryLocation;
     googlePlace?: GooglePlacesEntity;
     votes?: SelectionVote[] | undefined;
 
@@ -5603,6 +5827,7 @@ export class Selection implements ISelection {
             this.postId = _data["postId"];
             this.freeFormAnswer = _data["freeFormAnswer"];
             this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
+            this.geometryLocation = _data["geometryLocation"] ? GeometryLocation.fromJS(_data["geometryLocation"]) : <any>undefined;
             this.googlePlace = _data["googlePlace"] ? GooglePlacesEntity.fromJS(_data["googlePlace"]) : <any>undefined;
             if (Array.isArray(_data["votes"])) {
                 this.votes = [] as any;
@@ -5627,6 +5852,7 @@ export class Selection implements ISelection {
         data["postId"] = this.postId;
         data["freeFormAnswer"] = this.freeFormAnswer;
         data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
+        data["geometryLocation"] = this.geometryLocation ? this.geometryLocation.toJSON() : <any>undefined;
         data["googlePlace"] = this.googlePlace ? this.googlePlace.toJSON() : <any>undefined;
         if (Array.isArray(this.votes)) {
             data["votes"] = [];
@@ -5644,6 +5870,7 @@ export interface ISelection {
     postId?: string | undefined;
     freeFormAnswer?: string | undefined;
     vendor?: NeatBoutiqueEntity;
+    geometryLocation?: GeometryLocation;
     googlePlace?: GooglePlacesEntity;
     votes?: SelectionVote[] | undefined;
 }
@@ -5655,6 +5882,7 @@ export class Post implements IPost {
     postType?: string | undefined;
     subject?: string | undefined;
     communityName?: string | undefined;
+    feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -5678,6 +5906,7 @@ export class Post implements IPost {
             this.postType = _data["postType"];
             this.subject = _data["subject"];
             this.communityName = _data["communityName"];
+            this.feedContextId = _data["feedContextId"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
             this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
@@ -5709,6 +5938,7 @@ export class Post implements IPost {
         data["postType"] = this.postType;
         data["subject"] = this.subject;
         data["communityName"] = this.communityName;
+        data["feedContextId"] = this.feedContextId;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
         data["author"] = this.author ? this.author.toJSON() : <any>undefined;
@@ -5733,6 +5963,7 @@ export interface IPost {
     postType?: string | undefined;
     subject?: string | undefined;
     communityName?: string | undefined;
+    feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -6362,6 +6593,7 @@ export class CommunityResponse implements ICommunityResponse {
     consumerQuestions?: Post[] | undefined;
     vendorPolls?: Post[] | undefined;
     recentConsumerQuestions?: Post[] | undefined;
+    vendorRoutes?: Post[] | undefined;
     heroAds?: HeroAd[] | undefined;
 
     constructor(data?: ICommunityResponse) {
@@ -6395,6 +6627,11 @@ export class CommunityResponse implements ICommunityResponse {
                 this.recentConsumerQuestions = [] as any;
                 for (let item of _data["recentConsumerQuestions"])
                     this.recentConsumerQuestions!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["vendorRoutes"])) {
+                this.vendorRoutes = [] as any;
+                for (let item of _data["vendorRoutes"])
+                    this.vendorRoutes!.push(Post.fromJS(item));
             }
             if (Array.isArray(_data["heroAds"])) {
                 this.heroAds = [] as any;
@@ -6434,6 +6671,11 @@ export class CommunityResponse implements ICommunityResponse {
             for (let item of this.recentConsumerQuestions)
                 data["recentConsumerQuestions"].push(item.toJSON());
         }
+        if (Array.isArray(this.vendorRoutes)) {
+            data["vendorRoutes"] = [];
+            for (let item of this.vendorRoutes)
+                data["vendorRoutes"].push(item.toJSON());
+        }
         if (Array.isArray(this.heroAds)) {
             data["heroAds"] = [];
             for (let item of this.heroAds)
@@ -6449,47 +6691,8 @@ export interface ICommunityResponse {
     consumerQuestions?: Post[] | undefined;
     vendorPolls?: Post[] | undefined;
     recentConsumerQuestions?: Post[] | undefined;
+    vendorRoutes?: Post[] | undefined;
     heroAds?: HeroAd[] | undefined;
-}
-
-export class ConsumerQuestionRequest implements IConsumerQuestionRequest {
-    postId?: string | undefined;
-    post?: Post;
-
-    constructor(data?: IConsumerQuestionRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.postId = _data["postId"];
-            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ConsumerQuestionRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new ConsumerQuestionRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["postId"] = this.postId;
-        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IConsumerQuestionRequest {
-    postId?: string | undefined;
-    post?: Post;
 }
 
 export class MyPlacesRequest implements IMyPlacesRequest {
@@ -6568,12 +6771,12 @@ export interface IMyQuestionsRequest {
     pageSize?: number;
 }
 
-export class ConsumerQuestionsResponse implements IConsumerQuestionsResponse {
+export class PostsResponse implements IPostsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     posts?: Post[] | undefined;
 
-    constructor(data?: IConsumerQuestionsResponse) {
+    constructor(data?: IPostsResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -6598,9 +6801,9 @@ export class ConsumerQuestionsResponse implements IConsumerQuestionsResponse {
         }
     }
 
-    static fromJS(data: any): ConsumerQuestionsResponse {
+    static fromJS(data: any): PostsResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new ConsumerQuestionsResponse();
+        let result = new PostsResponse();
         result.init(data);
         return result;
     }
@@ -6622,7 +6825,7 @@ export class ConsumerQuestionsResponse implements IConsumerQuestionsResponse {
     }
 }
 
-export interface IConsumerQuestionsResponse {
+export interface IPostsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     posts?: Post[] | undefined;
@@ -7872,6 +8075,46 @@ export interface IVendorSubscriptionResponse {
     vendorSubscriptionId?: string | undefined;
 }
 
+export class PostRequest implements IPostRequest {
+    postId?: string | undefined;
+    post?: Post;
+
+    constructor(data?: IPostRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postId = _data["postId"];
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PostRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postId"] = this.postId;
+        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPostRequest {
+    postId?: string | undefined;
+    post?: Post;
+}
+
 export class VendorPostRequest implements IVendorPostRequest {
     post?: Post;
 
@@ -8162,6 +8405,354 @@ export interface IReviewUpdateRequest {
     body?: string | undefined;
     title?: string | undefined;
     rating?: number;
+}
+
+export class RouteRequest implements IRouteRequest {
+    routeId?: string | undefined;
+
+    constructor(data?: IRouteRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.routeId = _data["routeId"];
+        }
+    }
+
+    static fromJS(data: any): RouteRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new RouteRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["routeId"] = this.routeId;
+        return data; 
+    }
+}
+
+export interface IRouteRequest {
+    routeId?: string | undefined;
+}
+
+export class RouteTopUser implements IRouteTopUser {
+    visitor?: NeatBoutiqueEntity;
+    routeVisits?: number;
+
+    constructor(data?: IRouteTopUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.visitor = _data["visitor"] ? NeatBoutiqueEntity.fromJS(_data["visitor"]) : <any>undefined;
+            this.routeVisits = _data["routeVisits"];
+        }
+    }
+
+    static fromJS(data: any): RouteTopUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new RouteTopUser();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["visitor"] = this.visitor ? this.visitor.toJSON() : <any>undefined;
+        data["routeVisits"] = this.routeVisits;
+        return data; 
+    }
+}
+
+export interface IRouteTopUser {
+    visitor?: NeatBoutiqueEntity;
+    routeVisits?: number;
+}
+
+export class Route implements IRoute {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    communityName?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
+    author?: NeatBoutiqueEntity;
+    post?: Post;
+    routeQuestions?: Post[] | undefined;
+    routeTopUsers?: RouteTopUser[] | undefined;
+
+    constructor(data?: IRoute) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postId = _data["postId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.communityName = _data["communityName"];
+            this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
+            this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
+            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
+            if (Array.isArray(_data["routeQuestions"])) {
+                this.routeQuestions = [] as any;
+                for (let item of _data["routeQuestions"])
+                    this.routeQuestions!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["routeTopUsers"])) {
+                this.routeTopUsers = [] as any;
+                for (let item of _data["routeTopUsers"])
+                    this.routeTopUsers!.push(RouteTopUser.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Route {
+        data = typeof data === 'object' ? data : {};
+        let result = new Route();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postId"] = this.postId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["communityName"] = this.communityName;
+        data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
+        data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
+        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
+        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
+        if (Array.isArray(this.routeQuestions)) {
+            data["routeQuestions"] = [];
+            for (let item of this.routeQuestions)
+                data["routeQuestions"].push(item.toJSON());
+        }
+        if (Array.isArray(this.routeTopUsers)) {
+            data["routeTopUsers"] = [];
+            for (let item of this.routeTopUsers)
+                data["routeTopUsers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IRoute {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    communityName?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
+    author?: NeatBoutiqueEntity;
+    post?: Post;
+    routeQuestions?: Post[] | undefined;
+    routeTopUsers?: RouteTopUser[] | undefined;
+}
+
+export class RouteResponse implements IRouteResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    route?: Route;
+
+    constructor(data?: IRouteResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.route = _data["route"] ? Route.fromJS(_data["route"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RouteResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new RouteResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["route"] = this.route ? this.route.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IRouteResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    route?: Route;
+}
+
+export class RouteSelectionVisit implements IRouteSelectionVisit {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    routeId?: string | undefined;
+    visitor?: NeatBoutiqueEntity;
+    selectionId?: string | undefined;
+    visitedDateUtc?: Date;
+
+    constructor(data?: IRouteSelectionVisit) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.routeId = _data["routeId"];
+            this.visitor = _data["visitor"] ? NeatBoutiqueEntity.fromJS(_data["visitor"]) : <any>undefined;
+            this.selectionId = _data["selectionId"];
+            this.visitedDateUtc = _data["visitedDateUtc"] ? new Date(_data["visitedDateUtc"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RouteSelectionVisit {
+        data = typeof data === 'object' ? data : {};
+        let result = new RouteSelectionVisit();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["routeId"] = this.routeId;
+        data["visitor"] = this.visitor ? this.visitor.toJSON() : <any>undefined;
+        data["selectionId"] = this.selectionId;
+        data["visitedDateUtc"] = this.visitedDateUtc ? this.visitedDateUtc.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IRouteSelectionVisit {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    routeId?: string | undefined;
+    visitor?: NeatBoutiqueEntity;
+    selectionId?: string | undefined;
+    visitedDateUtc?: Date;
+}
+
+export class MyVisitsResponse implements IMyVisitsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    myVisits?: RouteSelectionVisit[] | undefined;
+
+    constructor(data?: IMyVisitsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            if (Array.isArray(_data["myVisits"])) {
+                this.myVisits = [] as any;
+                for (let item of _data["myVisits"])
+                    this.myVisits!.push(RouteSelectionVisit.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): MyVisitsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new MyVisitsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        if (Array.isArray(this.myVisits)) {
+            data["myVisits"] = [];
+            for (let item of this.myVisits)
+                data["myVisits"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IMyVisitsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    myVisits?: RouteSelectionVisit[] | undefined;
 }
 
 export class AnswerSearchRequest implements IAnswerSearchRequest {
@@ -8600,6 +9191,8 @@ export class MongoDbSettings implements IMongoDbSettings {
     databaseConnectionString?: string | undefined;
     dbName?: string | undefined;
     postsCollectionName?: string | undefined;
+    routesCollectionName?: string | undefined;
+    routeSelectionVisitsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
     selectionsCollectionName?: string | undefined;
     selectionVotesCollectionName?: string | undefined;
@@ -8612,6 +9205,7 @@ export class MongoDbSettings implements IMongoDbSettings {
     vendorSubscriptionSessionCollectionName?: string | undefined;
     promotionalDiscountsCollectionName?: string | undefined;
     notificationTokensCollectionName?: string | undefined;
+    googlePlacesReferencesCollectionName?: string | undefined;
 
     constructor(data?: IMongoDbSettings) {
         if (data) {
@@ -8627,6 +9221,8 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.databaseConnectionString = _data["databaseConnectionString"];
             this.dbName = _data["dbName"];
             this.postsCollectionName = _data["postsCollectionName"];
+            this.routesCollectionName = _data["routesCollectionName"];
+            this.routeSelectionVisitsCollectionName = _data["routeSelectionVisitsCollectionName"];
             this.commentsCollectionName = _data["commentsCollectionName"];
             this.selectionsCollectionName = _data["selectionsCollectionName"];
             this.selectionVotesCollectionName = _data["selectionVotesCollectionName"];
@@ -8639,6 +9235,7 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.vendorSubscriptionSessionCollectionName = _data["vendorSubscriptionSessionCollectionName"];
             this.promotionalDiscountsCollectionName = _data["promotionalDiscountsCollectionName"];
             this.notificationTokensCollectionName = _data["notificationTokensCollectionName"];
+            this.googlePlacesReferencesCollectionName = _data["googlePlacesReferencesCollectionName"];
         }
     }
 
@@ -8654,6 +9251,8 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["databaseConnectionString"] = this.databaseConnectionString;
         data["dbName"] = this.dbName;
         data["postsCollectionName"] = this.postsCollectionName;
+        data["routesCollectionName"] = this.routesCollectionName;
+        data["routeSelectionVisitsCollectionName"] = this.routeSelectionVisitsCollectionName;
         data["commentsCollectionName"] = this.commentsCollectionName;
         data["selectionsCollectionName"] = this.selectionsCollectionName;
         data["selectionVotesCollectionName"] = this.selectionVotesCollectionName;
@@ -8666,6 +9265,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["vendorSubscriptionSessionCollectionName"] = this.vendorSubscriptionSessionCollectionName;
         data["promotionalDiscountsCollectionName"] = this.promotionalDiscountsCollectionName;
         data["notificationTokensCollectionName"] = this.notificationTokensCollectionName;
+        data["googlePlacesReferencesCollectionName"] = this.googlePlacesReferencesCollectionName;
         return data; 
     }
 }
@@ -8674,6 +9274,8 @@ export interface IMongoDbSettings {
     databaseConnectionString?: string | undefined;
     dbName?: string | undefined;
     postsCollectionName?: string | undefined;
+    routesCollectionName?: string | undefined;
+    routeSelectionVisitsCollectionName?: string | undefined;
     commentsCollectionName?: string | undefined;
     selectionsCollectionName?: string | undefined;
     selectionVotesCollectionName?: string | undefined;
@@ -8686,6 +9288,7 @@ export interface IMongoDbSettings {
     vendorSubscriptionSessionCollectionName?: string | undefined;
     promotionalDiscountsCollectionName?: string | undefined;
     notificationTokensCollectionName?: string | undefined;
+    googlePlacesReferencesCollectionName?: string | undefined;
 }
 
 export class StripeSettings implements IStripeSettings {

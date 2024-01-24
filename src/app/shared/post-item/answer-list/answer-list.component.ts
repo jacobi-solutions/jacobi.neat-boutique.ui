@@ -11,7 +11,7 @@ import { debounceTime } from 'rxjs/operators';
 import { EntityDisplay } from 'src/app/models/entity-display';
 import { UtilService } from 'src/app/services/util.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { SelectionVoteRankingTypes, PostTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingTypes, PostTypes, FeedTypes } from 'src/app/models/constants';
 
 
 @Component({
@@ -21,17 +21,21 @@ import { SelectionVoteRankingTypes, PostTypes } from 'src/app/models/constants';
 })
 export class AnswerListComponent implements OnInit {
   @Input() postType: string = PostTypes.QUESTION;
+  @Input() feedType: string = FeedTypes.COMMUNITY;
   @Input() postId: string;
   @Input() chartShowAll: boolean = false;
   @Input() communityName: string;
   @Input() answers: AnswerDisplay[] = [];
+  @Input() restrictedAvailableAnswers:  AnswerDisplay[] = null;
   @Input() altAnswerStyle: string;
   @Input() isDemo: boolean = false;
   @Input() defaultNumberOfAnswersToShow: number = 5;
 
   public postTypes = PostTypes;
+  public feedTypes = FeedTypes;
   public answersChanged: boolean = true;
   public minimalAnswers: AnswerDisplay[] = [];
+  showAddAnswerConfirmation: boolean = true;
   
   public colors: string[] = THEME.colors.list;
   public viewRangeText: string = 'View all';
@@ -58,6 +62,7 @@ export class AnswerListComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.postType === PostTypes.ROUTE) this.toggleShowAll();
     this._accountsService.currentUserSubject.subscribe((user) => {
         this.currentUser = user;
     });
@@ -93,6 +98,12 @@ export class AnswerListComponent implements OnInit {
     }
   }
 
+  routeSelection() {
+    if(this.feedType === FeedTypes.ROUTE) {
+      this._searchVendor.results = this.vendorResults = this.restrictedAvailableAnswers.map(x => new EntityDisplay(x.vendor));
+    }
+  }
+
   async addNewAnswer() {
     if(!this.currentUser) {
       this._modalService.displayRequireLoginModal();
@@ -103,13 +114,13 @@ export class AnswerListComponent implements OnInit {
       var newAnswer = new AnswerDisplay(new Selection(), this.postType);
       newAnswer.entity = this.selectedVendor;
       const answerRanking = await this._modalService.displayChooseAnswerRankingModal(newAnswer, this.answers as AnswerDisplay[]);      
-      
+      if(!answerRanking) return;
       if(!this.isDemo) {
         
         if(this.selectedVendor.isGooglePlaceEntity) {
-          this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.selectedVendor), this.postId, answerRanking.choice);    
+          this._answersService.answerQuestionWithGoolgePlace(new GooglePlacesEntity(this.selectedVendor), this.postId, answerRanking.choice, this.feedType);    
         } else {
-          this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.selectedVendor), this.postId, answerRanking.choice);
+          this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.selectedVendor), this.postId, answerRanking.choice, this.feedType);
         }
         
       }
@@ -155,9 +166,12 @@ export class AnswerListComponent implements OnInit {
   selectedVendorNull() {
     this.selectedVendor = null;
   }
-
+  
   selectVendorFromList(vendor: EntityDisplay) {
     this.selectedVendor = vendor;
+    if(this.feedType === FeedTypes.ROUTE) {
+      this.addNewAnswer();
+    }
   }
 }
 

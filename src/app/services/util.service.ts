@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AnswerDisplay } from "../models/answer-display";
 import { Selection } from "./neat-boutique-api.service";
+import { TopUserDisplay } from "../models/top-user-display";
 
 @Injectable({
   providedIn: "root",
@@ -71,10 +72,35 @@ export class UtilService {
       const rangeMin = originalMin / originalMax * 100;
 
       displayAnswers.forEach(answer => {
-        answer.barChartValue = ((answer.points - originalMin) / (originalMax - originalMin) * (rangeMax - rangeMin)) + rangeMin;
+        if(originalMin !== originalMax && rangeMin !== rangeMax) {
+          answer.barChartValue = ((answer.points - originalMin) / (originalMax - originalMin) * (rangeMax - rangeMin)) + rangeMin;
+        } else {
+          answer.barChartValue = rangeMax;
+        }
       });
     }
     return (displayAnswers?.sort(this.sortByPointTotals));
+  }
+
+  public normalizedTopUsersForChartMinMax(topUsers: TopUserDisplay[], rangeMax: number = 100) {    
+    let displayTopUsers = topUsers || [];
+
+    if(topUsers?.length > 1) {
+      const points = [...displayTopUsers?.map(topUser => topUser.points)];
+      const originalMin = Math.min(...points);
+      const originalMax = Math.max(...points);
+      const rangeMin = originalMin / originalMax * 100;
+
+      displayTopUsers.forEach(topUser => {
+        if(originalMin !== originalMax && rangeMin !== rangeMax) {
+          topUser.barChartValue = ((topUser.points - originalMin) / (originalMax - originalMin) * (rangeMax - rangeMin)) + rangeMin;
+        } else {
+          topUser.barChartValue = rangeMax;
+        }
+        
+      });
+    }
+    return (displayTopUsers?.sort(this.sortByPointTotals));
   }
 
   

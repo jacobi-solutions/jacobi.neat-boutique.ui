@@ -1,45 +1,46 @@
 <ng-container>
   <div *ngIf="(answers?.length > 0); else searchVendorForm">
-   <div *ngIf="answersChanged" class="answers expanded">
-    <ion-row *ngFor="let answer of normalize(minimalAnswers); index as i" class="answer-item-row">
-      <ion-col>
-        <!-- community post answer -->
-        <app-answer-item
-        [expanded]="true"
-        [chartBar]="answer.barChartValue"
-        [answer]="answer"
-        [answers]="answers"
-        [chartColor]="colors[i%(colors?.length)]"
-        [altStyle]="altAnswerStyle"
-        [isDemo]="isDemo">
-      </app-answer-item>
-
-        <!-- poll post answer -->
-        <!-- <app-answer-item *ngIf="(postType === postTypes.POLL)"
+    <div *ngIf="answersChanged" class="answers expanded">
+      <ion-row *ngFor="let answer of normalize(minimalAnswers); index as i" class="answer-item-row">
+        <ion-col>
+          <!-- community post answer -->
+          <app-answer-item
+          [feedType]="feedType"
           [expanded]="true"
           [chartBar]="answer.barChartValue"
           [answer]="answer"
+          [answers]="answers"
           [chartColor]="colors[i%(colors?.length)]"
           [altStyle]="altAnswerStyle"
           [isDemo]="isDemo">
-        </app-answer-item> -->
+        </app-answer-item>
 
+          <!-- poll post answer -->
+          <!-- <app-answer-item *ngIf="(postType === postTypes.POLL)"
+            [expanded]="true"
+            [chartBar]="answer.barChartValue"
+            [answer]="answer"
+            [chartColor]="colors[i%(colors?.length)]"
+            [altStyle]="altAnswerStyle"
+            [isDemo]="isDemo">
+          </app-answer-item> -->
+
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="answers?.length > defaultNumberOfAnswersToShow && postType !== postTypes.ROUTE">
+        <ion-col class="ion-text-left">
+          <app-jacobi-button class="btn-show-all" (click)="toggleShowAll()" [buttonType]="'clear-primary'"
+            [altStyle]="'text-light-grey paragraph text-left'">{{ viewRangeText }}</app-jacobi-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-row>
+      <ion-col>
+        <ng-content *ngIf="postType !== postTypes.ROUTE then searchVendorForm"></ng-content>
       </ion-col>
     </ion-row>
-
-    <ion-row *ngIf="answers?.length > defaultNumberOfAnswersToShow">
-      <ion-col class="ion-text-left">
-        <app-jacobi-button class="btn-show-all" (click)="toggleShowAll()" [buttonType]="'clear-primary'"
-          [altStyle]="'text-light-grey paragraph text-left'">{{ viewRangeText }}</app-jacobi-button>
-      </ion-col>
-    </ion-row>
-  </div>
-
-  <ion-row>
-    <ion-col>
-      <ng-content *ngIf="true then searchVendorForm"></ng-content>
-    </ion-col>
-  </ion-row>
   </div>
 </ng-container>
 
@@ -59,9 +60,18 @@
         [borderColor]="currentUser?.consumer.borderColor"
         [imageSrc]="currentUser?.consumer.avatarSourceURL">
       </app-nb-avatar>
-      <form (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
+      <form *ngIf="feedType === feedTypes.COMMUNITY" (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
         <ion-item class="input-wrapper">
-          <ion-input type="text" formControlName="newAnswer" name="newAnswer" ngDefaultControl
+          <ion-input (click)="routeSelection()" type="text" formControlName="newAnswer" name="newAnswer" ngDefaultControl
+            class="no-border"
+            [ngClass]="{ hasValue: answerForm.value.newAnswer }">
+            <ion-label>Cast your vote</ion-label>
+          </ion-input>
+        </ion-item>
+      </form>
+      <form *ngIf="feedType === feedTypes.ROUTE" (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
+        <ion-item class="input-wrapper">
+          <ion-input (click)="routeSelection()" type="text" 
             class="no-border"
             [ngClass]="{ hasValue: answerForm.value.newAnswer }">
             <ion-label>Cast your vote</ion-label>
@@ -84,7 +94,7 @@
   </div>
 
  
-  <ion-row *ngIf="selectedVendor && (postType !== postTypes.POLL)" class="selected-vendor">
+  <ion-row *ngIf="feedType !== feedTypes.ROUTE && selectedVendor && (postType !== postTypes.POLL)" class="selected-vendor">
     <ion-col>
       <app-nb-avatar *ngIf="selectedVendor.isGooglePlaceEntity"
         [username]="selectedVendor.name"

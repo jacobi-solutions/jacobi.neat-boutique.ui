@@ -19,6 +19,8 @@ export const environment = {
     messagingSenderId: "801710531417",
     measurementId: "G-CVGLB8YWBX"
   },
+
+  googleMapsAPIKey: "AIzaSyCUpbApsq6RKqWDTgdRkOHsHcZb39eBMgM",
   
   subscriptionGrandfatherStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
   subscriptionGrandfatherPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",

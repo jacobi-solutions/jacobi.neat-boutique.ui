@@ -1,10 +1,10 @@
 
 <div *ngIf="post" fixed>
   <ion-row class="post-wrapper">
-    <ion-col>
-      <ion-row>
+    <ion-col [ngClass]="{ 'route-post-wrapper-col': post.postType === postTypes.ROUTE }">
+      <ion-row >
         <ion-col size="9">
-          <div [ngClass]="{ clickable: (post.postType === postTypes.POLL) }" (click)="((post.postType === postTypes.POLL) ? goToVendor() : null)">
+          <div *ngIf="post.postType !== postTypes.ROUTE" [ngClass]="{ clickable: (post.postType === postTypes.POLL) }" (click)="((post.postType === postTypes.POLL) ? goToVendor() : null)">
             <app-nb-avatar
               class="pointy-cursor"
               (click)="goToConsumerProfilePage(post.author)"
@@ -39,7 +39,7 @@
             <ion-row>
               <ion-col>
                 <!-- [answers]="normalizedAnswersForChartMinMax(post.selections)" -->
-                <app-answer-list [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
+                <app-answer-list [feedType]="feedType" [restrictedAvailableAnswers]="restrictedAvailableAnswers" [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
               </ion-col>
             </ion-row>
           </div>
