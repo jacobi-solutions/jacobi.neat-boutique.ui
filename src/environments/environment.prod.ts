@@ -12,7 +12,7 @@ export const environment = {
   firebase: {
     projectId: 'citric-inkwell-330122',
     appId: '1:529820257802:web:5f48a537442e238a97d9f3',
-    storageBucket: 'citric-inkwell-330122.appspot.com',
+    storageBucket: "lociknows.com",
     locationId: 'us-central',
     apiKey: 'AIzaSyBxreSfUWgDYfOT4H8A0pmPnuoeGJiGoxI',
     authDomain: 'citric-inkwell-330122.firebaseapp.com',

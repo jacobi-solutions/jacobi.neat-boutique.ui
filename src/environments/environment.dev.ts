@@ -12,7 +12,7 @@ export const environment = {
   firebase:  {
     projectId: "neat-boutique",
     appId: "1:801710531417:web:6f3ffcd1723087058f6248",
-    storageBucket: "neat-boutique.appspot.com",
+    storageBucket: "lociknows.com",
     locationId: 'us-central',
     apiKey: "AIzaSyDiUhrgtpbuAoqr_QrWqrWP0pv2kYQx5sw",
     authDomain: "neat-boutique.firebaseapp.com",
