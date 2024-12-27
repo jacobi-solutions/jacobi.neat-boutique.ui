@@ -202,7 +202,7 @@ export class UserSettingsPopoverComponent implements OnInit {
       // callback: this.addNewPost
       callback() {
         // self.userHasSeenNonEditableModal = true;
-        // self._communityService.userHasSeenNonEditableModal = true;
+        // self._categoryService.userHasSeenNonEditableModal = true;
         self._vendorSubscriptionService.startVendorSubscriptionCancelation(vendor);
         self._postNoticeModal.dismiss();
       }
@@ -226,7 +226,7 @@ export class UserSettingsPopoverComponent implements OnInit {
       // callback: this.addNewPost
       callback() {
         // self.userHasSeenNonEditableModal = true;
-        // self._communityService.userHasSeenNonEditableModal = true;
+        // self._categoryService.userHasSeenNonEditableModal = true;
         // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
         self._router.navigateByUrl('/vendor-businesses');
         self._postNoticeModal.dismiss();

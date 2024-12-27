@@ -4,7 +4,7 @@ import { ModalController, PopoverController } from "@ionic/angular";
 import { CommentDisplay } from "src/app/models/comment-display";
 import { CurrentUserDisplay } from "src/app/models/current-user-display";
 import { UserRoleTypes } from "src/app/models/constants";
-import { CommunityService } from "src/app/services/community.service";
+import { CategoryService } from "src/app/services/category.service";
 import { AccountsService } from "src/app/services/accounts.service";
 import { ModalService } from "src/app/services/modal.service";
 import { ConsumerProfile, NeatBoutiqueEntity, VendorProfile } from "src/app/services/neat-boutique-api.service";
@@ -33,7 +33,7 @@ export class CommentItemComponent implements OnInit {
   private _confirmDeleteModal: HTMLIonModalElement;
 
   constructor(
-    private _communityService: CommunityService,
+    private _categoryService: CategoryService,
     private _customersService: AccountsService,
     private _popoverController: PopoverController,
     private _modalService: ModalService,
@@ -72,7 +72,7 @@ export class CommentItemComponent implements OnInit {
 
 
     if(this.isLiked) {
-      comment = await this._communityService.unlikeComment(this.comment);
+      comment = await this._categoryService.unlikeComment(this.comment);
       this.comment.likers = comment.likers;
       if(comment) {
         this.isLiked = false;
@@ -93,7 +93,7 @@ export class CommentItemComponent implements OnInit {
     }
 
     // const commentAccount = await this._modalService.displayChooseProfileModal();
-    return await this._communityService.likeComment(this.comment, this.currentUser.consumer.id);
+    return await this._categoryService.likeComment(this.comment, this.currentUser.consumer.id);
   }
 
   
@@ -132,7 +132,7 @@ export class CommentItemComponent implements OnInit {
         label: 'Delete',
         callback() {
           if(!self.isDemo) {
-            self._communityService.removeCommentFromPost(self.comment);
+            self._categoryService.removeCommentFromPost(self.comment);
           }
           
           self.comment.isDeleted = true;

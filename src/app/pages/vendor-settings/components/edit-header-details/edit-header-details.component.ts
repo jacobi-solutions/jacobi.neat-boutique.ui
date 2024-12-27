@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
+import { SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -10,8 +11,6 @@ import { VendorSubscriptionResponse } from 'src/app/services/neat-boutique-api.s
 import { EditVendorExitCodes, VendorSettingsService } from 'src/app/services/vendor-settings.service';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { THEME } from 'src/theme/theme-constants';
-
-
 
 @Component({
   selector: 'app-edit-header-details',
@@ -25,6 +24,7 @@ export class EditHeaderDetailsComponent implements OnInit {
   public editExitCodes = EditVendorExitCodes;
   public showEditVendorLogoComponent: boolean;
   public showChangeVendorSubscription: boolean;
+  public subscriptionPlanTypes = SubscriptionPlanTypes;
 
   constructor(private _modelService: ModalService, private _vendorSettings: VendorSettingsService, 
     private _modalService: ModalService, private _platform: Platform, private _router: Router,
@@ -35,15 +35,21 @@ export class EditHeaderDetailsComponent implements OnInit {
       this.showChangeVendorSubscription = true;
     }
   }
- 
-  public async editCommunities() {
-    const { data: updatedCommunities } = await this._modelService.displayEditCommunitiesModal(this.vendor?.communities || []);
-    if(!updatedCommunities || updatedCommunities?.length === 0) {
+
+  createCategory() {
+    this._router.navigate(['/vendor-settings/create-category'], { 
+      state: this.vendor 
+    });
+  }
+
+  public async editCategories() {
+    const { data: updatedCategories } = await this._modelService.displayEditCategoriesModal(this.vendor?.categories || []);
+    if(!updatedCategories || updatedCategories?.length === 0) {
       return EditVendorExitCodes.ERR_NO_COMMUNITY_SELECTED;
     }
 
-    if(updatedCommunities) {
-      this.vendor = await this._vendorSettings.updateVendorCommunities(this.vendor.id, updatedCommunities);
+    if(updatedCategories) {
+      this.vendor = await this._vendorSettings.updateVendorCategories(this.vendor.id, updatedCategories);
       return EditVendorExitCodes.SUCCESS;
     }
   }

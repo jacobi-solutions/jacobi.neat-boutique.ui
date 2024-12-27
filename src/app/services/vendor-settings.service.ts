@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CommunityTypes } from '../models/constants';
+import { CategoryTypes } from '../models/constants';
 
 import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { AccountsService } from "./accounts.service";
 import { promise } from 'protractor';
-import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCommunitiesRequest, AdTagline, VendorBorderColorRequest, VendorProfile } from './neat-boutique-api.service';
+import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile } from './neat-boutique-api.service';
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -79,13 +79,13 @@ export class VendorSettingsService {
     return promise;
   }
 
-  public updateVendorCommunities(vendorId: string, communities: string[]) {
-    var request = new VendorCommunitiesRequest();
+  public updateVendorCategories(vendorId: string, categories: string[]) {
+    var request = new VendorCategoriesRequest();
     request.vendorId = vendorId;
-    request.communities = communities;
+    request.categories = categories;
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
-      this._neatBoutiqueApi.updateCommunities(request).subscribe((response: VendorProfileResponse) => {
+      this._neatBoutiqueApi.updateCategories(request).subscribe((response: VendorProfileResponse) => {
         if (response.isSuccess) {
           resolve(new VendorDisplay(response.vendorProfile));
         }
@@ -158,37 +158,37 @@ export class VendorSettingsService {
 
   // ================================ DUMMY DATA - TODO: Replace method return with backend call result when able ==================================================
 
-  public getCommunityImages() {
+  public getCategoryImages() {
     return [
       {
         imageUrl: 'https://storage.googleapis.com/neatboutique.com/images/amirali-mirhashemian-jh5XyK4Rr3Y-unsplash.jpg',
-        label: 'Community 1',
+        label: 'Category 1',
       },
       {
         imageUrl: 'https://storage.googleapis.com/neatboutique.com/images/amirali-mirhashemian-sc5sTPMrVfk-unsplash.jpg',
-        label: 'Community 2',
+        label: 'Category 2',
       },
       {
         imageUrl: 'https://storage.googleapis.com/neatboutique.com/images/sk-CK6tjAIMJWM-unsplash.jpg',
-        label: 'Community 3',
+        label: 'Category 3',
       },
       {
         imageUrl: 'https://storage.googleapis.com/neatboutique.com/images/amirali-mirhashemian-d-yAWqj-DRg-unsplash.jpg',
-        label: 'Community 4',
+        label: 'Category 4',
       }
     ];
   }
 
-  public getCommunityTaglines() {
+  public getCategoryTaglines() {
 
-    const communityTaglines = [];
-    for (let community in CommunityTypes) {
-      communityTaglines.push({
-        tagline: `${CommunityTypes[community]} tagline`,
-        label: `${CommunityTypes[community]} tagline`
+    const categoryTaglines = [];
+    for (let category in CategoryTypes) {
+      categoryTaglines.push({
+        tagline: `${CategoryTypes[category]} tagline`,
+        label: `${CategoryTypes[category]} tagline`
       })
     }
-    return communityTaglines;
+    return categoryTaglines;
   }
 
   // hero ads ======================
@@ -205,9 +205,9 @@ export class VendorSettingsService {
   }
 
 
-  public createHeroAdForVendor(vendorId: string, communityName: string, adTagline: AdTagline, callToAction: string, imageUrl: string) {
+  public createHeroAdForVendor(vendorId: string, categoryName: string, adTagline: AdTagline, callToAction: string, imageUrl: string) {
     const request = new CreateHeroAdRequest();
-    request.communityName = communityName;
+    request.categoryName = categoryName;
     request.adTagline = adTagline;
     request.callToAction = callToAction;
     request.imageUrl = imageUrl;

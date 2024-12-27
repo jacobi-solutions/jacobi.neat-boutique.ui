@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CommunityBillboardAdComponent } from './community-billboard-ad.component';
+import { SelectCategoriesModalComponent } from './select-categories-modal.component';
 
-describe('CommunityBillboardAdComponent', () => {
-  let component: CommunityBillboardAdComponent;
-  let fixture: ComponentFixture<CommunityBillboardAdComponent>;
+describe('SelectCategoriesModalComponent', () => {
+  let component: SelectCategoriesModalComponent;
+  let fixture: ComponentFixture<SelectCategoriesModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommunityBillboardAdComponent ],
+      declarations: [ SelectCategoriesModalComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CommunityBillboardAdComponent);
+    fixture = TestBed.createComponent(SelectCategoriesModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

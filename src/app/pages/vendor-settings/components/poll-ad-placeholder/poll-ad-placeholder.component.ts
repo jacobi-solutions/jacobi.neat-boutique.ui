@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostDisplay as PostDisplay } from 'src/app/models/post-display';
-import { CommunityTypes, PostTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
-import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
+import { CategoryTypes, PostTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
+import { CategoryDisplay, CategoryService } from 'src/app/services/category.service';
 import { NeatBoutiqueEntity, Comment, VendorProfile, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
@@ -27,7 +27,7 @@ export class PollAdPlaceholderComponent implements OnInit {
   }
 
 
-  constructor(private _utilService: UtilService, private _communityService: CommunityService,
+  constructor(private _utilService: UtilService, private _categoryService: CategoryService,
     private _vendorSubscriptionService: VendorSubscriptionService, private _router: Router) {
 
      
@@ -51,8 +51,8 @@ export class PollAdPlaceholderComponent implements OnInit {
 
   private _loadExamplePoll() {
     // TODO: update with real service when it's ready
-    // this._communityService.loadPostsByCommunityNames(CommunityTypes.BOUTIQUES_BEAUTY);
-    // this._communityService.communityDisplaySubject.subscribe((display: CommunityDisplay) => {  
+    // this._categoryService.loadPostsByCategoryNames(CategoryTypes.BOUTIQUES_BEAUTY);
+    // this._categoryService.categoryDisplaySubject.subscribe((display: CategoryDisplay) => {  
 
       // a post with 5+ answers
       this.examplePoll = new PostDisplay(new Post({
@@ -61,7 +61,7 @@ export class PollAdPlaceholderComponent implements OnInit {
         createdDateUtc: new Date(),
         lastUpdatedDateUtc: new Date(),
         subject: 'What is your favorite flavor',
-        communityName: CommunityTypes.FOOD_DRINK,
+        categoryName: CategoryTypes.FOOD_DRINK,
         startDateUtc: new Date(),
         endDateUtc: new Date(),
         author: new NeatBoutiqueEntity({

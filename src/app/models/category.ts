@@ -1,5 +1,5 @@
 
-export class CommunityCategory {
+export class Category {
     name: string;
     icon: string;
     hexColor: string;

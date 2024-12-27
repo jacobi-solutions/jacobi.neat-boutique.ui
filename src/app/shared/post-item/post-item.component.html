@@ -11,7 +11,7 @@
               [username]="getDisplayName()"
               [borderColor]="post.author.borderColor"
               [secondaryText]="post.localCreated"
-              [tertiaryText]="' in '  + post.communityName"
+              [tertiaryText]="' in '  + post.categoryName"
               [imageSrc]="post.author.avatarSourceURL">
             </app-nb-avatar>
           </div>
@@ -39,7 +39,7 @@
             <ion-row>
               <ion-col>
                 <!-- [answers]="normalizedAnswersForChartMinMax(post.selections)" -->
-                <app-answer-list [feedType]="feedType" [restrictedAvailableAnswers]="restrictedAvailableAnswers" [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [communityName]="post?.communityName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
+                <app-answer-list [feedType]="feedType" [restrictedAvailableAnswers]="restrictedAvailableAnswers" [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [categoryName]="post?.categoryName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
               </ion-col>
             </ion-row>
           </div>

@@ -7,13 +7,13 @@
   
     <ion-card-content class="modal-content-wrapper">
       <div>
-        <p class="text-notice">Update your communities</p>
+        <p class="text-notice">Update your categories</p>
         <p *ngIf="userErrorMsg" class="error-msg"> {{ userErrorMsg }}</p>
         <!-- <form action=""> -->
           <ion-list>
-            <ion-item *ngFor="let community of communityTypes">
-              <ion-label>{{ community }}</ion-label>
-              <ion-checkbox slot="end" [(ngModel)]="communitySet[community].isSelected" (ionChange)="assessSelectedCommunities($event)"></ion-checkbox>
+            <ion-item *ngFor="let category of categoryTypes">
+              <ion-label>{{ category }}</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="categorySet[category].isSelected" (ionChange)="assessSelectedCategories($event)"></ion-checkbox>
             </ion-item>
           </ion-list>
   

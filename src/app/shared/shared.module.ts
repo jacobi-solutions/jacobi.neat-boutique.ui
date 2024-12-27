@@ -18,7 +18,7 @@ import { FormDropDownPopoverComponent } from './popovers/form-drop-down-popover/
 import { SummedRatingComponent } from './rate-vendor/summed-rating/summed-rating.component';
 import { VendorReviewInputRatingComponent } from './rate-vendor/vendor-review-input-rating/vendor-review-input-rating.component';
 import { JacobiButtonComponent } from './jacobi-button/jacobi-button.component';
-import { SelectCommunitiesModalComponent } from './modals/vendor-settings-modals/select-communities-modal/select-communities-modal.component';
+import { SelectCategoriesModalComponent } from './modals/vendor-settings-modals/select-categories-modal/select-categories-modal.component';
 import { EditSocialMediaLinksModalComponent } from './modals/vendor-settings-modals/edit-social-media-links-modal/edit-social-media-links-modal.component';
 import { TextareaFieldComponent } from './textarea-field/textarea-field.component';
 import { EditHeroImgAdModalComponent } from './modals/vendor-settings-modals/edit-hero-img-ad-modal/edit-hero-img-ad-modal.component';
@@ -67,7 +67,7 @@ import { MyListComponent } from './my-list/my-list.component';
     SummedRatingComponent,
     VendorReviewInputRatingComponent,
     JacobiButtonComponent,
-    SelectCommunitiesModalComponent,
+    SelectCategoriesModalComponent,
     EditSocialMediaLinksModalComponent,
     TextareaFieldComponent,
     EditHeroImgAdModalComponent,
@@ -120,7 +120,7 @@ import { MyListComponent } from './my-list/my-list.component';
     SummedRatingComponent,
     VendorReviewInputRatingComponent,
     JacobiButtonComponent,
-    SelectCommunitiesModalComponent,
+    SelectCategoriesModalComponent,
     EditSocialMediaLinksModalComponent,
     TextareaFieldComponent,
     EditHeroImgAdModalComponent,

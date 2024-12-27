@@ -12,44 +12,44 @@
   
             <ion-item [lines]="'none'" class="input-choice hero-img">
               <ion-input type="text">
-                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.communityHeroImage}">
-                    <ion-label class="label-placeholder">Community</ion-label>
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.categoryHeroImage}">
+                    <ion-label class="label-placeholder">Category</ion-label>
   
                     <ion-select
-                        formControlName="communityHeroImage"
+                        formControlName="categoryHeroImage"
                         multiple="false"
                         cancelText="Cancel"
                         okText="Done"
                         interface="popover">
   
-                        <ion-select-option *ngFor="let communityHeroImg of communityHeroImages" [value]="communityHeroImg?.imageUrl">{{ communityHeroImg?.label }}</ion-select-option>
+                        <ion-select-option *ngFor="let categoryHeroImg of categoryHeroImages" [value]="categoryHeroImg?.imageUrl">{{ categoryHeroImg?.label }}</ion-select-option>
                     </ion-select>
                 </ion-item>
               </ion-input>
   
               <div class="hero-img-preview">
-                <img *ngIf="heroAdForm.value.communityHeroImage; else heroSelectPlaceholder" alt="community image" [src]="heroAdForm.value.communityHeroImage || null" />
+                <img *ngIf="heroAdForm.value.categoryHeroImage; else heroSelectPlaceholder" alt="category image" [src]="heroAdForm.value.categoryHeroImage || null" />
               
                 <ng-template #heroSelectPlaceholder>
-                  <p>Select a community image</p>
+                  <p>Select a category image</p>
                 </ng-template>
               </div>
             </ion-item>
   
   
-            <ion-item [lines]="'none'" class="input-choice community-tagline">
+            <ion-item [lines]="'none'" class="input-choice category-tagline">
               <ion-input type="text">
-                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.communityTagline}">
-                    <ion-label class="label-placeholder">Community</ion-label>
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: heroAdForm.value.categoryTagline}">
+                    <ion-label class="label-placeholder">Category</ion-label>
   
                     <ion-select
-                        formControlName="communityTagline"
+                        formControlName="categoryTagline"
                         multiple="false"
                         cancelText="Cancel"
                         okText="Done"
                         interface="popover">
   
-                        <ion-select-option *ngFor="let communityTagline of communityTaglines" [value]="communityTagline?.tagline">{{ communityTagline?.label }}</ion-select-option>
+                        <ion-select-option *ngFor="let categoryTagline of categoryTaglines" [value]="categoryTagline?.tagline">{{ categoryTagline?.label }}</ion-select-option>
                     </ion-select>
                 </ion-item>
               </ion-input>
@@ -61,8 +61,8 @@
             <!-- <ion-item [lines]="'none'">
               <app-input-field class="form-input"
               [formGroupInstance]="heroAdForm"
-              [inputName]="'communityTagline'"
-              [label]="'Community Tagline'"
+              [inputName]="'categoryTagline'"
+              [label]="'Category Tagline'"
               [value]="'TODO: Add default value'"></app-input-field>
             </ion-item> -->
   

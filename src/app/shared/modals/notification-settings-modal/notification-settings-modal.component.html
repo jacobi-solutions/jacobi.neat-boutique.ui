@@ -12,9 +12,9 @@
         
         <!-- <form action=""> -->
           <ion-list>
-            <ion-item *ngFor="let community of communitySet">
-              <ion-label>{{ community.name }}</ion-label>
-              <ion-checkbox slot="end" [(ngModel)]="community.isSelected" (ionChange)="assessSelectedCommunities($event)"></ion-checkbox>
+            <ion-item *ngFor="let category of categorySet">
+              <ion-label>{{ category.name }}</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="category.isSelected" (ionChange)="assessSelectedCategories($event)"></ion-checkbox>
             </ion-item>
           </ion-list>
   
@@ -22,7 +22,7 @@
   
         <ion-item>
           <ion-label>Answers to your questions</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="notificationsForAnsweredQuestions" (ionChange)="assessSelectedCommunities($event)"></ion-checkbox>
+          <ion-checkbox slot="end" [(ngModel)]="notificationsForAnsweredQuestions" (ionChange)="assessSelectedCategories($event)"></ion-checkbox>
         </ion-item>
         <div class="action-btn-wrapper">
           <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="onClose($event)">Cancel</app-jacobi-button>

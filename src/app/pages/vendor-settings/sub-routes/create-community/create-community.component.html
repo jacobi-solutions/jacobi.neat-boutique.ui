@@ -1,0 +1,55 @@
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size-xs="12" 
+        size-md="8" offset-md="2"
+        size-lg="6" offset-lg="3">
+        
+        <ion-row>
+          <ion-col>
+            <h1>Create a Community</h1>
+            <p>Create a community to connect with other local businesses and share resources.</p>
+          </ion-col>
+        </ion-row>
+
+        <form [formGroup]="createCommunityForm" (ngSubmit)="onSubmit()">
+          <ion-row>
+            <ion-col>
+              <app-input-field
+                [formGroupInstance]="createCommunityForm"
+                [inputName]="'name'"
+                [label]="'Community Name'"
+                [icon]="'business-outline'"
+                [invalidInputWarnings]="[{ warning: 'A community name is required.', errorType: 'required' }]">
+              </app-input-field>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <app-input-field
+                [formGroupInstance]="createCommunityForm"
+                [inputName]="'description'"
+                [label]="'Description'"
+                [icon]="'document-text-outline'"
+                [invalidInputWarnings]="[{ warning: 'A description is required.', errorType: 'required' }]">
+              </app-input-field>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <app-jacobi-button 
+                [buttonType]="'green-primary'"
+                [disabled]="createCommunityForm.invalid"
+                type="submit">
+                Create Community
+              </app-jacobi-button>
+            </ion-col>
+          </ion-row>
+        </form>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content> 

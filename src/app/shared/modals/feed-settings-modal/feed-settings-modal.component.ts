@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CommunityCategory } from 'src/app/models/community-category';
-import { CommunityService } from 'src/app/services/community.service';
+import { Category } from 'src/app/models/category';
+import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-feed-settings-modal',
@@ -9,15 +9,15 @@ import { CommunityService } from 'src/app/services/community.service';
   styleUrls: ['./feed-settings-modal.component.scss'],
 })
 export class FeedSettingsModalComponent implements OnInit {
-  communities: CommunityCategory[] = [];
+  categories: Category[] = [];
   public userErrorMsg: string = null;
 
-  constructor(private _modalController: ModalController, private _communityService: CommunityService) {
+  constructor(private _modalController: ModalController, private _categoryService: CategoryService) {
    
   }
 
   ngOnInit() {
-    this.communities = this._communityService.communities;
+    this.categories = this._categoryService.categories;
   }
 
   ionViewDidEnter() {
@@ -29,9 +29,9 @@ export class FeedSettingsModalComponent implements OnInit {
 
  
 
-  // public assessSelectedCommunities(event) {
-  //   const userSelectedCommunities = Object.keys(this.communitySet).filter(communityName => {
-  //     return this.communitySet[communityName].isSelected;
+  // public assessSelectedCategories(event) {
+  //   const userSelectedCategories = Object.keys(this.categorySet).filter(categoryName => {
+  //     return this.categorySet[categoryName].isSelected;
   //   })
   // }
 
@@ -44,7 +44,7 @@ export class FeedSettingsModalComponent implements OnInit {
   }
 
   async onSave(event) {
-    this._communityService.updateShownCommunities();
+    this._categoryService.updateShownCategories();
     
 
     this._modalController.dismiss({

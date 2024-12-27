@@ -30,7 +30,7 @@ export class EditHeroAdComponent implements OnInit {
     if(this.vendor?.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_STANDARD) {
       this.changeSubscription();
     } else {
-      this._router.navigateByUrl('/vendor-settings/community-billboard-ads', { state: this.vendor });
+      this._router.navigateByUrl('/vendor-settings/billboard-ads', { state: this.vendor });
     }
     
   }

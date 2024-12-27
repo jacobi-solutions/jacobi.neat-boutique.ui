@@ -5,7 +5,7 @@
         ANY CHANGE TO THIS OBJECT WILL BREAK THINGS IN THE API!!!
 */
 
-export const CommunityTypes = {
+export const CategoryTypes = {
     BOUTIQUES_BEAUTY : "Boutiques & Beauty",
     FOOD_DRINK : "Food & Drink",
     TRAVEL_ADVENTURE : "Travel & Adventure",
@@ -37,7 +37,7 @@ export enum PostTypes {
 }
 
 export enum FeedTypes {
-    COMMUNITY = "Community",
+    COMMUNITY = "Category",
     ROUTE = "Route"
 }
 

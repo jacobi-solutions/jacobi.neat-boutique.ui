@@ -1,0 +1,20 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+ion-content {
+  --padding-top: 2rem;
+  --padding-bottom: 2rem;
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--nb-grey);
+    margin-bottom: 2rem;
+  }
+
+  app-jacobi-button {
+    margin-top: 1rem;
+  }
+} 

@@ -34,7 +34,7 @@ export class EditPollAdComponent implements OnInit {
 
 
     this.pollFormFields = [
-      'community',
+      'category',
       'pollQuestion',
       'pollAnswer1',
       'pollAnswer2',

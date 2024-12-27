@@ -14,18 +14,18 @@ export class EditHeroImgAdModalComponent implements OnInit {
 
   @Input() vendor: VendorProfile;
 
-  public communityTaglines: {}[];
-  public communityHeroImages: {}[];
+  public categoryTaglines: {}[];
+  public categoryHeroImages: {}[];
 
   public heroAdForm = new UntypedFormGroup({
-    communityHeroImage: new UntypedFormControl('', [Validators.required]),
-    communityTagline: new UntypedFormControl('', [Validators.required]),
+    categoryHeroImage: new UntypedFormControl('', [Validators.required]),
+    categoryTagline: new UntypedFormControl('', [Validators.required]),
     vendorTagline: new UntypedFormControl('', [Validators.required]),
   }); 
 
   constructor(private _modalController: ModalController, private _vendorSettings: VendorSettingsService) {
-    this.communityHeroImages = this._vendorSettings.getCommunityImages();
-    this.communityTaglines = this._vendorSettings.getCommunityTaglines();
+    this.categoryHeroImages = this._vendorSettings.getCategoryImages();
+    this.categoryTaglines = this._vendorSettings.getCategoryTaglines();
   }
 
   ngOnInit() {}

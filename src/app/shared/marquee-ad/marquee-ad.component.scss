@@ -11,7 +11,7 @@
     margin: 0;
     float: left;
 
-    &:not(.demo, .communityAd) {
+    &:not(.demo, .categoryAd) {
         z-index: -1;
         height: 100% !important;
         width: 100vw !important;
@@ -61,7 +61,7 @@
 
     // used in vendor settings: hero ad
     &.demo,
-    &.communityAd {
+    &.categoryAd {
         border-radius: var(--nb-border-radius); 
         width: 100%;
         aspect-ratio: 2 / 1;
@@ -81,7 +81,7 @@
         }
     }
 
-    &.communityAd {
+    &.categoryAd {
         h1 {
             font-size: 4rem;
         }
@@ -91,7 +91,7 @@
 
 // ================================ media queries
 @include screen-xl-and-below {
-    .marquee-ad.communityAd {
+    .marquee-ad.categoryAd {
         h1 {
             //font-size: font-sizes(h1);
         }
@@ -109,7 +109,7 @@
             }
         }
 
-        &.communityAd {
+        &.categoryAd {
             h1 {
                 font-size: 2.4rem;
             }
@@ -121,7 +121,7 @@
     }
 }
 @include screen-sm-and-below {
-    .marquee-ad.communityAd {
+    .marquee-ad.categoryAd {
         h1 {
             font-size: 1.5rem;
         }

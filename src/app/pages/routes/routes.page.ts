@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {  } from 'googlemaps';
 import { PostDisplay } from 'src/app/models/post-display';
 import { RouteDisplay } from 'src/app/models/route-display';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { Loader } from "@googlemaps/js-api-loader"
 import { environment } from 'src/environments/environment';
@@ -50,8 +50,8 @@ export class RoutesPage implements OnInit {
   routeTopUsers: TopUserDisplay[];
   
 
-  constructor(private _postsService: CommunityService, private _authService: AuthService,
-    private _answersService: AnswersService, private _communityService: CommunityService,
+  constructor(private _postsService: CategoryService, private _authService: AuthService,
+    private _answersService: AnswersService, private _categoryService: CategoryService,
     private _util: UtilService) {
     this._answersService.pollVotedOnSubject.subscribe((postDisplay: PostDisplay) => {
       if(postDisplay && postDisplay.id === this.route?.post?.id) {
@@ -60,12 +60,12 @@ export class RoutesPage implements OnInit {
     });
     this._answersService.questionAnsweredOnRouteQuestionSubject.subscribe((postDisplay: PostDisplay) => {
       if(postDisplay && postDisplay?.feedContextId === this.route?.id) {
-        var updatedQuestions = this._communityService.updateConsumerPostInPosts(postDisplay, this.route.routeQuestions);
+        var updatedQuestions = this._categoryService.updateConsumerPostInPosts(postDisplay, this.route.routeQuestions);
         this._answersService.refreshCurrentUserVotesOnPosts(updatedQuestions);
         this.routeQuestions = [ ...updatedQuestions ];
       }
     });
-    this._communityService.newRouteQuestionSubject.subscribe((postDisplay: PostDisplay) => {
+    this._categoryService.newRouteQuestionSubject.subscribe((postDisplay: PostDisplay) => {
       if(postDisplay && postDisplay?.feedContextId === this.route?.id) {
         this.route.routeQuestions = [ postDisplay, ...this.routeQuestions ];
         this.routeQuestions = this.route.routeQuestions;

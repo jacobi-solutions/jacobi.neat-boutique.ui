@@ -5,32 +5,32 @@
 
       <ion-col class="web category-selections" size-lg="3" size-xl="2.5">
 
-        <ion-card class="clickable community-list-card">
-          <ion-row class="community-list-header">
+        <ion-card class="clickable category-list-card">
+          <ion-row class="category-list-header">
             <ion-col><span>My Feed</span></ion-col>
           </ion-row>
-          <ion-row (click)="updateSelectedCommunities(community)" class="community-item-wrapper" *ngFor="let community of communities">
+          <ion-row (click)="updateSelectedCategories(category)" class="category-item-wrapper" *ngFor="let category of categories">
            <ion-col size="2">
-              <ion-icon *ngIf="community.isSelected" [ngStyle]="{'color': community.hexColor}" [name]="community.icon + '-sharp'"></ion-icon>
-              <ion-icon *ngIf="!community.isSelected" [ngStyle]="{'color': '#b2b2b2'}" [name]="community.icon + '-outline'"></ion-icon>
+              <ion-icon *ngIf="category.isSelected" [ngStyle]="{'color': category.hexColor}" [name]="category.icon + '-sharp'"></ion-icon>
+              <ion-icon *ngIf="!category.isSelected" [ngStyle]="{'color': '#b2b2b2'}" [name]="category.icon + '-outline'"></ion-icon>
             </ion-col>
             <ion-col size="10">
-              <p><span>{{ community.name }}</span></p>
+              <p><span>{{ category.name }}</span></p>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col offset="1" size="11">
-              Click icons above to ignore posts from that community
+              Click icons above to ignore posts from that category
             </ion-col>
           </ion-row>
         </ion-card>
       </ion-col>
 
-      <ion-col size-xs="12" size-lg="9" size-xl="7" class="community-feed-col">
+      <ion-col size-xs="12" size-lg="9" size-xl="7" class="category-feed-col">
 
         <ion-row *ngIf="heroAd">
           <ion-col size="12">
-            <app-marquee-ad [heroAd]="heroAd" [isCommunityAd]="true"></app-marquee-ad>
+            <app-marquee-ad [heroAd]="heroAd" [isCategoryAd]="true"></app-marquee-ad>
           </ion-col>
         </ion-row>
 
@@ -45,20 +45,20 @@
         <ion-row class="posts-container">
           <ion-col class="nb-no-padding" size="12">
             <div>
-              <ion-row class="community-post-row specific-post" *ngIf="specificPost">
-                <ion-col class="community-post-col">
+              <ion-row class="category-post-row specific-post" *ngIf="specificPost">
+                <ion-col class="category-post-col">
                   <app-post-item [post]="specificPost"></app-post-item>
                 </ion-col>
               </ion-row>
             </div>
             <div *ngFor="let post of consumerPosts; index as i;">
-              <ion-row class="community-post-row">
-                <ion-col class="community-post-col">
+              <ion-row class="category-post-row">
+                <ion-col class="category-post-col">
                   <app-post-item [post]="post"></app-post-item>
                 </ion-col>
               </ion-row>
-              <ion-row class="community-post-row">
-                <ion-col class="community-post-col">
+              <ion-row class="category-post-row">
+                <ion-col class="category-post-col">
                   <app-post-item *ngIf="shouldShowVendorPost(i)"  [post]="vendorPosts[getVendorPostIndex(i)]"></app-post-item>
                 </ion-col>
               </ion-row>
@@ -81,8 +81,8 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <div class="recent-question" *ngFor="let recentPost of recentPosts" (click)="addCommunityToShownPosts(recentPost.communityName)">
-                {{ recentPost.subject }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.communityName }}</strong>
+              <div class="recent-question" *ngFor="let recentPost of recentPosts" (click)="addCategoryToShownPosts(recentPost.categoryName)">
+                {{ recentPost.subject }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.categoryName }}</strong>
               </div>
             </ion-col>
           </ion-row>

@@ -16,7 +16,8 @@ import { EditHeroAdComponent } from './components/edit-hero-ad/edit-hero-ad.comp
 import { EditPollAdComponent } from './sub-routes/poll-ad/edit-poll-ad/edit-poll-ad.component';
 import { PollAdPlaceholderComponent } from './components/poll-ad-placeholder/poll-ad-placeholder.component';
 import { PollAdComponent } from './sub-routes/poll-ad/poll-ad.component';
-import { CommunityBillboardAdComponent } from './sub-routes/community-billboard-ad/community-billboard-ad.component';
+import { BillboardAdComponent } from './sub-routes/billboard-ad/billboard-ad.component';
+import { CreateCommunityComponent } from './sub-routes/create-community/create-community.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { CommunityBillboardAdComponent } from './sub-routes/community-billboard-
     EditPollAdComponent,
     PollAdPlaceholderComponent,
     PollAdComponent,
-    CommunityBillboardAdComponent
+    BillboardAdComponent,
+    CreateCommunityComponent
   ]
 })
 export class VendorSettingsPageModule {}

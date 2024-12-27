@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PostDisplay } from 'src/app/models/post-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { THEME } from 'src/theme/theme-constants';
 import { AnswerDisplay } from 'src/app/models/answer-display';
@@ -35,7 +35,7 @@ export class PostItemComponent implements OnInit {
   constructor(
     private _customersService: AccountsService,
     private _util: UtilService,
-    private _communityService: CommunityService,
+    private _categoryService: CategoryService,
     private _router: Router) { }
 
   ngOnInit() {    

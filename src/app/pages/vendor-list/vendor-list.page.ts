@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
-import { CommunityTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/models/constants';
 import { VendorService } from 'src/app/vendor.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
-import { CommunityService } from 'src/app/services/community.service';
-import { CommunityCategory } from 'src/app/models/community-category';
+import { CategoryService } from 'src/app/services/category.service';
+import { Category } from 'src/app/models/category';
 import { THEME } from 'src/theme/theme-constants';
 
 @Component({
@@ -17,7 +17,7 @@ import { THEME } from 'src/theme/theme-constants';
 export class VendorListPage implements OnInit {
   public pageName = 'Home';
   public vendors: VendorDisplay[];
-  public category: CommunityCategory;
+  public category: Category;
   public showLoadMore: boolean;
   public defaultImg = THEME.avatar.defaultImage;
   public vendorsHaveLoaded: boolean;
@@ -27,7 +27,7 @@ export class VendorListPage implements OnInit {
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _siteVendorService: VendorService,
-    private _communityService: CommunityService) {}
+    private _categoryService: CategoryService) {}
 
   
   ngOnInit() {
@@ -40,7 +40,7 @@ export class VendorListPage implements OnInit {
     this.vendorsHaveLoaded = false;
     const categoryWords = this._nbRouter.getCategoryNameFromRoute(this._activatedRoute)   
     if(categoryWords) {
-      this.category = this._communityService.getCommunityCategoryByNameDisplay(categoryWords);      
+      this.category = this._categoryService.getCategoryByNameDisplay(categoryWords);      
       this.pageName = 'Browse ' + this.category.name;
       this._loadVendors(this.category.name);      
     }
@@ -48,8 +48,8 @@ export class VendorListPage implements OnInit {
 
   private async  _loadVendors(category: string) {
     
-    this._siteVendorService.getVendorsByCommunityName(category);
-    this._siteVendorService.vendorsByCommunityNameSubject.subscribe((vendors: VendorDisplay[]) => {
+    this._siteVendorService.getVendorsByCategoryName(category);
+    this._siteVendorService.vendorsByCategoryNameSubject.subscribe((vendors: VendorDisplay[]) => {
       if(vendors) {
         this.vendors = vendors;
         this.vendorsHaveLoaded = true;
@@ -64,6 +64,6 @@ export class VendorListPage implements OnInit {
   }
   
   public loadMoreVendors() {
-    this._siteVendorService.loadMoreVendorsByCommunityName(this.category.name);
+    this._siteVendorService.loadMoreVendorsByCategoryName(this.category.name);
   }  
 }

@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { FeedPage } from './feed.page';
 
-describe('CommunityPage', () => {
+describe('CategoryPage', () => {
   let component: FeedPage;
   let fixture: ComponentFixture<FeedPage>;
 

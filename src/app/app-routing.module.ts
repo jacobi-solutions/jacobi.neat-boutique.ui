@@ -27,13 +27,13 @@ const routes: Routes = [
   },
   {
     path: 'feed/:postId',
-    loadChildren: () => import('./pages/feed/feed.module').then( m => m.CommunityPageModule),
+    loadChildren: () => import('./pages/feed/feed.module').then( m => m.CategoryPageModule),
     canActivate: [ HeaderGuard ],
     data: { title: 'Feed', showNbHeader2: true, showNbHeader3: false }
   },
   {
     path: 'feed',
-    loadChildren: () => import('./pages/feed/feed.module').then( m => m.CommunityPageModule),
+    loadChildren: () => import('./pages/feed/feed.module').then( m => m.CategoryPageModule),
     canActivate: [ HeaderGuard ],
     data: { title: 'Feed', showNbHeader2: true, showNbHeader3: false }
   },

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CommunityTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/models/constants';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
@@ -14,20 +14,20 @@ export class NotificationSettingsModalComponent implements OnInit {
 
   @Input() notificationCategories: string[] = [];
   @Input() notificationsForAnsweredQuestions: boolean;
-  public communityTypes: string[];
-  public communitySet: { name: string, isSelected: boolean}[] = [];
+  public categoryTypes: string[];
+  public categorySet: { name: string, isSelected: boolean}[] = [];
   public userErrorMsg: string = null;
 
   constructor(private _modalController: ModalController, private _accountsService: AccountsService, private _notificationService: NotificationsService) {
-    this.communityTypes = Object.keys(CommunityTypes).map(key => CommunityTypes[key]);
+    this.categoryTypes = Object.keys(CategoryTypes).map(key => CategoryTypes[key]);
 
     
   }
 
   ngOnInit() {
-    this.communityTypes.forEach(x => {
+    this.categoryTypes.forEach(x => {
       var isSelected = this.notificationCategories.includes(x);
-      this.communitySet.push({name: x, isSelected: isSelected})
+      this.categorySet.push({name: x, isSelected: isSelected})
     });
     
     
@@ -42,9 +42,9 @@ export class NotificationSettingsModalComponent implements OnInit {
 
  
 
-  public assessSelectedCommunities(event) {
-    const userSelectedCommunities = Object.keys(this.communitySet).filter(communityName => {
-      return this.communitySet[communityName].isSelected;
+  public assessSelectedCategories(event) {
+    const userSelectedCategories = Object.keys(this.categorySet).filter(categoryName => {
+      return this.categorySet[categoryName].isSelected;
     })
   }
 
@@ -57,7 +57,7 @@ export class NotificationSettingsModalComponent implements OnInit {
   }
 
   async onSave(event) {
-    const selectedCategories = this.communitySet.filter(x => x.isSelected)
+    const selectedCategories = this.categorySet.filter(x => x.isSelected)
       .map(y => y.name);
 
     var token = await this._notificationService.getToken();

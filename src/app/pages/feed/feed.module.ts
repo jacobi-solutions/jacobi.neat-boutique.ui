@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CommunityPageRoutingModule } from './feed-routing.module';
+import { CategoryPageRoutingModule } from './feed-routing.module';
 
 import { FeedPage } from './feed.page';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -21,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     IonicModule,
-    CommunityPageRoutingModule,
+    CategoryPageRoutingModule,
     SharedModule,
     ReactiveFormsModule,
   ],
@@ -34,4 +34,4 @@ import { ReactiveFormsModule } from '@angular/forms';
     // CommentListComponent,
   ]
 })
-export class CommunityPageModule {}
+export class CategoryPageModule {}

@@ -21,18 +21,18 @@
             <!-- <ion-item [lines]="'none'" class="input-choice" [formGroup]="pollForm"> -->
               <div class="input-choice" [formGroup]="pollForm">
                 <ion-input type="text" >
-                  <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: pollForm.value.community}">
-                      <ion-label class="label-placeholder">Community</ion-label>
+                  <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: pollForm.value.category}">
+                      <ion-label class="label-placeholder">Category</ion-label>
     
                       <ion-select
-                          css="select-poll-community"
-                          formControlName="community"
+                          css="select-poll-category"
+                          formControlName="category"
                           multiple="false"
                           cancelText="Cancel"
                           okText="Done"
                           interface="popover">
     
-                          <ion-select-option *ngFor="let community of vendor?.communities" [value]="community">{{ community }}</ion-select-option>
+                          <ion-select-option *ngFor="let category of vendor?.categories" [value]="category">{{ category }}</ion-select-option>
                       </ion-select>
                   </ion-item>
                 </ion-input>
@@ -56,7 +56,7 @@
           <ion-item-divider class="question-divider"></ion-item-divider>
 
           <div class="answer-outter-wrapper" *ngFor="let answer of pollFormFields; index as i;">
-            <div class="answer-inner-wrapper" *ngIf="!['pollQuestion', 'community'].includes(answer) && ((i-1) <= currentQuestions) && (currentQuestions <= maxQuestions)">
+            <div class="answer-inner-wrapper" *ngIf="!['pollQuestion', 'category'].includes(answer) && ((i-1) <= currentQuestions) && (currentQuestions <= maxQuestions)">
               <app-input-field
                 [formGroupInstance]="pollForm"
                 [inputName]="'pollAnswer' + (i-1)"

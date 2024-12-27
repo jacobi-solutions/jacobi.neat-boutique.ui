@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AnimationController, Platform } from '@ionic/angular';
-import { CommunityCategory } from 'src/app/models/community-category';
-import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
+import { Category } from 'src/app/models/category';
+import { CategoryDisplay, CategoryService } from 'src/app/services/category.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { HeroAd } from 'src/app/services/neat-boutique-api.service';
 import { PromptComponent } from './prompt/prompt.component';
@@ -38,7 +38,7 @@ export class HomePage implements AfterViewInit {
   public reviewInteraction: boolean;
   // private beginSliding: boolean;
 
-  public communities: CommunityCategory[];
+  public categories: Category[];
   public pageName = 'Home';
   public consumerPromptPosts: PostDisplay[];
   public currentPromptPost: PostDisplay;
@@ -53,16 +53,16 @@ export class HomePage implements AfterViewInit {
   public currentPromptIndex = 0;
   public mainPromptsAreSliding: boolean;
   public currentUser: CurrentUserDisplay;
-  constructor(private _nbRouter: NbRoutingService, private _communityService: CommunityService, 
+  constructor(private _nbRouter: NbRoutingService, private _categoryService: CategoryService, 
     private _animationCtrl: AnimationController, private _util: UtilService, private _router: Router, 
     private _vendorService: VendorService, private _accountService: AccountsService, private _consumerService: ConsumerService,
     private _platform: Platform) {
     
     var postsPromise = new Promise<void>((resolve, reject) => {
-      this._communityService.communityDisplaySubject.subscribe((communityDisplay: CommunityDisplay) => {
-        if(communityDisplay) {
-          if(communityDisplay.consumerPosts) {
-            this.consumerPromptPosts = [...communityDisplay.consumerPosts];// .sort(this._util.sortByAnswersCountAsc);
+      this._categoryService.categoryDisplaySubject.subscribe((categoryDisplay: CategoryDisplay) => {
+        if(categoryDisplay) {
+          if(categoryDisplay.consumerPosts) {
+            this.consumerPromptPosts = [...categoryDisplay.consumerPosts];// .sort(this._util.sortByAnswersCountAsc);
             this.currentPromptPost = this.consumerPromptPosts[this.currentPromptIndex];
             resolve();
           }
@@ -133,7 +133,7 @@ export class HomePage implements AfterViewInit {
   }
 
     
-  goToCommunityPage() {
+  goToCategoryPage() {
     this.promptInteraction = false;
     this._router.navigateByUrl('/feed', { replaceUrl: true });
   }

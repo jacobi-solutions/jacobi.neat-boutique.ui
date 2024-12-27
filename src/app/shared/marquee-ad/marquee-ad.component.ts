@@ -10,7 +10,7 @@ import { HeroAd } from 'src/app/services/neat-boutique-api.service';
 export class MarqueeAdComponent implements OnInit {
 @Input() heroAd: HeroAd;
 @Input() isDemo: boolean = false;
-@Input() isCommunityAd: boolean = false;
+@Input() isCategoryAd: boolean = false;
 @ViewChild('slidingAd')
   public slidingAd: ElementRef;
   constructor(private router: Router) {}

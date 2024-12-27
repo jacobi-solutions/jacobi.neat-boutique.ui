@@ -18,15 +18,15 @@
         </div>
       </ion-input>
     
-      <span #categorySelection *ngIf="feedType === feedTypes.COMMUNITY && postForm.value.newQuestion?.trim() !== ''" lines="none" class="clickable category-selector" [ngClass]="{hasValue: postForm.value.communityName !== ''}">
+      <span #categorySelection *ngIf="feedType === feedTypes.COMMUNITY && postForm.value.newQuestion?.trim() !== ''" lines="none" class="clickable category-selector" [ngClass]="{hasValue: postForm.value.categoryName !== ''}">
         
         <ion-select      
             class="clickable"      
-            placeholder="Select Community"                                
-            formControlName="communityName"
+            placeholder="Select Category"                                
+            formControlName="categoryName"
             multiple="false"
             interface="popover">
-            <ion-select-option *ngFor="let community of communities" [value]="community.name">{{ community.name }}</ion-select-option>
+            <ion-select-option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</ion-select-option>
         </ion-select>
       </span>
               
@@ -34,7 +34,7 @@
       <ion-icon
         #submitPostIcon 
         class="clickable"
-        [ngClass]="{'enabled': postForm?.value?.newQuestion !== '' && postForm?.value?.communityName !== ''}"
+        [ngClass]="{'enabled': postForm?.value?.newQuestion !== '' && postForm?.value?.categoryName !== ''}"
         (click)="confirmNonEditablePost()"
         (mouseenter)="newPostIcon = 'paper-plane'"
         (mouseleave)="newPostIcon = 'paper-plane-outline'"

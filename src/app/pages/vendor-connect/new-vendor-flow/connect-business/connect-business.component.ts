@@ -96,7 +96,7 @@ export class ConnectBusinessComponent implements OnInit {
         this.showVendorAlreadyAccociatedError = true;
       } else {
         this.connectBusiness.reset();
-        this._navCtrl.navigateForward('vendor-connect/business-community');
+        this._navCtrl.navigateForward('vendor-connect/business-category');
       }
     });
   }

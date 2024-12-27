@@ -18,10 +18,10 @@
                             </ion-col>
                         </ion-row>
 
-                        <form (ngSubmit)="saveAndContinue()" [formGroup]="businessCommunity" class="form">                          
+                        <form (ngSubmit)="saveAndContinue()" [formGroup]="businessCategory" class="form">                          
 
                             <app-input-field
-                                [formGroupInstance]="businessCommunity"
+                                [formGroupInstance]="businessCategory"
                                 [inputName]="'email'"
                                 [label]="'Company Email'"
                                 [icon]="'mail-outline'"
@@ -30,18 +30,18 @@
 
                             <ion-row class="multiple-choice-row">
                               <ion-col>
-                                <!-- <p (click)="selectCommunity($event)">test</p> -->
+                                <!-- <p (click)="selectCategory($event)">test</p> -->
                                 <ion-input type="text">
-                                    <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: businessCommunity.value.communityCategory !== ''}">
+                                    <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: businessCategory.value.categoryCategory !== ''}">
                                         <ion-icon name="chatbubbles-outline"></ion-icon>
-                                        <ion-label class="label-placeholder">Community</ion-label>
+                                        <ion-label class="label-placeholder">Category</ion-label>
                                         <ion-select                                            
-                                            formControlName="communityCategory"
+                                            formControlName="categoryCategory"
                                             multiple="true"
                                             cancelText="Cancel"
                                             okText="Done"
                                             interface="popover">
-                                            <ion-select-option *ngFor="let community of communityDropDown" [value]="community.value">{{ community.label }}</ion-select-option>
+                                            <ion-select-option *ngFor="let category of categoryDropDown" [value]="category.value">{{ category.label }}</ion-select-option>
                                         </ion-select>
                                     </ion-item>
                                 </ion-input>
@@ -50,21 +50,21 @@
                             </ion-row>
 
                             <app-input-field
-                                [formGroupInstance]="businessCommunity"
+                                [formGroupInstance]="businessCategory"
                                 [inputName]="'facebookLink'"
                                 [label]="'Facebook Link'"
                                 [icon]="'logo-facebook'">
                             </app-input-field>
 
                             <app-input-field
-                                [formGroupInstance]="businessCommunity"
+                                [formGroupInstance]="businessCategory"
                                 [inputName]="'instagramLink'"
                                 [label]="'Instagram Link'"
                                 [icon]="'logo-instagram'">
                             </app-input-field>
 
                             <app-input-field
-                                [formGroupInstance]="businessCommunity"
+                                [formGroupInstance]="businessCategory"
                                 [inputName]="'twitterLink'"
                                 [label]="'Twitter Link'"
                                 [icon]="'logo-twitter'">
@@ -72,7 +72,7 @@
                             
                             <ion-row hidden="true" style="height: 0 !important">
                                 <ion-col>
-                                    <button type="submit" [disabled]="businessCommunity.invalid">
+                                    <button type="submit" [disabled]="businessCategory.invalid">
                                         hidden submit
                                     </button>
                                 </ion-col>
@@ -82,10 +82,10 @@
                         <ion-row class="form-btn-row">
                             <ion-col>
                                 <ion-row>
-                                    <ion-col [ngClass]="{ 'notClickable': businessCommunity.invalid }">
+                                    <ion-col [ngClass]="{ 'notClickable': businessCategory.invalid }">
                                         <app-jacobi-button
                                             (click)="saveAndContinue()"
-                                            [disabled]="businessCommunity.invalid"
+                                            [disabled]="businessCategory.invalid"
                                             [buttonType]="'auth-primary'">Next</app-jacobi-button>
                                     </ion-col>
                                 </ion-row>

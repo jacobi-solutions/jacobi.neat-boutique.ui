@@ -12,7 +12,7 @@
         class="form-col">
         
           <h1>You're Ad is now live!</h1>
-          <p>Your Ad will now show in your community feed. Check back for updates on your ad's interactions.</p>
+          <p>Your Ad will now show in your category feed. Check back for updates on your ad's interactions.</p>
             
       </ion-col>
       <ion-col *ngIf="!adIsCreated" class="form-section" size-xs="12" size-lg="6">
@@ -27,19 +27,19 @@
           <ion-col>
             <div class="input-choice" >
               <ion-input type="text" >
-                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.communityName}">
-                    <ion-label class="label-placeholder">Community</ion-label>
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.categoryName}">
+                    <ion-label class="label-placeholder">Category</ion-label>
       
                     <ion-select
-                      [(ngModel)]="selectedHeroAd.communityName"
-                      (ionChange)="selectHeroTemplateByCommunity()"
-                      css="select-poll-community"
+                      [(ngModel)]="selectedHeroAd.categoryName"
+                      (ionChange)="selectHeroTemplateByCategory()"
+                      css="select-poll-category"
                       multiple="false"
                       cancelText="Cancel"
                       okText="Done"
                       interface="popover">
       
-                      <ion-select-option *ngFor="let community of vendor?.communities" [value]="community">{{ community }}</ion-select-option>
+                      <ion-select-option *ngFor="let category of vendor?.categories" [value]="category">{{ category }}</ion-select-option>
                     </ion-select>
                 </ion-item>
                 
@@ -57,7 +57,7 @@
       
                     <ion-select
                       [(ngModel)]="selectedHeroAd.adTagline"
-                      css="select-poll-community"
+                      css="select-poll-category"
                       multiple="false"
                       cancelText="Cancel"
                       okText="Done"
@@ -78,8 +78,8 @@
             class="thumbnail-col clickable"
             *ngFor="let imageUrl of selectedHeroTemplate?.imageUrls">
 
-            <!-- <div (click)="selectHero(imageUrl)" class="border-wrapper" [ngClass]="{ 'has-border': (selectedHeroTemplate?.communityName === selectedHeroTemplate?.communityName) }">
-              <p>{{ selectedHeroTemplate?.communityName }}</p>
+            <!-- <div (click)="selectHero(imageUrl)" class="border-wrapper" [ngClass]="{ 'has-border': (selectedHeroTemplate?.categoryName === selectedHeroTemplate?.categoryName) }">
+              <p>{{ selectedHeroTemplate?.categoryName }}</p>
             </div> -->
             <div>
               <ion-img (click)="selectedHeroAd.imageUrl = imageUrl;" [src]="imageUrl"></ion-img>

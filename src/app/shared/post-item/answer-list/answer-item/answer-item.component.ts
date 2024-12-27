@@ -5,7 +5,7 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { SelectionVote, GooglePlacesEntity, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { PopoverController } from '@ionic/angular';
 import { SelectionVoteRankingColorsMap, SelectionVoteRankingTypes, PostTypes, FeedTypes } from 'src/app/models/constants';
@@ -35,7 +35,7 @@ export class AnswerItemComponent implements OnInit {
   answerVoteRankingTypes = SelectionVoteRankingTypes;
   postTypes = PostTypes;
   
-  constructor(private _communityService: CommunityService, private _customersService: AccountsService, private _modalService: ModalService,
+  constructor(private _categoryService: CategoryService, private _customersService: AccountsService, private _modalService: ModalService,
     private _router: Router, private _answersService: AnswersService, private _popoverController: PopoverController) {}
 
   ngOnInit() {

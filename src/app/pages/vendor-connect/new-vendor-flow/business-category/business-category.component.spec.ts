@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { SelectCommunitiesModalComponent } from './select-communities-modal.component';
+import { BusinessCategoryComponent } from './business-category.component';
 
-describe('SelectCommunitiesModalComponent', () => {
-  let component: SelectCommunitiesModalComponent;
-  let fixture: ComponentFixture<SelectCommunitiesModalComponent>;
+describe('BusinessCategoryComponent', () => {
+  let component: BusinessCategoryComponent;
+  let fixture: ComponentFixture<BusinessCategoryComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectCommunitiesModalComponent ],
+      declarations: [ BusinessCategoryComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SelectCommunitiesModalComponent);
+    fixture = TestBed.createComponent(BusinessCategoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

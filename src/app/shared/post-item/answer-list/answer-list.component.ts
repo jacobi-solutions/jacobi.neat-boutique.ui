@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { Selection, GooglePlacesEntity, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
@@ -24,7 +24,7 @@ export class AnswerListComponent implements OnInit {
   @Input() feedType: string = FeedTypes.COMMUNITY;
   @Input() postId: string;
   @Input() chartShowAll: boolean = false;
-  @Input() communityName: string;
+  @Input() categoryName: string;
   @Input() answers: AnswerDisplay[] = [];
   @Input() restrictedAvailableAnswers:  AnswerDisplay[] = null;
   @Input() altAnswerStyle: string;
@@ -53,7 +53,7 @@ export class AnswerListComponent implements OnInit {
   private _searchVendor: { minChars: number, lastSearchText: string, results: EntityDisplay[] };
   
   constructor(
-    private _communityService: CommunityService,
+    private _categoryService: CategoryService,
     private _accountsService: AccountsService,
     private _modalService: ModalService,
     private _util: UtilService,
@@ -152,8 +152,8 @@ export class AnswerListComponent implements OnInit {
 
     if(searchText && (searchText?.length >= this._searchVendor?.minChars) && (searchText !== this._searchVendor?.lastSearchText)) {
       this._searchVendor.lastSearchText = searchText;
-      this._searchVendor.results = await this._communityService.autocompleteSearchForAnswer({
-        communityName: this.communityName,
+      this._searchVendor.results = await this._categoryService.autocompleteSearchForAnswer({
+        categoryName: this.categoryName,
         searchString: this._searchVendor.lastSearchText
       });
       this.vendorResults = this._searchVendor.results;      

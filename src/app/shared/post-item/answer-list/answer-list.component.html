@@ -3,7 +3,7 @@
     <div *ngIf="answersChanged" class="answers expanded">
       <ion-row *ngFor="let answer of normalize(minimalAnswers); index as i" class="answer-item-row">
         <ion-col>
-          <!-- community post answer -->
+          <!-- category post answer -->
           <app-answer-item
           [feedType]="feedType"
           [expanded]="true"

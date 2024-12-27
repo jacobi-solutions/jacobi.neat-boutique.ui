@@ -73,7 +73,7 @@ export class ManualBusinessDetailsComponent implements OnInit {
         this.showVendorAlreadyAccociatedError = true;
       } else {
         this.businessDetails.reset();
-        this._navCtrl.navigateForward('vendor-connect/business-community');
+        this._navCtrl.navigateForward('vendor-connect/business-category');
       }
     });
   }

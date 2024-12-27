@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostDisplay } from 'src/app/models/post-display';
-import { CommunityTypes } from 'src/app/models/constants';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryTypes } from 'src/app/models/constants';
+import { CategoryService } from 'src/app/services/category.service';
 import { MyQuestionsService } from 'src/app/services/my-questions.service';
 
 @Component({

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; 
-import { CommunityBillboardAdComponent } from './sub-routes/community-billboard-ad/community-billboard-ad.component';
+import { BillboardAdComponent } from './sub-routes/billboard-ad/billboard-ad.component';
 import { PollAdComponent } from './sub-routes/poll-ad/poll-ad.component';
 
 import { VendorSettingsPage } from './vendor-settings.page';
+import { CreateCommunityComponent } from './sub-routes/create-community/create-community.component';
 
 const routes: Routes = [
   {
@@ -12,12 +13,16 @@ const routes: Routes = [
     component: VendorSettingsPage
   },
   {
-    path: 'community-billboard-ads',
-    component: CommunityBillboardAdComponent
+    path: 'billboard-ads',
+    component: BillboardAdComponent
   },
   {
     path: 'poll-ads',
     component: PollAdComponent
+  },
+  {
+    path: 'create-category',
+    component: CreateCommunityComponent
   }
 ];
 

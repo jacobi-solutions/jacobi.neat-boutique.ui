@@ -7,11 +7,11 @@
   @include clickable;
 }
 
-// community section ======================================
+// category section ======================================
 .category-selections {
   //padding-right: 1.5rem;
 
-  .community-heading {
+  .category-heading {
     align-items: center;
     color: var(--nb-light-grey);
     font-weight: bold !important;
@@ -21,7 +21,7 @@
     }
   }
 
-  .community-list-card {
+  .category-list-card {
     border-radius: 10px;
     border-style: solid;
     border-width: 1px;
@@ -38,7 +38,7 @@
     font-size: 1rem;
     color: var(--nb-light-grey);
 
-    .community-item-wrapper { 
+    .category-item-wrapper { 
       align-items: center;
       cursor: pointer;
   
@@ -62,10 +62,10 @@
   }
 
 }
-.my-communities-col {
+.my-categories-col {
   padding: 0;
 }
-.community-feed-col {
+.category-feed-col {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -214,7 +214,7 @@ ion-grid {
   padding-bottom: 2.5rem;
 }
 
-.community-list-header {
+.category-list-header {
   padding-left: 1rem;
   font-weight: bold;
   color: var(--nb-dark-grey);
@@ -328,10 +328,10 @@ ion-grid {
   .specific-post {
     margin-bottom: .5rem;
   }
-  .community-post-row {
+  .category-post-row {
     margin-bottom: 1rem;
   }
-  .community-post-col {
+  .category-post-col {
     padding: 0;
   }
 }
@@ -418,7 +418,7 @@ ion-grid {
 // ============================= Mobile ===============================
 
 @include screen-xl-and-below {
-  .community-list-wrapper ion-row .community-item-wrapper {
+  .category-list-wrapper ion-row .category-item-wrapper {
    
 
     ion-icon {
@@ -429,7 +429,7 @@ ion-grid {
 }
 
 @include screen-sm-and-below {
-  .community-feed-col {
+  .category-feed-col {
     padding: 0;
   }
   ion-grid {

@@ -94,6 +94,11 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    getAllDataForCategories(body: CategoryRequest | undefined): Observable<CategoryResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     addCommentToPost(body: CommentRequest | undefined): Observable<CommentResponse>;
     /**
      * @param body (optional) 
@@ -115,11 +120,6 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     updateCommentBodyOnPost(body: CommentUpdateRequest | undefined): Observable<CommentResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    getAllDataForCommunities(body: CommunityRequest | undefined): Observable<CommunityResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -185,6 +185,28 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     createHeroAdForVendor(body: CreateHeroAdRequest | undefined): Observable<Response>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createNetwork(body: CreateNetworkRequest | undefined): Observable<void>;
+    /**
+     * @param networkId (optional) 
+     * @param vendorId (optional) 
+     * @return Success
+     */
+    addVendorToNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void>;
+    /**
+     * @param networkId (optional) 
+     * @param vendorId (optional) 
+     * @return Success
+     */
+    removeVendorFromNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void>;
+    /**
+     * @param networkId (optional) 
+     * @return Success
+     */
+    deleteNetwork(networkId: string | null | undefined): Observable<Response>;
     /**
      * @param body (optional) 
      * @return Success
@@ -345,7 +367,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getVendorsByCommunityName(body: VendorProfilesRequest | undefined): Observable<VendorProfilesResponse>;
+    getVendorsByCategoryName(body: VendorProfilesRequest | undefined): Observable<VendorProfilesResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -395,7 +417,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    updateCommunities(body: VendorCommunitiesRequest | undefined): Observable<VendorProfileResponse>;
+    updateCategories(body: VendorCategoriesRequest | undefined): Observable<VendorProfileResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -1258,6 +1280,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    getAllDataForCategories(body: CategoryRequest | undefined): Observable<CategoryResponse> {
+        let url_ = this.baseUrl + "/Category/GetAllDataForCategoriesAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllDataForCategories(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllDataForCategories(<any>response_);
+                } catch (e) {
+                    return <Observable<CategoryResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CategoryResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllDataForCategories(response: HttpResponseBase): Observable<CategoryResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CategoryResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CategoryResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     addCommentToPost(body: CommentRequest | undefined): Observable<CommentResponse> {
         let url_ = this.baseUrl + "/Comments/AddCommentToPostAsync";
         url_ = url_.replace(/[?&]$/, "");
@@ -1532,62 +1610,6 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<CommentResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    getAllDataForCommunities(body: CommunityRequest | undefined): Observable<CommunityResponse> {
-        let url_ = this.baseUrl + "/Community/GetAllDataForCommunitiesAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllDataForCommunities(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllDataForCommunities(<any>response_);
-                } catch (e) {
-                    return <Observable<CommunityResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<CommunityResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetAllDataForCommunities(response: HttpResponseBase): Observable<CommunityResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CommunityResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CommunityResponse>(<any>null);
     }
 
     /**
@@ -2297,6 +2319,218 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     protected processCreateHeroAdForVendor(response: HttpResponseBase): Observable<Response> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Response.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Response>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createNetwork(body: CreateNetworkRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Networks/CreateNetwork";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateNetwork(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateNetwork(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateNetwork(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param networkId (optional) 
+     * @param vendorId (optional) 
+     * @return Success
+     */
+    addVendorToNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Networks/AddVendorToNetwork?";
+        if (networkId !== undefined && networkId !== null)
+            url_ += "networkId=" + encodeURIComponent("" + networkId) + "&";
+        if (vendorId !== undefined && vendorId !== null)
+            url_ += "vendorId=" + encodeURIComponent("" + vendorId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddVendorToNetwork(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddVendorToNetwork(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddVendorToNetwork(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param networkId (optional) 
+     * @param vendorId (optional) 
+     * @return Success
+     */
+    removeVendorFromNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Networks/RemoveVendorFromNetwork?";
+        if (networkId !== undefined && networkId !== null)
+            url_ += "networkId=" + encodeURIComponent("" + networkId) + "&";
+        if (vendorId !== undefined && vendorId !== null)
+            url_ += "vendorId=" + encodeURIComponent("" + vendorId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveVendorFromNetwork(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveVendorFromNetwork(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRemoveVendorFromNetwork(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param networkId (optional) 
+     * @return Success
+     */
+    deleteNetwork(networkId: string | null | undefined): Observable<Response> {
+        let url_ = this.baseUrl + "/api/Networks/DeleteNetwork?";
+        if (networkId !== undefined && networkId !== null)
+            url_ += "networkId=" + encodeURIComponent("" + networkId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteNetwork(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteNetwork(<any>response_);
+                } catch (e) {
+                    return <Observable<Response>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<Response>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteNetwork(response: HttpResponseBase): Observable<Response> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4120,8 +4354,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getVendorsByCommunityName(body: VendorProfilesRequest | undefined): Observable<VendorProfilesResponse> {
-        let url_ = this.baseUrl + "/Vendors/GetVendorsByCommunityNameAsync";
+    getVendorsByCategoryName(body: VendorProfilesRequest | undefined): Observable<VendorProfilesResponse> {
+        let url_ = this.baseUrl + "/Vendors/GetVendorsByCategoryNameAsync";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -4137,11 +4371,11 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetVendorsByCommunityName(response_);
+            return this.processGetVendorsByCategoryName(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetVendorsByCommunityName(<any>response_);
+                    return this.processGetVendorsByCategoryName(<any>response_);
                 } catch (e) {
                     return <Observable<VendorProfilesResponse>><any>_observableThrow(e);
                 }
@@ -4150,7 +4384,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         }));
     }
 
-    protected processGetVendorsByCommunityName(response: HttpResponseBase): Observable<VendorProfilesResponse> {
+    protected processGetVendorsByCategoryName(response: HttpResponseBase): Observable<VendorProfilesResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4680,8 +4914,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    updateCommunities(body: VendorCommunitiesRequest | undefined): Observable<VendorProfileResponse> {
-        let url_ = this.baseUrl + "/Vendors/UpdateCommunitiesAsync";
+    updateCategories(body: VendorCategoriesRequest | undefined): Observable<VendorProfileResponse> {
+        let url_ = this.baseUrl + "/Vendors/UpdateCategoriesAsync";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -4697,11 +4931,11 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateCommunities(response_);
+            return this.processUpdateCategories(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUpdateCommunities(<any>response_);
+                    return this.processUpdateCategories(<any>response_);
                 } catch (e) {
                     return <Observable<VendorProfileResponse>><any>_observableThrow(e);
                 }
@@ -4710,7 +4944,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         }));
     }
 
-    protected processUpdateCommunities(response: HttpResponseBase): Observable<VendorProfileResponse> {
+    protected processUpdateCategories(response: HttpResponseBase): Observable<VendorProfileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4988,7 +5222,7 @@ export class VendorProfile implements IVendorProfile {
     avatarSourceURL?: string | undefined;
     profilePath?: string | undefined;
     borderColor?: string | undefined;
-    communities?: string[] | undefined;
+    categories?: string[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
     questionsAnsweredCount?: number;
@@ -5034,10 +5268,10 @@ export class VendorProfile implements IVendorProfile {
             this.avatarSourceURL = _data["avatarSourceURL"];
             this.profilePath = _data["profilePath"];
             this.borderColor = _data["borderColor"];
-            if (Array.isArray(_data["communities"])) {
-                this.communities = [] as any;
-                for (let item of _data["communities"])
-                    this.communities!.push(item);
+            if (Array.isArray(_data["categories"])) {
+                this.categories = [] as any;
+                for (let item of _data["categories"])
+                    this.categories!.push(item);
             }
             this.reviewCount = _data["reviewCount"];
             this.reviewRatingTotal = _data["reviewRatingTotal"];
@@ -5084,10 +5318,10 @@ export class VendorProfile implements IVendorProfile {
         data["avatarSourceURL"] = this.avatarSourceURL;
         data["profilePath"] = this.profilePath;
         data["borderColor"] = this.borderColor;
-        if (Array.isArray(this.communities)) {
-            data["communities"] = [];
-            for (let item of this.communities)
-                data["communities"].push(item);
+        if (Array.isArray(this.categories)) {
+            data["categories"] = [];
+            for (let item of this.categories)
+                data["categories"].push(item);
         }
         data["reviewCount"] = this.reviewCount;
         data["reviewRatingTotal"] = this.reviewRatingTotal;
@@ -5121,7 +5355,7 @@ export interface IVendorProfile {
     avatarSourceURL?: string | undefined;
     profilePath?: string | undefined;
     borderColor?: string | undefined;
-    communities?: string[] | undefined;
+    categories?: string[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
     questionsAnsweredCount?: number;
@@ -5881,7 +6115,7 @@ export class Post implements IPost {
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     subject?: string | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
@@ -5905,7 +6139,7 @@ export class Post implements IPost {
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.postType = _data["postType"];
             this.subject = _data["subject"];
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
             this.feedContextId = _data["feedContextId"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
@@ -5937,7 +6171,7 @@ export class Post implements IPost {
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["postType"] = this.postType;
         data["subject"] = this.subject;
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         data["feedContextId"] = this.feedContextId;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
@@ -5962,7 +6196,7 @@ export interface IPost {
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     subject?: string | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
@@ -6145,6 +6379,286 @@ export class PollAnswerRequest implements IPollAnswerRequest {
 export interface IPollAnswerRequest {
     answerId?: string | undefined;
     voteRanking?: string | undefined;
+}
+
+export class CategoryRequest implements ICategoryRequest {
+    categoryNames?: string[] | undefined;
+    pageNumber?: number;
+    pageSize?: number;
+    includeRecentPostsCount?: number;
+
+    constructor(data?: ICategoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["categoryNames"])) {
+                this.categoryNames = [] as any;
+                for (let item of _data["categoryNames"])
+                    this.categoryNames!.push(item);
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.pageSize = _data["pageSize"];
+            this.includeRecentPostsCount = _data["includeRecentPostsCount"];
+        }
+    }
+
+    static fromJS(data: any): CategoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.categoryNames)) {
+            data["categoryNames"] = [];
+            for (let item of this.categoryNames)
+                data["categoryNames"].push(item);
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["pageSize"] = this.pageSize;
+        data["includeRecentPostsCount"] = this.includeRecentPostsCount;
+        return data; 
+    }
+}
+
+export interface ICategoryRequest {
+    categoryNames?: string[] | undefined;
+    pageNumber?: number;
+    pageSize?: number;
+    includeRecentPostsCount?: number;
+}
+
+export class AdTagline implements IAdTagline {
+    primaryAdTagline?: string | undefined;
+    secondaryAdTagline?: string | undefined;
+
+    constructor(data?: IAdTagline) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.primaryAdTagline = _data["primaryAdTagline"];
+            this.secondaryAdTagline = _data["secondaryAdTagline"];
+        }
+    }
+
+    static fromJS(data: any): AdTagline {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdTagline();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["primaryAdTagline"] = this.primaryAdTagline;
+        data["secondaryAdTagline"] = this.secondaryAdTagline;
+        return data; 
+    }
+}
+
+export interface IAdTagline {
+    primaryAdTagline?: string | undefined;
+    secondaryAdTagline?: string | undefined;
+}
+
+export class HeroAd implements IHeroAd {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendor?: NeatBoutiqueEntity;
+    campaignStartDateUtc?: Date;
+    campaignEndDateUtc?: Date;
+    isActive?: boolean;
+    imageUrl?: string | undefined;
+    adTagline?: AdTagline;
+    callToAction?: string | undefined;
+    categoryName?: string | undefined;
+
+    constructor(data?: IHeroAd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
+            this.campaignStartDateUtc = _data["campaignStartDateUtc"] ? new Date(_data["campaignStartDateUtc"].toString()) : <any>undefined;
+            this.campaignEndDateUtc = _data["campaignEndDateUtc"] ? new Date(_data["campaignEndDateUtc"].toString()) : <any>undefined;
+            this.isActive = _data["isActive"];
+            this.imageUrl = _data["imageUrl"];
+            this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
+            this.callToAction = _data["callToAction"];
+            this.categoryName = _data["categoryName"];
+        }
+    }
+
+    static fromJS(data: any): HeroAd {
+        data = typeof data === 'object' ? data : {};
+        let result = new HeroAd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
+        data["campaignStartDateUtc"] = this.campaignStartDateUtc ? this.campaignStartDateUtc.toISOString() : <any>undefined;
+        data["campaignEndDateUtc"] = this.campaignEndDateUtc ? this.campaignEndDateUtc.toISOString() : <any>undefined;
+        data["isActive"] = this.isActive;
+        data["imageUrl"] = this.imageUrl;
+        data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
+        data["callToAction"] = this.callToAction;
+        data["categoryName"] = this.categoryName;
+        return data; 
+    }
+}
+
+export interface IHeroAd {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendor?: NeatBoutiqueEntity;
+    campaignStartDateUtc?: Date;
+    campaignEndDateUtc?: Date;
+    isActive?: boolean;
+    imageUrl?: string | undefined;
+    adTagline?: AdTagline;
+    callToAction?: string | undefined;
+    categoryName?: string | undefined;
+}
+
+export class CategoryResponse implements ICategoryResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    consumerQuestions?: Post[] | undefined;
+    vendorPolls?: Post[] | undefined;
+    recentConsumerQuestions?: Post[] | undefined;
+    vendorRoutes?: Post[] | undefined;
+    heroAds?: HeroAd[] | undefined;
+
+    constructor(data?: ICategoryResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            if (Array.isArray(_data["consumerQuestions"])) {
+                this.consumerQuestions = [] as any;
+                for (let item of _data["consumerQuestions"])
+                    this.consumerQuestions!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["vendorPolls"])) {
+                this.vendorPolls = [] as any;
+                for (let item of _data["vendorPolls"])
+                    this.vendorPolls!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["recentConsumerQuestions"])) {
+                this.recentConsumerQuestions = [] as any;
+                for (let item of _data["recentConsumerQuestions"])
+                    this.recentConsumerQuestions!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["vendorRoutes"])) {
+                this.vendorRoutes = [] as any;
+                for (let item of _data["vendorRoutes"])
+                    this.vendorRoutes!.push(Post.fromJS(item));
+            }
+            if (Array.isArray(_data["heroAds"])) {
+                this.heroAds = [] as any;
+                for (let item of _data["heroAds"])
+                    this.heroAds!.push(HeroAd.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CategoryResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        if (Array.isArray(this.consumerQuestions)) {
+            data["consumerQuestions"] = [];
+            for (let item of this.consumerQuestions)
+                data["consumerQuestions"].push(item.toJSON());
+        }
+        if (Array.isArray(this.vendorPolls)) {
+            data["vendorPolls"] = [];
+            for (let item of this.vendorPolls)
+                data["vendorPolls"].push(item.toJSON());
+        }
+        if (Array.isArray(this.recentConsumerQuestions)) {
+            data["recentConsumerQuestions"] = [];
+            for (let item of this.recentConsumerQuestions)
+                data["recentConsumerQuestions"].push(item.toJSON());
+        }
+        if (Array.isArray(this.vendorRoutes)) {
+            data["vendorRoutes"] = [];
+            for (let item of this.vendorRoutes)
+                data["vendorRoutes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.heroAds)) {
+            data["heroAds"] = [];
+            for (let item of this.heroAds)
+                data["heroAds"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICategoryResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    consumerQuestions?: Post[] | undefined;
+    vendorPolls?: Post[] | undefined;
+    recentConsumerQuestions?: Post[] | undefined;
+    vendorRoutes?: Post[] | undefined;
+    heroAds?: HeroAd[] | undefined;
 }
 
 export class CommentRequest implements ICommentRequest {
@@ -6413,286 +6927,6 @@ export interface ICommentUpdateRequest {
     commentId?: string | undefined;
     authorId?: string | undefined;
     body?: string | undefined;
-}
-
-export class CommunityRequest implements ICommunityRequest {
-    communityNames?: string[] | undefined;
-    pageNumber?: number;
-    pageSize?: number;
-    includeRecentPostsCount?: number;
-
-    constructor(data?: ICommunityRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["communityNames"])) {
-                this.communityNames = [] as any;
-                for (let item of _data["communityNames"])
-                    this.communityNames!.push(item);
-            }
-            this.pageNumber = _data["pageNumber"];
-            this.pageSize = _data["pageSize"];
-            this.includeRecentPostsCount = _data["includeRecentPostsCount"];
-        }
-    }
-
-    static fromJS(data: any): CommunityRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new CommunityRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.communityNames)) {
-            data["communityNames"] = [];
-            for (let item of this.communityNames)
-                data["communityNames"].push(item);
-        }
-        data["pageNumber"] = this.pageNumber;
-        data["pageSize"] = this.pageSize;
-        data["includeRecentPostsCount"] = this.includeRecentPostsCount;
-        return data; 
-    }
-}
-
-export interface ICommunityRequest {
-    communityNames?: string[] | undefined;
-    pageNumber?: number;
-    pageSize?: number;
-    includeRecentPostsCount?: number;
-}
-
-export class AdTagline implements IAdTagline {
-    primaryAdTagline?: string | undefined;
-    secondaryAdTagline?: string | undefined;
-
-    constructor(data?: IAdTagline) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.primaryAdTagline = _data["primaryAdTagline"];
-            this.secondaryAdTagline = _data["secondaryAdTagline"];
-        }
-    }
-
-    static fromJS(data: any): AdTagline {
-        data = typeof data === 'object' ? data : {};
-        let result = new AdTagline();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["primaryAdTagline"] = this.primaryAdTagline;
-        data["secondaryAdTagline"] = this.secondaryAdTagline;
-        return data; 
-    }
-}
-
-export interface IAdTagline {
-    primaryAdTagline?: string | undefined;
-    secondaryAdTagline?: string | undefined;
-}
-
-export class HeroAd implements IHeroAd {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    vendor?: NeatBoutiqueEntity;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    isActive?: boolean;
-    imageUrl?: string | undefined;
-    adTagline?: AdTagline;
-    callToAction?: string | undefined;
-    communityName?: string | undefined;
-
-    constructor(data?: IHeroAd) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
-            this.campaignStartDateUtc = _data["campaignStartDateUtc"] ? new Date(_data["campaignStartDateUtc"].toString()) : <any>undefined;
-            this.campaignEndDateUtc = _data["campaignEndDateUtc"] ? new Date(_data["campaignEndDateUtc"].toString()) : <any>undefined;
-            this.isActive = _data["isActive"];
-            this.imageUrl = _data["imageUrl"];
-            this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
-            this.callToAction = _data["callToAction"];
-            this.communityName = _data["communityName"];
-        }
-    }
-
-    static fromJS(data: any): HeroAd {
-        data = typeof data === 'object' ? data : {};
-        let result = new HeroAd();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
-        data["campaignStartDateUtc"] = this.campaignStartDateUtc ? this.campaignStartDateUtc.toISOString() : <any>undefined;
-        data["campaignEndDateUtc"] = this.campaignEndDateUtc ? this.campaignEndDateUtc.toISOString() : <any>undefined;
-        data["isActive"] = this.isActive;
-        data["imageUrl"] = this.imageUrl;
-        data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
-        data["callToAction"] = this.callToAction;
-        data["communityName"] = this.communityName;
-        return data; 
-    }
-}
-
-export interface IHeroAd {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    vendor?: NeatBoutiqueEntity;
-    campaignStartDateUtc?: Date;
-    campaignEndDateUtc?: Date;
-    isActive?: boolean;
-    imageUrl?: string | undefined;
-    adTagline?: AdTagline;
-    callToAction?: string | undefined;
-    communityName?: string | undefined;
-}
-
-export class CommunityResponse implements ICommunityResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    consumerQuestions?: Post[] | undefined;
-    vendorPolls?: Post[] | undefined;
-    recentConsumerQuestions?: Post[] | undefined;
-    vendorRoutes?: Post[] | undefined;
-    heroAds?: HeroAd[] | undefined;
-
-    constructor(data?: ICommunityResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            if (Array.isArray(_data["consumerQuestions"])) {
-                this.consumerQuestions = [] as any;
-                for (let item of _data["consumerQuestions"])
-                    this.consumerQuestions!.push(Post.fromJS(item));
-            }
-            if (Array.isArray(_data["vendorPolls"])) {
-                this.vendorPolls = [] as any;
-                for (let item of _data["vendorPolls"])
-                    this.vendorPolls!.push(Post.fromJS(item));
-            }
-            if (Array.isArray(_data["recentConsumerQuestions"])) {
-                this.recentConsumerQuestions = [] as any;
-                for (let item of _data["recentConsumerQuestions"])
-                    this.recentConsumerQuestions!.push(Post.fromJS(item));
-            }
-            if (Array.isArray(_data["vendorRoutes"])) {
-                this.vendorRoutes = [] as any;
-                for (let item of _data["vendorRoutes"])
-                    this.vendorRoutes!.push(Post.fromJS(item));
-            }
-            if (Array.isArray(_data["heroAds"])) {
-                this.heroAds = [] as any;
-                for (let item of _data["heroAds"])
-                    this.heroAds!.push(HeroAd.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CommunityResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new CommunityResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        if (Array.isArray(this.consumerQuestions)) {
-            data["consumerQuestions"] = [];
-            for (let item of this.consumerQuestions)
-                data["consumerQuestions"].push(item.toJSON());
-        }
-        if (Array.isArray(this.vendorPolls)) {
-            data["vendorPolls"] = [];
-            for (let item of this.vendorPolls)
-                data["vendorPolls"].push(item.toJSON());
-        }
-        if (Array.isArray(this.recentConsumerQuestions)) {
-            data["recentConsumerQuestions"] = [];
-            for (let item of this.recentConsumerQuestions)
-                data["recentConsumerQuestions"].push(item.toJSON());
-        }
-        if (Array.isArray(this.vendorRoutes)) {
-            data["vendorRoutes"] = [];
-            for (let item of this.vendorRoutes)
-                data["vendorRoutes"].push(item.toJSON());
-        }
-        if (Array.isArray(this.heroAds)) {
-            data["heroAds"] = [];
-            for (let item of this.heroAds)
-                data["heroAds"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface ICommunityResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    consumerQuestions?: Post[] | undefined;
-    vendorPolls?: Post[] | undefined;
-    recentConsumerQuestions?: Post[] | undefined;
-    vendorRoutes?: Post[] | undefined;
-    heroAds?: HeroAd[] | undefined;
 }
 
 export class MyPlacesRequest implements IMyPlacesRequest {
@@ -7422,7 +7656,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
     imageUrls?: string[] | undefined;
     adTaglines?: AdTagline[] | undefined;
     callsToAction?: string[] | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
 
     constructor(data?: IHeroAdTemplate) {
         if (data) {
@@ -7453,7 +7687,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
                 for (let item of _data["callsToAction"])
                     this.callsToAction!.push(item);
             }
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
         }
     }
 
@@ -7484,7 +7718,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
             for (let item of this.callsToAction)
                 data["callsToAction"].push(item);
         }
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         return data; 
     }
 }
@@ -7496,7 +7730,7 @@ export interface IHeroAdTemplate {
     imageUrls?: string[] | undefined;
     adTaglines?: AdTagline[] | undefined;
     callsToAction?: string[] | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
 }
 
 export class HeroAdTemplatesResponse implements IHeroAdTemplatesResponse {
@@ -7560,7 +7794,7 @@ export interface IHeroAdTemplatesResponse {
 }
 
 export class CreateHeroAdRequest implements ICreateHeroAdRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
@@ -7577,7 +7811,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
             this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
             this.callToAction = _data["callToAction"];
             this.imageUrl = _data["imageUrl"];
@@ -7594,7 +7828,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
         data["callToAction"] = this.callToAction;
         data["imageUrl"] = this.imageUrl;
@@ -7604,11 +7838,51 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 }
 
 export interface ICreateHeroAdRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
     vendorProfileId?: string | undefined;
+}
+
+export class CreateNetworkRequest implements ICreateNetworkRequest {
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: ICreateNetworkRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CreateNetworkRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateNetworkRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICreateNetworkRequest {
+    name?: string | undefined;
+    description?: string | undefined;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
@@ -8490,7 +8764,7 @@ export class Route implements IRoute {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -8515,7 +8789,7 @@ export class Route implements IRoute {
             this.postId = _data["postId"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
             this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
@@ -8548,7 +8822,7 @@ export class Route implements IRoute {
         data["postId"] = this.postId;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
         data["author"] = this.author ? this.author.toJSON() : <any>undefined;
@@ -8574,7 +8848,7 @@ export interface IRoute {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -8756,7 +9030,7 @@ export interface IMyVisitsResponse {
 }
 
 export class AnswerSearchRequest implements IAnswerSearchRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     searchString?: string | undefined;
 
     constructor(data?: IAnswerSearchRequest) {
@@ -8770,7 +9044,7 @@ export class AnswerSearchRequest implements IAnswerSearchRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
             this.searchString = _data["searchString"];
         }
     }
@@ -8784,14 +9058,14 @@ export class AnswerSearchRequest implements IAnswerSearchRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         data["searchString"] = this.searchString;
         return data; 
     }
 }
 
 export interface IAnswerSearchRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     searchString?: string | undefined;
 }
 
@@ -9416,7 +9690,7 @@ export interface ISettings {
 }
 
 export class VendorProfilesRequest implements IVendorProfilesRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     pageNumber?: number;
     pageSize?: number;
 
@@ -9431,7 +9705,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.communityName = _data["communityName"];
+            this.categoryName = _data["categoryName"];
             this.pageNumber = _data["pageNumber"];
             this.pageSize = _data["pageSize"];
         }
@@ -9446,7 +9720,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["communityName"] = this.communityName;
+        data["categoryName"] = this.categoryName;
         data["pageNumber"] = this.pageNumber;
         data["pageSize"] = this.pageSize;
         return data; 
@@ -9454,7 +9728,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 }
 
 export interface IVendorProfilesRequest {
-    communityName?: string | undefined;
+    categoryName?: string | undefined;
     pageNumber?: number;
     pageSize?: number;
 }
@@ -9755,11 +10029,11 @@ export interface IVendorSocialLinksRequest {
     twitterURL?: string | undefined;
 }
 
-export class VendorCommunitiesRequest implements IVendorCommunitiesRequest {
+export class VendorCategoriesRequest implements IVendorCategoriesRequest {
     vendorId?: string | undefined;
-    communities?: string[] | undefined;
+    categories?: string[] | undefined;
 
-    constructor(data?: IVendorCommunitiesRequest) {
+    constructor(data?: IVendorCategoriesRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9771,17 +10045,17 @@ export class VendorCommunitiesRequest implements IVendorCommunitiesRequest {
     init(_data?: any) {
         if (_data) {
             this.vendorId = _data["vendorId"];
-            if (Array.isArray(_data["communities"])) {
-                this.communities = [] as any;
-                for (let item of _data["communities"])
-                    this.communities!.push(item);
+            if (Array.isArray(_data["categories"])) {
+                this.categories = [] as any;
+                for (let item of _data["categories"])
+                    this.categories!.push(item);
             }
         }
     }
 
-    static fromJS(data: any): VendorCommunitiesRequest {
+    static fromJS(data: any): VendorCategoriesRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new VendorCommunitiesRequest();
+        let result = new VendorCategoriesRequest();
         result.init(data);
         return result;
     }
@@ -9789,18 +10063,18 @@ export class VendorCommunitiesRequest implements IVendorCommunitiesRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["vendorId"] = this.vendorId;
-        if (Array.isArray(this.communities)) {
-            data["communities"] = [];
-            for (let item of this.communities)
-                data["communities"].push(item);
+        if (Array.isArray(this.categories)) {
+            data["categories"] = [];
+            for (let item of this.categories)
+                data["categories"].push(item);
         }
         return data; 
     }
 }
 
-export interface IVendorCommunitiesRequest {
+export interface IVendorCategoriesRequest {
     vendorId?: string | undefined;
-    communities?: string[] | undefined;
+    categories?: string[] | undefined;
 }
 
 export class VendorBorderColorRequest implements IVendorBorderColorRequest {

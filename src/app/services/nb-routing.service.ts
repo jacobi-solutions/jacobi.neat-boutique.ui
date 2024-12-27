@@ -8,13 +8,13 @@ export class NbRoutingService {
 
   constructor(private _router: Router) {}
 
-  public goToVendorListByCategory(communityName: string) {
-    const urlFriendlyCategory = this.communityNameToFriendlyUrlPart(communityName);
+  public goToVendorListByCategory(categoryName: string) {
+    const urlFriendlyCategory = this.categoryNameToFriendlyUrlPart(categoryName);
     this._router.navigateByUrl(`/vendor-list/${urlFriendlyCategory}`);
   }
 
-  public communityNameToFriendlyUrlPart(communityName) {
-    return communityName.toLowerCase().replace(/\s/g, '-').replace(/\&/g, "and");
+  public categoryNameToFriendlyUrlPart(categoryName) {
+    return categoryName.toLowerCase().replace(/\s/g, '-').replace(/\&/g, "and");
   }
 
 
@@ -22,11 +22,11 @@ export class NbRoutingService {
     const routeParams = activatedRoute.snapshot.paramMap;    
     const rawCategoryName = routeParams.get('categoryName'); 
 
-    let cleanWithAmpersand = this.communityFriendlyUrlPartToName(rawCategoryName);
+    let cleanWithAmpersand = this.categoryFriendlyUrlPartToName(rawCategoryName);
     return cleanWithAmpersand;
   }
 
-  public communityFriendlyUrlPartToName(words: string) {
+  public categoryFriendlyUrlPartToName(words: string) {
     const categoryWordsWithDash = words.split('-');   
     return categoryWordsWithDash.map(word => {
       const wordArray = [...word];

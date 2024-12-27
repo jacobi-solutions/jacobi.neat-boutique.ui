@@ -8,7 +8,7 @@ import { ConfirmationActionModalComponent } from "../shared/modals/confirmation-
 import { RequireLoginModalComponent } from "../shared/modals/require-login-modal/require-login-modal.component";
 import { EditHeroImgAdModalComponent } from "../shared/modals/vendor-settings-modals/edit-hero-img-ad-modal/edit-hero-img-ad-modal.component";
 import { EditSocialMediaLinksModalComponent } from "../shared/modals/vendor-settings-modals/edit-social-media-links-modal/edit-social-media-links-modal.component";
-import { SelectCommunitiesModalComponent } from "../shared/modals/vendor-settings-modals/select-communities-modal/select-communities-modal.component";
+import { SelectCategoriesModalComponent } from "../shared/modals/vendor-settings-modals/select-categories-modal/select-categories-modal.component";
 import { UploadPhotoModalComponent } from "../shared/modals/upload-photo-modal/upload-photo-modal.component";
 import { AccountsService } from "./accounts.service";
 import { Selection, ConsumerProfile, VendorProfile } from "./neat-boutique-api.service";
@@ -104,11 +104,11 @@ export class ModalService {
     }
 
 
-  async displayEditCommunitiesModal(vendorCommunities: string[]) {
+  async displayEditCategoriesModal(vendorCategories: string[]) {
     const modalHandle = await this._modalController.create({
-      component: SelectCommunitiesModalComponent,
-      componentProps: { vendorCommunities },
-      cssClass: 'custom-modal confirm-action-warning-modal vendor-settings-edit-communities',
+      component: SelectCategoriesModalComponent,
+      componentProps: { vendorCategories },
+      cssClass: 'custom-modal confirm-action-warning-modal vendor-settings-edit-categories',
     });
     modalHandle.present();
 
@@ -116,7 +116,7 @@ export class ModalService {
     const { data } = await modalHandle.onDidDismiss();
 
     return {
-      data: data?.communitySet || null
+      data: data?.categorySet || null
     };
   }
 
@@ -132,7 +132,7 @@ export class ModalService {
     const { data } = await modalHandle.onDidDismiss();
 
     return {
-      data: data?.communitySet || null
+      data: data?.categorySet || null
     };
   }
 
@@ -148,7 +148,7 @@ export class ModalService {
     const { data } = await modalHandle.onDidDismiss();
 
     return {
-      data: data?.communitySet || null
+      data: data?.categorySet || null
     };
   }
 

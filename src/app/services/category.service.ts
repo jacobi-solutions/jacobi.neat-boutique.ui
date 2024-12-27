@@ -4,11 +4,11 @@ import { BehaviorSubject } from "rxjs";
 
 import { AnswerDisplay } from "../models/answer-display";
 import { CommentDisplay } from "../models/comment-display";
-import { CommunityCategory } from "../models/community-category";
+import { Category } from "../models/category";
 import { PostDisplay } from "../models/post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
-import { CommunityTypes, UserRoleTypes } from "../models/constants";
+import { CategoryTypes, UserRoleTypes } from "../models/constants";
 import { VendorDisplay } from "../models/vendor-display";
 import { AccountsService } from "./accounts.service";
 import {
@@ -39,8 +39,8 @@ import {
   VendorProfilesResponse,
   VendorProfilesRequest,
   PollAnswerRequest,
-  CommunityRequest,
-  CommunityResponse,
+  CategoryRequest,
+  CategoryResponse,
   HeroAdTemplate,
   ConsumerFeedSettingsRequest,
   SelectionVote,
@@ -58,7 +58,7 @@ import { RouteDisplay } from "../models/route-display";
 import { Visitor } from "@angular/compiler";
 
 
-export class CommunityDisplay {
+export class CategoryDisplay {
   constructor(consumerPosts: PostDisplay[] = [], vendorPosts: PostDisplay[] = [],
       recentConsumerPosts: PostDisplay[] = [], heroAds: HeroAdTemplate[] = []) {
     this.consumerPosts = consumerPosts;
@@ -77,17 +77,17 @@ export class CommunityDisplay {
 @Injectable({
   providedIn: "root",
 })
-export class CommunityService {
+export class CategoryService {
 
   private _currentUser: CurrentUserDisplay;
   // private _vendorPosts: VendorPostDisplay[] = [];
   private _recentConsumerPosts: PostDisplay[];
-  private _selectedCommunityNames: string[];
+  private _selectedCategoryNames: string[];
   private _pageCount: number;
-  public communities: CommunityCategory[];
+  public categories: Category[];
   public currentPage: number = 0;
-  private _communityDisplay = new CommunityDisplay();
-  public communityDisplaySubject: BehaviorSubject<CommunityDisplay> = new BehaviorSubject<CommunityDisplay>(null);
+  private _categoryDisplay = new CategoryDisplay();
+  public categoryDisplaySubject: BehaviorSubject<CategoryDisplay> = new BehaviorSubject<CategoryDisplay>(null);
   public newRouteQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public consumerPostsPerPage: number = 12;
   public recentPostsPerPage: number = 3;
@@ -100,49 +100,49 @@ export class CommunityService {
     private _answersService: AnswersService,
     private _consumerService: ConsumerService
   ) {
-    this.loadStaticCommunities();
+    this.loadStaticCategories();
     this._accountsService.accountsHaveBeenLoadedSubject.subscribe((haveBeenLoaded) => {
       if(haveBeenLoaded) {
         this._currentUser = this._accountsService.currentUserSubject.getValue();
 
         if(this._currentUser?.feedCategoriesToShow) {
 
-          this.communities.forEach(x => {
+          this.categories.forEach(x => {
             var showCategory =  x.isSelected = this._currentUser.feedCategoriesToShow.some(y => y == x.name);
             x.isSelected = showCategory;
           });
-          this.loadPostsByCommunityNames(this.communities.filter(x => x.isSelected).map(x => x.name));
+          this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name));
         }
         
-        // this.emitCommunityDisplaySubject();
+        // this.emitCategoryDisplaySubject();
       }
     });
 
     
-    this.loadPostsByCommunityNames(this.communities.filter(x => x.isSelected).map(x => x.name));
+    this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name));
     this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
       if(post) {
-        var updatedPosts = this.updateConsumerPostInPosts(post, this._communityDisplay.consumerPosts);
-        this._communityDisplay.consumerPosts = [...updatedPosts];
-        this.emitCommunityDisplaySubject();
+        var updatedPosts = this.updateConsumerPostInPosts(post, this._categoryDisplay.consumerPosts);
+        this._categoryDisplay.consumerPosts = [...updatedPosts];
+        this.emitCategoryDisplaySubject();
       }
     });
 
     this._answersService.pollVotedOnSubject.subscribe((post: PostDisplay) => {
       if(post) {
-        var updatedPosts = this.updateVendorPostInPosts(post, this._communityDisplay.vendorPosts);
-        this._communityDisplay.vendorPosts = [...updatedPosts];
-        this.emitCommunityDisplaySubject();
+        var updatedPosts = this.updateVendorPostInPosts(post, this._categoryDisplay.vendorPosts);
+        this._categoryDisplay.vendorPosts = [...updatedPosts];
+        this.emitCategoryDisplaySubject();
       }
     });
   }
 
-  updateShownCommunities() {
-    var communityNames = this.communities.filter(x => x.isSelected).map(x => x.name);
+  updateShownCategories() {
+    var categoryNames = this.categories.filter(x => x.isSelected).map(x => x.name);
 
-    this._accountsService.updateFeedSettings(communityNames);
+    this._accountsService.updateFeedSettings(categoryNames);
     
-    this.loadPostsByCommunityNames(communityNames);
+    this.loadPostsByCategoryNames(categoryNames);
   }
 
   getPostById(specificPostId: string) {
@@ -191,26 +191,26 @@ export class CommunityService {
   }
   
 
-  private loadPostsByCommunityNames(communityNames: string[]) {
-    this._selectedCommunityNames = communityNames;
-    const request = new CommunityRequest();
-    request.communityNames = communityNames;
+  private loadPostsByCategoryNames(categoryNames: string[]) {
+    this._selectedCategoryNames = categoryNames;
+    const request = new CategoryRequest();
+    request.categoryNames = categoryNames;
     request.includeRecentPostsCount = this.recentPostsPerPage;
     request.pageSize = this.consumerPostsPerPage;
     request.pageNumber = 0;
 
     this._neatBoutiqueApiService
-      .getAllDataForCommunities(request)
-      .subscribe((response: CommunityResponse) => {
+      .getAllDataForCategories(request)
+      .subscribe((response: CategoryResponse) => {
 
         if (response.isSuccess) {
-          this._communityDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
-          this._communityDisplay.consumerPosts = response.consumerQuestions.map(x => new PostDisplay(x));
-          this._communityDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
-          this._communityDisplay.vendorPosts = response.vendorPolls.map(x => new PostDisplay(x));
-          this._communityDisplay.heroAds = response.heroAds; //.map(ad => new HeroAdTemplate(ad));
+          this._categoryDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
+          this._categoryDisplay.consumerPosts = response.consumerQuestions.map(x => new PostDisplay(x));
+          this._categoryDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
+          this._categoryDisplay.vendorPosts = response.vendorPolls.map(x => new PostDisplay(x));
+          this._categoryDisplay.heroAds = response.heroAds; //.map(ad => new HeroAdTemplate(ad));
 
-          this.emitCommunityDisplaySubject();
+          this.emitCategoryDisplaySubject();
         } else {
           // this.authService.revokeToken();
           // reject(false);
@@ -220,30 +220,30 @@ export class CommunityService {
 
 
   loadMorePosts() {
-    // const isNewCommunity = this._selectedCommunities !== communityNames;
-    // if (isNewCommunity) {
+    // const isNewCategory = this._selectedCategories !== categoryNames;
+    // if (isNewCategory) {
     //   this.currentPage = 0;
-    //   this._communityDisplay.consumerPosts = [];
+    //   this._categoryDisplay.consumerPosts = [];
     // } else {
       this.currentPage += 1;
     //}
 
-    const request = new CommunityRequest();
-    request.communityNames = this._selectedCommunityNames;
+    const request = new CategoryRequest();
+    request.categoryNames = this._selectedCategoryNames;
     request.includeRecentPostsCount = this.recentPostsPerPage;
     request.pageSize = this.consumerPostsPerPage;
     request.pageNumber = this.currentPage;
 
     this._neatBoutiqueApiService
-      .getAllDataForCommunities(request)
-      .subscribe((response: CommunityResponse) => {
+      .getAllDataForCategories(request)
+      .subscribe((response: CategoryResponse) => {
         if (response.isSuccess) {
-          this._communityDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
-          this._communityDisplay.consumerPosts = [...this._communityDisplay.consumerPosts, ...response.consumerQuestions.map(x => new PostDisplay(x))];
-          this._communityDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
-          this._communityDisplay.vendorPosts = [...this._communityDisplay.vendorPosts, ...response.vendorPolls.map(x => new PostDisplay(x))];
+          this._categoryDisplay.canLoadMorePosts = response.consumerQuestions?.length === this.consumerPostsPerPage;
+          this._categoryDisplay.consumerPosts = [...this._categoryDisplay.consumerPosts, ...response.consumerQuestions.map(x => new PostDisplay(x))];
+          this._categoryDisplay.recentConsumerPosts = response.recentConsumerQuestions.map(x => new PostDisplay(x));
+          this._categoryDisplay.vendorPosts = [...this._categoryDisplay.vendorPosts, ...response.vendorPolls.map(x => new PostDisplay(x))];
 
-          this.emitCommunityDisplaySubject();
+          this.emitCategoryDisplaySubject();
         } else {
           // this.authService.revokeToken();
           // reject(false);
@@ -302,7 +302,7 @@ export class CommunityService {
 
         if (response.isSuccess) {
           // this.authService.setToken(response.token);
-          this.loadPostsByCommunityNames(this._selectedCommunityNames);
+          this.loadPostsByCategoryNames(this._selectedCategoryNames);
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           // this.authService.revokeToken();
           // reject(false);
@@ -418,9 +418,9 @@ export class CommunityService {
     return promise;
   }
 
-  autocompleteSearchForAnswer(venderSearch: { communityName: string, searchString: string }) {
+  autocompleteSearchForAnswer(venderSearch: { categoryName: string, searchString: string }) {
     const request = new AnswerSearchRequest();
-    request.communityName = venderSearch.communityName;
+    request.categoryName = venderSearch.categoryName;
     request.searchString = venderSearch.searchString;
     const promise = new Promise<EntityDisplay[]>((resolve, reject) => {
       this._neatBoutiqueApiService
@@ -438,16 +438,16 @@ export class CommunityService {
     return promise;
   }
 
-  getCommunityCategoryByNameDisplay(communityName: string) {
-    var community = this.communities.find(x => x.name === communityName);
-    return community;
+  getCategoryByNameDisplay(categoryName: string) {
+    var category = this.categories.find(x => x.name === categoryName);
+    return category;
   }
 
   
 
   private _updateVendorPostWithUpdatedAnswer(answer: AnswerDisplay) {
 
-    this._communityDisplay.vendorPosts = this._communityDisplay.vendorPosts.map((post: PostDisplay) => {
+    this._categoryDisplay.vendorPosts = this._categoryDisplay.vendorPosts.map((post: PostDisplay) => {
       if (post.id === answer.postId) {
         
         // remove previous vote from post
@@ -464,73 +464,73 @@ export class CommunityService {
       return post;
     });
 
-    this._communityDisplay.vendorPosts = [...this._communityDisplay.vendorPosts];
-    this.emitCommunityDisplaySubject();
+    this._categoryDisplay.vendorPosts = [...this._categoryDisplay.vendorPosts];
+    this.emitCategoryDisplaySubject();
   }
 
-  emitCommunityDisplaySubject() {
+  emitCategoryDisplaySubject() {
     var accountsHasBeenLoaded = this._accountsService.accountsHaveBeenLoadedSubject.getValue();
     if (accountsHasBeenLoaded) {
-      this._answersService.refreshCurrentUserVotesOnPosts(this._communityDisplay.consumerPosts);
-      this._answersService.refreshCurrentUserVotesOnPosts(this._communityDisplay.vendorPosts);
+      this._answersService.refreshCurrentUserVotesOnPosts(this._categoryDisplay.consumerPosts);
+      this._answersService.refreshCurrentUserVotesOnPosts(this._categoryDisplay.vendorPosts);
     }
 
-    this.communityDisplaySubject.next(this._communityDisplay);
+    this.categoryDisplaySubject.next(this._categoryDisplay);
   }
 
-  loadStaticCommunities() {
-    this.communities = [
-      new CommunityCategory({
-        name: CommunityTypes.BOUTIQUES_BEAUTY,
+  loadStaticCategories() {
+    this.categories = [
+      new Category({
+        name: CategoryTypes.BOUTIQUES_BEAUTY,
         icon: 'storefront',
         hexColor: '#409195',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.FOOD_DRINK,
+      new Category({
+        name: CategoryTypes.FOOD_DRINK,
         icon: 'restaurant',
         hexColor: '#ffbc00',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.TRAVEL_ADVENTURE,
+      new Category({
+        name: CategoryTypes.TRAVEL_ADVENTURE,
         icon: 'airplane',
         hexColor: '#916dd5',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.NIGHTLIFE_ENTERTAINMENT,
+      new Category({
+        name: CategoryTypes.NIGHTLIFE_ENTERTAINMENT,
         icon: 'beer',
         hexColor: '#dc7730',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.HEALTH_WELLNESS,
+      new Category({
+        name: CategoryTypes.HEALTH_WELLNESS,
         icon: 'heart',
         hexColor: '#93290f',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.MAINTENANCE_REPAIR,
+      new Category({
+        name: CategoryTypes.MAINTENANCE_REPAIR,
         icon: 'build',
         hexColor: '#65c2db',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.CHURCH_STATE,
+      new Category({
+        name: CategoryTypes.CHURCH_STATE,
         icon: 'school',
         hexColor: '#9eaebe',
         categoryLink: '',
         isSelected: true
       }),
-      new CommunityCategory({
-        name: CommunityTypes.SERVICES_MORE,
+      new Category({
+        name: CategoryTypes.SERVICES_MORE,
         icon: 'compass',
         hexColor: '#013e43',
         categoryLink: '',

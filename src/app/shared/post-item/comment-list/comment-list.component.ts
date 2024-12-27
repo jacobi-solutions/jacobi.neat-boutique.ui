@@ -3,7 +3,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { UserRoleTypes } from 'src/app/models/constants';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { Comment, ConsumerProfile, NeatBoutiqueEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';
@@ -35,7 +35,7 @@ export class CommentListComponent implements OnInit {
   };
   
   
-  constructor(private _communityService: CommunityService, private _customersService: AccountsService, private _util: UtilService, private _modalService: ModalService) {
+  constructor(private _categoryService: CategoryService, private _customersService: AccountsService, private _util: UtilService, private _modalService: ModalService) {
     this._customersService.currentUserSubject.subscribe(user => {
         this.currentUser = user;        
     });
@@ -123,7 +123,7 @@ export class CommentListComponent implements OnInit {
 
     let commentAdded: any;
     if(!this.isDemo) {
-      commentAdded = await this._communityService.createCommentOnPost(comment);
+      commentAdded = await this._categoryService.createCommentOnPost(comment);
     
     // is a vendor poll demo
     } else {

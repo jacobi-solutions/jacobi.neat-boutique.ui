@@ -6,7 +6,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { ReviewDisplay } from 'src/app/models/review-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { ConsumerProfile } from 'src/app/services/neat-boutique-api.service';
 
@@ -21,7 +21,7 @@ export class ConsumerProfilePage implements OnInit {
   selectedActivity: string = 'recent-questions';
   recentActivity: ConsumerProfileActivityDisplay = new ConsumerProfileActivityDisplay();
 
-  constructor(private _accountsService: AccountsService, private _activatedRoute: ActivatedRoute, private _communityService: CommunityService,
+  constructor(private _accountsService: AccountsService, private _activatedRoute: ActivatedRoute, private _categoryService: CategoryService,
       private _consumerService: ConsumerService, private _router: Router, private _answersService: AnswersService) { 
     
   }
@@ -57,10 +57,10 @@ export class ConsumerProfilePage implements OnInit {
 
       this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
         if(post) {
-          var updatedQuestions = this._communityService.updateConsumerPostInPosts(post, this.recentActivity.recentQuestions);
+          var updatedQuestions = this._categoryService.updateConsumerPostInPosts(post, this.recentActivity.recentQuestions);
           this._answersService.refreshCurrentUserVotesOnPosts(updatedQuestions);
 
-          var updatedAnswers = this._communityService.updateConsumerPostInPosts(post, this.recentActivity.recentAnswers);
+          var updatedAnswers = this._categoryService.updateConsumerPostInPosts(post, this.recentActivity.recentAnswers);
           this._answersService.refreshCurrentUserVotesOnPosts(updatedAnswers);
         }
       });

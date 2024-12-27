@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AnimationController } from '@ionic/angular';
-import { CommunityCategory } from 'src/app/models/community-category';
-import { CommunityDisplay, CommunityService } from 'src/app/services/community.service';
+import { Category } from 'src/app/models/category';
+import { CategoryDisplay, CategoryService } from 'src/app/services/category.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { UtilService } from 'src/app/services/util.service';
 import { VendorService } from 'src/app/vendor.service';
@@ -13,10 +13,10 @@ import { VendorService } from 'src/app/vendor.service';
   styleUrls: ['./browse.page.scss'],
 })
 export class BrowsePage implements OnInit {
-  communities: CommunityCategory[];
-  constructor(private _nbRouter: NbRoutingService, private _communityService: CommunityService) {
+  categories: Category[];
+  constructor(private _nbRouter: NbRoutingService, private _categoryService: CategoryService) {
 
-    this.communities = this._communityService.communities;
+    this.categories = this._categoryService.categories;
 
     }
   ngOnInit() {

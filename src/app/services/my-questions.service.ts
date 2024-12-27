@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 // import { AuthService } from "../auth/auth.service";
 
 import { CurrentUserDisplay } from "../models/current-user-display";
-import { CommunityTypes } from "../models/constants";
+import { CategoryTypes } from "../models/constants";
 import { AccountsService } from "./accounts.service";
-import { CommunityService } from "./community.service";
+import { CategoryService } from "./category.service";
 import { Post, MyQuestionsRequest, NeatBoutiqueApiService, PostsResponse } from "./neat-boutique-api.service";
 import { PostDisplay } from "../models/post-display";
 

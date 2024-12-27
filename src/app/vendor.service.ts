@@ -9,8 +9,8 @@ import { NeatBoutiqueApiService, VendorProfileRequest, Request, VendorProfilesRe
 })
 export class VendorService {
 
-  public vendorsByCommunityNameSubject: BehaviorSubject<VendorDisplay[]> = new BehaviorSubject<VendorDisplay[]>(null);
-  private _currentCommunity: string;
+  public vendorsByCategoryNameSubject: BehaviorSubject<VendorDisplay[]> = new BehaviorSubject<VendorDisplay[]>(null);
+  private _currentCategory: string;
   private _vendorListPage: number = 0;
   private _vendorsInList: VendorDisplay[] = [];
   constructor(private _neatBoutiqueApiService: NeatBoutiqueApiService) {}
@@ -49,17 +49,17 @@ export class VendorService {
     return promise;
   }
 
-  getVendorsByCommunityName(communityName: string, pageNumber: number = 0, pageSize: number = 10) {    
+  getVendorsByCategoryName(categoryName: string, pageNumber: number = 0, pageSize: number = 10) {    
     const request = new VendorProfilesRequest();
-    request.communityName = communityName;
+    request.categoryName = categoryName;
     request.pageNumber = pageNumber;
     request.pageSize = pageSize;
     const promise = new Promise<VendorDisplay[]>((resolve, reject) => {
     this._neatBoutiqueApiService
-      .getVendorsByCommunityName(request)
+      .getVendorsByCategoryName(request)
       .subscribe((response: VendorProfilesResponse) => {
         if(response.isSuccess) {
-          this.vendorsByCommunityNameSubject.next(response.vendorProfiles.map(vendor => new VendorDisplay(vendor)));
+          this.vendorsByCategoryNameSubject.next(response.vendorProfiles.map(vendor => new VendorDisplay(vendor)));
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           // this.authService.revokeToken();
           reject(false);
@@ -87,28 +87,28 @@ export class VendorService {
   }
 
 
-  loadMoreVendorsByCommunityName(communityName: string, pageNumber: number = 0, pageSize: number = 10) {  
-    const isNewCommunity = this._currentCommunity !== communityName; 
-    if(isNewCommunity) {
+  loadMoreVendorsByCategoryName(categoryName: string, pageNumber: number = 0, pageSize: number = 10) {  
+    const isNewCategory = this._currentCategory !== categoryName; 
+    if(isNewCategory) {
       this._vendorListPage = 0;
       this._vendorsInList = [];
     } else {
       this._vendorListPage += 1;
     }
 
-    this._currentCommunity = communityName;
+    this._currentCategory = categoryName;
 
     const request = new VendorProfilesRequest();
-    request.communityName = communityName;
+    request.categoryName = categoryName;
     request.pageNumber = this._vendorListPage;
     request.pageSize = pageSize;
     const promise = new Promise<VendorDisplay[]>((resolve, reject) => {
     this._neatBoutiqueApiService
-      .getVendorsByCommunityName(request)
+      .getVendorsByCategoryName(request)
       .subscribe((response: VendorProfilesResponse) => {
         if(response.isSuccess) {
           this._vendorsInList = [...this._vendorsInList, ...response.vendorProfiles.map(x => new VendorDisplay(x))];
-          this.vendorsByCommunityNameSubject.next(this._vendorsInList)
+          this.vendorsByCategoryNameSubject.next(this._vendorsInList)
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           // this.authService.revokeToken();
           reject(false);

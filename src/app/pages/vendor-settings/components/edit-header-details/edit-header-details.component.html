@@ -27,14 +27,14 @@
       </ion-row>
       <ion-row class="categories-wrapper-row">
         <ion-col class="categories-wrapper">
-          <p *ngIf="vendor?.communities && (vendor?.communities.length > 0); else addCommunityPrompt;" class="categories">
-            <span *ngFor="let community of vendor?.communities">{{ community }}</span>
+          <p *ngIf="vendor?.categories && (vendor?.categories.length > 0); else addCategoryPrompt;" class="categories">
+            <span *ngFor="let category of vendor?.categories">{{ category }}</span>
           </p>
   
-          <ng-template #addCommunityPrompt>
-            <p>Join a community by selecting some from the editor <ion-icon name="arrow-forward-outline"></ion-icon></p>
+          <ng-template #addCategoryPrompt>
+            <p>Join a category by selecting some from the editor <ion-icon name="arrow-forward-outline"></ion-icon></p>
           </ng-template>
-          <ion-icon class="categories-edit-action edit-action allow-opacity" name="create-outline" (click)="editCommunities()"></ion-icon>
+          <ion-icon class="categories-edit-action edit-action allow-opacity" name="create-outline" (click)="editCategories()"></ion-icon>
   
         </ion-col>
       </ion-row>
@@ -81,6 +81,12 @@
     <ion-col>
       <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="addAnotherBusiness()">Add Another Business</app-jacobi-button>
       <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="changeSubscription()">Change Subscription</app-jacobi-button>
+      <app-jacobi-button 
+        *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM" 
+        [buttonType]="'green-primary secondary'" 
+        (click)="createCategory()">
+        Create a Category
+      </app-jacobi-button>
     </ion-col>
   </ion-row>
 </ion-grid>

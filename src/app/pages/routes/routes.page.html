@@ -113,11 +113,11 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col offset-lg="3" offset-xl="2.5" size-xs="12" size-lg="9" size-xl="7" class="community-feed-col">
+    <ion-col offset-lg="3" offset-xl="2.5" size-xs="12" size-lg="9" size-xl="7" class="category-feed-col">
 
       <!-- <ion-row *ngIf="heroAd">
         <ion-col size="12">
-          <app-marquee-ad [heroAd]="heroAd" [isCommunityAd]="true"></app-marquee-ad>
+          <app-marquee-ad [heroAd]="heroAd" [isCategoryAd]="true"></app-marquee-ad>
         </ion-col>
       </ion-row> -->
 
@@ -131,20 +131,20 @@
       <ion-row class="posts-container">
         <ion-col class="nb-no-padding" size="12">
           <!-- <div>
-            <ion-row class="community-post-row specific-post" *ngIf="specificPost">
-              <ion-col class="community-post-col">
+            <ion-row class="category-post-row specific-post" *ngIf="specificPost">
+              <ion-col class="category-post-col">
                 <app-post-item [post]="specificPost"></app-post-item>
               </ion-col>
             </ion-row>
           </div> -->
           <div *ngFor="let post of routeQuestions; index as i;">
-            <ion-row class="community-post-row">
-              <ion-col class="community-post-col">
+            <ion-row class="category-post-row">
+              <ion-col class="category-post-col">
                 <app-post-item [feedType]="feedTypes.ROUTE" [restrictedAvailableAnswers]="route.post.selections" [post]="post"></app-post-item>
               </ion-col>
             </ion-row>
-            <!-- <ion-row class="community-post-row">
-              <ion-col class="community-post-col">
+            <!-- <ion-row class="category-post-row">
+              <ion-col class="category-post-col">
                 <app-post-item *ngIf="shouldShowVendorPost(i)"  [post]="vendorPosts[getVendorPostIndex(i)]"></app-post-item>
               </ion-col>
             </ion-row> -->

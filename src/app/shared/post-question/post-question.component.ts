@@ -1,11 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
-import { CommunityCategory } from 'src/app/models/community-category';
+import { Category } from 'src/app/models/category';
 import { FeedTypes, UserRoleTypes } from 'src/app/models/constants';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { Post, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 
@@ -30,16 +30,16 @@ export class PostQuestionComponent implements OnInit {
   public newPostIcon: string = 'paper-plane-outline';
   public postForm = new UntypedFormGroup({
     newQuestion: new UntypedFormControl('', [Validators.minLength(3)]),
-    communityName: new UntypedFormControl('', [ Validators.required ])
+    categoryName: new UntypedFormControl('', [ Validators.required ])
   });
 
   private _postNoticeModal: HTMLIonModalElement;
-  public communities: CommunityCategory[];
+  public categories: Category[];
   public currentUser: CurrentUserDisplay = null;
-  constructor(private _communityService: CommunityService, private _modalService: ModalService, 
+  constructor(private _categoryService: CategoryService, private _modalService: ModalService, 
     private _accountService: AccountsService, private _authService: AuthService) { 
 
-    this.communities = this._communityService.communities;
+    this.categories = this._categoryService.categories;
   }
 
   ngOnInit() {
@@ -90,7 +90,7 @@ export class PostQuestionComponent implements OnInit {
     } 
 
     if(this.feedType === FeedTypes.COMMUNITY) {
-      await this.addNewCommunityPost();
+      await this.addNewCategoryPost();
     } else if(this.feedType === FeedTypes.ROUTE) {
       await this.addNewRouteQuestion();
     }
@@ -98,7 +98,7 @@ export class PostQuestionComponent implements OnInit {
 
   async addNewRouteQuestion() {
     const post =  new Post();
-    post.communityName = this.postForm.value.communityName;
+    post.categoryName = this.postForm.value.categoryName;
     post.subject = this.postForm.value.newQuestion.trim();
     post.feedContextId = this.feedContextId;
     post.author = new NeatBoutiqueEntity({
@@ -116,20 +116,20 @@ export class PostQuestionComponent implements OnInit {
     questionCharArray[0] = questionCharArray[0].toUpperCase();
     post.subject = questionCharArray.join('');
 
-    this._communityService.createRouteQuestion(post);
+    this._categoryService.createRouteQuestion(post);
     this.postForm.reset();
     this.newPostIcon = 'paper-plane-outline';
     this.postWithQuestionMark = null;
 
-    // var community = this.communities.find(x => x.name === post.communityName);
-    // this.updateSelectedCommunities(community);
+    // var category = this.categories.find(x => x.name === post.categoryName);
+    // this.updateSelectedCategories(category);
     this.onPost.emit();
   }
 
-  async addNewCommunityPost() {
+  async addNewCategoryPost() {
     
     const post =  new Post();
-    post.communityName = this.postForm.value.communityName;
+    post.categoryName = this.postForm.value.categoryName;
     post.subject = this.postForm.value.newQuestion.trim();
     post.author = new NeatBoutiqueEntity({
       name: this.currentUser?.consumer.name,
@@ -146,23 +146,23 @@ export class PostQuestionComponent implements OnInit {
     questionCharArray[0] = questionCharArray[0].toUpperCase();
     post.subject = questionCharArray.join('');
 
-    this._communityService.createConsumerPost(post);
+    this._categoryService.createConsumerPost(post);
     this.postForm.reset();
     this.newPostIcon = 'paper-plane-outline';
     this.postWithQuestionMark = null;
 
-    var community = this.communities.find(x => x.name === post.communityName);
-    this.updateSelectedCommunities(community);
+    var category = this.categories.find(x => x.name === post.categoryName);
+    this.updateSelectedCategories(category);
     this.onPost.emit();
   }
 
-  updateSelectedCommunities(community) {  
-    community.isSelected = true;
-    this._communityService.updateShownCommunities();
+  updateSelectedCategories(category) {  
+    category.isSelected = true;
+    this._categoryService.updateShownCategories();
   }
 
   async confirmNonEditablePost() {
-    if(this.postForm?.value?.newQuestion === '' || (this.postForm?.value?.communityName === '' && this.feedType === FeedTypes.COMMUNITY)) return;
+    if(this.postForm?.value?.newQuestion === '' || (this.postForm?.value?.categoryName === '' && this.feedType === FeedTypes.COMMUNITY)) return;
     const self = this;
     const showCancelBtn = true;
     const html = `
@@ -177,7 +177,7 @@ export class PostQuestionComponent implements OnInit {
       // callback: this.addNewPost
       callback() {
         // self.userHasSeenNonEditableModal = true;
-        // self._communityService.userHasSeenNonEditableModal = true;
+        // self._categoryService.userHasSeenNonEditableModal = true;
         self.addNewPost();
         self._postNoticeModal.dismiss();
       }

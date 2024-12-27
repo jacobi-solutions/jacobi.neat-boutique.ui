@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AccountsService } from './services/accounts.service';
 import { HeaderGuard } from './guards/header.guard';
 import { HeaderDisplay } from './models/header-display';
-import { CommunityCategory } from './models/community-category';
+import { Category } from './models/category';
 import { NotificationsService } from './services/notifications.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { AuthService } from './auth/auth.service';
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public appPages: any[];
   public selectedIndex = 0;
   public selectedPageName: string;
-  public communities: CommunityCategory[];
+  public categories: Category[];
   public showPricing = false;
   lociConstants = LociConstants;
   constructor(

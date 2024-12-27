@@ -17,7 +17,7 @@
 //   SignInWithApple,
 //   SignInWithAppleResponse,
 //   SignInWithAppleOptions,
-// } from '@capacitor-community/apple-sign-in';
+// } from '@capacitor-category/apple-sign-in';
 // import { AuthSplitScreenVersionConfig, AuthConfig } from './auth.config';
 // import { AccountsService } from '../services/accounts.service';
 // // import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';

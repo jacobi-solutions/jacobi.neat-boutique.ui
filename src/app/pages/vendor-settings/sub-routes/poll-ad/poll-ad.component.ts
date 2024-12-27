@@ -79,7 +79,7 @@ export class PollAdComponent implements OnInit {
   updateLivePreview(pollForm) {    
     if(pollForm) {
       const {
-        community,
+        category,
         pollQuestion,
         pollAnswer1,
         pollAnswer2,
@@ -88,7 +88,7 @@ export class PollAdComponent implements OnInit {
         pollAnswer5,
       } = pollForm;
   
-      this.pollLivePreview.communityName = community;
+      this.pollLivePreview.categoryName = category;
       this.pollLivePreview.subject = pollQuestion;
       this.pollLivePreview.selections = [pollAnswer1,pollAnswer2,pollAnswer3,pollAnswer4,pollAnswer5].map((answer, i) => {
         let voterCount: number;
@@ -134,7 +134,7 @@ export class PollAdComponent implements OnInit {
 
       const vendorPost = new Post({
         postType: PostTypes.POLL,
-        communityName: this.pollAdToSubmit.value.community,
+        categoryName: this.pollAdToSubmit.value.category,
         subject: this.pollAdToSubmit.value.pollQuestion,
         selections: pollAnswers,
         author: new NeatBoutiqueEntity({

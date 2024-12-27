@@ -7,7 +7,7 @@ import { ConsumerProfileActivityDisplay } from 'src/app/models/consumer-profile-
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { CommunityService } from 'src/app/services/community.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { ModalService } from 'src/app/services/modal.service';
 
@@ -26,7 +26,7 @@ export class ConsumerSettingsPage implements OnInit {
   public editUsername: boolean;
   public newUsername: string;
 
-  constructor(private _accountsService: AccountsService, private _modalService: ModalService, private _communityService: CommunityService,
+  constructor(private _accountsService: AccountsService, private _modalService: ModalService, private _categoryService: CategoryService,
       private _consumerService: ConsumerService, private _answersService: AnswersService, private _authService: AuthService) { 
     
       this.maxConsumerDescriptionChars = 500;
@@ -58,10 +58,10 @@ export class ConsumerSettingsPage implements OnInit {
 
         this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
           if(post) {
-            var updatedQuestions = this._communityService.updateConsumerPostInPosts(post, this.recentActivity.recentQuestions);
+            var updatedQuestions = this._categoryService.updateConsumerPostInPosts(post, this.recentActivity.recentQuestions);
             this._answersService.refreshCurrentUserVotesOnPosts(updatedQuestions);
 
-            var updatedAnswers = this._communityService.updateConsumerPostInPosts(post, this.recentActivity.recentAnswers);
+            var updatedAnswers = this._categoryService.updateConsumerPostInPosts(post, this.recentActivity.recentAnswers);
             this._answersService.refreshCurrentUserVotesOnPosts(updatedAnswers);
           }
         });
