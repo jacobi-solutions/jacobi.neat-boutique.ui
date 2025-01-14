@@ -26,7 +26,7 @@ export class VendorSubscriptionService {
   private _sessionToken: string = null;
   public vendorPackage: SubscriptionPackage;
   // numberOfBusinessesAlreadyConnected: number;
-  numberOfBusinessesAlreadyConnectedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  vendorForPricingPageSubject: BehaviorSubject<VendorProfile> = new BehaviorSubject<VendorProfile>(null);
   hasPremiumAccountSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
   // private _vendorSubscriptionId: string;
@@ -35,7 +35,8 @@ export class VendorSubscriptionService {
     private _router: Router) {
     this._currentVendor = new VendorProfile();
     this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
-      this.numberOfBusinessesAlreadyConnectedSubject.next(userDisplay?.vendors?.length);
+      // there should only be one vendor in the list
+      this.vendorForPricingPageSubject.next(userDisplay?.vendors[0] ? userDisplay.vendors[0] : null);
       var hasPremiumAccount = userDisplay?.vendors?.some(x => x.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM);
       this.hasPremiumAccountSubject.next(hasPremiumAccount);
     });
@@ -119,18 +120,18 @@ export class VendorSubscriptionService {
     this._router.navigateByUrl('/vendor-revise');
   };
 
-  async upgradeSelectedVendorSubscriptionToPremium (vendor: VendorProfile) {
-    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
+  // async upgradeSelectedVendorSubscriptionToPremium (vendor: VendorProfile) {
+  //   this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
 
-    this.setVendor(vendor);
-    this._router.navigateByUrl('/vendor-revise');
-  };
+  //   this.setVendor(vendor);
+  //   this._router.navigateByUrl('/vendor-revise');
+  // };
 
-  async downgradeSelectedVendorSubscriptionToStandard (vendor: VendorProfile) {
-    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
-    this.setVendor(vendor);
-    this._router.navigateByUrl('/vendor-revise');
-  };
+  // async downgradeSelectedVendorSubscriptionToStandard (vendor: VendorProfile) {
+  //   this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
+  //   this.setVendor(vendor);
+  //   this._router.navigateByUrl('/vendor-revise');
+  // };
 
   createStripeCheckout(vendorPackage: SubscriptionPackage) {
 
@@ -152,23 +153,23 @@ export class VendorSubscriptionService {
     });
   }
 
-  completeAddAdditionalBusiness(vendorPackage: SubscriptionPackage) {
+  // completeAddAdditionalBusiness(vendorPackage: SubscriptionPackage) {
 
-    var request = new StripeCheckoutRequest();
-    request.googlePlace = this._googlePlace;
-    request.vendorProfile = this._currentVendor;
-    request.planTier = vendorPackage.planTier;
-    request.stripePriceId = vendorPackage.stripePriceId;
-    request.promoCode = vendorPackage.promoCode;
-    this._neatBoutiqueApiService.addVendorSubscriptionToAccount(request).subscribe((response: VendorProfileResponse) => {
-      if(response.isSuccess) {
-        var vendors = this._accountsService.getCurrentUser().vendors;
-        vendors = [ ...vendors, response.vendorProfile ];
-        this._accountsService.setCurrentVendors(vendors);
-        this._router.navigateByUrl('/vendor-businesses');
-      }
-    });
-  }
+  //   var request = new StripeCheckoutRequest();
+  //   request.googlePlace = this._googlePlace;
+  //   request.vendorProfile = this._currentVendor;
+  //   request.planTier = vendorPackage.planTier;
+  //   request.stripePriceId = vendorPackage.stripePriceId;
+  //   request.promoCode = vendorPackage.promoCode;
+  //   this._neatBoutiqueApiService.addVendorSubscriptionToAccount(request).subscribe((response: VendorProfileResponse) => {
+  //     if(response.isSuccess) {
+  //       var vendors = this._accountsService.getCurrentUser().vendors;
+  //       vendors = [ ...vendors, response.vendorProfile ];
+  //       this._accountsService.setCurrentVendors(vendors);
+  //       this._router.navigateByUrl('/vendor-businesses');
+  //     }
+  //   });
+  // }
 
   async startVendorSubscriptionCancelation(vendor: VendorProfile) {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.CONSUMER_BASIC, null);
@@ -206,10 +207,10 @@ export class VendorSubscriptionService {
     this._router.navigateByUrl('/vendor-connect');
   };
 
-  startAdditionalVendorSubscriptionWithPremium () {
-    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
-    this._router.navigateByUrl('/vendor-connect');
-  };
+  // startAdditionalVendorSubscriptionWithPremium () {
+  //   this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_PREMIUM, environment.subscriptionPremiumAdditionalBusinessesStripePriceId);
+  //   this._router.navigateByUrl('/vendor-connect');
+  // };
 
   startFirstVendorSubscriptionWithStandard () {
     this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardStripePriceId);
@@ -217,11 +218,11 @@ export class VendorSubscriptionService {
     this._router.navigateByUrl('/vendor-connect');
   };
 
-  startAdditionalVendorSubscriptionWithStandard () {
-    this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
+  // startAdditionalVendorSubscriptionWithStandard () {
+  //   this.vendorPackage = new SubscriptionPackage(SubscriptionPlanTypes.VENDOR_STANDARD, environment.subscriptionStandardAdditionalBusinessesStripePriceId);
     
-    this._router.navigateByUrl('/vendor-connect');
-  };
+  //   this._router.navigateByUrl('/vendor-connect');
+  // };
 
   getGooglePlacesDetails(googlePlace: GooglePlacesEntity) {
     const request = new GooglePlaceRequest();

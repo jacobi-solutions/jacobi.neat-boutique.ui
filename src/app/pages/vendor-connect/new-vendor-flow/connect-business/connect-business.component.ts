@@ -28,17 +28,17 @@ export class ConnectBusinessComponent implements OnInit {
 
   public showVendorAlreadyAccociatedError: boolean;
   private _googlePlaceToSave: GooglePlacesEntity = null;
-  numberOfBusinessesConnected: number = 0;
+  // numberOfBusinessesConnected: number = 0;
 
   constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService) {
     this.vendorPackage = _vendorSubscriptionService.getVendorPackage();
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
 
-    this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
-      if(numberOfBusinessesAlreadyConnected) {
-        this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
-      }
-    });
+    // this._vendorSubscriptionService.vendorForPricingPageSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+    //   if(numberOfBusinessesAlreadyConnected) {
+    //     this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+    //   }
+    // });
   }
 
   ngOnInit() {

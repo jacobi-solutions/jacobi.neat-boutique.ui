@@ -79,13 +79,13 @@
       </ion-row>
     </ion-col>
     <ion-col>
-      <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="addAnotherBusiness()">Add Another Business</app-jacobi-button>
+      <!-- <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="addAnotherBusiness()">Add Another Business</app-jacobi-button> -->
       <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="changeSubscription()">Change Subscription</app-jacobi-button>
       <app-jacobi-button 
         *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM" 
         [buttonType]="'green-primary secondary'" 
-        (click)="createCategory()">
-        Create a Category
+        (click)="createCommunity()">
+        Create a Network Community
       </app-jacobi-button>
     </ion-col>
   </ion-row>

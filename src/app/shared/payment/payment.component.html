@@ -21,7 +21,8 @@
             </ion-col>
         </ion-row>
 
-        <ion-row *ngIf="!isRevise && numberOfBusinessesConnected === 0" class="flow-title-row">
+        <!-- <ion-row *ngIf="!isRevise && numberOfBusinessesConnected === 0" class="flow-title-row"> -->
+        <ion-row *ngIf="!isRevise" class="flow-title-row">
             <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
                 <h1>Final step: payment</h1>
                 <p>We use Stripe for processing payments to ensure the security of your information. You’ll see a charge from Stripe each month for your Standard subscription. Thank you for joining us and choosing to connect with your customers!</p>
@@ -32,7 +33,7 @@
             </ion-col>
         </ion-row>
 
-        <ion-row *ngIf="!isRevise && numberOfBusinessesConnected > 0" class="flow-title-row">
+        <!-- <ion-row *ngIf="!isRevise && numberOfBusinessesConnected > 0" class="flow-title-row">
             <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
                 <h1>Final step: payment</h1>
                 <p>We use Stripe for processing payments to ensure the security of your information. You’ll see a single charge from Stripe each month for all your business subscritpions including this Standard subscription. Thank you for adding another business and choosing to connect with your customers!</p>
@@ -41,7 +42,7 @@
                 <h1>Final step: payment</h1>
                 <p>We use Stripe for processing payments to ensure the security of your information. You’ll see a single charge from Stripe each month for all your business subscritpions including this Premium subscription. Thank you for adding another business and choosing to connect with your customers!</p>
             </ion-col>
-        </ion-row>
+        </ion-row> -->
 
         
 

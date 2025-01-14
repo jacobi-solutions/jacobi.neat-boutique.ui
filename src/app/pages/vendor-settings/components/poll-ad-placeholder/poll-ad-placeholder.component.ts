@@ -47,7 +47,7 @@ export class PollAdPlaceholderComponent implements OnInit {
   changeSubscription() {
     this._vendorSubscriptionService.setVendorForPricingPage(this.vendor);
     this._router.navigateByUrl('/pricing');
-  }
+  } 
 
   private _loadExamplePoll() {
     // TODO: update with real service when it's ready

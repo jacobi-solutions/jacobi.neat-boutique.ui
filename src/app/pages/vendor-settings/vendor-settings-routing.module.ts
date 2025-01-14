@@ -21,7 +21,7 @@ const routes: Routes = [
     component: PollAdComponent
   },
   {
-    path: 'create-category',
+    path: 'create-community',
     component: CreateCommunityComponent
   }
 ];

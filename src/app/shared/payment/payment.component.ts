@@ -30,18 +30,18 @@ export class PaymentComponent implements OnInit {
   isPromoCodeApplied: boolean;
   promoCodeWorked: boolean;
   showPayment: boolean;
-  numberOfBusinessesConnected: number = 0;
+  // numberOfBusinessesConnected: number = 0;
   public subscriptionPlanTypes = SubscriptionPlanTypes;
   
   public promoCodeForm = new UntypedFormGroup({
     promoCode: new UntypedFormControl('', [  ])
   });
   constructor(private _vendorSubscriptionService: VendorSubscriptionService, private _neatBoutiqueApi: NeatBoutiqueApiService) { 
-    this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
-      if(numberOfBusinessesAlreadyConnected) {
-        this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
-      }
-    });
+    // this._vendorSubscriptionService.vendorForPricingPageSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+    //   if(numberOfBusinessesAlreadyConnected) {
+    //     this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+    //   }
+    // });
   }
 
   ngOnInit() {

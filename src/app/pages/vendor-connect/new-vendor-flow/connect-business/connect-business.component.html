@@ -11,7 +11,8 @@
                 <ion-row class="vendor-form-row">
                     <ion-col offset-lg="3" size-lg="8" class="vendor-form-col">
 
-                        <ion-row *ngIf="numberOfBusinessesConnected === 0" class="flow-title-row">
+                        <!-- <ion-row *ngIf="numberOfBusinessesConnected === 0" class="flow-title-row"> -->
+                        <ion-row class="flow-title-row">
                             <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
                                 <!-- <h1>Let's connect your business</h1> -->
                                 <h1>Thank you for choosing the standard package</h1>
@@ -25,9 +26,8 @@
                             </ion-col>
                         </ion-row>
 
-                        <ion-row *ngIf="numberOfBusinessesConnected > 0" class="flow-title-row">
+                        <!-- <ion-row *ngIf="numberOfBusinessesConnected > 0" class="flow-title-row">
                             <ion-col *ngIf="vendorPackage.planTier === subscriptionPlanTypes.VENDOR_STANDARD">
-                                <!-- <h1>Let's connect your business</h1> -->
                                 <h1>Thank you for choosing the standard package</h1>
                                 <p>When you connect another business with the Standard package, you can create an additional business profile, add photos and share your information so users can engage with you. You’ll be able to engage with users by commenting on posts about your business and responding to reviews.</p>
                                 <h2>What is your business name?</h2>
@@ -37,7 +37,7 @@
                                 <p>When you connect another business with the Premium package, you will have all the benefits of the Standard Package (commenting, responding, and engaging with users through your business profile) and be able to create polls and ads that take your customer interaction to the next level. Our polls allow you to ask questions targeted at your customers so you can use their responses to gain insights for your business. Our ads are a great way to get in front of the people that love you. Connect another business below to get started.</p>
                                 <h2>What is your business name?</h2>
                             </ion-col>
-                        </ion-row>
+                        </ion-row> -->
 
                         <form (ngSubmit)="saveAndContinue()" [formGroup]="connectBusiness" class="form">
 

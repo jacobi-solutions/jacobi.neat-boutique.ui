@@ -36,8 +36,8 @@ export class EditHeaderDetailsComponent implements OnInit {
     }
   }
 
-  createCategory() {
-    this._router.navigate(['/vendor-settings/create-category'], { 
+  createCommunity() {
+    this._router.navigate(['/vendor-settings/create-community'], { 
       state: this.vendor 
     });
   }

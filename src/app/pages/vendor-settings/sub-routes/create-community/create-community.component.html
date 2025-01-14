@@ -8,7 +8,7 @@
         <ion-row>
           <ion-col>
             <h1>Create a Community</h1>
-            <p>Create a community to connect with other local businesses and share resources.</p>
+            <p>Create a community to connect with other local businesses and share resources. Once you create a community, you will be able to invite businesses to the community.</p>
           </ion-col>
         </ion-row>
 
@@ -40,6 +40,7 @@
           <ion-row>
             <ion-col class="ion-text-center">
               <app-jacobi-button 
+              (click)="onSubmit()"
                 [buttonType]="'green-primary'"
                 [disabled]="createCommunityForm.invalid"
                 type="submit">

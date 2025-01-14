@@ -20,15 +20,15 @@ export class BusinessCategoryComponent implements OnInit {
     twitterLink: new UntypedFormControl('', []),
   });
   private _vendor: VendorProfile;
-  numberOfBusinessesConnected: number = 0;
+  // numberOfBusinessesConnected: number = 0;
 
   constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService, 
       private _categoryService: CategoryService) { 
-        this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
-          if(numberOfBusinessesAlreadyConnected) {
-            this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
-          }
-        });
+        // this._vendorSubscriptionService.vendorForPricingPageSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+        //   if(numberOfBusinessesAlreadyConnected) {
+        //     this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+        //   }
+        // });
       }
 
   ngOnInit() {

@@ -19,7 +19,7 @@ import { environment } from 'src/environments/environment';
 export class PricingPage implements OnInit {
   public isAuthenticated: boolean;
   vendorForSubscriptionChange: VendorDisplay = null;
-  numberOfBusinessesConnected: number = 0;
+  // numberOfBusinessesConnected: number = 0;
   hasPremiumAccount: boolean = false;
   subscriptionPlanTypes = SubscriptionPlanTypes;
   standardPricing: string = "$65";
@@ -37,21 +37,27 @@ export class PricingPage implements OnInit {
       this.standardPricing = "$65";
       this.premiumPricing = "$95";
 
-      this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
-        if(numberOfBusinessesAlreadyConnected) {
-          this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
-          if(this.vendorForSubscriptionChange) {
-            if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
-              this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
-                this.standardPricing = "$45";
-                this.premiumPricing = "$75";
-            }
-          } else if(this.numberOfBusinessesConnected > 0) {
-            this.standardPricing = "$45";
-            this.premiumPricing = "$75";
+      if(!this.vendorForSubscriptionChange) {
+
+        this._vendorSubscriptionService.vendorForPricingPageSubject.subscribe((vendorForSubscriptionChange: VendorProfile) => {
+          if(vendorForSubscriptionChange) {
+            this.vendorForSubscriptionChange = new VendorDisplay(vendorForSubscriptionChange);
+            // if(this.vendorForSubscriptionChange) {
+            //   if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
+            //     this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
+            //       this.standardPricing = "$45";
+            //       this.premiumPricing = "$75";
+            //   }
+            // } else if(this.numberOfBusinessesConnected > 0) {
+            //   this.standardPricing = "$45";
+            //   this.premiumPricing = "$75";
+            // }
           }
-        }
-      });
+        });
+
+      }
+
+      
       
 
       this._vendorSubscriptionService.hasPremiumAccountSubject.subscribe((hasPremiumAccount: boolean) => {
@@ -76,119 +82,124 @@ export class PricingPage implements OnInit {
   }
 
   upgradeSelectedVendorSubscriptionToPremium() {
-    if(this.numberOfBusinessesConnected === 1) {
+    // commented out for now because we are not allowing multiple businesses to be connected to a single account
+    // if(this.numberOfBusinessesConnected === 1) {
       this._vendorSubscriptionService.upgradeOnlyVendorSubscriptionToPremium(this.vendorForSubscriptionChange);
-    } else if(this.numberOfBusinessesConnected > 1)  {
-      this._vendorSubscriptionService.upgradeSelectedVendorSubscriptionToPremium(this.vendorForSubscriptionChange);
-    }
+    // } else if(this.numberOfBusinessesConnected > 1)  {
+    //   this._vendorSubscriptionService.upgradeSelectedVendorSubscriptionToPremium(this.vendorForSubscriptionChange);
+    // }
   }
 
   downgradeSelectedVendorSubscriptionToStandard() {
-    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
-       this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
-        if(this.numberOfBusinessesConnected === 1) {
+        // commented out for now because we are not allowing multiple businesses to be connected to a single account
+
+    // if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
+    //    this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
+    //     if(this.numberOfBusinessesConnected === 1) {
           this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
-        } else {
-          this.needsPremiumAccountForChangeConfirm();
-        }
-    } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
-      if(this.numberOfBusinessesConnected === 1) {
-        this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
-      } else if(this.numberOfBusinessesConnected > 1)  {
-        this._vendorSubscriptionService.downgradeSelectedVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
-      }
-    } else {
-      this.needsPremiumAccountForChangeConfirm();
-    }
+    //     } else {
+    //       this.needsPremiumAccountForChangeConfirm();
+    //     }
+    // } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId) {
+    //   if(this.numberOfBusinessesConnected === 1) {
+    //     this._vendorSubscriptionService.downgradeOnlyVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+    //   } else if(this.numberOfBusinessesConnected > 1)  {
+    //     this._vendorSubscriptionService.downgradeSelectedVendorSubscriptionToStandard(this.vendorForSubscriptionChange);
+    //   }
+    // } else {
+    //   this.needsPremiumAccountForChangeConfirm();
+    // }
   }
 
   cancelVendorSubscription() {
-    if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
-      this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
-       if(this.numberOfBusinessesConnected === 1) {
+        // commented out for now because we are not allowing multiple businesses to be connected to a single account
+
+    // if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionGrandfatherPremiumStripePriceId || 
+    //   this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumStripePriceId) {
+    //    if(this.numberOfBusinessesConnected === 1) {
          this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.vendorForSubscriptionChange);
-       } else {
-         this.needsPremiumAccountForChangeConfirm();
-       }
-    } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
-      this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId ||
-      this.numberOfBusinessesConnected === 1) {
-        this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.vendorForSubscriptionChange);
-    } else {
-      this.needsPremiumAccountForChangeConfirm();
-    }
+    //    } else {
+    //      this.needsPremiumAccountForChangeConfirm();
+    //    }
+    // } else if(this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionStandardAdditionalBusinessesStripePriceId ||
+    //   this.vendorForSubscriptionChange.stripePriceId === environment.subscriptionPremiumAdditionalBusinessesStripePriceId ||
+    //   this.numberOfBusinessesConnected === 1) {
+    //     this._vendorSubscriptionService.startVendorSubscriptionCancelation(this.vendorForSubscriptionChange);
+    // } else {
+    //   this.needsPremiumAccountForChangeConfirm();
+    // }
   }
 
   startVendorSubscriptionWithPremium() {
     this._vendorSubscriptionService.startFirstVendorSubscriptionWithPremium();
   }
 
-  addVendorSubscriptionWithPremium() {
-    if(this.hasPremiumAccount) {
-      this._vendorSubscriptionService.startAdditionalVendorSubscriptionWithPremium();
-    } else {
-      this.needsPremiumAccountForAddConfirm();
-    }
-  }
+  // addVendorSubscriptionWithPremium() {
+  //   if(this.hasPremiumAccount) {
+  //     this._vendorSubscriptionService.startAdditionalVendorSubscriptionWithPremium();
+  //   } else {
+  //     this.needsPremiumAccountForAddConfirm();
+  //   }
+  // }
 
   startVendorSubscriptionWithStandard() {
     this._vendorSubscriptionService.startFirstVendorSubscriptionWithStandard();
   }
-  addVendorSubscriptionWithStandard() {
-    if(this.hasPremiumAccount) {
-      this._vendorSubscriptionService.startAdditionalVendorSubscriptionWithStandard();
-    } else {
-      this.needsPremiumAccountForAddConfirm();
-    }
-  }
+  // addVendorSubscriptionWithStandard() {
+  //   if(this.hasPremiumAccount) {
+  //     this._vendorSubscriptionService.startAdditionalVendorSubscriptionWithStandard();
+  //   } else {
+  //     this.needsPremiumAccountForAddConfirm();
+  //   }
+  // }
 
-  async needsPremiumAccountForAddConfirm() {
-    const self = this;
-    const showCancelBtn = true;
-    const html = `
-      <h1>We're glad to help.</h1>
-      <p class="text-left-align modal-p-min">
-        In order to add another business to this account, your first business must be on the premium subscription. To do that, upgrade your first business to premium.
-      </p>
-    `;
+  // async needsPremiumAccountForAddConfirm() {
+  //   const self = this;
+  //   const showCancelBtn = true;
+  //   const html = `
+  //     <h1>We're glad to help.</h1>
+  //     <p class="text-left-align modal-p-min">
+  //       In order to add another business to this account, your first business must be on the premium subscription. To do that, upgrade your first business to premium.
+  //     </p>
+  //   `;
 
-    const confirmBtn = {
-      label: 'Manage Business',
-      // callback: this.addNewPost
-      callback() {
-        // self.userHasSeenNonEditableModal = true;
-        // self._categoryService.userHasSeenNonEditableModal = true;
-        // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
-        self._router.navigateByUrl('/vendor-settings');
-        self._needsPremiumAccountForAddModal.dismiss();
-      }
-    };
+  //   const confirmBtn = {
+  //     label: 'Manage Business',
+  //     // callback: this.addNewPost
+  //     callback() {
+  //       // self.userHasSeenNonEditableModal = true;
+  //       // self._categoryService.userHasSeenNonEditableModal = true;
+  //       // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
+  //       self._router.navigateByUrl('/vendor-settings');
+  //       self._needsPremiumAccountForAddModal.dismiss();
+  //     }
+  //   };
 
-    this._needsPremiumAccountForAddModal = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
-  }
+  //   this._needsPremiumAccountForAddModal = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
+  // }
 
-  async needsPremiumAccountForChangeConfirm() {
-    const self = this;
-    const showCancelBtn = true;
-    const html = `
-      <h1>We're glad to help.</h1>
-      <p class="text-left-align modal-p-min">
-        In order to continue managing multiple bussinesses from this account, you need to keep the premium subscription. In order to downgrade to standard or cancel this subscription, you must first cancel the other business subscriptions.
-      </p>
-    `;
+  // async needsPremiumAccountForChangeConfirm() {
+  //   const self = this;
+  //   const showCancelBtn = true;
+  //   const html = `
+  //     <h1>We're glad to help.</h1>
+  //     <p class="text-left-align modal-p-min">
+  //       In order to continue managing multiple bussinesses from this account, you need to keep the premium subscription. In order to downgrade to standard or cancel this subscription, you must first cancel the other business subscriptions.
+  //     </p>
+  //   `;
 
-    const confirmBtn = {
-      label: 'Manage Businesses',
-      // callback: this.addNewPost
-      callback() {
-        // self.userHasSeenNonEditableModal = true;
-        // self._categoryService.userHasSeenNonEditableModal = true;
-        // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
-        self._router.navigateByUrl('/vendor-businesses');
-        self._needsPremiumAccountForChange.dismiss();
-      }
-    };
+  //   const confirmBtn = {
+  //     label: 'Manage Businesses',
+  //     // callback: this.addNewPost
+  //     callback() {
+  //       // self.userHasSeenNonEditableModal = true;
+  //       // self._categoryService.userHasSeenNonEditableModal = true;
+  //       // self._vendorSubscriptionService.startVendorSubscriptionCancelation(self.currentUser.vendor);
+  //       self._router.navigateByUrl('/vendor-businesses');
+  //       self._needsPremiumAccountForChange.dismiss();
+  //     }
+  //   };
 
-    this._needsPremiumAccountForChange = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
-  }
+  //   this._needsPremiumAccountForChange = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
+  // }
 }

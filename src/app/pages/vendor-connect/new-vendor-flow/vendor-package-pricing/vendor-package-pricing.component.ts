@@ -26,14 +26,14 @@ export class VendorPackagePricingComponent implements OnInit {
   public promoCodeForm = new FormGroup({
     promoCode: new FormControl('', [  ])
   });
-  numberOfBusinessesConnected: number = 0;
+  // numberOfBusinessesConnected: number = 0;
   constructor(private _navCtrl: NavController, private _vendorSubscriptionService: VendorSubscriptionService, 
     private _router: Router) { 
-      this._vendorSubscriptionService.numberOfBusinessesAlreadyConnectedSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
-        if(numberOfBusinessesAlreadyConnected) {
-          this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
-        }
-      });
+      // this._vendorSubscriptionService.vendorForPricingPageSubject.subscribe((numberOfBusinessesAlreadyConnected: number) => {
+      //   if(numberOfBusinessesAlreadyConnected) {
+      //     this.numberOfBusinessesConnected = numberOfBusinessesAlreadyConnected;
+      //   }
+      // });
   }
 
   ngOnInit() {
@@ -47,12 +47,12 @@ export class VendorPackagePricingComponent implements OnInit {
   }
   
   async createStripeCheckout(vendorPackage: SubscriptionPackage ) {
-    if(this.numberOfBusinessesConnected === 0) {
+    // if(this.numberOfBusinessesConnected === 0) {
       await this._vendorSubscriptionService.createStripeCheckout(vendorPackage);
-    } else if(this.numberOfBusinessesConnected > 0) {
-      await this._vendorSubscriptionService.completeAddAdditionalBusiness(vendorPackage);
-      this._router.navigateByUrl('/home');
-    }
+    // } else if(this.numberOfBusinessesConnected > 0) {
+    //   await this._vendorSubscriptionService.completeAddAdditionalBusiness(vendorPackage);
+    //   this._router.navigateByUrl('/home');
+    // }
     
   }
 

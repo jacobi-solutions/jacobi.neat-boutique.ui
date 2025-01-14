@@ -3,8 +3,9 @@
     <ion-row>
       <ion-col class="ion-text-center">
         <h1 *ngIf="vendorForSubscriptionChange">Change subscription for {{ vendorForSubscriptionChange.name }}</h1>
-        <h1 *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected === 0">Start now and upgrade later!</h1>
-        <h1 *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Add another business!</h1>
+        <h1 *ngIf="!vendorForSubscriptionChange">Start now and upgrade later!</h1>
+        <!-- <h1 *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected === 0">Start now and upgrade later!</h1> -->
+        <!-- <h1 *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Add another business!</h1> -->
       </ion-col>
     </ion-row>
 
@@ -45,17 +46,18 @@
         <ion-card>
           <ion-card-header>
             <ion-card-title>Business Standard</ion-card-title>
-            <ion-card-subtitle *ngIf="vendorForSubscriptionChange || numberOfBusinessesConnected === 0">Connect your business</ion-card-subtitle>
-            <ion-card-subtitle *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Connect another business</ion-card-subtitle>
+            <ion-card-subtitle>Connect your business</ion-card-subtitle>
+            <!-- <ion-card-subtitle *ngIf="vendorForSubscriptionChange || numberOfBusinessesConnected === 0">Connect your business</ion-card-subtitle> -->
+            <!-- <ion-card-subtitle *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Connect another business</ion-card-subtitle> -->
           </ion-card-header>
         
           <ion-card-content>
             Engage with your customers.
             <ion-card-title>{{ standardPricing }}</ion-card-title>
             <ion-list lines="none">
-              <ion-item *ngIf="numberOfBusinessesConnected > 0">
+              <!-- <ion-item *ngIf="numberOfBusinessesConnected > 0">
                 <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">$20 off standard for additional businesses</ion-label>
-              </ion-item>
+              </ion-item> -->
               <ion-item>
                 <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Take control of your Business Profile with photos and more</ion-label>
               </ion-item>
@@ -70,8 +72,9 @@
           <ion-row class="call-to-action-row">
             <ion-col>
               <a *ngIf="!isAuthenticated" [routerLink]="'/auth-flow/sign-up'">Sign up for a user account and then promote your business</a>
-              <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected === 0" (click)="startVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Start with Standard</app-jacobi-button>
-              <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected > 0" (click)="addVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Add Standard</app-jacobi-button>
+              <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange" (click)="startVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Start with Standard</app-jacobi-button>
+              <!-- <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected === 0" (click)="startVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Start with Standard</app-jacobi-button> -->
+              <!-- <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected > 0" (click)="addVendorSubscriptionWithStandard()" [buttonType]="'green-primary'">Add Standard</app-jacobi-button> -->
               <a class="pointy-cursor" *ngIf="isAuthenticated && vendorForSubscriptionChange?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM" (click)="downgradeSelectedVendorSubscriptionToStandard()">Downgrade to Standard</a>
 
               <p *ngIf="isAuthenticated && vendorForSubscriptionChange?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_STANDARD">You have the Standard package</p>
@@ -80,21 +83,23 @@
           </ion-row>
         </ion-card>
       </ion-col>
+
       <ion-col size-md="4">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Business Premium</ion-card-title>
-            <ion-card-subtitle *ngIf="vendorForSubscriptionChange || numberOfBusinessesConnected === 0">Connect your business</ion-card-subtitle>
-            <ion-card-subtitle *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Connect another business</ion-card-subtitle>
+            <ion-card-subtitle >Connect your business</ion-card-subtitle>
+            <!-- <ion-card-subtitle *ngIf="vendorForSubscriptionChange || numberOfBusinessesConnected === 0">Connect your business</ion-card-subtitle> -->
+            <!-- <ion-card-subtitle *ngIf="!vendorForSubscriptionChange && numberOfBusinessesConnected > 0">Connect another business</ion-card-subtitle> -->
           </ion-card-header>
         
           <ion-card-content>
             Know what your customers want.
             <ion-card-title>{{ premiumPricing }}</ion-card-title>
             <ion-list lines="none">
-              <ion-item *ngIf="numberOfBusinessesConnected > 0">
+              <!-- <ion-item *ngIf="numberOfBusinessesConnected > 0">
                 <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">$20 off premium for additional businesses</ion-label>
-              </ion-item>
+              </ion-item> -->
               <ion-item>
                 <ion-icon name="checkmark-outline"></ion-icon><ion-label class="ion-text-wrap">Do everything you can do with your standard account</ion-label>
               </ion-item>
@@ -114,8 +119,9 @@
             <ion-row>
               <ion-col>
                 <a *ngIf="!isAuthenticated" [routerLink]="'/auth-flow/sign-up'">Sign up for a user account and then promote your business</a>
-                <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected === 0" (click)="startVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Start with Premium</app-jacobi-button>
-                <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected > 0" (click)="addVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Add Premium</app-jacobi-button>
+                <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange" (click)="startVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Start with Premium</app-jacobi-button>
+                <!-- <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected === 0" (click)="startVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Start with Premium</app-jacobi-button> -->
+                <!-- <app-jacobi-button *ngIf="isAuthenticated && !vendorForSubscriptionChange && numberOfBusinessesConnected > 0" (click)="addVendorSubscriptionWithPremium()" [buttonType]="'green-primary'">Add Premium</app-jacobi-button> -->
                 <app-jacobi-button *ngIf="isAuthenticated && vendorForSubscriptionChange?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_STANDARD" (click)="upgradeSelectedVendorSubscriptionToPremium()" [buttonType]="'green-primary'">Upgrade to Premium</app-jacobi-button>
                 <p *ngIf="isAuthenticated && vendorForSubscriptionChange?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM">You have the Premium package</p>
               </ion-col>
