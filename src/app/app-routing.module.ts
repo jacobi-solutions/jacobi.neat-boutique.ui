@@ -144,6 +144,12 @@ const routes: Routes = [
   {
     path: 'qr',
     loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
+  },
+  {
+    path: 'network-community',
+    loadChildren: () => import('./pages/network-community/network-community.module').then( m => m.NetworkCommunityPageModule),
+    canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
+    data: { redirect: '/home', title: 'Community' }
   }
 ];
 

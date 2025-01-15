@@ -19,12 +19,12 @@ export class VendorGuard implements CanActivate {
         let redirect = route.data["redirect"] as string;
 
         const promise = new Promise<boolean | UrlTree>((resolve, reject) => {
-          if(this._currentUser?.vendors?.length > 0) {
+          if(this._currentUser?.vendor) {
             resolve(true);
           } else {
             this._accountsService.accountsHaveBeenLoadedSubject.subscribe((accountsHaveBeenLoaded) => {
               if(accountsHaveBeenLoaded) {
-                if(this._currentUser?.vendors?.length > 0) {
+                if(this._currentUser?.vendor) {
                   resolve(true);
                 } else {
                   resolve(this.router.parseUrl(redirect));

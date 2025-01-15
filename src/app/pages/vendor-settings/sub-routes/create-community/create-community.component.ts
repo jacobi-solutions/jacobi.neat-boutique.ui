@@ -39,15 +39,15 @@ export class CreateCommunityComponent implements OnInit {
     }
 
     const networkData = this.createCommunityForm.value;
-    this._networkService.createNetwork(networkData).subscribe(
+    this._networkService.createNetwork(networkData).then(
       response => {
         console.log('Network created successfully', response);
+        if (response) {
+          this._networkService.setCurrentNetwork(response);
+          this._router.navigate(['/network-community']);
+        }
         // Navigate to another page or show a success message
       },
-      error => {
-        console.error('Error creating network', error);
-        // Handle error, show a message to the user
-      }
     );
   }
 } 

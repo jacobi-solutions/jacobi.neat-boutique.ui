@@ -33,11 +33,12 @@ export class UserSettingsPopoverComponent implements OnInit {
       this._accountsService.currentUserSubject.subscribe((user) => {
         if(user) {
           this.currentUser = user;
-          if(this.currentUser?.vendors?.length === 1) {
+          if(this.currentUser?.vendor) {
             this.promoteMyBusinessLabel = 'Manage My Business';
-          } else if(this.currentUser?.vendors?.length > 1) {
-            this.promoteMyBusinessLabel = 'Manage My Businesses';
-          }
+          } 
+          // else if(this.currentUser?.vendors?.length > 1) {
+          //   this.promoteMyBusinessLabel = 'Manage My Businesses';
+          // }
         }
       });
     }
@@ -111,11 +112,13 @@ export class UserSettingsPopoverComponent implements OnInit {
         label: "Delete Account",
         isClickable: true,
         callback(event) {
-          if(self.currentUser?.vendors?.length === 1) {
-            self.confirmCancelSubscription(self.currentUser.vendors[0]);
-          } else if(self.currentUser?.vendors?.length > 1) {
-            self.confirmCancelSubscriptions();
-          } else {
+          if(self.currentUser?.vendor) {
+            self.confirmCancelSubscription(self.currentUser.vendor);
+          } 
+          // else if(self.currentUser?.vendors?.length > 1) {
+          //   self.confirmCancelSubscriptions();
+          // } 
+          else {
             self._router.navigateByUrl('/auth-flow/delete-account-init');
           }
           self._popoverController.dismiss();
@@ -144,11 +147,13 @@ export class UserSettingsPopoverComponent implements OnInit {
         url: '/vendor-settings',
         callback(event) {
           self._popoverController.dismiss();  
-          if(self.currentUser?.vendors?.length === 1) {
-            self._router.navigateByUrl('/vendor-settings', { state: self.currentUser.vendors[0] });
-          } else if(self.currentUser?.vendors?.length > 1) {
-            self._router.navigateByUrl('/vendor-businesses');
-          } else {
+          if(self.currentUser?.vendor) {
+            self._router.navigateByUrl('/vendor-settings', { state: self.currentUser.vendor });
+          } 
+          // else if(self.currentUser?.vendors?.length > 1) {
+          //   self._router.navigateByUrl('/vendor-businesses');
+          // } 
+          else {
             self._router.navigateByUrl('/pricing');
           }
         }

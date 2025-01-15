@@ -36,8 +36,8 @@ export class VendorSubscriptionService {
     this._currentVendor = new VendorProfile();
     this._accountsService.currentUserSubject.subscribe((userDisplay: CurrentUserDisplay) => {
       // there should only be one vendor in the list
-      this.vendorForPricingPageSubject.next(userDisplay?.vendors[0] ? userDisplay.vendors[0] : null);
-      var hasPremiumAccount = userDisplay?.vendors?.some(x => x.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM);
+      this.vendorForPricingPageSubject.next(userDisplay?.vendor ? userDisplay.vendor : null);
+      var hasPremiumAccount = userDisplay?.vendor.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM;
       this.hasPremiumAccountSubject.next(hasPremiumAccount);
     });
   }

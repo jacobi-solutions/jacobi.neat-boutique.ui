@@ -1,4 +1,3 @@
-
 <ion-grid >
   <ion-row class="vendor-splash-container">
     
@@ -82,10 +81,16 @@
       <!-- <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="addAnotherBusiness()">Add Another Business</app-jacobi-button> -->
       <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="changeSubscription()">Change Subscription</app-jacobi-button>
       <app-jacobi-button 
-        *ngIf="vendor?.vendorSubscriptionPlan === subscriptionPlanTypes.VENDOR_PREMIUM" 
+        *ngIf="!vendor?.network"
         [buttonType]="'green-primary secondary'" 
         (click)="createCommunity()">
-        Create a Network Community
+        Create a Community
+      </app-jacobi-button>
+      <app-jacobi-button 
+        *ngIf="vendor?.network"
+        [buttonType]="'green-primary secondary'" 
+        (click)="goToMyCommunity()">
+        Go to my Community
       </app-jacobi-button>
     </ion-col>
   </ion-row>

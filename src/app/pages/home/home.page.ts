@@ -86,13 +86,17 @@ export class HomePage implements AfterViewInit {
       this._accountService.currentUserSubject.subscribe((user) => {
         if(user) {
           this.currentUser = user;
-          if(this.currentUser?.vendors?.length === 0) {
-            this.promoteMyBusinessLabel = 'Promote My Business';
-          } else if(this.currentUser?.vendors?.length === 1) {
+          
+          
+          if(this.currentUser?.vendor) {
             this.promoteMyBusinessLabel = 'Manage My Business';
-          } else if(this.currentUser?.vendors?.length > 1) {
-            this.promoteMyBusinessLabel = 'Manage My Businesses';
+          } else {
+            this.promoteMyBusinessLabel = 'Promote My Business';
           }
+          
+          // if(this.currentUser?.vendors?.length > 1) {
+          //   this.promoteMyBusinessLabel = 'Manage My Businesses';
+          // }
         }
       });
     }
@@ -155,13 +159,18 @@ export class HomePage implements AfterViewInit {
   }
 
   promoteMyBusiness() {
-    if(this.currentUser?.vendors?.length === 0) {
+    
+    
+    if(this.currentUser?.vendor) {
+      this._router.navigateByUrl('/vendor-settings', { state: this.currentUser?.vendor });
+    } 
+    else {
       this._router.navigateByUrl('/pricing');
-    } else if(this.currentUser?.vendors?.length === 1) {
-      this._router.navigateByUrl('/vendor-settings', { state: this.currentUser?.vendors[0] });
-    } else if(this.currentUser?.vendors?.length > 1) {
-      this._router.navigateByUrl('/vendor-businesses');
-    }
+    }  
+    
+    // else if(this.currentUser?.vendors?.length > 1) {
+    //   this._router.navigateByUrl('/vendor-businesses');
+    // }
   }
   
 

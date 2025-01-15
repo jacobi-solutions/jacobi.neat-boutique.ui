@@ -140,9 +140,7 @@ export class VendorSettingsService {
     const promise = new Promise<VendorProfile>((resolve, reject) => {
       this._neatBoutiqueApi.updateVendorBorderColor(request).subscribe((response: VendorProfileResponse) => {
         if (response.isSuccess) {
-          var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
-          currentVendors = [ response.vendorProfile, ...currentVendors]
-          this._accountsService.setCurrentVendors(currentVendors);
+          this._accountsService.setCurrentVendor(response.vendorProfile);
           resolve(response.vendorProfile);
         }
       });

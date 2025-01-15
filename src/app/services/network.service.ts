@@ -1,17 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { NeatBoutiqueApiService } from './neat-boutique-api.service';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { CreateNetworkRequest, NeatBoutiqueApiService, NetworkResponse } from './neat-boutique-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NetworkService {
-  constructor(private neatBoutiqueApiService: NeatBoutiqueApiService) {}
+  private _currentNetwork: any = null;
+  public currentNetworkSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  createNetwork(data: any): Observable<any> {
-    return this.neatBoutiqueApiService.createNetwork(data);
-    console.log(data);
+  constructor(private _neatBoutiqueApiService: NeatBoutiqueApiService) {}
+
+  setCurrentNetwork(network: any) {
+    this._currentNetwork = network;
+    this.currentNetworkSubject.next(this._currentNetwork);
   }
 
-  // Add more methods as needed for managing networks
+  createNetwork(data: any) {
+    var promise = new Promise((resolve, reject) => {
+      var request = new CreateNetworkRequest();
+      request.name = data.name;
+      request.description = data.description;
+      this._neatBoutiqueApiService
+        .createNetwork(request).subscribe((response: NetworkResponse) => {
+          if (response.isSuccess) {
+            this.setCurrentNetwork(response.network);
+            resolve(response.network);
+          }
+        });
+    });
+    return promise;
+  }
+
+  
+
 } 

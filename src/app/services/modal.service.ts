@@ -67,7 +67,7 @@ export class ModalService {
 
 
     async displayChooseProfileModal(): Promise<{ accountRole: string, user: ConsumerProfile | VendorProfile }> {
-      if(this._currentUser?.vendors?.length > 0) {
+      if(this._currentUser?.vendor) {
         const modal = await this._chooseAccountModal();
         const { data: { accountRole, user} } = await modal.onDidDismiss();
         return { accountRole, user };

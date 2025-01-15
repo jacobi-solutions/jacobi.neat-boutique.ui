@@ -8,20 +8,21 @@ export class CurrentUserDisplay {
     feedCategoriesToShow?: string[];
     notificationsForAnsweredQuestions?: boolean;
     public consumer: ConsumerProfile = null;
-    public vendors: VendorProfile[] = null;
+    public vendor: VendorProfile = null;
+    // public vendors: VendorProfile[] = null;
     public ids: string[];
     private _uiVendorsInMyList: string[] = [];
     public isAdmin: boolean = false;
 
-    constructor(consumer: ConsumerProfile, vendors: VendorProfile[]) {        
+    constructor(consumer: ConsumerProfile, vendor: VendorProfile) {        
         this.consumer = consumer;
-        this.vendors = vendors
+        this.vendor = vendor
         this.ids = [];
         if(consumer) {
             this.ids.push(consumer.id);
         }
-        if(vendors) {
-            this.ids = [...this.ids, ...(vendors?.map(x => x.id))];
+        if(vendor) {
+            this.ids = [...this.ids, ...(vendor.id)];
         }
     }
 

@@ -47,7 +47,7 @@ export class AccountsService {
       this._neatBoutiqueApiService.createAccount(request).subscribe((response) => {
         if(response.isSuccess) {
           
-          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfiles);
+          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfile);
           this._currentUser.feedCategoriesToShow = response.feedCategoriesToShow;
           this._currentUser.notificationCategories = response.notificationCategories;
           this._currentUser.notificationsForAnsweredQuestions = response.notificationsForAnsweredQuestions;
@@ -132,7 +132,7 @@ export class AccountsService {
           if(this._currentUser?.consumer) {
             response.consumerProfile.name = this._currentUser?.consumer.name;
           }
-          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfiles);
+          this._currentUser = new CurrentUserDisplay(response.consumerProfile, response.vendorProfile);
           this._currentUser.isAdmin = response.isAdmin;
           this._currentUser.feedCategoriesToShow = response.feedCategoriesToShow;
           this._currentUser.notificationCategories = response.notificationCategories;
@@ -156,27 +156,35 @@ export class AccountsService {
   private _promptUserForNameAndEmail() {
 
   }
-  private _setCurrentUser(consumer: ConsumerProfile, vendors: VendorProfile[]) {    
+  private _setCurrentUser(consumer: ConsumerProfile, vendor: VendorProfile) {    
     // preserve consumer name from Firebase User
     if(this._currentUser?.consumer) {
       consumer.name = this._currentUser?.consumer.name;
     }
 
-    this._currentUser = new CurrentUserDisplay(consumer, vendors);
+    this._currentUser = new CurrentUserDisplay(consumer, vendor);
     this.currentUserSubject.next(this._currentUser);
   }
 
   public setCurrentConsumer(consumer: ConsumerProfile) {
     var promise = new Promise<boolean>((resolve, reject) => {
-      this._setCurrentUser(consumer, this._currentUser?.vendors);
+      this._setCurrentUser(consumer, this._currentUser?.vendor);
       resolve(true);
     });
     return promise;
   } 
 
-  public setCurrentVendors(vendors: VendorProfile[]) {
+  // public setCurrentVendors(vendor: VendorProfile) {
+  //   var promise = new Promise<boolean>((resolve, reject) => {
+  //     this._setCurrentUser(this._currentUser?.consumer, vendor);
+  //     resolve(true);
+  //   });
+  //   return promise;
+  // }
+
+  public setCurrentVendor(vendor: VendorProfile) {
     var promise = new Promise<boolean>((resolve, reject) => {
-      this._setCurrentUser(this._currentUser?.consumer, vendors);
+      this._setCurrentUser(this._currentUser?.consumer, vendor);
       resolve(true);
     });
     return promise;
@@ -188,7 +196,7 @@ export class AccountsService {
 
   updateUsername(username: string) {
     this._currentUser.consumer.name = username;
-    this._setCurrentUser(this._currentUser.consumer, this._currentUser.vendors)
+    this._setCurrentUser(this._currentUser.consumer, this._currentUser.vendor)
     
     this._neatBoutiqueApiService.updateUsername(new Request());
   }
@@ -225,8 +233,8 @@ export class AccountsService {
         .cancelVendorSubscription(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-            var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
-            this.setCurrentVendors(currentVendors).then(() => {
+            var currentVendor = this._currentUser.vendor;
+            this.setCurrentVendor(currentVendor).then(() => {
               resolve(true);
             });
           } else if (response.errors.find((x) => x.errorCode === "409")) {
@@ -247,9 +255,7 @@ export class AccountsService {
         .changeVendorSubscriptionToPremium(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-              var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
-              currentVendors = [ response.vendorProfile, ...currentVendors]
-              this.setCurrentVendors(currentVendors);
+              this.setCurrentVendor(response.vendorProfile);
               resolve(true);
           } else if (response.errors.find((x) => x.errorCode === "420")) {
             reject();
@@ -268,9 +274,7 @@ export class AccountsService {
         .changeVendorSubscriptionToStandard(request)
         .subscribe((response: VendorProfileResponse) => {
           if (response.isSuccess) {
-            var currentVendors = this._currentUser.vendors.filter(x => x.id !== vendorId)
-            currentVendors = [ response.vendorProfile, ...currentVendors]
-            this.setCurrentVendors(currentVendors);
+            this.setCurrentVendor(response.vendorProfile);
               resolve(true);
           } else if (response.errors.find((x) => x.errorCode === "420")) {
             reject();

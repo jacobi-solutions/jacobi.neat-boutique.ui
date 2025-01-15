@@ -11,6 +11,7 @@ import { VendorSubscriptionResponse } from 'src/app/services/neat-boutique-api.s
 import { EditVendorExitCodes, VendorSettingsService } from 'src/app/services/vendor-settings.service';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
 import { THEME } from 'src/theme/theme-constants';
+import { NetworkService } from 'src/app/services/network.service';
 
 @Component({
   selector: 'app-edit-header-details',
@@ -28,7 +29,7 @@ export class EditHeaderDetailsComponent implements OnInit {
 
   constructor(private _modelService: ModalService, private _vendorSettings: VendorSettingsService, 
     private _modalService: ModalService, private _platform: Platform, private _router: Router,
-    private _vendorSubscriptionService: VendorSubscriptionService) {}
+    private _vendorSubscriptionService: VendorSubscriptionService, private _networkService: NetworkService) {}
 
   ngOnInit() {
     if (!this._platform.is("capacitor")) {
@@ -82,6 +83,13 @@ export class EditHeaderDetailsComponent implements OnInit {
   }
   addAnotherBusiness() {
     this._router.navigateByUrl('/pricing');
+  }
+
+  goToMyCommunity() {
+    if (this.vendor.network) {
+      this._networkService.setCurrentNetwork(this.vendor.network);
+      this._router.navigate(['/network-community']);
+    }
   }
   
 }

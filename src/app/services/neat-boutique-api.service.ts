@@ -189,7 +189,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createNetwork(body: CreateNetworkRequest | undefined): Observable<void>;
+    createNetwork(body: CreateNetworkRequest | undefined): Observable<NetworkResponse>;
     /**
      * @param networkId (optional) 
      * @param vendorId (optional) 
@@ -207,6 +207,11 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     deleteNetwork(networkId: string | null | undefined): Observable<Response>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getNetworkWithVendors(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -247,11 +252,6 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     changeVendorSubscriptionToStandard(body: ChangeVendorSubscriptionRequest | undefined): Observable<VendorProfileResponse>;
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    addVendorSubscriptionToAccount(body: StripeCheckoutRequest | undefined): Observable<VendorProfileResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -2344,7 +2344,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createNetwork(body: CreateNetworkRequest | undefined): Observable<void> {
+    createNetwork(body: CreateNetworkRequest | undefined): Observable<NetworkResponse> {
         let url_ = this.baseUrl + "/api/Networks/CreateNetwork";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2356,6 +2356,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "text/plain"
             })
         };
 
@@ -2366,14 +2367,14 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
                 try {
                     return this.processCreateNetwork(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<NetworkResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<NetworkResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreateNetwork(response: HttpResponseBase): Observable<void> {
+    protected processCreateNetwork(response: HttpResponseBase): Observable<NetworkResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2382,14 +2383,17 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkResponse.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<NetworkResponse>(<any>null);
     }
 
     /**
@@ -2550,6 +2554,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<Response>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getNetworkWithVendors(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/GetNetworkWithVendors";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNetworkWithVendors(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNetworkWithVendors(<any>response_);
+                } catch (e) {
+                    return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNetworkWithVendors(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkWithVendorsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkWithVendorsResponse>(<any>null);
     }
 
     /**
@@ -2979,62 +3039,6 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     protected processChangeVendorSubscriptionToStandard(response: HttpResponseBase): Observable<VendorProfileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = VendorProfileResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<VendorProfileResponse>(<any>null);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    addVendorSubscriptionToAccount(body: StripeCheckoutRequest | undefined): Observable<VendorProfileResponse> {
-        let url_ = this.baseUrl + "/Payments/AddVendorSubscriptionToAccountAsync";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddVendorSubscriptionToAccount(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddVendorSubscriptionToAccount(<any>response_);
-                } catch (e) {
-                    return <Observable<VendorProfileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<VendorProfileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddVendorSubscriptionToAccount(response: HttpResponseBase): Observable<VendorProfileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5197,6 +5201,74 @@ export interface IConsumerProfile {
     reviewsCount?: number;
 }
 
+export class Network implements INetwork {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    name?: string | undefined;
+    description?: string | undefined;
+    ownerVendorId?: string | undefined;
+    vendorIds?: string[] | undefined;
+
+    constructor(data?: INetwork) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.ownerVendorId = _data["ownerVendorId"];
+            if (Array.isArray(_data["vendorIds"])) {
+                this.vendorIds = [] as any;
+                for (let item of _data["vendorIds"])
+                    this.vendorIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): Network {
+        data = typeof data === 'object' ? data : {};
+        let result = new Network();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["ownerVendorId"] = this.ownerVendorId;
+        if (Array.isArray(this.vendorIds)) {
+            data["vendorIds"] = [];
+            for (let item of this.vendorIds)
+                data["vendorIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface INetwork {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    name?: string | undefined;
+    description?: string | undefined;
+    ownerVendorId?: string | undefined;
+    vendorIds?: string[] | undefined;
+}
+
 export class VendorProfile implements IVendorProfile {
     id?: string | undefined;
     createdDateUtc?: Date;
@@ -5226,6 +5298,7 @@ export class VendorProfile implements IVendorProfile {
     reviewCount?: number;
     reviewRatingTotal?: number;
     questionsAnsweredCount?: number;
+    network?: Network;
 
     constructor(data?: IVendorProfile) {
         if (data) {
@@ -5276,6 +5349,7 @@ export class VendorProfile implements IVendorProfile {
             this.reviewCount = _data["reviewCount"];
             this.reviewRatingTotal = _data["reviewRatingTotal"];
             this.questionsAnsweredCount = _data["questionsAnsweredCount"];
+            this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
         }
     }
 
@@ -5326,6 +5400,7 @@ export class VendorProfile implements IVendorProfile {
         data["reviewCount"] = this.reviewCount;
         data["reviewRatingTotal"] = this.reviewRatingTotal;
         data["questionsAnsweredCount"] = this.questionsAnsweredCount;
+        data["network"] = this.network ? this.network.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -5359,13 +5434,14 @@ export interface IVendorProfile {
     reviewCount?: number;
     reviewRatingTotal?: number;
     questionsAnsweredCount?: number;
+    network?: Network;
 }
 
 export class ProfilesResponse implements IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfiles?: VendorProfile[] | undefined;
+    vendorProfile?: VendorProfile;
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
@@ -5389,11 +5465,7 @@ export class ProfilesResponse implements IProfilesResponse {
             }
             this.isSuccess = _data["isSuccess"];
             this.consumerProfile = _data["consumerProfile"] ? ConsumerProfile.fromJS(_data["consumerProfile"]) : <any>undefined;
-            if (Array.isArray(_data["vendorProfiles"])) {
-                this.vendorProfiles = [] as any;
-                for (let item of _data["vendorProfiles"])
-                    this.vendorProfiles!.push(VendorProfile.fromJS(item));
-            }
+            this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
             if (Array.isArray(_data["notificationCategories"])) {
                 this.notificationCategories = [] as any;
                 for (let item of _data["notificationCategories"])
@@ -5425,11 +5497,7 @@ export class ProfilesResponse implements IProfilesResponse {
         }
         data["isSuccess"] = this.isSuccess;
         data["consumerProfile"] = this.consumerProfile ? this.consumerProfile.toJSON() : <any>undefined;
-        if (Array.isArray(this.vendorProfiles)) {
-            data["vendorProfiles"] = [];
-            for (let item of this.vendorProfiles)
-                data["vendorProfiles"].push(item.toJSON());
-        }
+        data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
         if (Array.isArray(this.notificationCategories)) {
             data["notificationCategories"] = [];
             for (let item of this.notificationCategories)
@@ -5450,7 +5518,7 @@ export interface IProfilesResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
-    vendorProfiles?: VendorProfile[] | undefined;
+    vendorProfile?: VendorProfile;
     notificationCategories?: string[] | undefined;
     feedCategoriesToShow?: string[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
@@ -7848,6 +7916,7 @@ export interface ICreateHeroAdRequest {
 export class CreateNetworkRequest implements ICreateNetworkRequest {
     name?: string | undefined;
     description?: string | undefined;
+    vendorId?: string | undefined;
 
     constructor(data?: ICreateNetworkRequest) {
         if (data) {
@@ -7862,6 +7931,7 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
         if (_data) {
             this.name = _data["name"];
             this.description = _data["description"];
+            this.vendorId = _data["vendorId"];
         }
     }
 
@@ -7876,6 +7946,7 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["description"] = this.description;
+        data["vendorId"] = this.vendorId;
         return data; 
     }
 }
@@ -7883,6 +7954,159 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
 export interface ICreateNetworkRequest {
     name?: string | undefined;
     description?: string | undefined;
+    vendorId?: string | undefined;
+}
+
+export class NetworkResponse implements INetworkResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    network?: Network;
+
+    constructor(data?: INetworkResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NetworkResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["network"] = this.network ? this.network.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface INetworkResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    network?: Network;
+}
+
+export class NetworkRequest implements INetworkRequest {
+    networkId?: string | undefined;
+
+    constructor(data?: INetworkRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+        }
+    }
+
+    static fromJS(data: any): NetworkRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        return data; 
+    }
+}
+
+export interface INetworkRequest {
+    networkId?: string | undefined;
+}
+
+export class NetworkWithVendorsResponse implements INetworkWithVendorsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    network?: Network;
+    vendors?: VendorProfile[] | undefined;
+
+    constructor(data?: INetworkWithVendorsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
+            if (Array.isArray(_data["vendors"])) {
+                this.vendors = [] as any;
+                for (let item of _data["vendors"])
+                    this.vendors!.push(VendorProfile.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): NetworkWithVendorsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkWithVendorsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["network"] = this.network ? this.network.toJSON() : <any>undefined;
+        if (Array.isArray(this.vendors)) {
+            data["vendors"] = [];
+            for (let item of this.vendors)
+                data["vendors"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface INetworkWithVendorsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    network?: Network;
+    vendors?: VendorProfile[] | undefined;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
@@ -9480,6 +9704,7 @@ export class MongoDbSettings implements IMongoDbSettings {
     promotionalDiscountsCollectionName?: string | undefined;
     notificationTokensCollectionName?: string | undefined;
     googlePlacesReferencesCollectionName?: string | undefined;
+    networksCollectionName?: string | undefined;
 
     constructor(data?: IMongoDbSettings) {
         if (data) {
@@ -9510,6 +9735,7 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.promotionalDiscountsCollectionName = _data["promotionalDiscountsCollectionName"];
             this.notificationTokensCollectionName = _data["notificationTokensCollectionName"];
             this.googlePlacesReferencesCollectionName = _data["googlePlacesReferencesCollectionName"];
+            this.networksCollectionName = _data["networksCollectionName"];
         }
     }
 
@@ -9540,6 +9766,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["promotionalDiscountsCollectionName"] = this.promotionalDiscountsCollectionName;
         data["notificationTokensCollectionName"] = this.notificationTokensCollectionName;
         data["googlePlacesReferencesCollectionName"] = this.googlePlacesReferencesCollectionName;
+        data["networksCollectionName"] = this.networksCollectionName;
         return data; 
     }
 }
@@ -9563,6 +9790,7 @@ export interface IMongoDbSettings {
     promotionalDiscountsCollectionName?: string | undefined;
     notificationTokensCollectionName?: string | undefined;
     googlePlacesReferencesCollectionName?: string | undefined;
+    networksCollectionName?: string | undefined;
 }
 
 export class StripeSettings implements IStripeSettings {
@@ -9797,6 +10025,7 @@ export class VendorProfileWithReviewsResponse implements IVendorProfileWithRevie
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorProfile?: VendorProfile;
+    network?: Network;
     reviews?: Review[] | undefined;
 
     constructor(data?: IVendorProfileWithReviewsResponse) {
@@ -9817,6 +10046,7 @@ export class VendorProfileWithReviewsResponse implements IVendorProfileWithRevie
             }
             this.isSuccess = _data["isSuccess"];
             this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
+            this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
             if (Array.isArray(_data["reviews"])) {
                 this.reviews = [] as any;
                 for (let item of _data["reviews"])
@@ -9841,6 +10071,7 @@ export class VendorProfileWithReviewsResponse implements IVendorProfileWithRevie
         }
         data["isSuccess"] = this.isSuccess;
         data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
+        data["network"] = this.network ? this.network.toJSON() : <any>undefined;
         if (Array.isArray(this.reviews)) {
             data["reviews"] = [];
             for (let item of this.reviews)
@@ -9854,6 +10085,7 @@ export interface IVendorProfileWithReviewsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorProfile?: VendorProfile;
+    network?: Network;
     reviews?: Review[] | undefined;
 }
 
