@@ -8,7 +8,8 @@ import { Category } from "../models/category";
 import { PostDisplay } from "../models/post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
-import { CategoryTypes, UserRoleTypes } from "../models/constants";
+import { UserRoleTypes } from "../constants/user-role-types";
+import { CategoryTypes } from "../constants/category-types";
 import { VendorDisplay } from "../models/vendor-display";
 import { AccountsService } from "./accounts.service";
 import {

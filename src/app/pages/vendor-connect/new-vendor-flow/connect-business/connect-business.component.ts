@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { debounceTime } from 'rxjs/operators';
-import { SubscriptionPlanTypes } from 'src/app/models/constants';
+import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
 import { GooglePlacesEntityDisplay } from 'src/app/models/google-entity-display';
 import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 import { GooglePlaceDetailsResponse, GooglePlacesEntity, VendorProfile } from 'src/app/services/neat-boutique-api.service';

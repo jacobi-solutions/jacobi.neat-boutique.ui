@@ -39,7 +39,7 @@ export class CreateCommunityComponent implements OnInit {
     }
 
     const networkData = this.createCommunityForm.value;
-    this._networkService.createNetwork(networkData).then(
+    this._networkService.createNetwork(networkData.name, networkData.description, this.vendor.id).then(
       response => {
         console.log('Network created successfully', response);
         if (response) {

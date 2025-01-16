@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 // import { AuthService } from "../auth/auth.service";
 
 import { CurrentUserDisplay } from "../models/current-user-display";
-import { CategoryTypes } from "../models/constants";
+import { CategoryTypes } from "../constants/category-types";
 import { AccountsService } from "./accounts.service";
 import { CategoryService } from "./category.service";
 import { Post, MyQuestionsRequest, NeatBoutiqueApiService, PostsResponse } from "./neat-boutique-api.service";

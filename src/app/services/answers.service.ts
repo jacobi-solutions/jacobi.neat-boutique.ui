@@ -6,7 +6,7 @@ import { CurrentUserDisplay } from '../models/current-user-display';
 import { AccountsService } from './accounts.service';
 import { SelectionVote, AnswerVoteRemoveRequest, AnswerWithGooglePlaceRequest, AnswerWithVendorRequest, PostResponse, GooglePlacesEntity, NeatBoutiqueApiService, NeatBoutiqueEntity, PollAnswerRequest } from './neat-boutique-api.service';
 import { UtilService } from './util.service';
-import { FeedTypes } from '../models/constants';
+import { FeedTypes } from "../constants/feed-types";
 
 @Injectable({
   providedIn: 'root'

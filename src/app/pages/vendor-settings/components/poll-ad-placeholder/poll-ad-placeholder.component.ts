@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostDisplay as PostDisplay } from 'src/app/models/post-display';
-import { CategoryTypes, PostTypes, SubscriptionPlanTypes } from 'src/app/models/constants';
 import { CategoryDisplay, CategoryService } from 'src/app/services/category.service';
 import { NeatBoutiqueEntity, Comment, VendorProfile, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
@@ -9,6 +8,9 @@ import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
+import { CategoryTypes } from 'src/app/constants/category-types';
+import { PostTypes } from 'src/app/constants/post-types';
+import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
 
 @Component({
   selector: 'app-poll-ad-placeholder',

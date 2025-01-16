@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { UserRoleTypes } from 'src/app/models/constants';
+import { UserRoleTypes } from 'src/app/constants/user-role-types';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';

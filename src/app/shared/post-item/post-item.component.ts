@@ -8,7 +8,8 @@ import { AnswerDisplay } from 'src/app/models/answer-display';
 import { Selection, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
-import { FeedTypes, PostTypes } from 'src/app/models/constants';
+import { FeedTypes } from 'src/app/constants/feed-types';
+import { PostTypes } from 'src/app/constants/post-types';
 
 @Component({
   selector: 'app-post-item',

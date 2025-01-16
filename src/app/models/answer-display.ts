@@ -1,5 +1,5 @@
 import { Selection } from "../services/neat-boutique-api.service";
-import { SelectionVoteRankingTypes } from "./constants";
+import { SelectionVoteRankingTypes } from "../constants/selection-vote-ranking-types";
 import { EntityDisplay } from "./entity-display";
 
 export class AnswerDisplay extends Selection {

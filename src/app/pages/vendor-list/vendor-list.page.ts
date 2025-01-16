@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
-import { CategoryTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/constants/category-types';
 import { VendorService } from 'src/app/vendor.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { CategoryService } from 'src/app/services/category.service';

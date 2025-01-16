@@ -1,6 +1,6 @@
 import { Url } from 'url';
 import { NeatBoutiqueEntity, Review, VendorProfile } from '../services/neat-boutique-api.service';
-import { UserRoleTypes } from './constants';
+import { UserRoleTypes } from '../constants/user-role-types';
 import { ReviewDisplay } from './review-display';
 import { VendorRating } from './vendor-review';
 

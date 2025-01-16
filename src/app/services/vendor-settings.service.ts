@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CategoryTypes } from '../models/constants';
+import { CategoryTypes } from "../constants/category-types";
 
 import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";

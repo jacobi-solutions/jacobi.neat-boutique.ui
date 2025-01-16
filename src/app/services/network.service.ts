@@ -16,11 +16,12 @@ export class NetworkService {
     this.currentNetworkSubject.next(this._currentNetwork);
   }
 
-  createNetwork(data: any) {
+  createNetwork(name: string, description: string, vendorId: string) {
     var promise = new Promise((resolve, reject) => {
       var request = new CreateNetworkRequest();
-      request.name = data.name;
-      request.description = data.description;
+      request.name = name;
+      request.description = description;
+      request.vendorId = vendorId;
       this._neatBoutiqueApiService
         .createNetwork(request).subscribe((response: NetworkResponse) => {
           if (response.isSuccess) {

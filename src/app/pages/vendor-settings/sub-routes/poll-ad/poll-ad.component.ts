@@ -3,7 +3,6 @@ import { UntypedFormGroup } from '@angular/forms';
 import { IonContent } from '@ionic/angular';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { PostTypes, SubscriptionPlanTypes, UserRoleTypes } from 'src/app/models/constants';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { NeatBoutiqueEntity, Comment, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
@@ -12,6 +11,9 @@ import { VendorSettingsService } from 'src/app/services/vendor-settings.service'
 import { Router } from '@angular/router';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 import { PostDisplay } from 'src/app/models/post-display';
+import { PostTypes } from 'src/app/constants/post-types';
+import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
+import { UserRoleTypes } from 'src/app/constants/user-role-types';
 
 @Component({
   selector: 'app-poll-ad',

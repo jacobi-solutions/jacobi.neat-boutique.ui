@@ -11,11 +11,11 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { FeedTypes, PostTypes } from 'src/app/models/constants';
 import { AnswerDisplay } from 'src/app/models/answer-display';
 import { THEME } from 'src/theme/theme-constants';
 import { UtilService } from 'src/app/services/util.service';
 import { TopUserDisplay } from 'src/app/models/top-user-display';
+import { FeedTypes } from 'src/app/constants/feed-types';
 
 export const RouteTabTypes = {
   MAP: "Map",

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CategoryTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/constants/category-types';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { NotificationsService } from 'src/app/services/notifications.service';

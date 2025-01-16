@@ -1,7 +1,7 @@
 
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CategoryTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/constants/category-types';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
 
 @Component({

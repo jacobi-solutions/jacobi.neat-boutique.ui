@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
-import { SubscriptionPlanTypes } from '../../models/constants';
+import { SubscriptionPlanTypes } from "src/app/constants/subscription-plan-types";
 import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 
 @Component({

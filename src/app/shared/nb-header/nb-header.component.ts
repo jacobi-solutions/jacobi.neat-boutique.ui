@@ -9,7 +9,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { UserSettingsPopoverComponent } from '../popovers/user-settings-popover/user-settings-popover.component';
 import {ElementRef, ViewChild} from '@angular/core';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
-import { CategoryTypes } from 'src/app/models/constants';
+import { CategoryTypes } from 'src/app/constants/category-types';
 import { HeaderGuard } from 'src/app/guards/header.guard';
 import { HeaderDisplay } from 'src/app/models/header-display';
 import { ModalService } from 'src/app/services/modal.service';

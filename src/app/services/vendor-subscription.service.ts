@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SubscriptionPlanTypes } from '../models/constants';
+import { SubscriptionPlanTypes } from "../constants/subscription-plan-types";
 import { GooglePlacesEntityDisplay } from '../models/google-entity-display';
 import { VendorPackagePricingComponent } from '../pages/vendor-connect/new-vendor-flow/vendor-package-pricing/vendor-package-pricing.component';
 import { AccountsService } from './accounts.service';

@@ -3,7 +3,7 @@ import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { timeInterval } from 'rxjs/operators';
-import { SubscriptionPlanTypes } from 'src/app/models/constants';
+import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
 import { SubscriptionPackage } from 'src/app/models/vendor-subscription-package';
 import { VendorPackagePricingComponent } from 'src/app/pages/vendor-connect/new-vendor-flow/vendor-package-pricing/vendor-package-pricing.component';
 import { ChangeVendorSubscriptionRequest, NeatBoutiqueApiService } from 'src/app/services/neat-boutique-api.service';

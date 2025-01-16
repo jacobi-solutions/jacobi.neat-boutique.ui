@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { user } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SubscriptionPlanTypes } from 'src/app/models/constants';
+import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { AccountsService } from 'src/app/services/accounts.service';

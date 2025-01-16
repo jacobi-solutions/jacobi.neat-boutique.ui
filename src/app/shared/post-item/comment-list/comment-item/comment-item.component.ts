@@ -3,7 +3,7 @@ import { waitForAsync } from "@angular/core/testing";
 import { ModalController, PopoverController } from "@ionic/angular";
 import { CommentDisplay } from "src/app/models/comment-display";
 import { CurrentUserDisplay } from "src/app/models/current-user-display";
-import { UserRoleTypes } from "src/app/models/constants";
+import { UserRoleTypes } from "src/app/constants/user-role-types";
 import { CategoryService } from "src/app/services/category.service";
 import { AccountsService } from "src/app/services/accounts.service";
 import { ModalService } from "src/app/services/modal.service";

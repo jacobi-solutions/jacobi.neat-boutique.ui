@@ -1,11 +1,12 @@
 import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
-import { SelectionVoteRankingTypes, PostTypes, UserRoleTypes } from 'src/app/models/constants';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { Selection, SelectionVote, ConsumerProfile, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { Router } from '@angular/router';
 import { AnswerDisplay } from 'src/app/models/answer-display';
+import { PostTypes } from 'src/app/constants/post-types';
+import { SelectionVoteRankingTypes } from 'src/app/constants/selection-vote-ranking-types';
 
 @Component({
   selector: 'app-choose-answer-ranking-modal',

@@ -11,7 +11,9 @@ import { debounceTime } from 'rxjs/operators';
 import { EntityDisplay } from 'src/app/models/entity-display';
 import { UtilService } from 'src/app/services/util.service';
 import { AnswersService } from 'src/app/services/answers.service';
-import { SelectionVoteRankingTypes, PostTypes, FeedTypes } from 'src/app/models/constants';
+import { SelectionVoteRankingTypes } from 'src/app/constants/selection-vote-ranking-types';
+import { FeedTypes } from 'src/app/constants/feed-types';
+import { PostTypes } from 'src/app/constants/post-types';
 
 
 @Component({

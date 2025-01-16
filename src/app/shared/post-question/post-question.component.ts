@@ -2,7 +2,8 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Category } from 'src/app/models/category';
-import { FeedTypes, UserRoleTypes } from 'src/app/models/constants';
+import { UserRoleTypes } from 'src/app/constants/user-role-types';
+import { FeedTypes } from "src/app/constants/feed-types";
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CategoryService } from 'src/app/services/category.service';

@@ -8,7 +8,10 @@ import { Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/category.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { PopoverController } from '@ionic/angular';
-import { SelectionVoteRankingColorsMap, SelectionVoteRankingTypes, PostTypes, FeedTypes } from 'src/app/models/constants';
+import { FeedTypes } from 'src/app/constants/feed-types';
+import { PostTypes } from 'src/app/constants/post-types';
+import { SelectionVoteRankingColorsMap } from 'src/app/constants/selection-vote-ranking-colors-map';
+import { SelectionVoteRankingTypes } from 'src/app/constants/selection-vote-ranking-types';
 
 @Component({
   selector: 'app-answer-item',

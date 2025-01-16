@@ -2,7 +2,7 @@ import { ComponentRef, Injectable } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { THEME } from "src/theme/theme-constants";
 import { CurrentUserDisplay } from "../models/current-user-display";
-import { UserRoleTypes } from "../models/constants";
+import { UserRoleTypes } from "../constants/user-role-types";
 import { ChooseAccountModalComponent } from "../shared/modals/choose-account-type-modal/choose-account-type-modal.component";
 import { ConfirmationActionModalComponent } from "../shared/modals/confirmation-action-modal/confirmation-action-modal.component";
 import { RequireLoginModalComponent } from "../shared/modals/require-login-modal/require-login-modal.component";
