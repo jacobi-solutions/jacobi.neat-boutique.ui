@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { CreateNetworkRequest, NeatBoutiqueApiService, NetworkResponse } from './neat-boutique-api.service';
+import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse } from './neat-boutique-api.service';
+import { EntityDisplay } from '../models/entity-display';
+import { VendorDisplay } from '../models/vendor-display';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NetworkService {
   private _currentNetwork: any = null;
-  public currentNetworkSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public currentNetworkSubject: BehaviorSubject<Network> = new BehaviorSubject<Network>(null);
+  private _currentVendorNetworkMemberships: any[] = [];
+  public currentVendorNetworkMembershipsSubject: BehaviorSubject<VendorNetworkMembership[]> = new BehaviorSubject<VendorNetworkMembership[]>(null);
 
   constructor(private _neatBoutiqueApiService: NeatBoutiqueApiService) {}
 
-  setCurrentNetwork(network: any) {
+  setCurrentNetwork(network: Network) {
     this._currentNetwork = network;
     this.currentNetworkSubject.next(this._currentNetwork);
+    this.loadNetwork(network.id);
+
   }
+
+  
 
   createNetwork(name: string, description: string, vendorId: string) {
     var promise = new Promise((resolve, reject) => {
@@ -33,6 +41,99 @@ export class NetworkService {
     return promise;
   }
 
-  
+  acceptInvite(vendorNetworkMembershipId: string) {
+    var request = new NetworkRequest();
+    request.vendorNetworkMembershipId = vendorNetworkMembershipId;
+    this._neatBoutiqueApiService.acceptNetworkInvite(request).subscribe((response: NetworkWithVendorsResponse) => {
+      if (response.isSuccess) {
+        this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          this._currentVendorNetworkMemberships = response.memberships;
+          this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
+      }
+    });
+  }
+
+  declineInvite(vendorNetworkMembershipId: string) {
+    var request = new NetworkRequest();
+    request.vendorNetworkMembershipId = vendorNetworkMembershipId;
+    this._neatBoutiqueApiService.declineNetworkInvite(request).subscribe((response: Response) => {
+      
+    });
+  }
+
+  createInviteLink(networkId: string, vendorId: string) {
+    var request = new NetworkInviteRequest();
+    request.networkId = networkId;
+    request.vendorId = vendorId;
+    var promise = new Promise<VendorNetworkMembership>((resolve, reject) => {
+    this._neatBoutiqueApiService.getVendorNetworkMembershipInvite(request).subscribe((response: VendorNetworkMembershipResponse) => {
+      if (response.isSuccess) {
+        resolve(response.vendorNetworkMembership);
+      } else {
+        reject('Failed to create invite link');
+      }
+    });
+    });
+    return promise;
+  }
+  loadNetworkByVendorNetworkMembershipId(vendorNetworkMembershipId: string) {
+    var request = new NetworkRequest();
+    request.vendorNetworkMembershipId = vendorNetworkMembershipId;
+    var promise = new Promise<void>((resolve, reject) => {
+      this._neatBoutiqueApiService.getNetworkByMembershipId(request).subscribe((response: NetworkWithVendorsResponse) => {
+        if (response.isSuccess) {
+          this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          this._currentVendorNetworkMemberships = response.memberships;
+          this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
+          resolve();
+        } else {
+          reject('Failed to load network');
+        }
+      });
+    });
+    return promise;
+  }
+
+  loadNetwork(networkId: string) {
+    var request = new NetworkRequest();
+    request.networkId = networkId;
+
+    var promise = new Promise<void>((resolve, reject) => {
+      this._neatBoutiqueApiService
+        .getNetworkWithVendorNetworkMemberships(request)
+        .subscribe((response: NetworkWithVendorsResponse) => {
+          if (response.isSuccess) {
+            this._currentNetwork = response.network;
+            this.currentNetworkSubject.next(this._currentNetwork);
+            this._currentVendorNetworkMemberships = response.memberships;
+            this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
+            resolve();
+          } else {
+            reject('Failed to load network');
+          }
+        }, error => reject(error));
+    });
+
+    return promise;
+  }
+
+  autocompleteSearchForVendoorProfile(searchRequest: string) {
+    const request = new AnswerSearchRequest();
+    request.searchString = searchRequest;
+    var promise = new Promise<VendorDisplay[]>((resolve, reject) => {
+      this._neatBoutiqueApiService
+        .autoCompleteSearchVendorProfiles(request)
+        .subscribe((response: VendorProfilesResponse) => {
+          if (response.isSuccess) {
+            resolve(response.vendorProfiles.map(x => new VendorDisplay(x)));
+          } else {
+            //reject();
+          }
+      });
+    }) 
+    return promise;
+  }
 
 } 

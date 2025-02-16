@@ -87,8 +87,8 @@ export class EditHeaderDetailsComponent implements OnInit {
 
   goToMyCommunity() {
     if (this.vendor.network) {
-      this._networkService.setCurrentNetwork(this.vendor.network);
-      this._router.navigate(['/network-community']);
+      
+      this._router.navigateByUrl('/network-community', { state: this.vendor.network });
     }
   }
   

@@ -19,6 +19,17 @@
         height: 3.5rem;
         color: var(--nb-light-grey) !important;
     }
+    &.white-primary-wide {
+        --border-style: solid !important;
+        --border-width: var(--nb-border-width) !important;
+        --border-color: var(--nb-border-color) !important;
+        --box-shadow: 0 0 10px 10px var(--nb-box-shadow-color) !important;
+        --background: white !important;
+        width: 100% !important;
+        font-size: 1.5rem !important;
+        height: 3.5rem;
+        color: var(--nb-light-grey) !important;
+    }
     
     &.white-secondary {
         --border-style: solid !important;

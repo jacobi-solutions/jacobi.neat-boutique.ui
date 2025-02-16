@@ -1,0 +1,111 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+h2 {
+  color: var(--nb-primary);
+}
+
+/* Keep Original Card Styles */
+ion-card {
+  border-radius: var(--nb-border-radius);
+  border: 1px solid var(--nb-border-color);
+  box-shadow: var(--nb-subtle-box-shadow);
+  padding: 1rem;
+}
+
+/* 🔹 Grid Layout - Always 3 Columns */
+:root {
+  --card-height: 8rem; /* Default card height */
+  --expanded-multiplier: 3; /* Expansion factor */
+  --grid-gap: 1rem; /* Grid gap */
+}
+
+.vendor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
+  grid-auto-rows: var(--card-height); /* Flexible row height */
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+/* Vendor Cards (Default State) */
+.vendor-info-card {
+  border-radius: var(--nb-border-radius);
+  border: 1px solid var(--nb-border-color);
+  box-shadow: var(--nb-subtle-box-shadow);
+  padding: .5 rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  height: var(--card-height);
+  align-self: stretch; /* Ensures proper height in grid */
+
+  ion-card-content {
+    padding: 0;
+  }
+}
+
+/* Expanded Card - Now Exactly 3x Height + 2 Gaps */
+.vendor-info-card.expanded {
+  grid-row: span 3; /* Spans 3 rows */
+  height: calc(3 * var(--card-height) + 2 * var(--grid-gap)); /* Exact expanded height */
+}
+
+/* Logo Image */
+.logo-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Expandable Section */
+app-expandable {
+  transition: max-height 0.4s ease-in-out;
+  overflow: hidden;
+}
+
+/* Vendor Text */
+.vendor-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.vendor-description {
+  font-size: 0.9rem;
+  color: var(--nb-light-grey);
+  margin-top: 0.25rem;
+}
+
+/* 🔹 Responsive Adjustments */
+@media (max-width: 1024px) {
+  :root {
+    --card-height: 9rem;
+  }
+
+  .vendor-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --card-height: 7rem;
+  }
+
+  .vendor-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-height: 6rem;
+  }
+
+  .vendor-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

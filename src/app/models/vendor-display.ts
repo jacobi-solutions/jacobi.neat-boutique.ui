@@ -20,6 +20,7 @@ export class VendorDisplay extends VendorProfile {
     // public bio: string;
     public reviews: ReviewDisplay[] = [];
     public reviewRatingValues: number[] = [];
+    public expandNetworkCard: boolean = false;
     // public isGooglePlace: boolean;
 
     constructor(vendor: VendorProfile, reviews?: Review[]) {

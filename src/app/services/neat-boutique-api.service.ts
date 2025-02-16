@@ -211,7 +211,27 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getNetworkWithVendors(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
+    getNetworkWithVendorNetworkMemberships(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getVendorNetworkMembershipInvite(body: NetworkInviteRequest | undefined): Observable<VendorNetworkMembershipResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getNetworkByMembershipId(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    declineNetworkInvite(body: NetworkRequest | undefined): Observable<Response>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    acceptNetworkInvite(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -307,6 +327,11 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     getMyVisitsOnRouteByRouteId(body: RouteRequest | undefined): Observable<MyVisitsResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    autoCompleteSearchVendorProfiles(body: AnswerSearchRequest | undefined): Observable<VendorProfilesResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -2560,8 +2585,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getNetworkWithVendors(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
-        let url_ = this.baseUrl + "/api/Networks/GetNetworkWithVendors";
+    getNetworkWithVendorNetworkMemberships(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/GetNetworkWithVendorNetworkMemberships";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -2577,11 +2602,11 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetNetworkWithVendors(response_);
+            return this.processGetNetworkWithVendorNetworkMemberships(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetNetworkWithVendors(<any>response_);
+                    return this.processGetNetworkWithVendorNetworkMemberships(<any>response_);
                 } catch (e) {
                     return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
                 }
@@ -2590,7 +2615,231 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         }));
     }
 
-    protected processGetNetworkWithVendors(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+    protected processGetNetworkWithVendorNetworkMemberships(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkWithVendorsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkWithVendorsResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getVendorNetworkMembershipInvite(body: NetworkInviteRequest | undefined): Observable<VendorNetworkMembershipResponse> {
+        let url_ = this.baseUrl + "/api/Networks/GetVendorNetworkMembershipInvite";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVendorNetworkMembershipInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVendorNetworkMembershipInvite(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorNetworkMembershipResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorNetworkMembershipResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetVendorNetworkMembershipInvite(response: HttpResponseBase): Observable<VendorNetworkMembershipResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorNetworkMembershipResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorNetworkMembershipResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getNetworkByMembershipId(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/GetNetworkByMembershipId";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNetworkByMembershipId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNetworkByMembershipId(<any>response_);
+                } catch (e) {
+                    return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNetworkByMembershipId(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkWithVendorsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkWithVendorsResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    declineNetworkInvite(body: NetworkRequest | undefined): Observable<Response> {
+        let url_ = this.baseUrl + "/api/Networks/DeclineNetworkInvite";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeclineNetworkInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeclineNetworkInvite(<any>response_);
+                } catch (e) {
+                    return <Observable<Response>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<Response>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeclineNetworkInvite(response: HttpResponseBase): Observable<Response> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Response.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Response>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    acceptNetworkInvite(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/AcceptNetworkInvite";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAcceptNetworkInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAcceptNetworkInvite(<any>response_);
+                } catch (e) {
+                    return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAcceptNetworkInvite(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3674,6 +3923,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<MyVisitsResponse>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    autoCompleteSearchVendorProfiles(body: AnswerSearchRequest | undefined): Observable<VendorProfilesResponse> {
+        let url_ = this.baseUrl + "/Search/AutoCompleteSearchVendorProfilesAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAutoCompleteSearchVendorProfiles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAutoCompleteSearchVendorProfiles(<any>response_);
+                } catch (e) {
+                    return <Observable<VendorProfilesResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VendorProfilesResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAutoCompleteSearchVendorProfiles(response: HttpResponseBase): Observable<VendorProfilesResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = VendorProfilesResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VendorProfilesResponse>(<any>null);
     }
 
     /**
@@ -5207,8 +5512,6 @@ export class Network implements INetwork {
     lastUpdatedDateUtc?: Date;
     name?: string | undefined;
     description?: string | undefined;
-    ownerVendorId?: string | undefined;
-    vendorIds?: string[] | undefined;
 
     constructor(data?: INetwork) {
         if (data) {
@@ -5226,12 +5529,6 @@ export class Network implements INetwork {
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.name = _data["name"];
             this.description = _data["description"];
-            this.ownerVendorId = _data["ownerVendorId"];
-            if (Array.isArray(_data["vendorIds"])) {
-                this.vendorIds = [] as any;
-                for (let item of _data["vendorIds"])
-                    this.vendorIds!.push(item);
-            }
         }
     }
 
@@ -5249,12 +5546,6 @@ export class Network implements INetwork {
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["ownerVendorId"] = this.ownerVendorId;
-        if (Array.isArray(this.vendorIds)) {
-            data["vendorIds"] = [];
-            for (let item of this.vendorIds)
-                data["vendorIds"].push(item);
-        }
         return data; 
     }
 }
@@ -5265,8 +5556,6 @@ export interface INetwork {
     lastUpdatedDateUtc?: Date;
     name?: string | undefined;
     description?: string | undefined;
-    ownerVendorId?: string | undefined;
-    vendorIds?: string[] | undefined;
 }
 
 export class VendorProfile implements IVendorProfile {
@@ -8011,6 +8300,7 @@ export interface INetworkResponse {
 
 export class NetworkRequest implements INetworkRequest {
     networkId?: string | undefined;
+    vendorNetworkMembershipId?: string | undefined;
 
     constructor(data?: INetworkRequest) {
         if (data) {
@@ -8024,6 +8314,7 @@ export class NetworkRequest implements INetworkRequest {
     init(_data?: any) {
         if (_data) {
             this.networkId = _data["networkId"];
+            this.vendorNetworkMembershipId = _data["vendorNetworkMembershipId"];
         }
     }
 
@@ -8037,19 +8328,113 @@ export class NetworkRequest implements INetworkRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["networkId"] = this.networkId;
+        data["vendorNetworkMembershipId"] = this.vendorNetworkMembershipId;
         return data; 
     }
 }
 
 export interface INetworkRequest {
     networkId?: string | undefined;
+    vendorNetworkMembershipId?: string | undefined;
+}
+
+export class VendorNetworkMembership implements IVendorNetworkMembership {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendorId?: string | undefined;
+    networkId?: string | undefined;
+    contactName?: string | undefined;
+    contactEmail?: string | undefined;
+    contactPhone?: string | undefined;
+    monthlyCost?: number;
+    joinedNetworkDateUtc?: Date;
+    customerDiscounts?: string[] | undefined;
+    role?: string | undefined;
+    vendorProfile?: VendorProfile;
+
+    constructor(data?: IVendorNetworkMembership) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.vendorId = _data["vendorId"];
+            this.networkId = _data["networkId"];
+            this.contactName = _data["contactName"];
+            this.contactEmail = _data["contactEmail"];
+            this.contactPhone = _data["contactPhone"];
+            this.monthlyCost = _data["monthlyCost"];
+            this.joinedNetworkDateUtc = _data["joinedNetworkDateUtc"] ? new Date(_data["joinedNetworkDateUtc"].toString()) : <any>undefined;
+            if (Array.isArray(_data["customerDiscounts"])) {
+                this.customerDiscounts = [] as any;
+                for (let item of _data["customerDiscounts"])
+                    this.customerDiscounts!.push(item);
+            }
+            this.role = _data["role"];
+            this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): VendorNetworkMembership {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorNetworkMembership();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["vendorId"] = this.vendorId;
+        data["networkId"] = this.networkId;
+        data["contactName"] = this.contactName;
+        data["contactEmail"] = this.contactEmail;
+        data["contactPhone"] = this.contactPhone;
+        data["monthlyCost"] = this.monthlyCost;
+        data["joinedNetworkDateUtc"] = this.joinedNetworkDateUtc ? this.joinedNetworkDateUtc.toISOString() : <any>undefined;
+        if (Array.isArray(this.customerDiscounts)) {
+            data["customerDiscounts"] = [];
+            for (let item of this.customerDiscounts)
+                data["customerDiscounts"].push(item);
+        }
+        data["role"] = this.role;
+        data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IVendorNetworkMembership {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendorId?: string | undefined;
+    networkId?: string | undefined;
+    contactName?: string | undefined;
+    contactEmail?: string | undefined;
+    contactPhone?: string | undefined;
+    monthlyCost?: number;
+    joinedNetworkDateUtc?: Date;
+    customerDiscounts?: string[] | undefined;
+    role?: string | undefined;
+    vendorProfile?: VendorProfile;
 }
 
 export class NetworkWithVendorsResponse implements INetworkWithVendorsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     network?: Network;
-    vendors?: VendorProfile[] | undefined;
+    memberships?: VendorNetworkMembership[] | undefined;
 
     constructor(data?: INetworkWithVendorsResponse) {
         if (data) {
@@ -8069,10 +8454,10 @@ export class NetworkWithVendorsResponse implements INetworkWithVendorsResponse {
             }
             this.isSuccess = _data["isSuccess"];
             this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
-            if (Array.isArray(_data["vendors"])) {
-                this.vendors = [] as any;
-                for (let item of _data["vendors"])
-                    this.vendors!.push(VendorProfile.fromJS(item));
+            if (Array.isArray(_data["memberships"])) {
+                this.memberships = [] as any;
+                for (let item of _data["memberships"])
+                    this.memberships!.push(VendorNetworkMembership.fromJS(item));
             }
         }
     }
@@ -8093,10 +8478,10 @@ export class NetworkWithVendorsResponse implements INetworkWithVendorsResponse {
         }
         data["isSuccess"] = this.isSuccess;
         data["network"] = this.network ? this.network.toJSON() : <any>undefined;
-        if (Array.isArray(this.vendors)) {
-            data["vendors"] = [];
-            for (let item of this.vendors)
-                data["vendors"].push(item.toJSON());
+        if (Array.isArray(this.memberships)) {
+            data["memberships"] = [];
+            for (let item of this.memberships)
+                data["memberships"].push(item.toJSON());
         }
         return data; 
     }
@@ -8106,7 +8491,99 @@ export interface INetworkWithVendorsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     network?: Network;
-    vendors?: VendorProfile[] | undefined;
+    memberships?: VendorNetworkMembership[] | undefined;
+}
+
+export class NetworkInviteRequest implements INetworkInviteRequest {
+    networkId?: string | undefined;
+    vendorId?: string | undefined;
+
+    constructor(data?: INetworkInviteRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+            this.vendorId = _data["vendorId"];
+        }
+    }
+
+    static fromJS(data: any): NetworkInviteRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkInviteRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        data["vendorId"] = this.vendorId;
+        return data; 
+    }
+}
+
+export interface INetworkInviteRequest {
+    networkId?: string | undefined;
+    vendorId?: string | undefined;
+}
+
+export class VendorNetworkMembershipResponse implements IVendorNetworkMembershipResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorNetworkMembership?: VendorNetworkMembership;
+
+    constructor(data?: IVendorNetworkMembershipResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.vendorNetworkMembership = _data["vendorNetworkMembership"] ? VendorNetworkMembership.fromJS(_data["vendorNetworkMembership"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): VendorNetworkMembershipResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorNetworkMembershipResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["vendorNetworkMembership"] = this.vendorNetworkMembership ? this.vendorNetworkMembership.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IVendorNetworkMembershipResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorNetworkMembership?: VendorNetworkMembership;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
@@ -9254,7 +9731,6 @@ export interface IMyVisitsResponse {
 }
 
 export class AnswerSearchRequest implements IAnswerSearchRequest {
-    categoryName?: string | undefined;
     searchString?: string | undefined;
 
     constructor(data?: IAnswerSearchRequest) {
@@ -9268,7 +9744,6 @@ export class AnswerSearchRequest implements IAnswerSearchRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.categoryName = _data["categoryName"];
             this.searchString = _data["searchString"];
         }
     }
@@ -9282,15 +9757,73 @@ export class AnswerSearchRequest implements IAnswerSearchRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
         data["searchString"] = this.searchString;
         return data; 
     }
 }
 
 export interface IAnswerSearchRequest {
-    categoryName?: string | undefined;
     searchString?: string | undefined;
+}
+
+export class VendorProfilesResponse implements IVendorProfilesResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorProfiles?: VendorProfile[] | undefined;
+
+    constructor(data?: IVendorProfilesResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            if (Array.isArray(_data["vendorProfiles"])) {
+                this.vendorProfiles = [] as any;
+                for (let item of _data["vendorProfiles"])
+                    this.vendorProfiles!.push(VendorProfile.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): VendorProfilesResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorProfilesResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["isSuccess"] = this.isSuccess;
+        if (Array.isArray(this.vendorProfiles)) {
+            data["vendorProfiles"] = [];
+            for (let item of this.vendorProfiles)
+                data["vendorProfiles"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IVendorProfilesResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    vendorProfiles?: VendorProfile[] | undefined;
 }
 
 export class AnswerSearchResponse implements IAnswerSearchResponse {
@@ -9705,6 +10238,8 @@ export class MongoDbSettings implements IMongoDbSettings {
     notificationTokensCollectionName?: string | undefined;
     googlePlacesReferencesCollectionName?: string | undefined;
     networksCollectionName?: string | undefined;
+    vendorNetworkMembershipsCollectionName?: string | undefined;
+    networkInvitesCollectionName?: string | undefined;
 
     constructor(data?: IMongoDbSettings) {
         if (data) {
@@ -9736,6 +10271,8 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.notificationTokensCollectionName = _data["notificationTokensCollectionName"];
             this.googlePlacesReferencesCollectionName = _data["googlePlacesReferencesCollectionName"];
             this.networksCollectionName = _data["networksCollectionName"];
+            this.vendorNetworkMembershipsCollectionName = _data["vendorNetworkMembershipsCollectionName"];
+            this.networkInvitesCollectionName = _data["networkInvitesCollectionName"];
         }
     }
 
@@ -9767,6 +10304,8 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["notificationTokensCollectionName"] = this.notificationTokensCollectionName;
         data["googlePlacesReferencesCollectionName"] = this.googlePlacesReferencesCollectionName;
         data["networksCollectionName"] = this.networksCollectionName;
+        data["vendorNetworkMembershipsCollectionName"] = this.vendorNetworkMembershipsCollectionName;
+        data["networkInvitesCollectionName"] = this.networkInvitesCollectionName;
         return data; 
     }
 }
@@ -9791,6 +10330,8 @@ export interface IMongoDbSettings {
     notificationTokensCollectionName?: string | undefined;
     googlePlacesReferencesCollectionName?: string | undefined;
     networksCollectionName?: string | undefined;
+    vendorNetworkMembershipsCollectionName?: string | undefined;
+    networkInvitesCollectionName?: string | undefined;
 }
 
 export class StripeSettings implements IStripeSettings {
@@ -9959,66 +10500,6 @@ export interface IVendorProfilesRequest {
     categoryName?: string | undefined;
     pageNumber?: number;
     pageSize?: number;
-}
-
-export class VendorProfilesResponse implements IVendorProfilesResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorProfiles?: VendorProfile[] | undefined;
-
-    constructor(data?: IVendorProfilesResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [] as any;
-                for (let item of _data["errors"])
-                    this.errors!.push(ErrorDto.fromJS(item));
-            }
-            this.isSuccess = _data["isSuccess"];
-            if (Array.isArray(_data["vendorProfiles"])) {
-                this.vendorProfiles = [] as any;
-                for (let item of _data["vendorProfiles"])
-                    this.vendorProfiles!.push(VendorProfile.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): VendorProfilesResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new VendorProfilesResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["isSuccess"] = this.isSuccess;
-        if (Array.isArray(this.vendorProfiles)) {
-            data["vendorProfiles"] = [];
-            for (let item of this.vendorProfiles)
-                data["vendorProfiles"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IVendorProfilesResponse {
-    errors?: ErrorDto[] | undefined;
-    isSuccess?: boolean;
-    vendorProfiles?: VendorProfile[] | undefined;
 }
 
 export class VendorProfileWithReviewsResponse implements IVendorProfileWithReviewsResponse {

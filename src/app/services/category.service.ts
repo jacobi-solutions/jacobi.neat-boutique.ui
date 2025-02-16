@@ -421,7 +421,7 @@ export class CategoryService {
 
   autocompleteSearchForAnswer(venderSearch: { categoryName: string, searchString: string }) {
     const request = new AnswerSearchRequest();
-    request.categoryName = venderSearch.categoryName;
+    // request.categoryName = venderSearch.categoryName;
     request.searchString = venderSearch.searchString;
     const promise = new Promise<EntityDisplay[]>((resolve, reject) => {
       this._neatBoutiqueApiService

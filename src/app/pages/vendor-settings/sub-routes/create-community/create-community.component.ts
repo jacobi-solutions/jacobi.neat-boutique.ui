@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VendorDisplay } from 'src/app/models/vendor-display';
+import { NetworkResponse } from 'src/app/services/neat-boutique-api.service';
 import { NetworkService } from 'src/app/services/network.service';
 
 @Component({
@@ -40,11 +41,10 @@ export class CreateCommunityComponent implements OnInit {
 
     const networkData = this.createCommunityForm.value;
     this._networkService.createNetwork(networkData.name, networkData.description, this.vendor.id).then(
-      response => {
+      (response: NetworkResponse) => {
         console.log('Network created successfully', response);
         if (response) {
-          this._networkService.setCurrentNetwork(response);
-          this._router.navigate(['/network-community']);
+          this._router.navigateByUrl('/network-community', { state: response.network });
         }
         // Navigate to another page or show a success message
       },
