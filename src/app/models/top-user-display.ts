@@ -18,3 +18,5 @@ export class TopUserDisplay extends RouteTopUser {
         this.points = this.routeVisits;
     }
 }
+
+

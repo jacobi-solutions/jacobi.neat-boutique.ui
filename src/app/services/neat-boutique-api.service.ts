@@ -5506,12 +5506,495 @@ export interface IConsumerProfile {
     reviewsCount?: number;
 }
 
+export class NeatBoutiqueEntity implements INeatBoutiqueEntity {
+    id?: string | undefined;
+    role?: string | undefined;
+    name?: string | undefined;
+    avatarSourceURL?: string | undefined;
+    profilePath?: string | undefined;
+    borderColor?: string | undefined;
+
+    constructor(data?: INeatBoutiqueEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.role = _data["role"];
+            this.name = _data["name"];
+            this.avatarSourceURL = _data["avatarSourceURL"];
+            this.profilePath = _data["profilePath"];
+            this.borderColor = _data["borderColor"];
+        }
+    }
+
+    static fromJS(data: any): NeatBoutiqueEntity {
+        data = typeof data === 'object' ? data : {};
+        let result = new NeatBoutiqueEntity();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["role"] = this.role;
+        data["name"] = this.name;
+        data["avatarSourceURL"] = this.avatarSourceURL;
+        data["profilePath"] = this.profilePath;
+        data["borderColor"] = this.borderColor;
+        return data; 
+    }
+}
+
+export interface INeatBoutiqueEntity {
+    id?: string | undefined;
+    role?: string | undefined;
+    name?: string | undefined;
+    avatarSourceURL?: string | undefined;
+    profilePath?: string | undefined;
+    borderColor?: string | undefined;
+}
+
+export class Comment implements IComment {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    body?: string | undefined;
+    author?: NeatBoutiqueEntity;
+    likers?: NeatBoutiqueEntity[] | undefined;
+
+    constructor(data?: IComment) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postId = _data["postId"];
+            this.body = _data["body"];
+            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
+            if (Array.isArray(_data["likers"])) {
+                this.likers = [] as any;
+                for (let item of _data["likers"])
+                    this.likers!.push(NeatBoutiqueEntity.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Comment {
+        data = typeof data === 'object' ? data : {};
+        let result = new Comment();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postId"] = this.postId;
+        data["body"] = this.body;
+        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
+        if (Array.isArray(this.likers)) {
+            data["likers"] = [];
+            for (let item of this.likers)
+                data["likers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IComment {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    body?: string | undefined;
+    author?: NeatBoutiqueEntity;
+    likers?: NeatBoutiqueEntity[] | undefined;
+}
+
+export class GeometryLocation implements IGeometryLocation {
+    latitude?: number;
+    longitude?: number;
+
+    constructor(data?: IGeometryLocation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+        }
+    }
+
+    static fromJS(data: any): GeometryLocation {
+        data = typeof data === 'object' ? data : {};
+        let result = new GeometryLocation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        return data; 
+    }
+}
+
+export interface IGeometryLocation {
+    latitude?: number;
+    longitude?: number;
+}
+
+export class GooglePlacesEntity implements IGooglePlacesEntity {
+    placeId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IGooglePlacesEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.placeId = _data["placeId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): GooglePlacesEntity {
+        data = typeof data === 'object' ? data : {};
+        let result = new GooglePlacesEntity();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["placeId"] = this.placeId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IGooglePlacesEntity {
+    placeId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class SelectionVote implements ISelectionVote {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    selectionId?: string | undefined;
+    voter?: NeatBoutiqueEntity;
+    voteRanking?: string | undefined;
+
+    constructor(data?: ISelectionVote) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postId = _data["postId"];
+            this.selectionId = _data["selectionId"];
+            this.voter = _data["voter"] ? NeatBoutiqueEntity.fromJS(_data["voter"]) : <any>undefined;
+            this.voteRanking = _data["voteRanking"];
+        }
+    }
+
+    static fromJS(data: any): SelectionVote {
+        data = typeof data === 'object' ? data : {};
+        let result = new SelectionVote();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postId"] = this.postId;
+        data["selectionId"] = this.selectionId;
+        data["voter"] = this.voter ? this.voter.toJSON() : <any>undefined;
+        data["voteRanking"] = this.voteRanking;
+        return data; 
+    }
+}
+
+export interface ISelectionVote {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    selectionId?: string | undefined;
+    voter?: NeatBoutiqueEntity;
+    voteRanking?: string | undefined;
+}
+
+export class Selection implements ISelection {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    freeFormAnswer?: string | undefined;
+    vendor?: NeatBoutiqueEntity;
+    geometryLocation?: GeometryLocation;
+    googlePlace?: GooglePlacesEntity;
+    votes?: SelectionVote[] | undefined;
+
+    constructor(data?: ISelection) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postId = _data["postId"];
+            this.freeFormAnswer = _data["freeFormAnswer"];
+            this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
+            this.geometryLocation = _data["geometryLocation"] ? GeometryLocation.fromJS(_data["geometryLocation"]) : <any>undefined;
+            this.googlePlace = _data["googlePlace"] ? GooglePlacesEntity.fromJS(_data["googlePlace"]) : <any>undefined;
+            if (Array.isArray(_data["votes"])) {
+                this.votes = [] as any;
+                for (let item of _data["votes"])
+                    this.votes!.push(SelectionVote.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Selection {
+        data = typeof data === 'object' ? data : {};
+        let result = new Selection();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postId"] = this.postId;
+        data["freeFormAnswer"] = this.freeFormAnswer;
+        data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
+        data["geometryLocation"] = this.geometryLocation ? this.geometryLocation.toJSON() : <any>undefined;
+        data["googlePlace"] = this.googlePlace ? this.googlePlace.toJSON() : <any>undefined;
+        if (Array.isArray(this.votes)) {
+            data["votes"] = [];
+            for (let item of this.votes)
+                data["votes"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ISelection {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
+    freeFormAnswer?: string | undefined;
+    vendor?: NeatBoutiqueEntity;
+    geometryLocation?: GeometryLocation;
+    googlePlace?: GooglePlacesEntity;
+    votes?: SelectionVote[] | undefined;
+}
+
+export class Post implements IPost {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
+    subject?: string | undefined;
+    categoryName?: string | undefined;
+    feedContextId?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
+    author?: NeatBoutiqueEntity;
+    comments?: Comment[] | undefined;
+    selections?: Selection[] | undefined;
+
+    constructor(data?: IPost) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postType = _data["postType"];
+            this.subject = _data["subject"];
+            this.categoryName = _data["categoryName"];
+            this.feedContextId = _data["feedContextId"];
+            this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
+            this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
+            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(Comment.fromJS(item));
+            }
+            if (Array.isArray(_data["selections"])) {
+                this.selections = [] as any;
+                for (let item of _data["selections"])
+                    this.selections!.push(Selection.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Post {
+        data = typeof data === 'object' ? data : {};
+        let result = new Post();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postType"] = this.postType;
+        data["subject"] = this.subject;
+        data["categoryName"] = this.categoryName;
+        data["feedContextId"] = this.feedContextId;
+        data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
+        data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
+        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
+        if (Array.isArray(this.selections)) {
+            data["selections"] = [];
+            for (let item of this.selections)
+                data["selections"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPost {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    postType?: string | undefined;
+    subject?: string | undefined;
+    categoryName?: string | undefined;
+    feedContextId?: string | undefined;
+    startDateUtc?: Date | undefined;
+    endDateUtc?: Date | undefined;
+    author?: NeatBoutiqueEntity;
+    comments?: Comment[] | undefined;
+    selections?: Selection[] | undefined;
+}
+
+export class NetworkTopVisitor implements INetworkTopVisitor {
+    visitor?: NeatBoutiqueEntity;
+    networkVisitsCount?: number;
+
+    constructor(data?: INetworkTopVisitor) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.visitor = _data["visitor"] ? NeatBoutiqueEntity.fromJS(_data["visitor"]) : <any>undefined;
+            this.networkVisitsCount = _data["networkVisitsCount"];
+        }
+    }
+
+    static fromJS(data: any): NetworkTopVisitor {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkTopVisitor();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["visitor"] = this.visitor ? this.visitor.toJSON() : <any>undefined;
+        data["networkVisitsCount"] = this.networkVisitsCount;
+        return data; 
+    }
+}
+
+export interface INetworkTopVisitor {
+    visitor?: NeatBoutiqueEntity;
+    networkVisitsCount?: number;
+}
+
 export class Network implements INetwork {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    post?: Post;
+    networkTopVisitors?: NetworkTopVisitor[] | undefined;
 
     constructor(data?: INetwork) {
         if (data) {
@@ -5527,8 +6010,15 @@ export class Network implements INetwork {
             this.id = _data["id"];
             this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.postId = _data["postId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
+            if (Array.isArray(_data["networkTopVisitors"])) {
+                this.networkTopVisitors = [] as any;
+                for (let item of _data["networkTopVisitors"])
+                    this.networkTopVisitors!.push(NetworkTopVisitor.fromJS(item));
+            }
         }
     }
 
@@ -5544,8 +6034,15 @@ export class Network implements INetwork {
         data["id"] = this.id;
         data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["postId"] = this.postId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["post"] = this.post ? this.post.toJSON() : <any>undefined;
+        if (Array.isArray(this.networkTopVisitors)) {
+            data["networkTopVisitors"] = [];
+            for (let item of this.networkTopVisitors)
+                data["networkTopVisitors"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -5554,8 +6051,11 @@ export interface INetwork {
     id?: string | undefined;
     createdDateUtc?: Date;
     lastUpdatedDateUtc?: Date;
+    postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    post?: Post;
+    networkTopVisitors?: NetworkTopVisitor[] | undefined;
 }
 
 export class VendorProfile implements IVendorProfile {
@@ -6078,62 +6578,6 @@ export interface IAccountFeedSettingsRequest {
     feedCategoriesToShow?: string[] | undefined;
 }
 
-export class NeatBoutiqueEntity implements INeatBoutiqueEntity {
-    id?: string | undefined;
-    role?: string | undefined;
-    name?: string | undefined;
-    avatarSourceURL?: string | undefined;
-    profilePath?: string | undefined;
-    borderColor?: string | undefined;
-
-    constructor(data?: INeatBoutiqueEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.role = _data["role"];
-            this.name = _data["name"];
-            this.avatarSourceURL = _data["avatarSourceURL"];
-            this.profilePath = _data["profilePath"];
-            this.borderColor = _data["borderColor"];
-        }
-    }
-
-    static fromJS(data: any): NeatBoutiqueEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new NeatBoutiqueEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["role"] = this.role;
-        data["name"] = this.name;
-        data["avatarSourceURL"] = this.avatarSourceURL;
-        data["profilePath"] = this.profilePath;
-        data["borderColor"] = this.borderColor;
-        return data; 
-    }
-}
-
-export interface INeatBoutiqueEntity {
-    id?: string | undefined;
-    role?: string | undefined;
-    name?: string | undefined;
-    avatarSourceURL?: string | undefined;
-    profilePath?: string | undefined;
-    borderColor?: string | undefined;
-}
-
 export class AnswerWithVendorRequest implements IAnswerWithVendorRequest {
     postId?: string | undefined;
     vendor?: NeatBoutiqueEntity;
@@ -6176,390 +6620,6 @@ export interface IAnswerWithVendorRequest {
     postId?: string | undefined;
     vendor?: NeatBoutiqueEntity;
     voteRanking?: string | undefined;
-}
-
-export class Comment implements IComment {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    body?: string | undefined;
-    author?: NeatBoutiqueEntity;
-    likers?: NeatBoutiqueEntity[] | undefined;
-
-    constructor(data?: IComment) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.postId = _data["postId"];
-            this.body = _data["body"];
-            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
-            if (Array.isArray(_data["likers"])) {
-                this.likers = [] as any;
-                for (let item of _data["likers"])
-                    this.likers!.push(NeatBoutiqueEntity.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Comment {
-        data = typeof data === 'object' ? data : {};
-        let result = new Comment();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["postId"] = this.postId;
-        data["body"] = this.body;
-        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
-        if (Array.isArray(this.likers)) {
-            data["likers"] = [];
-            for (let item of this.likers)
-                data["likers"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IComment {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    body?: string | undefined;
-    author?: NeatBoutiqueEntity;
-    likers?: NeatBoutiqueEntity[] | undefined;
-}
-
-export class GeometryLocation implements IGeometryLocation {
-    latitude?: number;
-    longitude?: number;
-
-    constructor(data?: IGeometryLocation) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.latitude = _data["latitude"];
-            this.longitude = _data["longitude"];
-        }
-    }
-
-    static fromJS(data: any): GeometryLocation {
-        data = typeof data === 'object' ? data : {};
-        let result = new GeometryLocation();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["latitude"] = this.latitude;
-        data["longitude"] = this.longitude;
-        return data; 
-    }
-}
-
-export interface IGeometryLocation {
-    latitude?: number;
-    longitude?: number;
-}
-
-export class GooglePlacesEntity implements IGooglePlacesEntity {
-    placeId?: string | undefined;
-    name?: string | undefined;
-    description?: string | undefined;
-
-    constructor(data?: IGooglePlacesEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.placeId = _data["placeId"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-        }
-    }
-
-    static fromJS(data: any): GooglePlacesEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new GooglePlacesEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["placeId"] = this.placeId;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        return data; 
-    }
-}
-
-export interface IGooglePlacesEntity {
-    placeId?: string | undefined;
-    name?: string | undefined;
-    description?: string | undefined;
-}
-
-export class SelectionVote implements ISelectionVote {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    selectionId?: string | undefined;
-    voter?: NeatBoutiqueEntity;
-    voteRanking?: string | undefined;
-
-    constructor(data?: ISelectionVote) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.postId = _data["postId"];
-            this.selectionId = _data["selectionId"];
-            this.voter = _data["voter"] ? NeatBoutiqueEntity.fromJS(_data["voter"]) : <any>undefined;
-            this.voteRanking = _data["voteRanking"];
-        }
-    }
-
-    static fromJS(data: any): SelectionVote {
-        data = typeof data === 'object' ? data : {};
-        let result = new SelectionVote();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["postId"] = this.postId;
-        data["selectionId"] = this.selectionId;
-        data["voter"] = this.voter ? this.voter.toJSON() : <any>undefined;
-        data["voteRanking"] = this.voteRanking;
-        return data; 
-    }
-}
-
-export interface ISelectionVote {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    selectionId?: string | undefined;
-    voter?: NeatBoutiqueEntity;
-    voteRanking?: string | undefined;
-}
-
-export class Selection implements ISelection {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    freeFormAnswer?: string | undefined;
-    vendor?: NeatBoutiqueEntity;
-    geometryLocation?: GeometryLocation;
-    googlePlace?: GooglePlacesEntity;
-    votes?: SelectionVote[] | undefined;
-
-    constructor(data?: ISelection) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.postId = _data["postId"];
-            this.freeFormAnswer = _data["freeFormAnswer"];
-            this.vendor = _data["vendor"] ? NeatBoutiqueEntity.fromJS(_data["vendor"]) : <any>undefined;
-            this.geometryLocation = _data["geometryLocation"] ? GeometryLocation.fromJS(_data["geometryLocation"]) : <any>undefined;
-            this.googlePlace = _data["googlePlace"] ? GooglePlacesEntity.fromJS(_data["googlePlace"]) : <any>undefined;
-            if (Array.isArray(_data["votes"])) {
-                this.votes = [] as any;
-                for (let item of _data["votes"])
-                    this.votes!.push(SelectionVote.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Selection {
-        data = typeof data === 'object' ? data : {};
-        let result = new Selection();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["postId"] = this.postId;
-        data["freeFormAnswer"] = this.freeFormAnswer;
-        data["vendor"] = this.vendor ? this.vendor.toJSON() : <any>undefined;
-        data["geometryLocation"] = this.geometryLocation ? this.geometryLocation.toJSON() : <any>undefined;
-        data["googlePlace"] = this.googlePlace ? this.googlePlace.toJSON() : <any>undefined;
-        if (Array.isArray(this.votes)) {
-            data["votes"] = [];
-            for (let item of this.votes)
-                data["votes"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface ISelection {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postId?: string | undefined;
-    freeFormAnswer?: string | undefined;
-    vendor?: NeatBoutiqueEntity;
-    geometryLocation?: GeometryLocation;
-    googlePlace?: GooglePlacesEntity;
-    votes?: SelectionVote[] | undefined;
-}
-
-export class Post implements IPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postType?: string | undefined;
-    subject?: string | undefined;
-    categoryName?: string | undefined;
-    feedContextId?: string | undefined;
-    startDateUtc?: Date | undefined;
-    endDateUtc?: Date | undefined;
-    author?: NeatBoutiqueEntity;
-    comments?: Comment[] | undefined;
-    selections?: Selection[] | undefined;
-
-    constructor(data?: IPost) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
-            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
-            this.postType = _data["postType"];
-            this.subject = _data["subject"];
-            this.categoryName = _data["categoryName"];
-            this.feedContextId = _data["feedContextId"];
-            this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
-            this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
-            this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
-            if (Array.isArray(_data["comments"])) {
-                this.comments = [] as any;
-                for (let item of _data["comments"])
-                    this.comments!.push(Comment.fromJS(item));
-            }
-            if (Array.isArray(_data["selections"])) {
-                this.selections = [] as any;
-                for (let item of _data["selections"])
-                    this.selections!.push(Selection.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Post {
-        data = typeof data === 'object' ? data : {};
-        let result = new Post();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
-        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
-        data["postType"] = this.postType;
-        data["subject"] = this.subject;
-        data["categoryName"] = this.categoryName;
-        data["feedContextId"] = this.feedContextId;
-        data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
-        data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
-        data["author"] = this.author ? this.author.toJSON() : <any>undefined;
-        if (Array.isArray(this.comments)) {
-            data["comments"] = [];
-            for (let item of this.comments)
-                data["comments"].push(item.toJSON());
-        }
-        if (Array.isArray(this.selections)) {
-            data["selections"] = [];
-            for (let item of this.selections)
-                data["selections"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IPost {
-    id?: string | undefined;
-    createdDateUtc?: Date;
-    lastUpdatedDateUtc?: Date;
-    postType?: string | undefined;
-    subject?: string | undefined;
-    categoryName?: string | undefined;
-    feedContextId?: string | undefined;
-    startDateUtc?: Date | undefined;
-    endDateUtc?: Date | undefined;
-    author?: NeatBoutiqueEntity;
-    comments?: Comment[] | undefined;
-    selections?: Selection[] | undefined;
 }
 
 export class PostResponse implements IPostResponse {
@@ -8351,6 +8411,8 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
     joinedNetworkDateUtc?: Date;
     customerDiscounts?: string[] | undefined;
     role?: string | undefined;
+    geometryLocation?: GeometryLocation;
+    googlePlace?: GooglePlacesEntity;
     vendorProfile?: VendorProfile;
 
     constructor(data?: IVendorNetworkMembership) {
@@ -8380,6 +8442,8 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
                     this.customerDiscounts!.push(item);
             }
             this.role = _data["role"];
+            this.geometryLocation = _data["geometryLocation"] ? GeometryLocation.fromJS(_data["geometryLocation"]) : <any>undefined;
+            this.googlePlace = _data["googlePlace"] ? GooglePlacesEntity.fromJS(_data["googlePlace"]) : <any>undefined;
             this.vendorProfile = _data["vendorProfile"] ? VendorProfile.fromJS(_data["vendorProfile"]) : <any>undefined;
         }
     }
@@ -8409,6 +8473,8 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
                 data["customerDiscounts"].push(item);
         }
         data["role"] = this.role;
+        data["geometryLocation"] = this.geometryLocation ? this.geometryLocation.toJSON() : <any>undefined;
+        data["googlePlace"] = this.googlePlace ? this.googlePlace.toJSON() : <any>undefined;
         data["vendorProfile"] = this.vendorProfile ? this.vendorProfile.toJSON() : <any>undefined;
         return data; 
     }
@@ -8427,6 +8493,8 @@ export interface IVendorNetworkMembership {
     joinedNetworkDateUtc?: Date;
     customerDiscounts?: string[] | undefined;
     role?: string | undefined;
+    geometryLocation?: GeometryLocation;
+    googlePlace?: GooglePlacesEntity;
     vendorProfile?: VendorProfile;
 }
 
@@ -10240,6 +10308,7 @@ export class MongoDbSettings implements IMongoDbSettings {
     networksCollectionName?: string | undefined;
     vendorNetworkMembershipsCollectionName?: string | undefined;
     networkInvitesCollectionName?: string | undefined;
+    vendorVisitsCollectionName?: string | undefined;
 
     constructor(data?: IMongoDbSettings) {
         if (data) {
@@ -10273,6 +10342,7 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.networksCollectionName = _data["networksCollectionName"];
             this.vendorNetworkMembershipsCollectionName = _data["vendorNetworkMembershipsCollectionName"];
             this.networkInvitesCollectionName = _data["networkInvitesCollectionName"];
+            this.vendorVisitsCollectionName = _data["vendorVisitsCollectionName"];
         }
     }
 
@@ -10306,6 +10376,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["networksCollectionName"] = this.networksCollectionName;
         data["vendorNetworkMembershipsCollectionName"] = this.vendorNetworkMembershipsCollectionName;
         data["networkInvitesCollectionName"] = this.networkInvitesCollectionName;
+        data["vendorVisitsCollectionName"] = this.vendorVisitsCollectionName;
         return data; 
     }
 }
@@ -10332,6 +10403,7 @@ export interface IMongoDbSettings {
     networksCollectionName?: string | undefined;
     vendorNetworkMembershipsCollectionName?: string | undefined;
     networkInvitesCollectionName?: string | undefined;
+    vendorVisitsCollectionName?: string | undefined;
 }
 
 export class StripeSettings implements IStripeSettings {

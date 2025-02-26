@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {  } from 'googlemaps';
 import { PostDisplay } from 'src/app/models/post-display';
 import { RouteDisplay } from 'src/app/models/route-display';
 import { CategoryService } from 'src/app/services/category.service';
+import {  } from 'googlemaps';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { Loader } from "@googlemaps/js-api-loader"
 import { environment } from 'src/environments/environment';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { VendorNetworkMembershipTypes } from 'src/app/constants/vendor-network-membership-types';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -11,6 +11,18 @@ import { EntityDisplay } from 'src/app/models/entity-display';
 import { debounceTime } from 'rxjs/operators';
 import { THEME } from 'src/theme/theme-constants';
 import { environment } from 'src/environments/environment';
+import { TopVisitorDisplay } from 'src/app/models/top-visitor-display';
+import { UtilService } from 'src/app/services/util.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import {  } from 'googlemaps';
+import { GoogleMapsService } from 'src/app/services/google-maps.service';
+import { Loader } from "@googlemaps/js-api-loader"
+import { resolve } from 'dns';
+export const NetworkTabTypes = {
+  MAP: "Map",
+  NETWORK_POST: "Network Post",
+  TOP_VISITORS: "Top Visitors"
+}
 
 @Component({
   selector: 'app-network-community',
@@ -18,12 +30,20 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./network-community.page.scss'],
 })
 export class NetworkCommunityPage implements OnInit {
+  
+
+  
+  @ViewChild('map') mapElement: ElementRef;
+  currentNetworkTab = NetworkTabTypes.MAP;
+  networkTabTypes = NetworkTabTypes;
   public defaultImg = THEME.avatar.defaultImage;
   currentUser: CurrentUserDisplay;
-  isVendorOwner: boolean = false;
-  currentNetwork: Network;
+  network: Network;
+  vendorNetworkMembershipTypes = VendorNetworkMembershipTypes;
   currentVendorNetworkMembershipDisplays: VendorNetworkMembershipDisplay[];
+  currentVendorNetworkMembershipDisplay: VendorNetworkMembershipDisplay;
   addMemberForm: FormGroup;
+  loyaltyForm: FormGroup;
 
   private _searchVendor: { minChars: number, lastSearchText: string, results: VendorDisplay[] };
   vendorProfileSearchResults: VendorDisplay[];
@@ -32,7 +52,17 @@ export class NetworkCommunityPage implements OnInit {
   isVendorInvited: boolean = false;
   private _inviteId: string;
 
-  constructor(private _networkService: NetworkService, private _customersService: AccountsService, private _fb: FormBuilder, private _router: Router, private _activatedRoute: ActivatedRoute) {
+  public colors: string[] = THEME.colors.list;
+  networkTopVisitors: TopVisitorDisplay[];
+
+  googleMap: google.maps.Map;
+  allMapMarkersMap: Map<string, google.maps.Marker> = new Map<string, google.maps.Marker>();
+  orangeLocationIconUrl = "../../../assets/icons/loci-location-orange.svg";
+  yellowLocationIconUrl = "../../../assets/icons/loci-location-red.svg";
+
+  constructor(private _networkService: NetworkService, private _customersService: AccountsService, 
+    private _fb: FormBuilder, private _router: Router, private _activatedRoute: ActivatedRoute,
+    private _util: UtilService, private _authService: AuthService) {
     const routeParams = this._activatedRoute.snapshot.paramMap;    
     const inviteId = routeParams.get('inviteId');    
     if(inviteId) {
@@ -47,11 +77,51 @@ export class NetworkCommunityPage implements OnInit {
     
     this.addMemberForm = this._fb.group({
       businessName: ['', Validators.required],
-      // ownerName: ['', Validators.required],
-      // phone: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]]
     });
+
+    this.loyaltyForm = this._fb.group({
+      vendorLoyaltyDiscount: ['', Validators.required],
+      vendorLoyaltyDiscountVisitThreshold: [10, Validators.required],
+      networkLoyaltyDiscount: ['', Validators.required],
+      networkLoyaltyDiscountVisitThreshold: [10, Validators.required],
+    });
+
+
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
+  }
+
+  ionViewWillEnter() {
+    // var postPromise = new Promise<void>((resolve, reject) => {
+    //   this._postsService.getRouteById(this.lociCafeCrawlId).then((route) => {
+    //     if(route) {
+    //       this.route = route;
+    //       this.routeQuestions = this.route.routeQuestions.map(x => new PostDisplay(x));
+    //       this.showLoadMore = this.routeQuestions?.length === this.routeQuestionsPerPage;
+    //       this.routeTopUsers = this._util.normalizedTopUsersForChartMinMax(this.route.routeTopUsers.map(x => new TopUserDisplay(x)));
+    //       this.routeTopUsers.forEach((user: TopUserDisplay, index: number) => {
+    //         user.barColor = this.colors[index % (this.colors?.length)];
+    //         user.barWidth = user.barChartValue + '%';
+    //       });
+    //       resolve();
+    //     }
+    //   });
+    // });
+
+    var myVisitsPromise = new Promise<void>((resolve, reject) => {
+      this._authService.isAuthenticated().then((isAuthenticated) => {
+        if(isAuthenticated) {
+          // this.currentUser = currentUser;
+          // this._postsService.getMyVisitsOnRouteByRouteById(this.lociCafeCrawlId).then((myVisits: RouteSelectionVisit[]) => {
+          //   this.myVisits = myVisits;
+          //   resolve();
+          // });
+        }
+      });
+     
+    });
+    
+   
+
   }
 
   ngOnInit() {
@@ -71,26 +141,55 @@ export class NetworkCommunityPage implements OnInit {
    
     var network = (this._router.getCurrentNavigation().extras.state) as Network;  
     if(network) {
-      this.currentNetwork = network;
+      this.network = network;
       this._networkService.setCurrentNetwork(network);
     }
-    this._networkService.currentNetworkSubject.subscribe(network => {
-      if (network) {
-        this.currentNetwork = network;
-        this._networkService.currentVendorNetworkMembershipsSubject.subscribe(memberships => {
-          if(memberships) { 
-            this.currentVendorNetworkMembershipDisplays = 
-            [ 
-              ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
-              ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
-              ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
-            ];
-            this.isVendorOwner = this.currentVendorNetworkMembershipDisplays.some(membership => membership.vendorId === this.currentUser.vendor.id && membership.role === VendorNetworkMembershipTypes.OWNER);
-          }
-        });
-      }
+
+    var networtkPromise = new Promise<void>((resolve, reject) => {
+      this._networkService.currentNetworkSubject.subscribe(network => {
+        if (network) {
+          this.network = network;
+          this._networkService.currentVendorNetworkMembershipsSubject.subscribe(memberships => {
+            if(memberships) { 
+              this.currentVendorNetworkMembershipDisplays = 
+              [ 
+                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
+                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
+                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
+              ];
+              this.currentVendorNetworkMembershipDisplay = this.currentVendorNetworkMembershipDisplays.find(membership => membership.vendorId === this.currentUser.vendor?.id);
+              resolve();
+            }
+          });
+        }
+      });
     });
+    
+
+    var mapPromise = new Promise<void>((resolve, reject) => {
+      this.initMap();
+      resolve();
+    });
+
+    Promise.all([networtkPromise, mapPromise]).then(() => {
+      this.loadNetworkIntoMap();
+    });
+
+    // Promise.all([networtkPromise, mapPromise, myVisitsPromise]).then(() => {
+    //   this.updateNetworkWithMyVisits();
+    // });
     // }
+  }
+
+  goToVendor(vendor: VendorDisplay) {
+    this._router.navigateByUrl('/vendor-profile/' + vendor.profilePath);
+  }
+  openExpansion(membership: VendorNetworkMembershipDisplay) {
+    membership.vendorDisplay.expandNetworkCard = true;
+  }
+
+  closeExpansion(membership: VendorNetworkMembershipDisplay) {
+    membership.vendorDisplay.expandNetworkCard = false;
   }
 
   toggleExpansion(membership: VendorNetworkMembershipDisplay) {
@@ -106,7 +205,7 @@ export class NetworkCommunityPage implements OnInit {
   }
 
   async createInviteLink() {
-    var membership = await this._networkService.createInviteLink(this.currentNetwork.id, this.selectedVendorToAdd.id);
+    var membership = await this._networkService.createInviteLink(this.network.id, this.selectedVendorToAdd.id);
     if(membership.role === VendorNetworkMembershipTypes.MEMBER) { 
       this.inviteLink = "This business is already a member of this network";
     } else {
@@ -149,6 +248,138 @@ export class NetworkCommunityPage implements OnInit {
   acceptInvite() {
     this._networkService.acceptInvite(this._inviteId);
   }
+
+
+
+
+  async initMap(){
+    const loader = new Loader({
+      apiKey: environment.googleMapsAPIKey,
+      version: "weekly"
+    });
+    
+    loader.load().then(async () => {
+      const mapProperties = {
+        center: new google.maps.LatLng(30.421590, -87.216904),
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapId: "75993fb34c2cdcfc",
+        disableDefaultUI: true,
+        styles: this.mapStyles
+      };
+      this.googleMap = new google.maps.Map(this.mapElement.nativeElement, mapProperties);
+    });
+  }
+
+  loadNetworkIntoMap() {
+    var geocoder = new google.maps.Geocoder();
+    let bounds = new google.maps.LatLngBounds();
+
+    this.currentVendorNetworkMembershipDisplays.forEach((membership: VendorNetworkMembershipDisplay) => {
+      var markerPosition = null;
+      if(membership.geometryLocation?.latitude && membership.geometryLocation?.longitude) {
+        markerPosition = new google.maps.LatLng(membership.geometryLocation.latitude, membership.geometryLocation.longitude);
+        bounds.extend(markerPosition);
+        var marker = this.addMarker(markerPosition, membership);
+        this.allMapMarkersMap.set(membership.id, marker);
+      }
+    });
+
+    this.googleMap.fitBounds(bounds);
+  }
+
+  updateNetworkWithMyVisits() {
+
+    // this.myVisits.forEach((visit: RouteSelectionVisit) => {
+    //   var marker = this.allMapMarkersMap.get(visit.selectionId);
+    //   marker.setIcon({
+    //     url: "../../../assets/icons/loci-location-orange.svg",
+    //     scaledSize: new google.maps.Size(32, 32)
+    //   });
+    // });
+  }
+
+  addMarker(markerPosition: google.maps.LatLng, membership: VendorNetworkMembership) {
+    
+    var locationUrl = this.yellowLocationIconUrl;
+    //if()
+
+    const marker = new google.maps.Marker({
+      position: markerPosition,
+      map: this.googleMap,
+      title: 'Hello World!',
+      // Custom Icon
+      icon: {
+        url: "../../../assets/icons/loci-location-yellow.svg",
+        scaledSize: new google.maps.Size(32, 32), // Size of the icon,#013e43
+
+      },
+      
+      // Animation
+      animation: google.maps.Animation.DROP
+    });
+
+    // Info Window for Marker
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<h3>${membership.vendorProfile.name}</h3><p>Some more information about this place.</p>`
+    });
+
+    marker.addListener('click', () => {
+      infoWindow.open(this.googleMap, marker);
+    });
+
+    return marker;
+  }
+
+  
+  mapStyles: google.maps.MapTypeStyle[] = [
+    {
+      featureType: "poi.attraction",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi",
+      elementType: "labels",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.business",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.government",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.medical",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.park",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.place_of_worship",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.school",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "poi.sports_complex",
+      stylers: [{ visibility: "off" }]
+    },
+    // ... any other POI types you want to include
+  ];
+
+
+
+
+
+
+
 
 }
 

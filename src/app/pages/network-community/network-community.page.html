@@ -1,9 +1,123 @@
+
 <ion-content>
+  <ion-row>
+    <ion-col offset-lg="3" offset-xl="2.5" size-xs="12" size-lg="9" size-xl="7">
+      <ion-row>
+        <ion-col>
+          <h1 class="hide-md-and-above ion-text-center">{{ network?.name }}</h1>
+          <h1 class="hide-sm-and-below">{{ network?.name }}</h1>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <h3 class="ion-text-center hide-md-and-above description">{{ network?.description }}</h3>
+          <h3 class="hide-sm-and-below description">{{ network?.description }}</h3>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row class="network-tab-selector">
+        <ion-col>
+          <ion-col size="auto">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.MAP" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.MAP}" class="clickable" src="../../../assets/icons/loci-location.svg"></ion-icon>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.NETWORK_POST" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.NETWORK_POST}" class="clickable" src="../../../assets/icons/leaderboard.svg"></ion-icon>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.TOP_VISITORS" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.TOP_VISITORS}" class="clickable" src="../../../assets/icons/top-user.svg"></ion-icon>
+          </ion-col>
+        </ion-col>
+        <ion-col class="hide-sm-and-below" offset="2.5">
+          <ion-col class="nb-vertical-center">
+            <ion-icon src="../../../assets/icons/loci-location-orange.svg"></ion-icon><span class="icons-key">Visited location</span> <ion-icon src="../../../assets/icons/loci-location-yellow.svg"> </ion-icon><span class="icons-key">Not yet visited</span>
+          </ion-col>
+        </ion-col>
+        
+      </ion-row> -->
+      <ion-row [hidden]="currentNetworkTab !== networkTabTypes.MAP">
+        <ion-col>
+          <ion-row class="post-wrapper">
+            <ion-col class="map-wrapper-col">
+              <div #map class="map"></div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="hide-md-and-above">
+              <ion-col  offset="2.5">
+                <ion-col class="nb-vertical-center">
+                  <ion-icon src="../../../assets/icons/loci-location-orange.svg"></ion-icon><span class="icons-key">Visited location</span> <ion-icon src="../../../assets/icons/loci-location-yellow.svg"> </ion-icon><span class="icons-key">Not yet visited</span>
+                </ion-col>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row *ngIf="currentNetworkTab === networkTabTypes.NETWORK_POST">
+        <ion-col>
+          <app-post-item [post]="network?.post"></app-post-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row  *ngIf="currentNetworkTab === networkTabTypes.TOP_VISITORS">
+        <ion-col *ngIf="network?.networkTopVisitors">
+          
+
+          <ion-row class="post-wrapper">
+            <ion-col class="post-wrapper-col">
+              <ion-row class="post-title-row">
+                <ion-col class=" ion-text-left">
+                  <p>View the Network Leaders!</p>
+                </ion-col>
+              </ion-row>
+              <div class="answers expanded">
+                <ion-row *ngFor="let topUser of networkTopVisitors; index as i" class="answer-item-row">
+                  <ion-col>
+                      <ion-row class="answer-item expanded">
+                        <ion-col size-xs="1.5" size-md="1">
+                        </ion-col>
+                        <ion-col size-xs="2" size-md="1">
+                          <div class="avatar-container">
+                            <app-nb-avatar class="avatar"
+                              [borderColor]="topUser.visitor.borderColor"
+                              [altStyleClass]="'post-answer center-username truncate-username '"
+                              [imageSrc]="topUser.visitor.avatarSourceURL"
+                              [colorAlt]="colors[i%(colors?.length)]">
+                            </app-nb-avatar>
+                          </div>
+                        </ion-col> 
+                        <ion-col class="bar-wrapper ion-text-left" size-xs="8" size-md="8.5">
+                          <div class="visitor-name">{{ topUser.visitor.name }}
+                            <span class="hide-md-and-above visits-text"> - visited {{ topUser.networkVisits }} / {{ network.post.selections.length }}</span>
+                            <span class="hide-sm-and-below visits-text"> - visited {{ topUser.networkVisits }} out of {{ network.post.selections.length }}</span>
+                          </div>
+                          <div class="bar" [ngStyle]="{ 'width': topUser.barWidth, 'background': topUser.barColor }"></div>
+                        </ion-col>
+                        <ion-col size-xs=".5" size-md=".5">
+                         
+                        </ion-col>
+                      </ion-row>
+                  </ion-col>
+                </ion-row>
+          
+              </div>
+            </ion-col>
+          </ion-row>
+          
+        </ion-col>
+      </ion-row> -->
+    </ion-col>
+  </ion-row>
+
+
+
+
+
+
+
+
+
   <ion-row>
     <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
       <!-- Conditional Form Display -->
       <div *ngIf="isVendorInvited">
-        <h2>{{ currentNetwork?.name }}</h2>
+        <!-- <h2>{{ network?.name }}</h2> -->
         <ion-card>
           <h3>You're invited!</h3>
           <ion-row>
@@ -26,8 +140,78 @@
         </ion-card>
       </div>
 
-      <div *ngIf="isVendorOwner">
-        <h2>{{ currentNetwork.name }}</h2>
+      <div *ngIf="!!currentVendorNetworkMembershipDisplay">
+        <ion-card>
+          <h3>My Membership Details</h3>
+          
+          <ion-card-content>
+            <ion-row>
+              <!-- Logo Image (3 columns) -->
+              <ion-col size="2.5">
+                <ion-img
+                  class="logo-image"
+                  [src]="currentVendorNetworkMembershipDisplay.vendorDisplay?.avatarSourceURL || defaultImg">
+                </ion-img>
+              </ion-col>
+      
+              <!-- Loyalty Discount Section (9 columns) -->
+               
+              <ion-col offset=".5" size="9">
+                <h2>Loyalty Discounts</h2>
+                <form [formGroup]="loyaltyForm">
+                <!-- Visits to this business (1 row) -->
+                  <h3>My Business Loyalty Discount</h3>
+                  <h4>After how many visits to your business will you offer a discount? And what is the discount?</h4>
+                  <ion-row class="loyalty-section">
+                    
+                    <ion-col size="2">
+                      <app-input-field
+                        [inputType]="'number'"
+                        [formGroupInstance]="loyaltyForm"
+                        inputName="vendorLoyaltyDiscountVisitThreshold"
+                        label="Visits">
+                      </app-input-field>
+                    </ion-col>
+                    <ion-col size="10">
+                      <app-input-field
+                        [formGroupInstance]="loyaltyForm"
+                        inputName="vendorLoyaltyDiscount"
+                        label="Discount Offer">
+                      </app-input-field>
+                    </ion-col>
+                  </ion-row>
+        
+                  <!-- Visits to other businesses in the network (1 row) -->
+                  <h3>My Network Loyalty Discount</h3>
+                  <h4>After how many visits to businesses in the network will you offer a discount? And what is the discount?</h4>
+                  <ion-row class="loyalty-section">
+                    
+                    <ion-col size="2">
+                      <app-input-field
+                        [inputType]="'number'"
+                        [formGroupInstance]="loyaltyForm"
+                        inputName="vendorLoyaltyDiscountVisitThreshold"
+                        label="Visits">
+                      </app-input-field>
+                    </ion-col>
+                    <ion-col size="10">
+                      <app-input-field
+                        [formGroupInstance]="loyaltyForm"
+                        inputName="vendorLoyaltyDiscount"
+                        label="Discount Offer">
+                      </app-input-field>
+                    </ion-col>
+                  </ion-row>
+                </form>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      
+
+      <div *ngIf="currentVendorNetworkMembershipDisplay?.role === vendorNetworkMembershipTypes.OWNER">
+        <!-- <h2>{{ network.name }}</h2> -->
         <ion-card>
           <h3>Add New Member</h3>
           <form [formGroup]="addMemberForm">
@@ -48,13 +232,21 @@
         </ion-card>
       </div>
 
+
       <!-- Existing Vendor List -->
       <div class="vendor-grid">
         <ion-card
           *ngFor="let membership of currentVendorNetworkMembershipDisplays"
           (click)="toggleExpansion(membership)"
           class="vendor-info-card"
-          [ngClass]="{ 'expanded': membership.vendorDisplay.expandNetworkCard }">
+          [ngClass]="{ 'expanded': membership.vendorDisplay.expandNetworkCard, 'clickable': !membership.vendorDisplay.expandNetworkCard }"
+          style="position: relative;"> <!-- Ensures child elements position correctly -->
+
+          <!-- <ion-icon *ngIf="membership.vendorDisplay.expandNetworkCard" class="close-icon clickable" 
+            (click)="closeExpansion(membership)" 
+            name="close-outline">
+          </ion-icon> -->
+
           <ion-card-content>
             <ion-row>
               <ion-col offset="3" size="6">
@@ -72,8 +264,17 @@
                 <p class="vendor-description">{{ membership.vendorDisplay.description }}</p>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col>
+                <p class="view-business-page clickable" (click)="goToVendor(membership.vendorDisplay)">
+                  <ion-icon class="form-icon" slot="end" [name]="'eye'"></ion-icon>
+                  View Business Page
+                </p>
+              </ion-col>
+            </ion-row>
           </app-expandable>
         </ion-card>
+
       </div>
     </ion-col>
   </ion-row>
