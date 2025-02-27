@@ -44,12 +44,14 @@ export class NetworkCommunityPage implements OnInit {
   currentVendorNetworkMembershipDisplay: VendorNetworkMembershipDisplay;
   addMemberForm: FormGroup;
   loyaltyForm: FormGroup;
+  inviteSignupForm: FormGroup;
 
   private _searchVendor: { minChars: number, lastSearchText: string, results: VendorDisplay[] };
   vendorProfileSearchResults: VendorDisplay[];
   selectedVendorToAdd: VendorDisplay;
   inviteLink: string;
   isVendorInvited: boolean = false;
+  isInvitedVendorAlreadyAMember: boolean = false;
   private _inviteId: string;
 
   public colors: string[] = THEME.colors.list;
@@ -80,6 +82,13 @@ export class NetworkCommunityPage implements OnInit {
     });
 
     this.loyaltyForm = this._fb.group({
+      vendorLoyaltyDiscount: ['', Validators.required],
+      vendorLoyaltyDiscountVisitThreshold: [10, Validators.required],
+      networkLoyaltyDiscount: ['', Validators.required],
+      networkLoyaltyDiscountVisitThreshold: [10, Validators.required],
+    });
+
+    this.inviteSignupForm = this._fb.group({
       vendorLoyaltyDiscount: ['', Validators.required],
       vendorLoyaltyDiscountVisitThreshold: [10, Validators.required],
       networkLoyaltyDiscount: ['', Validators.required],
@@ -151,13 +160,14 @@ export class NetworkCommunityPage implements OnInit {
           this.network = network;
           this._networkService.currentVendorNetworkMembershipsSubject.subscribe(memberships => {
             if(memberships) { 
+              var currentMembership = memberships.find(membership => membership.vendorId === this.currentUser.vendor?.id);
+              this.currentVendorNetworkMembershipDisplay = currentMembership ? new VendorNetworkMembershipDisplay(currentMembership) : null;
               this.currentVendorNetworkMembershipDisplays = 
               [ 
-                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
-                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
-                ...memberships.map(membership => new VendorNetworkMembershipDisplay(membership)),
+                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership)),
+                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership)),
+                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership))
               ];
-              this.currentVendorNetworkMembershipDisplay = this.currentVendorNetworkMembershipDisplays.find(membership => membership.vendorId === this.currentUser.vendor?.id);
               resolve();
             }
           });
@@ -198,6 +208,7 @@ export class NetworkCommunityPage implements OnInit {
 
   selectVendor(vendor: VendorDisplay) {
     this.selectedVendorToAdd = vendor;
+    this.isInvitedVendorAlreadyAMember = this.currentVendorNetworkMembershipDisplays.some(m => m.vendorId === vendor.id && m.role === VendorNetworkMembershipTypes.MEMBER);
   }
 
   cancelSelectedVendor() {
@@ -246,7 +257,12 @@ export class NetworkCommunityPage implements OnInit {
     this._router.navigate(['/vendor-settings']);
   }
   acceptInvite() {
-    this._networkService.acceptInvite(this._inviteId);
+    if(!this.inviteSignupForm.valid) {
+      this.inviteSignupForm.markAllAsTouched();
+    } else {
+      this._networkService.acceptInvite(this._inviteId);
+    }
+    
   }
 
 
