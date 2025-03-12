@@ -1,18 +1,17 @@
 <ion-content>
   <ion-grid fixed>
     <ion-row>
-      <ion-col size-xs="12" 
-        size-md="8" offset-md="2"
-        size-lg="6" offset-lg="3">
+      <ion-col offset-lg="3" offset-xl="2.5" size-xs="12" size-lg="9" size-xl="7">
         
-        <ion-row>
-          <ion-col>
-            <h1>Create a Community</h1>
-            <p>Create a community to connect with other local businesses and share resources. Once you create a community, you will be able to invite businesses to the community.</p>
-          </ion-col>
-        </ion-row>
+        
 
-        <form [formGroup]="createCommunityForm" (ngSubmit)="onSubmit()">
+        <form *ngIf="currentTab === createCommunityTabTypes.STEP_ONE" [formGroup]="createCommunityForm" (ngSubmit)="nextStep()">
+          <ion-row>
+            <ion-col>
+              <h1>Create a Community</h1>
+              <p>Create a community to connect with other local businesses and share resources. Once you create a community, you will be able to invite businesses to the community.</p>
+            </ion-col>
+          </ion-row>
           <ion-row>
             <ion-col>
               <app-input-field
@@ -40,15 +39,82 @@
           <ion-row>
             <ion-col class="ion-text-center">
               <app-jacobi-button 
-              (click)="onSubmit()"
+              (click)="nextStep()"
                 [buttonType]="'green-primary'"
                 [disabled]="createCommunityForm.invalid"
+                type="submit">
+                Next Step
+              </app-jacobi-button>
+            </ion-col>
+          </ion-row>
+        </form>
+
+        <form *ngIf="currentTab === createCommunityTabTypes.STEP_TWO" [formGroup]="discountsForm">
+          <h1>Create a Community</h1>
+          <p>As the first business in the community, you'll need to set up your loyalty discounts.</p>
+        
+          <!-- Business Loyalty Discounts -->
+          <h4>My Network Discounts</h4>
+          <p>Set one or more discounts. These discounts are valid only for other members of this network.</p>
+        
+          <div formArrayName="discountsForNetworkMembers">
+            <div *ngFor="let control of discountsForNetworkMembers.controls; let i = index" [formGroupName]="i">
+              <ion-row class="loyalty-section">
+                <!-- <ion-col size="1.5">
+                  <app-input-field
+                    [inputType]="'number'"
+                    [formGroupInstance]="discount"
+                    inputName="visitsThreshold"
+                    label="Visits"
+                    [invalidInputWarnings]="[
+                      { warning: 'Visits must be a positive number.', errorType: 'min' }
+                    ]">
+                  </app-input-field>
+                </ion-col>
+                 -->
+                <ion-col>
+                  <app-input-field
+                    [formGroupInstance]="control"
+                    inputName="description"
+                    label="Discount Value (e.g. 10% off total or one free ride)">
+                  </app-input-field>
+                </ion-col>
+                <ion-col *ngIf="discountsForNetworkMembers.length > 1" class="delete-icon-col" size=".75">
+                  <ion-icon name="trash" class="clickable delete-icon" (click)="removeDiscountsForNetworkMembers(i)"></ion-icon>
+                </ion-col>
+                <ion-col class="add-more-button-col" size=".75">
+                  <ion-icon name="add-circle-outline" class="clickable add-more-button" (click)="AddDiscountsForNetworkMembers()"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+        
+        
+        
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <app-jacobi-button 
+                (click)="previousStep()"
+                [buttonType]="'white-primary-wide'"
+                type="submit">
+                Back
+              </app-jacobi-button>
+            </ion-col>
+
+            <ion-col class="ion-text-center">
+              <app-jacobi-button 
+                (click)="createCommunity()"
+                [buttonType]="'green-primary'"
+                [disabled]="discountsForm.invalid"
                 type="submit">
                 Create Community
               </app-jacobi-button>
             </ion-col>
           </ion-row>
         </form>
+        
+        
+        
 
       </ion-col>
     </ion-row>

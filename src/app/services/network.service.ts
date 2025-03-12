@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse } from './neat-boutique-api.service';
+import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, CustomerDiscount, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, UpdateVendorMembershipinNetworkRequest, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse } from './neat-boutique-api.service';
 import { EntityDisplay } from '../models/entity-display';
 import { VendorDisplay } from '../models/vendor-display';
 
@@ -24,12 +24,17 @@ export class NetworkService {
 
   
 
-  createNetwork(name: string, description: string, vendorId: string) {
+  createNetwork(name: string, description: string, discountsForNetworkMembers: CustomerDiscount[], vendorId: string) {
     var promise = new Promise((resolve, reject) => {
       var request = new CreateNetworkRequest();
       request.name = name;
       request.description = description;
       request.vendorId = vendorId;
+      
+      
+      request.discountsForNetworkMembers = discountsForNetworkMembers.map(x => 
+          x instanceof CustomerDiscount ? x : new CustomerDiscount(x)
+      );
       this._neatBoutiqueApiService
         .createNetwork(request).subscribe((response: NetworkResponse) => {
           if (response.isSuccess) {
@@ -41,9 +46,24 @@ export class NetworkService {
     return promise;
   }
 
-  acceptInvite(vendorNetworkMembershipId: string) {
-    var request = new NetworkRequest();
-    request.vendorNetworkMembershipId = vendorNetworkMembershipId;
+  updateNetworkMembership(vendorNetworkMembershipId: string, discountsForNetworkMembers: CustomerDiscount[]) {
+    var request = new UpdateVendorMembershipinNetworkRequest();
+    request.membershipId = vendorNetworkMembershipId;
+    request.discountsForNetworkMembers = discountsForNetworkMembers;
+    this._neatBoutiqueApiService.updateVendorMembershipInNetwork(request).subscribe((response: NetworkWithVendorsResponse) => {
+      if (response.isSuccess) {
+        this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          this._currentVendorNetworkMemberships = response.memberships;
+          this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
+      }
+    });
+  }
+
+  acceptInvite(vendorNetworkMembershipId: string, discountsForNetworkMembers: CustomerDiscount[]) {
+    var request = new UpdateVendorMembershipinNetworkRequest();
+    request.membershipId = vendorNetworkMembershipId;
+    request.discountsForNetworkMembers = discountsForNetworkMembers;
     this._neatBoutiqueApiService.acceptNetworkInvite(request).subscribe((response: NetworkWithVendorsResponse) => {
       if (response.isSuccess) {
         this._currentNetwork = response.network;
@@ -57,9 +77,16 @@ export class NetworkService {
   declineInvite(vendorNetworkMembershipId: string) {
     var request = new NetworkRequest();
     request.vendorNetworkMembershipId = vendorNetworkMembershipId;
-    this._neatBoutiqueApiService.declineNetworkInvite(request).subscribe((response: Response) => {
-      
+    var promise = new Promise<void>((resolve, reject) => {
+      this._neatBoutiqueApiService.declineNetworkInvite(request).subscribe((response: Response) => {
+        if(response.isSuccess) {
+          resolve();
+        } else {
+          reject('Failed to decline invite');
+        }
+      });
     });
+    return promise;
   }
 
   createInviteLink(networkId: string, vendorId: string) {
@@ -80,16 +107,19 @@ export class NetworkService {
   loadNetworkByVendorNetworkMembershipId(vendorNetworkMembershipId: string) {
     var request = new NetworkRequest();
     request.vendorNetworkMembershipId = vendorNetworkMembershipId;
-    var promise = new Promise<void>((resolve, reject) => {
-      this._neatBoutiqueApiService.getNetworkByMembershipId(request).subscribe((response: NetworkWithVendorsResponse) => {
+    var promise = new Promise<VendorNetworkMembership>((resolve, reject) => {
+      this._neatBoutiqueApiService.getNetworkByMembershipIdWithInviteLink(request).subscribe((response: NetworkWithVendorsResponse) => {
         if (response.isSuccess) {
           this._currentNetwork = response.network;
           this.currentNetworkSubject.next(this._currentNetwork);
           this._currentVendorNetworkMemberships = response.memberships;
           this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
-          resolve();
+
+          var currentVendorNetworkMembership = this._currentVendorNetworkMemberships.find(m => m.id === vendorNetworkMembershipId);
+          resolve(currentVendorNetworkMembership);
         } else {
-          reject('Failed to load network');
+           // Redirect to vendor settings page
+          reject();
         }
       });
     });

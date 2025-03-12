@@ -56,10 +56,19 @@ ion-card {
 }
 
 /* Logo Image */
+.logo-image-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1; // forces a square
+  border-radius: 1rem;
+  overflow: hidden;
+  display: block;
+}
+
 .logo-image {
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  display: block; // important if ion-img inserts an inline <img>
 }
 
 /* Expandable Section */
@@ -74,11 +83,24 @@ app-expandable {
   font-weight: bold;
   margin-top: 0.5rem;
 }
+.discounts-header {
+  font-size: 1.5rem;
+  
+}
 
 .vendor-description {
   font-size: 0.9rem;
   color: var(--nb-light-grey);
   margin-top: 0.25rem;
+  display: -webkit-box;
+  display: box; // fallback
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3; // ✅ standard version
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.5rem; // optional: safeguard fallback
 }
 
 /* 🔹 Responsive Adjustments */
@@ -129,6 +151,13 @@ app-expandable {
 .view-business-page {
   color: var(--nb-deep-emerald) !important;
   font-weight: bold;
+  font-size: .8rem;
+}
+
+.member-discounts {
+  color: var(--nb-deep-emerald) !important;
+  font-weight: bold;
+  font-size: .8rem;
 }
 
 
@@ -136,6 +165,15 @@ app-expandable {
     color: var(--light-grey);
     font-size: 1.4rem;
     font-family: "HelveticaNeue";
+}
+.discount-list {
+  list-style-type: disc; /* Use bullet points */
+  padding-left: 20px; /* Adjust as needed for indentation */
+  margin: 0; /* Remove default margin */
+}
+
+.discount-list li {
+  margin-bottom: 4px; /* Minimal spacing between items */
 }
 
 .map {
@@ -334,7 +372,10 @@ app-expandable {
         
     }
 }
-
+.view-business-page {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
 // ======================================================= alt-styles
 
 
@@ -438,4 +479,41 @@ app-expandable {
     color: var(--nb-primary);
     font-weight: bold;
  } 
+}
+
+h4 {
+  color: var(--nb-dark-grey);
+}
+
+.delete-icon {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-light-grey) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+}
+ion-icon {
+  font-size: inherit;
+}
+
+.delete-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Ensures it's centered horizontally too */
+}
+
+.add-more-button-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-more-button {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-primary) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+  justify-content: center;
 }

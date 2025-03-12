@@ -2,9 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { VendorNetworkMembershipTypes } from 'src/app/constants/vendor-network-membership-types';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { Network, VendorNetworkMembership, VendorProfile } from 'src/app/services/neat-boutique-api.service';
+import { CustomerDiscount, Network, VendorNetworkMembership, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { NetworkService } from 'src/app/services/network.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EntityDisplay } from 'src/app/models/entity-display';
@@ -43,15 +43,16 @@ export class NetworkCommunityPage implements OnInit {
   currentVendorNetworkMembershipDisplays: VendorNetworkMembershipDisplay[];
   currentVendorNetworkMembershipDisplay: VendorNetworkMembershipDisplay;
   addMemberForm: FormGroup;
-  loyaltyForm: FormGroup;
-  inviteSignupForm: FormGroup;
+  discountsForm: FormGroup;
 
   private _searchVendor: { minChars: number, lastSearchText: string, results: VendorDisplay[] };
   vendorProfileSearchResults: VendorDisplay[];
   selectedVendorToAdd: VendorDisplay;
   inviteLink: string;
   isVendorInvited: boolean = false;
-  isInvitedVendorAlreadyAMember: boolean = false;
+  isInvitedVendorMember: boolean = false;
+  isCurrentVendorOwner: boolean = false;
+  isCurrentVendorMember: boolean = false;
   private _inviteId: string;
 
   public colors: string[] = THEME.colors.list;
@@ -68,11 +69,13 @@ export class NetworkCommunityPage implements OnInit {
     const routeParams = this._activatedRoute.snapshot.paramMap;    
     const inviteId = routeParams.get('inviteId');    
     if(inviteId) {
-      this._networkService.loadNetworkByVendorNetworkMembershipId(inviteId).then(() =>{
-        this.isVendorInvited = true;
-        this._inviteId = inviteId;
+      this._networkService.loadNetworkByVendorNetworkMembershipId(inviteId).then((membership: VendorNetworkMembership) =>{
+        if(membership.role === VendorNetworkMembershipTypes.INVITED) {
+          this.isVendorInvited = true;
+          this._inviteId = inviteId;
+        } 
       }).catch(() => {
-        this._router.navigate(['/vendor-settings']);
+        this._router.navigateByUrl('/vendor-settings', { state: this.currentUser.vendor });
       });
       
     }
@@ -81,23 +84,12 @@ export class NetworkCommunityPage implements OnInit {
       businessName: ['', Validators.required],
     });
 
-    this.loyaltyForm = this._fb.group({
-      vendorLoyaltyDiscount: ['', Validators.required],
-      vendorLoyaltyDiscountVisitThreshold: [10, Validators.required],
-      networkLoyaltyDiscount: ['', Validators.required],
-      networkLoyaltyDiscountVisitThreshold: [10, Validators.required],
-    });
-
-    this.inviteSignupForm = this._fb.group({
-      vendorLoyaltyDiscount: ['', Validators.required],
-      vendorLoyaltyDiscountVisitThreshold: [10, Validators.required],
-      networkLoyaltyDiscount: ['', Validators.required],
-      networkLoyaltyDiscountVisitThreshold: [10, Validators.required],
-    });
+    
 
 
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
   }
+  
 
   ionViewWillEnter() {
     // var postPromise = new Promise<void>((resolve, reject) => {
@@ -128,6 +120,12 @@ export class NetworkCommunityPage implements OnInit {
       });
      
     });
+
+    this.discountsForm = this._fb.group({
+      discountsForNetworkMembers: this._fb.array([
+       
+      ]),
+    });
     
    
 
@@ -143,7 +141,7 @@ export class NetworkCommunityPage implements OnInit {
 
     this._customersService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
       if(user) {
-      this.currentUser = user;
+        this.currentUser = user;
       }
     });
     
@@ -154,20 +152,19 @@ export class NetworkCommunityPage implements OnInit {
       this._networkService.setCurrentNetwork(network);
     }
 
-    var networtkPromise = new Promise<void>((resolve, reject) => {
+    var networkPromise = new Promise<void>((resolve, reject) => {
       this._networkService.currentNetworkSubject.subscribe(network => {
         if (network) {
           this.network = network;
           this._networkService.currentVendorNetworkMembershipsSubject.subscribe(memberships => {
             if(memberships) { 
               var currentMembership = memberships.find(membership => membership.vendorId === this.currentUser.vendor?.id);
+              this.isCurrentVendorOwner = currentMembership?.role === VendorNetworkMembershipTypes.OWNER;
+              this.isCurrentVendorMember = currentMembership?.role === VendorNetworkMembershipTypes.MEMBER;
               this.currentVendorNetworkMembershipDisplay = currentMembership ? new VendorNetworkMembershipDisplay(currentMembership) : null;
-              this.currentVendorNetworkMembershipDisplays = 
-              [ 
-                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership)),
-                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership)),
-                ...memberships.filter(m => m.role !== VendorNetworkMembershipTypes.INVITED).map(membership => new VendorNetworkMembershipDisplay(membership))
-              ];
+              this.currentVendorNetworkMembershipDisplays = memberships.filter(m => m.role === VendorNetworkMembershipTypes.OWNER || m.role === VendorNetworkMembershipTypes.MEMBER).map(membership => new VendorNetworkMembershipDisplay(membership));
+              this.loadInitialDiscountsForCurrentMember(this.currentVendorNetworkMembershipDisplay);
+              
               resolve();
             }
           });
@@ -181,7 +178,7 @@ export class NetworkCommunityPage implements OnInit {
       resolve();
     });
 
-    Promise.all([networtkPromise, mapPromise]).then(() => {
+    Promise.all([networkPromise, mapPromise]).then(() => {
       this.loadNetworkIntoMap();
     });
 
@@ -191,6 +188,53 @@ export class NetworkCommunityPage implements OnInit {
     // }
   }
 
+
+  loadInitialDiscountsForCurrentMember(membership: VendorNetworkMembershipDisplay) {
+    const discountsArray = this.discountsForm.get('discountsForNetworkMembers') as FormArray;
+    while (discountsArray.length !== 0) {
+      discountsArray.removeAt(0);
+    }
+    
+    if(membership.discountsForNetworkMembers.length > 0) {
+      membership.discountsForNetworkMembers.forEach(discount => {
+        discountsArray.push(this._fb.group({
+          description: [ discount.description || '' ], // Add description here
+        }));
+      });
+    } else {
+      discountsArray.push(this._fb.group({
+        description: [ '' ], // Add description here
+      }));
+    }
+  }
+  
+  
+  // Getter for Network Discounts Array
+  get discountsForNetworkMembers() {
+    return this.discountsForm.get('discountsForNetworkMembers') as FormArray;
+  }
+
+  createDiscountGroup(): FormGroup {
+    return this._fb.group({
+      // visitsThreshold: [1, [Validators.required, Validators.min(1)]], // Must be positive
+      // discountType: ['', Validators.required], // String instead of enum
+      description: ['', Validators.required], // Can be percentage, fixed amount, etc.
+    });
+  }
+  
+  // Add Business Discount
+  addDiscountsForNetworkMembers() {
+    this.discountsForNetworkMembers.push(this.createDiscountGroup());
+  }
+  
+  // Remove Business Discount
+  removeDiscountsForNetworkMembers(index: number) {
+    if(this.discountsForNetworkMembers.length > 1) {
+      this.discountsForNetworkMembers.removeAt(index);
+    }
+  }
+  
+  
   goToVendor(vendor: VendorDisplay) {
     this._router.navigateByUrl('/vendor-profile/' + vendor.profilePath);
   }
@@ -208,7 +252,7 @@ export class NetworkCommunityPage implements OnInit {
 
   selectVendor(vendor: VendorDisplay) {
     this.selectedVendorToAdd = vendor;
-    this.isInvitedVendorAlreadyAMember = this.currentVendorNetworkMembershipDisplays.some(m => m.vendorId === vendor.id && m.role === VendorNetworkMembershipTypes.MEMBER);
+    this.isInvitedVendorMember = this.currentVendorNetworkMembershipDisplays.some(m => m.vendorId === vendor.id && m.role === VendorNetworkMembershipTypes.MEMBER);
   }
 
   cancelSelectedVendor() {
@@ -222,6 +266,13 @@ export class NetworkCommunityPage implements OnInit {
     } else {
       this.inviteLink = `${environment.lociUIBaseUrl}/network-community/${membership.id}`;
     }
+  }
+
+  updateDiscounts() {
+    console.log(this.discountsForm.value);
+    var discounts = this.discountsForm.value.discountsForNetworkMembers.map(discount => new CustomerDiscount(discount));
+    
+    this._networkService.updateNetworkMembership(this.currentVendorNetworkMembershipDisplay.id, discounts);
   }
 
   async searchBusinesses(rawSearchText: string) {
@@ -253,14 +304,17 @@ export class NetworkCommunityPage implements OnInit {
   }
 
   declineInvite() {
-    this._networkService.declineInvite(this._inviteId);
-    this._router.navigate(['/vendor-settings']);
+    this._networkService.declineInvite(this._inviteId).then(() => {
+      this._router.navigate(['/vendor-settings']);
+    });
+    
   }
   acceptInvite() {
-    if(!this.inviteSignupForm.valid) {
-      this.inviteSignupForm.markAllAsTouched();
+    if(!this.discountsForm.valid) {
+      this.discountsForm.markAllAsTouched();
     } else {
-      this._networkService.acceptInvite(this._inviteId);
+      const discountsData = this.discountsForm.value;
+      this._networkService.acceptInvite(this._inviteId, discountsData.discountsForNetworkMembers);
     }
     
   }

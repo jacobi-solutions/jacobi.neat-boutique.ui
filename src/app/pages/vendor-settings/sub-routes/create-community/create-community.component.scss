@@ -1,5 +1,7 @@
+@use "sass:math";
 @import 'src/theme/jacobi-theme/scss/main';
 @import 'src/global-sass-variables';
+
 
 ion-content {
   --padding-top: 2rem;
@@ -7,6 +9,9 @@ ion-content {
 
   h1 {
     margin-bottom: 1rem;
+  }
+  h4 {
+    color: var(--nb-dark-grey);
   }
 
   p {
@@ -18,3 +23,47 @@ ion-content {
     margin-top: 1rem;
   }
 } 
+// .custom-select-wrapper {
+//   width: 100%;
+//   border: 1px solid var(--ion-color-medium);
+//   border-radius: 8px;
+//   background: var(--ion-background-color);
+//   padding: 0.5rem;
+//   display: flex;
+//   align-items: center;
+// }
+/* Ensure outline fill style is correctly applied */
+
+/* Fix alignment of delete icon */
+.delete-icon {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-light-grey) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+}
+ion-icon {
+  font-size: inherit;
+}
+
+.delete-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Ensures it's centered horizontally too */
+}
+
+.add-more-button-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-more-button {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-primary) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+  justify-content: center;
+}

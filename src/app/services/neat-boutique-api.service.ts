@@ -191,11 +191,15 @@ export interface INeatBoutiqueApiService {
      */
     createNetwork(body: CreateNetworkRequest | undefined): Observable<NetworkResponse>;
     /**
-     * @param networkId (optional) 
-     * @param vendorId (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    addVendorToNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void>;
+    addVendorToNetwork(body: AddVendorToNetworkRequest | undefined): Observable<void>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateVendorMembershipInNetwork(body: UpdateVendorMembershipinNetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
     /**
      * @param networkId (optional) 
      * @param vendorId (optional) 
@@ -221,7 +225,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getNetworkByMembershipId(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
+    getNetworkByMembershipIdWithInviteLink(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -231,7 +235,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    acceptNetworkInvite(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
+    acceptNetworkInvite(body: UpdateVendorMembershipinNetworkRequest | undefined): Observable<NetworkWithVendorsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -2422,22 +2426,21 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     /**
-     * @param networkId (optional) 
-     * @param vendorId (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    addVendorToNetwork(networkId: string | null | undefined, vendorId: string | null | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Networks/AddVendorToNetwork?";
-        if (networkId !== undefined && networkId !== null)
-            url_ += "networkId=" + encodeURIComponent("" + networkId) + "&";
-        if (vendorId !== undefined && vendorId !== null)
-            url_ += "vendorId=" + encodeURIComponent("" + vendorId) + "&";
+    addVendorToNetwork(body: AddVendorToNetworkRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Networks/AddVendorToNetwork";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
             })
         };
 
@@ -2472,6 +2475,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateVendorMembershipInNetwork(body: UpdateVendorMembershipinNetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/UpdateVendorMembershipInNetwork";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateVendorMembershipInNetwork(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateVendorMembershipInNetwork(<any>response_);
+                } catch (e) {
+                    return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateVendorMembershipInNetwork(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkWithVendorsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkWithVendorsResponse>(<any>null);
     }
 
     /**
@@ -2697,8 +2756,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    getNetworkByMembershipId(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
-        let url_ = this.baseUrl + "/api/Networks/GetNetworkByMembershipId";
+    getNetworkByMembershipIdWithInviteLink(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+        let url_ = this.baseUrl + "/api/Networks/GetNetworkByMembershipIdWithInviteLink";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -2714,11 +2773,11 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetNetworkByMembershipId(response_);
+            return this.processGetNetworkByMembershipIdWithInviteLink(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetNetworkByMembershipId(<any>response_);
+                    return this.processGetNetworkByMembershipIdWithInviteLink(<any>response_);
                 } catch (e) {
                     return <Observable<NetworkWithVendorsResponse>><any>_observableThrow(e);
                 }
@@ -2727,7 +2786,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         }));
     }
 
-    protected processGetNetworkByMembershipId(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
+    protected processGetNetworkByMembershipIdWithInviteLink(response: HttpResponseBase): Observable<NetworkWithVendorsResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2809,7 +2868,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    acceptNetworkInvite(body: NetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
+    acceptNetworkInvite(body: UpdateVendorMembershipinNetworkRequest | undefined): Observable<NetworkWithVendorsResponse> {
         let url_ = this.baseUrl + "/api/Networks/AcceptNetworkInvite";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5506,6 +5565,46 @@ export interface IConsumerProfile {
     reviewsCount?: number;
 }
 
+export class CustomerDiscount implements ICustomerDiscount {
+    visitsThreshold?: number;
+    description?: string | undefined;
+
+    constructor(data?: ICustomerDiscount) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.visitsThreshold = _data["visitsThreshold"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CustomerDiscount {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerDiscount();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["visitsThreshold"] = this.visitsThreshold;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICustomerDiscount {
+    visitsThreshold?: number;
+    description?: string | undefined;
+}
+
 export class NeatBoutiqueEntity implements INeatBoutiqueEntity {
     id?: string | undefined;
     role?: string | undefined;
@@ -6086,6 +6185,7 @@ export class VendorProfile implements IVendorProfile {
     categories?: string[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
+    generalDiscounts?: CustomerDiscount[] | undefined;
     questionsAnsweredCount?: number;
     network?: Network;
 
@@ -6137,6 +6237,11 @@ export class VendorProfile implements IVendorProfile {
             }
             this.reviewCount = _data["reviewCount"];
             this.reviewRatingTotal = _data["reviewRatingTotal"];
+            if (Array.isArray(_data["generalDiscounts"])) {
+                this.generalDiscounts = [] as any;
+                for (let item of _data["generalDiscounts"])
+                    this.generalDiscounts!.push(CustomerDiscount.fromJS(item));
+            }
             this.questionsAnsweredCount = _data["questionsAnsweredCount"];
             this.network = _data["network"] ? Network.fromJS(_data["network"]) : <any>undefined;
         }
@@ -6188,6 +6293,11 @@ export class VendorProfile implements IVendorProfile {
         }
         data["reviewCount"] = this.reviewCount;
         data["reviewRatingTotal"] = this.reviewRatingTotal;
+        if (Array.isArray(this.generalDiscounts)) {
+            data["generalDiscounts"] = [];
+            for (let item of this.generalDiscounts)
+                data["generalDiscounts"].push(item.toJSON());
+        }
         data["questionsAnsweredCount"] = this.questionsAnsweredCount;
         data["network"] = this.network ? this.network.toJSON() : <any>undefined;
         return data; 
@@ -6222,6 +6332,7 @@ export interface IVendorProfile {
     categories?: string[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
+    generalDiscounts?: CustomerDiscount[] | undefined;
     questionsAnsweredCount?: number;
     network?: Network;
 }
@@ -8266,6 +8377,7 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
     name?: string | undefined;
     description?: string | undefined;
     vendorId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
 
     constructor(data?: ICreateNetworkRequest) {
         if (data) {
@@ -8281,6 +8393,11 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
             this.name = _data["name"];
             this.description = _data["description"];
             this.vendorId = _data["vendorId"];
+            if (Array.isArray(_data["discountsForNetworkMembers"])) {
+                this.discountsForNetworkMembers = [] as any;
+                for (let item of _data["discountsForNetworkMembers"])
+                    this.discountsForNetworkMembers!.push(CustomerDiscount.fromJS(item));
+            }
         }
     }
 
@@ -8296,6 +8413,11 @@ export class CreateNetworkRequest implements ICreateNetworkRequest {
         data["name"] = this.name;
         data["description"] = this.description;
         data["vendorId"] = this.vendorId;
+        if (Array.isArray(this.discountsForNetworkMembers)) {
+            data["discountsForNetworkMembers"] = [];
+            for (let item of this.discountsForNetworkMembers)
+                data["discountsForNetworkMembers"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -8304,6 +8426,7 @@ export interface ICreateNetworkRequest {
     name?: string | undefined;
     description?: string | undefined;
     vendorId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
 }
 
 export class NetworkResponse implements INetworkResponse {
@@ -8358,11 +8481,12 @@ export interface INetworkResponse {
     network?: Network;
 }
 
-export class NetworkRequest implements INetworkRequest {
+export class AddVendorToNetworkRequest implements IAddVendorToNetworkRequest {
     networkId?: string | undefined;
-    vendorNetworkMembershipId?: string | undefined;
+    vendorId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
 
-    constructor(data?: INetworkRequest) {
+    constructor(data?: IAddVendorToNetworkRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8374,13 +8498,18 @@ export class NetworkRequest implements INetworkRequest {
     init(_data?: any) {
         if (_data) {
             this.networkId = _data["networkId"];
-            this.vendorNetworkMembershipId = _data["vendorNetworkMembershipId"];
+            this.vendorId = _data["vendorId"];
+            if (Array.isArray(_data["discountsForNetworkMembers"])) {
+                this.discountsForNetworkMembers = [] as any;
+                for (let item of _data["discountsForNetworkMembers"])
+                    this.discountsForNetworkMembers!.push(CustomerDiscount.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): NetworkRequest {
+    static fromJS(data: any): AddVendorToNetworkRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new NetworkRequest();
+        let result = new AddVendorToNetworkRequest();
         result.init(data);
         return result;
     }
@@ -8388,14 +8517,68 @@ export class NetworkRequest implements INetworkRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["networkId"] = this.networkId;
-        data["vendorNetworkMembershipId"] = this.vendorNetworkMembershipId;
+        data["vendorId"] = this.vendorId;
+        if (Array.isArray(this.discountsForNetworkMembers)) {
+            data["discountsForNetworkMembers"] = [];
+            for (let item of this.discountsForNetworkMembers)
+                data["discountsForNetworkMembers"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
-export interface INetworkRequest {
+export interface IAddVendorToNetworkRequest {
     networkId?: string | undefined;
-    vendorNetworkMembershipId?: string | undefined;
+    vendorId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
+}
+
+export class UpdateVendorMembershipinNetworkRequest implements IUpdateVendorMembershipinNetworkRequest {
+    membershipId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
+
+    constructor(data?: IUpdateVendorMembershipinNetworkRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.membershipId = _data["membershipId"];
+            if (Array.isArray(_data["discountsForNetworkMembers"])) {
+                this.discountsForNetworkMembers = [] as any;
+                for (let item of _data["discountsForNetworkMembers"])
+                    this.discountsForNetworkMembers!.push(CustomerDiscount.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateVendorMembershipinNetworkRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateVendorMembershipinNetworkRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["membershipId"] = this.membershipId;
+        if (Array.isArray(this.discountsForNetworkMembers)) {
+            data["discountsForNetworkMembers"] = [];
+            for (let item of this.discountsForNetworkMembers)
+                data["discountsForNetworkMembers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IUpdateVendorMembershipinNetworkRequest {
+    membershipId?: string | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
 }
 
 export class VendorNetworkMembership implements IVendorNetworkMembership {
@@ -8409,7 +8592,9 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
     contactPhone?: string | undefined;
     monthlyCost?: number;
     joinedNetworkDateUtc?: Date;
-    customerDiscounts?: string[] | undefined;
+    businessVisitDiscounts?: CustomerDiscount[] | undefined;
+    networkVisitDiscounts?: CustomerDiscount[] | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
     role?: string | undefined;
     geometryLocation?: GeometryLocation;
     googlePlace?: GooglePlacesEntity;
@@ -8436,10 +8621,20 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
             this.contactPhone = _data["contactPhone"];
             this.monthlyCost = _data["monthlyCost"];
             this.joinedNetworkDateUtc = _data["joinedNetworkDateUtc"] ? new Date(_data["joinedNetworkDateUtc"].toString()) : <any>undefined;
-            if (Array.isArray(_data["customerDiscounts"])) {
-                this.customerDiscounts = [] as any;
-                for (let item of _data["customerDiscounts"])
-                    this.customerDiscounts!.push(item);
+            if (Array.isArray(_data["businessVisitDiscounts"])) {
+                this.businessVisitDiscounts = [] as any;
+                for (let item of _data["businessVisitDiscounts"])
+                    this.businessVisitDiscounts!.push(CustomerDiscount.fromJS(item));
+            }
+            if (Array.isArray(_data["networkVisitDiscounts"])) {
+                this.networkVisitDiscounts = [] as any;
+                for (let item of _data["networkVisitDiscounts"])
+                    this.networkVisitDiscounts!.push(CustomerDiscount.fromJS(item));
+            }
+            if (Array.isArray(_data["discountsForNetworkMembers"])) {
+                this.discountsForNetworkMembers = [] as any;
+                for (let item of _data["discountsForNetworkMembers"])
+                    this.discountsForNetworkMembers!.push(CustomerDiscount.fromJS(item));
             }
             this.role = _data["role"];
             this.geometryLocation = _data["geometryLocation"] ? GeometryLocation.fromJS(_data["geometryLocation"]) : <any>undefined;
@@ -8467,10 +8662,20 @@ export class VendorNetworkMembership implements IVendorNetworkMembership {
         data["contactPhone"] = this.contactPhone;
         data["monthlyCost"] = this.monthlyCost;
         data["joinedNetworkDateUtc"] = this.joinedNetworkDateUtc ? this.joinedNetworkDateUtc.toISOString() : <any>undefined;
-        if (Array.isArray(this.customerDiscounts)) {
-            data["customerDiscounts"] = [];
-            for (let item of this.customerDiscounts)
-                data["customerDiscounts"].push(item);
+        if (Array.isArray(this.businessVisitDiscounts)) {
+            data["businessVisitDiscounts"] = [];
+            for (let item of this.businessVisitDiscounts)
+                data["businessVisitDiscounts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.networkVisitDiscounts)) {
+            data["networkVisitDiscounts"] = [];
+            for (let item of this.networkVisitDiscounts)
+                data["networkVisitDiscounts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.discountsForNetworkMembers)) {
+            data["discountsForNetworkMembers"] = [];
+            for (let item of this.discountsForNetworkMembers)
+                data["discountsForNetworkMembers"].push(item.toJSON());
         }
         data["role"] = this.role;
         data["geometryLocation"] = this.geometryLocation ? this.geometryLocation.toJSON() : <any>undefined;
@@ -8491,7 +8696,9 @@ export interface IVendorNetworkMembership {
     contactPhone?: string | undefined;
     monthlyCost?: number;
     joinedNetworkDateUtc?: Date;
-    customerDiscounts?: string[] | undefined;
+    businessVisitDiscounts?: CustomerDiscount[] | undefined;
+    networkVisitDiscounts?: CustomerDiscount[] | undefined;
+    discountsForNetworkMembers?: CustomerDiscount[] | undefined;
     role?: string | undefined;
     geometryLocation?: GeometryLocation;
     googlePlace?: GooglePlacesEntity;
@@ -8560,6 +8767,46 @@ export interface INetworkWithVendorsResponse {
     isSuccess?: boolean;
     network?: Network;
     memberships?: VendorNetworkMembership[] | undefined;
+}
+
+export class NetworkRequest implements INetworkRequest {
+    networkId?: string | undefined;
+    vendorNetworkMembershipId?: string | undefined;
+
+    constructor(data?: INetworkRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+            this.vendorNetworkMembershipId = _data["vendorNetworkMembershipId"];
+        }
+    }
+
+    static fromJS(data: any): NetworkRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new NetworkRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        data["vendorNetworkMembershipId"] = this.vendorNetworkMembershipId;
+        return data; 
+    }
+}
+
+export interface INetworkRequest {
+    networkId?: string | undefined;
+    vendorNetworkMembershipId?: string | undefined;
 }
 
 export class NetworkInviteRequest implements INetworkInviteRequest {
