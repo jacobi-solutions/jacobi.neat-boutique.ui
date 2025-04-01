@@ -1,0 +1,106 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.discounts-header {
+    font-size: 1.5rem;
+    
+  }
+  .loyalty-section {
+    align-items: center; /* Aligns elements neatly in each row */
+    margin-bottom: 0.5rem; /* Tight spacing */
+  
+  }
+
+  .delete-icon-col {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Ensures it's centered horizontally too */
+  }
+  
+  .add-more-button-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .add-more-button {
+    align-items: center;
+    justify-content: center;
+    color: var(--nb-primary) !important;
+    font-size: 2.5rem;
+    min-width: 2.5rem; 
+    min-height: 2.5rem;
+    justify-content: center;
+  }
+  .add-more-button {
+    align-items: center;
+    justify-content: center;
+    color: var(--nb-primary) !important;
+    font-size: 2.5rem;
+    min-width: 2.5rem; 
+    min-height: 2.5rem;
+    justify-content: center;
+  }
+  .delete-icon {
+    align-items: center;
+    justify-content: center;
+    color: var(--nb-light-grey) !important;
+    font-size: 2.5rem;
+    min-width: 2.5rem; 
+    min-height: 2.5rem;
+  }
+  ion-icon {
+    font-size: inherit;
+  }
+
+
+
+   .discounts-description-wrapper {
+    position: relative;
+    ul {
+        list-style-type: none;
+    }
+  
+    .empty-discounts-description-placeholder {
+        opacity: 0.5;
+        font-weight: 500;
+        font-size: 1.1rem;
+        font-family: inherit; // explicitly inherit the global font
+        line-height: inherit; // ensure line-height matches the global default
+        color: inherit; // ensure color matches global default
+    }
+
+    .discounts-description-text {
+        font-weight: 500;
+        font-size: 1.1rem;
+        font-family: inherit; // explicitly inherit the global font
+        line-height: inherit; // ensure line-height matches the global default
+        color: inherit; // ensure color matches global default
+    }
+
+    .edit-discounts-description {
+        position: absolute;
+        top: -20px;
+        right: -18px;
+        color: var(--nb-primary); // explicitly match the global edit icon color
+        font-size: 1.5rem; // explicitly match the global edit icon size
+        cursor: pointer; 
+    }
+}
+
+// Ensure padding and shadows match exactly:
+ion-card {
+    border-radius: var(--nb-border-radius);
+    border: 1px solid var(--nb-border-color);
+    box-shadow: var(--nb-subtle-box-shadow);
+    padding: 1rem; // Confirmed padding to match the first card precisely
+}
+
+
+.action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    float: revert;
+}

@@ -158,12 +158,17 @@ export class NetworkCommunityPage implements OnInit {
           this.network = network;
           this._networkService.currentVendorNetworkMembershipsSubject.subscribe(memberships => {
             if(memberships) { 
-              var currentMembership = memberships.find(membership => membership.vendorId === this.currentUser.vendor?.id);
+              const currentMembership = memberships.find(membership => membership.vendorId === this.currentUser.vendor?.id);
               this.isCurrentVendorOwner = currentMembership?.role === VendorNetworkMembershipTypes.OWNER;
               this.isCurrentVendorMember = currentMembership?.role === VendorNetworkMembershipTypes.MEMBER;
               this.currentVendorNetworkMembershipDisplay = currentMembership ? new VendorNetworkMembershipDisplay(currentMembership) : null;
               this.currentVendorNetworkMembershipDisplays = memberships.filter(m => m.role === VendorNetworkMembershipTypes.OWNER || m.role === VendorNetworkMembershipTypes.MEMBER).map(membership => new VendorNetworkMembershipDisplay(membership));
               this.loadInitialDiscountsForCurrentMember(this.currentVendorNetworkMembershipDisplay);
+              
+              if (currentMembership?.role === VendorNetworkMembershipTypes.INVITED) {
+                this.isVendorInvited = true;
+                this._inviteId = currentMembership.id;
+              }
               
               resolve();
             }
@@ -310,13 +315,11 @@ export class NetworkCommunityPage implements OnInit {
     
   }
   acceptInvite() {
-    if(!this.discountsForm.valid) {
-      this.discountsForm.markAllAsTouched();
-    } else {
-      const discountsData = this.discountsForm.value;
-      this._networkService.acceptInvite(this._inviteId, discountsData.discountsForNetworkMembers);
-    }
+    var discounts = this.discountsForm.value.discountsForNetworkMembers.map(discount => new CustomerDiscount(discount));
     
+    this._networkService.acceptInvite(this._inviteId, discounts).then(() => {
+      this._router.navigate(['/vendor-settings']);
+    });
   }
 
 

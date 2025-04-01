@@ -18,14 +18,14 @@
               </app-nb-avatar>
             </div>
   
-            <div *ngFor="let vendor of currentUser.vendors" class="choice clickable" (click)="getVendorProfile(vendor)">
+            <!-- <div *ngFor="let vendor of currentUser.vendors" class="choice clickable" (click)="getVendorProfile(vendor)"> -->
               <app-nb-avatar
-                [borderColor]="vendor?.borderColor"
-                [imageSrc]="vendor?.avatarSourceURL"
-                [username]="vendor?.name"
+                [borderColor]="currentUser.vendor?.borderColor"
+                [imageSrc]="currentUser.vendor?.avatarSourceURL"
+                [username]="currentUser.vendor?.name"
                 [altStyleClass]="'force-center-items flex-text-wrapper'">
               </app-nb-avatar>          
-            </div>
+            <!-- </div> -->
   
           <!-- <app-nb-button [buttonType]="'white-primary'" (click)="getConsumerProfile()">
             

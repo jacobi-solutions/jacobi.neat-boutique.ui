@@ -18,7 +18,7 @@ import { PollAdPlaceholderComponent } from './components/poll-ad-placeholder/pol
 import { PollAdComponent } from './sub-routes/poll-ad/poll-ad.component';
 import { BillboardAdComponent } from './sub-routes/billboard-ad/billboard-ad.component';
 import { CreateCommunityComponent } from './sub-routes/create-community/create-community.component';
-
+import { CustomerDiscountsComponent } from './components/customer-discounts/customer-discounts.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -39,7 +39,8 @@ import { CreateCommunityComponent } from './sub-routes/create-community/create-c
     PollAdPlaceholderComponent,
     PollAdComponent,
     BillboardAdComponent,
-    CreateCommunityComponent
+    CreateCommunityComponent,
+    CustomerDiscountsComponent
   ]
 })
 export class VendorSettingsPageModule {}

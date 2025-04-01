@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { VendorDisplay } from 'src/app/models/vendor-display';
@@ -17,8 +18,8 @@ export class VendorSettingsPage implements OnInit {
   public vendor: VendorDisplay = null;
   public newLogo: any;
   public newLogoFileType: string;
-
-  constructor(private _accountsService: AccountsService, private _vendorService: VendorService, private _router: Router) {  
+  
+  constructor(private _vendorService: VendorService, private _router: Router) {  
     var vendorProfile = (this._router.getCurrentNavigation().extras.state) as VendorProfile;  
     if(vendorProfile) {
       this.vendor = new VendorDisplay(vendorProfile);
@@ -38,5 +39,9 @@ export class VendorSettingsPage implements OnInit {
    
   }
   
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
+
+  
 }

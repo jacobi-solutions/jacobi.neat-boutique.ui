@@ -5,7 +5,7 @@ import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { AccountsService } from "./accounts.service";
 import { promise } from 'protractor';
-import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile } from './neat-boutique-api.service';
+import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile, CustomerDiscount, VendorGeneralDiscountsRequest } from './neat-boutique-api.service';
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -51,6 +51,22 @@ export class VendorSettingsService {
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
       this._neatBoutiqueApi.updateVendorDescription(request).subscribe((response: VendorProfileResponse) => {
+        if (response.isSuccess) {
+          resolve(new VendorDisplay(response.vendorProfile));
+        }
+      });
+    });
+
+    return promise;
+  }
+
+  public updateVendorCustomerDiscounts(vendorId: string, discounts: CustomerDiscount[]) {
+    var request = new VendorGeneralDiscountsRequest();
+    
+    request.generalDiscounts = discounts;
+
+    const promise = new Promise<VendorDisplay>((resolve, reject) => {
+      this._neatBoutiqueApi.updateVendorGeneralDiscounts(request).subscribe((response: VendorProfileResponse) => {
         if (response.isSuccess) {
           resolve(new VendorDisplay(response.vendorProfile));
         }

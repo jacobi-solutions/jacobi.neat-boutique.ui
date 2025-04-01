@@ -61,17 +61,24 @@ export class NetworkService {
   }
 
   acceptInvite(vendorNetworkMembershipId: string, discountsForNetworkMembers: CustomerDiscount[]) {
+    
     var request = new UpdateVendorMembershipinNetworkRequest();
     request.membershipId = vendorNetworkMembershipId;
     request.discountsForNetworkMembers = discountsForNetworkMembers;
-    this._neatBoutiqueApiService.acceptNetworkInvite(request).subscribe((response: NetworkWithVendorsResponse) => {
-      if (response.isSuccess) {
-        this._currentNetwork = response.network;
-          this.currentNetworkSubject.next(this._currentNetwork);
-          this._currentVendorNetworkMemberships = response.memberships;
-          this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
-      }
+    var promise = new Promise<void>((resolve, reject) => {
+      this._neatBoutiqueApiService.acceptNetworkInvite(request).subscribe((response: NetworkWithVendorsResponse) => {
+        if (response.isSuccess) {
+          this._currentNetwork = response.network;
+            this.currentNetworkSubject.next(this._currentNetwork);
+            this._currentVendorNetworkMemberships = response.memberships;
+            this.currentVendorNetworkMembershipsSubject.next(this._currentVendorNetworkMemberships);
+            resolve();
+        } else {
+          reject('Failed to accept invite');
+        }
+      });
     });
+    return promise;
   }
 
   declineInvite(vendorNetworkMembershipId: string) {

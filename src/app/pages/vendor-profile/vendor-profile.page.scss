@@ -54,8 +54,35 @@
         }
     }
 }
+.discounts-container {
+    ul {
+        list-style-type: none;
+    }
+}
+    .empty-discounts-description-placeholder {
+        opacity: 0.5;
+        font-weight: 500;
+        font-size: 1.1rem;
+        font-family: inherit; // explicitly inherit the global font
+        line-height: inherit; // ensure line-height matches the global default
+        color: inherit; // ensure color matches global default
+    }
 
+    .discounts-description-text {
+    
+        font-weight: 500;
+        font-size: 1.1rem;
+        font-family: inherit; // explicitly inherit the global font
+        line-height: inherit; // ensure line-height matches the global default
+        color: #737373; // ensure color matches global default
+    }
 
+ion-card {
+    border-radius: var(--nb-border-radius);
+    border: 1px solid var(--nb-border-color);
+    box-shadow: var(--nb-subtle-box-shadow);
+    padding: 1rem; // Confirmed padding to match the first card precisely
+}
 
 .vendor-details-container {
     margin-top: 2rem;

@@ -1,0 +1,64 @@
+<ion-card *ngIf="discountsForm">
+  <ion-card-content>
+    <div *ngIf="!editDiscounts" class="discounts-description-wrapper">
+      <p class="discounts-description-text">Loçi customers can show this at checkout to receive one of the discounts you offer here.</p>
+
+      <div *ngIf="vendor?.generalDiscounts?.length > 0">
+        <ul>
+          <li *ngFor="let discount of vendor.generalDiscounts"><p class="discounts-description-text">{{ discount.description }}</p></li>
+        </ul>
+      </div>
+
+      <div *ngIf="!(vendor?.generalDiscounts?.length > 0)" class="empty-discounts-description-placeholder">
+        You haven't set up any discounts yet. Show your Loçi customers some love by setting up a discount!
+      </div>
+      
+
+      <ion-icon class="edit-discounts-description edit-action allow-opacity" name="create-outline" (click)="toggleEditDiscounts()"></ion-icon>
+    </div>
+
+    
+    <ion-row *ngIf="editDiscounts" class="discounts-description-wrapper">
+      <ion-col offset=".5" size="11.5">
+        <form [formGroup]="discountsForm">
+          <p class="discounts-description-text">Set one or more discounts. These discounts are valid for all Loçi customers.</p>
+        
+          <div formArrayName="discountsForLociCustomers">
+            <div *ngFor="let control of discountsForLociCustomers.controls; let i = index" [formGroupName]="i">
+              <ion-row class="loyalty-section">
+              
+                <ion-col>
+                  <app-input-field
+                    [formGroupInstance]="control"
+                    inputName="description"
+                    label="Discount Value (e.g. 10% off total or one free ride)">
+                  </app-input-field>
+                </ion-col>
+                <ion-col *ngIf="discountsForLociCustomers.length > 1" class="delete-icon-col" size=".75">
+                  <ion-icon name="trash" class="clickable delete-icon" (click)="removeDiscountsForLociCustomers(i)"></ion-icon>
+                </ion-col>
+                <ion-col class="add-more-button-col" size=".75">
+                  <ion-icon name="add-circle-outline" class="clickable add-more-button" (click)="addDiscountsForLociCustomers()"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+        
+        
+        
+          <ion-row>
+            <ion-col offset="3" size="3" class="ion-text-center">
+
+              <div class="action-btn-wrapper">
+                <app-jacobi-button [buttonType]="'auth-primary'" (click)="updateDiscounts()">Save</app-jacobi-button>
+                <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditDiscounts()">Cancel</app-jacobi-button>
+              </div>
+              
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+      <ion-icon class="edit-discounts-description edit-action allow-opacity" name="create-outline" (click)="toggleEditDiscounts()"></ion-icon>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

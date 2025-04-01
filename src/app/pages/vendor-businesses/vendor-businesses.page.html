@@ -9,10 +9,11 @@
     </ion-row>
     
     <ion-row>
-      <ion-col *ngIf="currentUserDisplay?.vendors; else elseShowLoadSpinner">
-        <ion-row *ngFor="let vendor of currentUserDisplay.vendors">
+      <ion-col *ngIf="currentUserDisplay?.vendor; else elseShowLoadSpinner">
+        <!-- <ion-row *ngFor="let vendor of currentUserDisplay.vendors"> -->
+          <ion-row >
           <ion-col offset-md="1" size-md="10" offset-lg="2" size-lg="8" offset-xl="2.5" size-xl="7">
-            <app-vendor-list-item [vendor]="vendor"></app-vendor-list-item>
+            <app-vendor-list-item [vendor]="currentUserDisplay.vendor"></app-vendor-list-item>
           </ion-col>
           
         </ion-row>
