@@ -3,7 +3,7 @@ export const environment = {
   
   production: true,
   // lociApiBaseUrl: 'http://localhost',
-  lociApiBaseUrl: 'https://neat-boutique-api-zhal3rygga-ue.a.run.app',
+  lociApiBaseUrl: 'https://api.lociknows.com',
   lociUIBaseUrl: 'https://lociknows.com',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
