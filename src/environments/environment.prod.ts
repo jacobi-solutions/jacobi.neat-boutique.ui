@@ -24,7 +24,7 @@ export const environment = {
   
   subscriptionGrandfatherStandardStripePriceId: "price_1LmJsLIuBnHBFjIoIuZ0ygek",
   subscriptionGrandfatherPremiumStripePriceId : "price_1LmJsLIuBnHBFjIoPGSeM1MX",
-
+  
   subscriptionStandardStripePriceId: "price_1Njl2WIuBnHBFjIoR2lmLYXD",
   subscriptionStandardAdditionalBusinessesStripePriceId: "price_1Njl2WIuBnHBFjIocG26dntj",
   subscriptionPremiumStripePriceId : "price_1Njl7BIuBnHBFjIoSyVvePfI",
