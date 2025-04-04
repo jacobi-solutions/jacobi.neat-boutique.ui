@@ -215,7 +215,7 @@
           <ion-card-content>
             <ion-row>
               <!-- Logo Image (3 columns) -->
-              <ion-col size="2.5">
+              <ion-col class="hide-sm-and-below" size="2.5">
                 <div class="logo-image-wrapper">
                   <ion-img
                     class="logo-image"
@@ -226,7 +226,7 @@
       
               <!-- Loyalty Discount Section (9 columns) -->
                
-              <ion-col offset=".5" size="9">
+              <ion-col offset-md=".5" size-md="9">
                 <h2 class="discounts-header">Discounts</h2>
                 <form [formGroup]="discountsForm">
                   <!-- Business Loyalty Discounts -->

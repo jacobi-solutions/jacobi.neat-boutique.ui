@@ -399,6 +399,22 @@ app-expandable {
 
 
 // 
+@include screen-sm-and-below {
+  
+    ion-card {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      margin-right: 0;
+      margin-left: 0;
+    }
+    ion-card-content {
+      margin-right: 0;
+      margin-left: 0;
+      padding-right: 0;
+      padding-left: 0;
+    }
+  
+}
 
 @include screen-md-and-below {
 
