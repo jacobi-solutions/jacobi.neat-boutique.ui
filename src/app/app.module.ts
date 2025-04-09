@@ -21,7 +21,7 @@ import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { Capacitor } from '@capacitor/core';
 import { getApp } from 'firebase/app';
-import { initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
+import { initializeAuth, indexedDBLocalPersistence, browserLocalPersistence } from 'firebase/auth';
 import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 
 // import { FIREBASE_APP } from './auth/auth.service';
@@ -77,7 +77,9 @@ export function getAPIBaseUrl(): string {
               persistence: indexedDBLocalPersistence
             });
           } else {
-            return getAuth();
+            return initializeAuth(getApp(), {
+              persistence: browserLocalPersistence
+            });
           }
         }),
     ],
