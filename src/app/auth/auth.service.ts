@@ -318,64 +318,45 @@ export class AuthService {
   }
 
   private listenForFacebookRedirect() {
-    console.log('Calling getRedirectResult with auth:', this._auth);
-    getRedirectResult(this._auth)
-    .then((credential) => {
-      if (credential?.user) {
-        // logEvent(this._analytics, FirebaseEventTypes.AUTH_FACEBOOK_REDIRECT,  {
-        //   LC_user: credential.user.displayName,
-        //   LC_operationType: credential.operationType,
-        //   LC_providerId: credential.providerId,
-        //   LC_version_number: LociConstants.VERSION_NUMBER
-        // });
-        console.log("facebook redirect");
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        var token = credential.user.refreshToken;
-        var additionalUserInfo = getAdditionalUserInfo(credential);
-        if(additionalUserInfo?.isNewUser) {
-          // logEvent(this._analytics, FirebaseEventTypes.AUTH_NEW_FACEBOOK_USER,  {
-          //   LC_user: credential.user.displayName,
-          //   LC_operationType: credential.operationType,
-          //   LC_providerId: credential.providerId,
-          //   LC_version_number: LociConstants.VERSION_NUMBER
-          // });
-          this._accountsService.createAccount(credential.user.uid, credential.user.displayName, credential.user.email).then((customer) => {
-            if(customer) {
-              this._router.navigateByUrl(environment.signUpRedirectUrl);
-            }
-          });
-          
+    const auth = this._auth;
+  
+    // Wait for Firebase Auth to fully initialize
+    (auth as any)._initializationPromise
+      .then(() => {
+        console.log('✅ Firebase Auth is fully initialized.');
+        return getRedirectResult(auth);
+      })
+      .then((credential) => {
+        console.log('👉 Got credential from redirect:', credential);
+  
+        if (credential?.user) {
+          const token = credential.user.refreshToken;
+          const additionalUserInfo = getAdditionalUserInfo(credential);
+          if (additionalUserInfo?.isNewUser) {
+            this._accountsService.createAccount(
+              credential.user.uid,
+              credential.user.displayName,
+              credential.user.email
+            ).then((customer) => {
+              if (customer) {
+                this._router.navigateByUrl(environment.signUpRedirectUrl);
+              }
+            });
+          } else {
+            this._router.navigateByUrl(environment.signInRedirectUrl);
+          }
         } else {
-          // logEvent(this._analytics, FirebaseEventTypes.AUTH_SIGN_IN_FACEBOOK_USER,  {
-          //   LC_user: credential.user.displayName,
-          //   LC_operationType: credential.operationType,
-          //   LC_providerId: credential.providerId,
-          //   LC_version_number: LociConstants.VERSION_NUMBER
-          // });
-          this._router.navigateByUrl(environment.signInRedirectUrl);
+          console.log('⚠️ No credential returned after redirect.');
         }
-        // ...
-      }
-    }).catch(async (error) => {
-      // logEvent(this._analytics, FirebaseEventTypes.AUTH_ERROR_FACEBOOK_REDIRECT,  { 
-      //   LC_error: error,
-      //   LC_errorCode: error?.code,
-      //   LC_errorMessage: error?.message,
-      //   LC_version_number: LociConstants.VERSION_NUMBER
-      // });
-      // Handle Errors here.
-      if(error.code === "auth/account-exists-with-different-credential") {
-        this._confirmLinkAccountsNotice(error.customData.email);
-      }
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
-  } 
+      })
+      .catch((error) => {
+        console.error('🚨 Error during getRedirectResult:', error);
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          this._confirmLinkAccountsNotice(error.customData.email);
+        }
+      });
+  }
+  
 
   async getAvailableSignInMethodsToLinkTo() {
     var email = this._auth.currentUser.email;
