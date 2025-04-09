@@ -318,6 +318,7 @@ export class AuthService {
   }
 
   private listenForFacebookRedirect() {
+    console.log('Calling getRedirectResult with auth:', this._auth);
     getRedirectResult(this._auth)
     .then((credential) => {
       if (credential?.user) {
