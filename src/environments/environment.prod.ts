@@ -15,7 +15,7 @@ export const environment = {
     storageBucket: "citric-inkwell-330122.firebasestorage.app",
     locationId: 'us-central',
     apiKey: 'AIzaSyBxreSfUWgDYfOT4H8A0pmPnuoeGJiGoxI',
-    authDomain: 'citric-inkwell-330122.firebaseapp.com',
+    authDomain: 'app.lociknows.com',
     messagingSenderId: '529820257802',
     measurementId: 'G-EFT2LTNEFP',
   },
