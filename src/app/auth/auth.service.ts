@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
 	Auth,
 	signInWithEmailAndPassword,
@@ -47,15 +47,17 @@ export class AccountDeletion {
 	providedIn: 'root'
 })
 export class AuthService {
+  private _auth = inject(Auth);
   private _firebaseHasloadedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _firebaseAuthToken: string;
   private _currentAuthUser: User;
   private _linkAccountsInfoModal: HTMLIonModalElement;
   private _isCreatingAccount: boolean = false;
-	constructor(private _auth: Auth, private _accountsService: AccountsService, private _platform: Platform,
+	constructor(private _accountsService: AccountsService, private _platform: Platform,
     private _facebook: Facebook, private _router: Router, private _modalService: ModalService) {
 
-    this.listenForFacebookRedirect();
+    // this.listenForFacebookRedirect();
+    setTimeout(() => this.listenForFacebookRedirect(), 0);
     onAuthStateChanged(this._auth, (user) => {
       if (user) {
         var firebaseUser: any = user;
