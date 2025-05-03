@@ -5626,6 +5626,17 @@ export interface IConsumerProfile {
     reviewsCount?: number;
 }
 
+export enum CategoryType {
+    BoutiquesBeauty = "BoutiquesBeauty",
+    FoodAndDrink = "FoodAndDrink",
+    TravelAdventure = "TravelAdventure",
+    NightlifeEntertainment = "NightlifeEntertainment",
+    HealthWellness = "HealthWellness",
+    MaintenanceRepair = "MaintenanceRepair",
+    ChurchState = "ChurchState",
+    ServicesMore = "ServicesMore",
+}
+
 export class CustomerDiscount implements ICustomerDiscount {
     visitsThreshold?: number;
     description?: string | undefined;
@@ -6016,7 +6027,7 @@ export class Post implements IPost {
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     subject?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
     feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
@@ -6040,7 +6051,7 @@ export class Post implements IPost {
             this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
             this.postType = _data["postType"];
             this.subject = _data["subject"];
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
             this.feedContextId = _data["feedContextId"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
@@ -6072,7 +6083,7 @@ export class Post implements IPost {
         data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
         data["postType"] = this.postType;
         data["subject"] = this.subject;
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         data["feedContextId"] = this.feedContextId;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
@@ -6097,7 +6108,7 @@ export interface IPost {
     lastUpdatedDateUtc?: Date;
     postType?: string | undefined;
     subject?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
     feedContextId?: string | undefined;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
@@ -6243,7 +6254,7 @@ export class VendorProfile implements IVendorProfile {
     avatarSourceURL?: string | undefined;
     profilePath?: string | undefined;
     borderColor?: string | undefined;
-    categories?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
     generalDiscounts?: CustomerDiscount[] | undefined;
@@ -6390,7 +6401,7 @@ export interface IVendorProfile {
     avatarSourceURL?: string | undefined;
     profilePath?: string | undefined;
     borderColor?: string | undefined;
-    categories?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
     reviewCount?: number;
     reviewRatingTotal?: number;
     generalDiscounts?: CustomerDiscount[] | undefined;
@@ -6403,8 +6414,8 @@ export class ProfilesResponse implements IProfilesResponse {
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
     vendorProfile?: VendorProfile;
-    notificationCategories?: string[] | undefined;
-    feedCategoriesToShow?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
     isAdmin?: boolean;
 
@@ -6480,8 +6491,8 @@ export interface IProfilesResponse {
     isSuccess?: boolean;
     consumerProfile?: ConsumerProfile;
     vendorProfile?: VendorProfile;
-    notificationCategories?: string[] | undefined;
-    feedCategoriesToShow?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
     isAdmin?: boolean;
 }
@@ -6620,7 +6631,7 @@ export interface IResponse {
 
 export class AccountNotificationCategoriesRequest implements IAccountNotificationCategoriesRequest {
     notificationToken?: string | undefined;
-    notificationCategories?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
 
     constructor(data?: IAccountNotificationCategoriesRequest) {
@@ -6666,7 +6677,7 @@ export class AccountNotificationCategoriesRequest implements IAccountNotificatio
 
 export interface IAccountNotificationCategoriesRequest {
     notificationToken?: string | undefined;
-    notificationCategories?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
 }
 
@@ -6707,7 +6718,7 @@ export interface INotificationTokenRequest {
 }
 
 export class AccountFeedSettingsRequest implements IAccountFeedSettingsRequest {
-    feedCategoriesToShow?: string[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
 
     constructor(data?: IAccountFeedSettingsRequest) {
         if (data) {
@@ -6747,7 +6758,7 @@ export class AccountFeedSettingsRequest implements IAccountFeedSettingsRequest {
 }
 
 export interface IAccountFeedSettingsRequest {
-    feedCategoriesToShow?: string[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
 }
 
 export class AnswerWithVendorRequest implements IAnswerWithVendorRequest {
@@ -6971,7 +6982,7 @@ export interface IPollAnswerRequest {
 }
 
 export class CategoryRequest implements ICategoryRequest {
-    categoryNames?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
     pageNumber?: number;
     pageSize?: number;
     includeRecentPostsCount?: number;
@@ -6987,10 +6998,10 @@ export class CategoryRequest implements ICategoryRequest {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["categoryNames"])) {
-                this.categoryNames = [] as any;
-                for (let item of _data["categoryNames"])
-                    this.categoryNames!.push(item);
+            if (Array.isArray(_data["categories"])) {
+                this.categories = [] as any;
+                for (let item of _data["categories"])
+                    this.categories!.push(item);
             }
             this.pageNumber = _data["pageNumber"];
             this.pageSize = _data["pageSize"];
@@ -7007,10 +7018,10 @@ export class CategoryRequest implements ICategoryRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.categoryNames)) {
-            data["categoryNames"] = [];
-            for (let item of this.categoryNames)
-                data["categoryNames"].push(item);
+        if (Array.isArray(this.categories)) {
+            data["categories"] = [];
+            for (let item of this.categories)
+                data["categories"].push(item);
         }
         data["pageNumber"] = this.pageNumber;
         data["pageSize"] = this.pageSize;
@@ -7020,7 +7031,7 @@ export class CategoryRequest implements ICategoryRequest {
 }
 
 export interface ICategoryRequest {
-    categoryNames?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
     pageNumber?: number;
     pageSize?: number;
     includeRecentPostsCount?: number;
@@ -7077,7 +7088,7 @@ export class HeroAd implements IHeroAd {
     imageUrl?: string | undefined;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
 
     constructor(data?: IHeroAd) {
         if (data) {
@@ -7100,7 +7111,7 @@ export class HeroAd implements IHeroAd {
             this.imageUrl = _data["imageUrl"];
             this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
             this.callToAction = _data["callToAction"];
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
         }
     }
 
@@ -7123,7 +7134,7 @@ export class HeroAd implements IHeroAd {
         data["imageUrl"] = this.imageUrl;
         data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
         data["callToAction"] = this.callToAction;
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         return data; 
     }
 }
@@ -7139,7 +7150,7 @@ export interface IHeroAd {
     imageUrl?: string | undefined;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
 }
 
 export class CategoryResponse implements ICategoryResponse {
@@ -8056,7 +8067,7 @@ export interface IConsumerBorderColorRequest {
 
 export class ConsumerNotificationSettingsRequest implements IConsumerNotificationSettingsRequest {
     notificationToken?: string | undefined;
-    notificationCategories?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
 
     constructor(data?: IConsumerNotificationSettingsRequest) {
@@ -8102,12 +8113,12 @@ export class ConsumerNotificationSettingsRequest implements IConsumerNotificatio
 
 export interface IConsumerNotificationSettingsRequest {
     notificationToken?: string | undefined;
-    notificationCategories?: string[] | undefined;
+    notificationCategories?: CategoryType[] | undefined;
     notificationsForAnsweredQuestions?: boolean;
 }
 
 export class ConsumerFeedSettingsRequest implements IConsumerFeedSettingsRequest {
-    feedCategoriesToShow?: string[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
 
     constructor(data?: IConsumerFeedSettingsRequest) {
         if (data) {
@@ -8147,7 +8158,7 @@ export class ConsumerFeedSettingsRequest implements IConsumerFeedSettingsRequest
 }
 
 export interface IConsumerFeedSettingsRequest {
-    feedCategoriesToShow?: string[] | undefined;
+    feedCategoriesToShow?: CategoryType[] | undefined;
 }
 
 export class ContactUsRequest implements IContactUsRequest {
@@ -8245,7 +8256,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
     imageUrls?: string[] | undefined;
     adTaglines?: AdTagline[] | undefined;
     callsToAction?: string[] | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
 
     constructor(data?: IHeroAdTemplate) {
         if (data) {
@@ -8276,7 +8287,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
                 for (let item of _data["callsToAction"])
                     this.callsToAction!.push(item);
             }
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
         }
     }
 
@@ -8307,7 +8318,7 @@ export class HeroAdTemplate implements IHeroAdTemplate {
             for (let item of this.callsToAction)
                 data["callsToAction"].push(item);
         }
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         return data; 
     }
 }
@@ -8319,7 +8330,7 @@ export interface IHeroAdTemplate {
     imageUrls?: string[] | undefined;
     adTaglines?: AdTagline[] | undefined;
     callsToAction?: string[] | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
 }
 
 export class HeroAdTemplatesResponse implements IHeroAdTemplatesResponse {
@@ -8383,7 +8394,7 @@ export interface IHeroAdTemplatesResponse {
 }
 
 export class CreateHeroAdRequest implements ICreateHeroAdRequest {
-    categoryName?: string | undefined;
+    category?: CategoryType;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
@@ -8400,7 +8411,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
             this.adTagline = _data["adTagline"] ? AdTagline.fromJS(_data["adTagline"]) : <any>undefined;
             this.callToAction = _data["callToAction"];
             this.imageUrl = _data["imageUrl"];
@@ -8417,7 +8428,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         data["adTagline"] = this.adTagline ? this.adTagline.toJSON() : <any>undefined;
         data["callToAction"] = this.callToAction;
         data["imageUrl"] = this.imageUrl;
@@ -8427,7 +8438,7 @@ export class CreateHeroAdRequest implements ICreateHeroAdRequest {
 }
 
 export interface ICreateHeroAdRequest {
-    categoryName?: string | undefined;
+    category?: CategoryType;
     adTagline?: AdTagline;
     callToAction?: string | undefined;
     imageUrl?: string | undefined;
@@ -9841,7 +9852,7 @@ export class Route implements IRoute {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -9866,7 +9877,7 @@ export class Route implements IRoute {
             this.postId = _data["postId"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
             this.startDateUtc = _data["startDateUtc"] ? new Date(_data["startDateUtc"].toString()) : <any>undefined;
             this.endDateUtc = _data["endDateUtc"] ? new Date(_data["endDateUtc"].toString()) : <any>undefined;
             this.author = _data["author"] ? NeatBoutiqueEntity.fromJS(_data["author"]) : <any>undefined;
@@ -9899,7 +9910,7 @@ export class Route implements IRoute {
         data["postId"] = this.postId;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         data["startDateUtc"] = this.startDateUtc ? this.startDateUtc.toISOString() : <any>undefined;
         data["endDateUtc"] = this.endDateUtc ? this.endDateUtc.toISOString() : <any>undefined;
         data["author"] = this.author ? this.author.toJSON() : <any>undefined;
@@ -9925,7 +9936,7 @@ export interface IRoute {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    categoryName?: string | undefined;
+    category?: CategoryType;
     startDateUtc?: Date | undefined;
     endDateUtc?: Date | undefined;
     author?: NeatBoutiqueEntity;
@@ -10721,9 +10732,6 @@ export class StripeSettings implements IStripeSettings {
     couponCode3FreeMonths?: string | undefined;
     couponCode6FreeMonths?: string | undefined;
     couponCodeFreeForever?: string | undefined;
-    couponCode3FreeMonthsGF?: string | undefined;
-    couponCode6FreeMonthsGF?: string | undefined;
-    couponCodeFreeForeverGF?: string | undefined;
     stripeBypassFreeForeverId?: string | undefined;
 
     constructor(data?: IStripeSettings) {
@@ -10743,9 +10751,6 @@ export class StripeSettings implements IStripeSettings {
             this.couponCode3FreeMonths = _data["couponCode3FreeMonths"];
             this.couponCode6FreeMonths = _data["couponCode6FreeMonths"];
             this.couponCodeFreeForever = _data["couponCodeFreeForever"];
-            this.couponCode3FreeMonthsGF = _data["couponCode3FreeMonthsGF"];
-            this.couponCode6FreeMonthsGF = _data["couponCode6FreeMonthsGF"];
-            this.couponCodeFreeForeverGF = _data["couponCodeFreeForeverGF"];
             this.stripeBypassFreeForeverId = _data["stripeBypassFreeForeverId"];
         }
     }
@@ -10765,9 +10770,6 @@ export class StripeSettings implements IStripeSettings {
         data["couponCode3FreeMonths"] = this.couponCode3FreeMonths;
         data["couponCode6FreeMonths"] = this.couponCode6FreeMonths;
         data["couponCodeFreeForever"] = this.couponCodeFreeForever;
-        data["couponCode3FreeMonthsGF"] = this.couponCode3FreeMonthsGF;
-        data["couponCode6FreeMonthsGF"] = this.couponCode6FreeMonthsGF;
-        data["couponCodeFreeForeverGF"] = this.couponCodeFreeForeverGF;
         data["stripeBypassFreeForeverId"] = this.stripeBypassFreeForeverId;
         return data; 
     }
@@ -10780,9 +10782,6 @@ export interface IStripeSettings {
     couponCode3FreeMonths?: string | undefined;
     couponCode6FreeMonths?: string | undefined;
     couponCodeFreeForever?: string | undefined;
-    couponCode3FreeMonthsGF?: string | undefined;
-    couponCode6FreeMonthsGF?: string | undefined;
-    couponCodeFreeForeverGF?: string | undefined;
     stripeBypassFreeForeverId?: string | undefined;
 }
 
@@ -10839,7 +10838,7 @@ export interface ISettings {
 }
 
 export class VendorProfilesRequest implements IVendorProfilesRequest {
-    categoryName?: string | undefined;
+    category?: CategoryType;
     pageNumber?: number;
     pageSize?: number;
 
@@ -10854,7 +10853,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.categoryName = _data["categoryName"];
+            this.category = _data["category"];
             this.pageNumber = _data["pageNumber"];
             this.pageSize = _data["pageSize"];
         }
@@ -10869,7 +10868,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
+        data["category"] = this.category;
         data["pageNumber"] = this.pageNumber;
         data["pageSize"] = this.pageSize;
         return data; 
@@ -10877,7 +10876,7 @@ export class VendorProfilesRequest implements IVendorProfilesRequest {
 }
 
 export interface IVendorProfilesRequest {
-    categoryName?: string | undefined;
+    category?: CategoryType;
     pageNumber?: number;
     pageSize?: number;
 }
@@ -11124,7 +11123,7 @@ export interface IVendorSocialLinksRequest {
 
 export class VendorCategoriesRequest implements IVendorCategoriesRequest {
     vendorId?: string | undefined;
-    categories?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
 
     constructor(data?: IVendorCategoriesRequest) {
         if (data) {
@@ -11167,7 +11166,7 @@ export class VendorCategoriesRequest implements IVendorCategoriesRequest {
 
 export interface IVendorCategoriesRequest {
     vendorId?: string | undefined;
-    categories?: string[] | undefined;
+    categories?: CategoryType[] | undefined;
 }
 
 export class VendorBorderColorRequest implements IVendorBorderColorRequest {

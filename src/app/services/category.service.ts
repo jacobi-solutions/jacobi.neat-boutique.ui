@@ -524,7 +524,7 @@ export class CategoryService {
         isSelected: true
       }),
       new Category({
-        name: CategoryTypes.CHURCH_STATE,
+        name: CategoryTypes.NON_PROFIT,
         icon: 'school',
         hexColor: '#9eaebe',
         categoryLink: '',

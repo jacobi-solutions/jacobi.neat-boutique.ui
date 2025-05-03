@@ -12,6 +12,6 @@ export const CategoryTypes = {
     NIGHTLIFE_ENTERTAINMENT: "Nightlife & Entertainment",
     HEALTH_WELLNESS: "Health & Wellness",
     MAINTENANCE_REPAIR: "Maintenance & Repair",
-    CHURCH_STATE: "Church & State",
+    NON_PROFIT: "Church & State",
     SERVICES_MORE: "Services & More"
 };
