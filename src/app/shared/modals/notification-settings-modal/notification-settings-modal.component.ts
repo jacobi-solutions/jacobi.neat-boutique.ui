@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CategoryTypes } from 'src/app/constants/category-types';
+import { CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ConsumerService } from 'src/app/services/consumer.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
@@ -12,16 +12,14 @@ import { NotificationsService } from 'src/app/services/notifications.service';
 })
 export class NotificationSettingsModalComponent implements OnInit {
 
-  @Input() notificationCategories: string[] = [];
+  @Input() notificationCategories: CategoryType[] = [];
   @Input() notificationsForAnsweredQuestions: boolean;
-  public categoryTypes: string[];
-  public categorySet: { name: string, isSelected: boolean}[] = [];
+  public categoryTypes: CategoryType[];
+  public categorySet: { name: CategoryType, isSelected: boolean}[] = [];
   public userErrorMsg: string = null;
 
   constructor(private _modalController: ModalController, private _accountsService: AccountsService, private _notificationService: NotificationsService) {
-    this.categoryTypes = Object.keys(CategoryTypes).map(key => CategoryTypes[key]);
-
-    
+    this.categoryTypes = Object.values(CategoryType);
   }
 
   ngOnInit() {
@@ -29,8 +27,6 @@ export class NotificationSettingsModalComponent implements OnInit {
       var isSelected = this.notificationCategories.includes(x);
       this.categorySet.push({name: x, isSelected: isSelected})
     });
-    
-    
   }
 
   ionViewDidEnter() {
@@ -40,14 +36,11 @@ export class NotificationSettingsModalComponent implements OnInit {
     document.documentElement.style.setProperty('--current-modal-card-width', `${modalCardWidth}px`);
   }
 
- 
-
   public assessSelectedCategories(event) {
     const userSelectedCategories = Object.keys(this.categorySet).filter(categoryName => {
       return this.categorySet[categoryName].isSelected;
     })
   }
-
 
   onClose(event) {
     this._modalController.dismiss({
@@ -65,11 +58,9 @@ export class NotificationSettingsModalComponent implements OnInit {
       this._accountsService.updateNotificationSettings(token, selectedCategories, this.notificationsForAnsweredQuestions);
     }
       
-
     this._modalController.dismiss({
       dismissed: true,
       event
     });
   }
-
 }

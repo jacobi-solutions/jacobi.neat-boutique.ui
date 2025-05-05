@@ -1,7 +1,6 @@
-
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CategoryTypes } from 'src/app/constants/category-types';
+import { CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { VendorSettingsService } from 'src/app/services/vendor-settings.service';
 
 @Component({
@@ -12,15 +11,13 @@ import { VendorSettingsService } from 'src/app/services/vendor-settings.service'
 })
 export class SelectCategoriesModalComponent implements OnInit {
 
-  @Input() vendorCategories: string[] = [];
-  public categoryTypes: string[];
+  @Input() vendorCategories: CategoryType[] = [];
+  public categoryTypes: CategoryType[];
   public categorySet: {};
   public userErrorMsg: string = null;
 
   constructor(private _modalController: ModalController, private _vendorSettings: VendorSettingsService) {
-    this.categoryTypes = Object.keys(CategoryTypes).map(key => CategoryTypes[key]);
-
-    
+    this.categoryTypes = Object.values(CategoryType);
   }
 
   ngOnInit() {
@@ -41,7 +38,7 @@ export class SelectCategoriesModalComponent implements OnInit {
     document.documentElement.style.setProperty('--current-modal-card-width', `${modalCardWidth}px`);
   }
 
-  public vendorInCategory(category: string) {
+  public vendorInCategory(category: CategoryType) {
     return this.vendorCategories.includes(category);
   }
 
@@ -56,7 +53,6 @@ export class SelectCategoriesModalComponent implements OnInit {
       this.userErrorMsg = null;
     }
   }
-
 
   onClose(event) {
     this._modalController.dismiss({
@@ -93,5 +89,4 @@ export class SelectCategoriesModalComponent implements OnInit {
 
     // updateVendorCategories
   }
-
 }

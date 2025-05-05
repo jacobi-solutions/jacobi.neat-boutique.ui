@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CurrentUserDisplay } from './models/current-user-display';
 import { VendorDisplay } from './models/vendor-display';
-import { NeatBoutiqueApiService, VendorProfileRequest, Request, VendorProfilesRequest, VendorProfilesResponse, VendorProfileWithReviewsResponse } from './services/neat-boutique-api.service';
+import { NeatBoutiqueApiService, VendorProfileRequest, Request, VendorProfilesRequest, VendorProfilesResponse, VendorProfileWithReviewsResponse, CategoryType } from './services/neat-boutique-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -49,9 +49,15 @@ export class VendorService {
     return promise;
   }
 
+  // Helper method to map a string category to the CategoryType enum
+  private mapStringToCategoryType(categoryName: string): CategoryType {
+    // This assumes the string matches the enum name
+    return CategoryType[categoryName as keyof typeof CategoryType];
+  }
+
   getVendorsByCategoryName(categoryName: string, pageNumber: number = 0, pageSize: number = 10) {    
     const request = new VendorProfilesRequest();
-    request.categoryName = categoryName;
+    request.category = this.mapStringToCategoryType(categoryName);
     request.pageNumber = pageNumber;
     request.pageSize = pageSize;
     const promise = new Promise<VendorDisplay[]>((resolve, reject) => {
@@ -99,7 +105,7 @@ export class VendorService {
     this._currentCategory = categoryName;
 
     const request = new VendorProfilesRequest();
-    request.categoryName = categoryName;
+    request.category = this.mapStringToCategoryType(categoryName);
     request.pageNumber = this._vendorListPage;
     request.pageSize = pageSize;
     const promise = new Promise<VendorDisplay[]>((resolve, reject) => {

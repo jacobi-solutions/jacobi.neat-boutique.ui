@@ -35,7 +35,7 @@ export class BillboardAdComponent implements OnInit {
 
   public async submitAd() {
     if (this.vendor.vendorSubscriptionPlan === SubscriptionPlanTypes.VENDOR_PREMIUM) {
-      this.postedAd = await this._vendorSettingsService.createHeroAdForVendor(this.vendor.id, this.selectedHeroAd.categoryName, 
+      this.postedAd = await this._vendorSettingsService.createHeroAdForVendor(this.vendor.id, this.selectedHeroAd.category, 
       this.selectedHeroAd.adTagline, this.selectedHeroAd.callToAction, this.selectedHeroAd.imageUrl);
       this.adIsCreated = true;
     } else {
@@ -45,11 +45,11 @@ export class BillboardAdComponent implements OnInit {
 
   private async _loadHeroAds() {
     this.heroTemplates = await this._vendorSettingsService.getHeroAdTemplatesForVendor();
-    this.selectedHeroAd.categoryName = this.heroTemplates[0].categoryName;
+    this.selectedHeroAd.category = this.heroTemplates[0].category;
     this.selectHeroTemplateByCategory();
   }
   selectHeroTemplateByCategory() {
-    this.selectedHeroTemplate = this.heroTemplates.find(x => x.categoryName === this.selectedHeroAd.categoryName);
+    this.selectedHeroTemplate = this.heroTemplates.find(x => x.category === this.selectedHeroAd.category);
     this.selectedHeroAd.adTagline = this.selectedHeroTemplate.adTaglines[0];
     this.selectedHeroAd.callToAction = this.selectedHeroTemplate.callsToAction[0];
     this.selectedHeroAd.imageUrl = this.selectedHeroTemplate.imageUrls[0];

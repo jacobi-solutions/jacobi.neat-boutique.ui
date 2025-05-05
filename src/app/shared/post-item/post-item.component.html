@@ -1,4 +1,3 @@
-
 <div *ngIf="post" fixed>
   <ion-row class="post-wrapper">
     <ion-col [ngClass]="{ 'route-post-wrapper-col': post.postType === postTypes.ROUTE }">
@@ -11,7 +10,7 @@
               [username]="getDisplayName()"
               [borderColor]="post.author.borderColor"
               [secondaryText]="post.localCreated"
-              [tertiaryText]="' in '  + post.categoryName"
+              [tertiaryText]="' in '  + post.category"
               [imageSrc]="post.author.avatarSourceURL">
             </app-nb-avatar>
           </div>
@@ -39,7 +38,7 @@
             <ion-row>
               <ion-col>
                 <!-- [answers]="normalizedAnswersForChartMinMax(post.selections)" -->
-                <app-answer-list [feedType]="feedType" [restrictedAvailableAnswers]="restrictedAvailableAnswers" [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [categoryName]="post?.categoryName" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
+                <app-answer-list [feedType]="feedType" [restrictedAvailableAnswers]="restrictedAvailableAnswers" [isDemo]="isDemo" [altAnswerStyle]="altAnswerStyle" [categoryName]="post?.category" [postId]="post.id" [postType]="post?.postType" [answers]="post.selections?.sort(sortByPointTotals)"></app-answer-list>
               </ion-col>
             </ion-row>
           </div>

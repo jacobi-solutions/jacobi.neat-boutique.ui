@@ -9,18 +9,14 @@ import { PostDisplay } from "../models/post-display";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { EntityDisplay } from "../models/entity-display";
 import { UserRoleTypes } from "../constants/user-role-types";
-import { CategoryTypes } from "../constants/category-types";
 import { VendorDisplay } from "../models/vendor-display";
 import { AccountsService } from "./accounts.service";
 import {
   Selection,
-
   Post,
-
   Comment,
   CommentRequest,
   CommentResponse,
-
   NeatBoutiqueApiService,
   AnswerSearchRequest,
   NeatBoutiqueEntity,
@@ -50,6 +46,7 @@ import {
   RouteRequest,
   MyVisitsResponse,
   RouteSelectionVisit,
+  CategoryType,
 } from "./neat-boutique-api.service";
 import { UtilService } from "./util.service";
 import { AnswersService } from "./answers.service";
@@ -83,7 +80,7 @@ export class CategoryService {
   private _currentUser: CurrentUserDisplay;
   // private _vendorPosts: VendorPostDisplay[] = [];
   private _recentConsumerPosts: PostDisplay[];
-  private _selectedCategoryNames: string[];
+  private _selectedCategoryNames: CategoryType[];
   private _pageCount: number;
   public categories: Category[];
   public currentPage: number = 0;
@@ -112,7 +109,7 @@ export class CategoryService {
             var showCategory =  x.isSelected = this._currentUser.feedCategoriesToShow.some(y => y == x.name);
             x.isSelected = showCategory;
           });
-          this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name));
+          this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name as CategoryType));
         }
         
         // this.emitCategoryDisplaySubject();
@@ -120,7 +117,7 @@ export class CategoryService {
     });
 
     
-    this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name));
+    this.loadPostsByCategoryNames(this.categories.filter(x => x.isSelected).map(x => x.name as CategoryType));
     this._answersService.questionAnsweredOnPostSubject.subscribe((post: PostDisplay) => {
       if(post) {
         var updatedPosts = this.updateConsumerPostInPosts(post, this._categoryDisplay.consumerPosts);
@@ -139,10 +136,19 @@ export class CategoryService {
   }
 
   updateShownCategories() {
-    var categoryNames = this.categories.filter(x => x.isSelected).map(x => x.name);
-
-    this._accountsService.updateFeedSettings(categoryNames);
+    var categoryNames = this.categories.filter(x => x.isSelected).map(x => x.name as CategoryType);
     
+    // Check if the user is logged in by getting the current user
+    const isUserLoggedIn = this._accountsService.currentUserSubject.getValue() != null;
+    
+    if (isUserLoggedIn) {
+      // Only update feed settings in the backend if the user is logged in
+      this._accountsService.updateFeedSettings(categoryNames);
+    } else {
+      console.log('User not logged in, skipping preference save to backend');
+    }
+    
+    // Always load posts with the updated categories
     this.loadPostsByCategoryNames(categoryNames);
   }
 
@@ -192,13 +198,17 @@ export class CategoryService {
   }
   
 
-  private loadPostsByCategoryNames(categoryNames: string[]) {
+  private loadPostsByCategoryNames(categoryNames: CategoryType[]) {
     this._selectedCategoryNames = categoryNames;
     const request = new CategoryRequest();
-    request.categoryNames = categoryNames;
+    request.categories = categoryNames;
     request.includeRecentPostsCount = this.recentPostsPerPage;
     request.pageSize = this.consumerPostsPerPage;
     request.pageNumber = 0;
+
+    console.log('Category Names:', categoryNames);
+    console.log('Request:', request);
+    console.log('Request JSON:', JSON.stringify(request));
 
     this._neatBoutiqueApiService
       .getAllDataForCategories(request)
@@ -213,6 +223,7 @@ export class CategoryService {
 
           this.emitCategoryDisplaySubject();
         } else {
+          console.error('Error loading categories:', response.errors);
           // this.authService.revokeToken();
           // reject(false);
         }
@@ -230,7 +241,7 @@ export class CategoryService {
     //}
 
     const request = new CategoryRequest();
-    request.categoryNames = this._selectedCategoryNames;
+    request.categories = this._selectedCategoryNames;
     request.includeRecentPostsCount = this.recentPostsPerPage;
     request.pageSize = this.consumerPostsPerPage;
     request.pageNumber = this.currentPage;
@@ -481,62 +492,62 @@ export class CategoryService {
 
   loadStaticCategories() {
     this.categories = [
-      new Category({
-        name: CategoryTypes.BOUTIQUES_BEAUTY,
+      {
+        name: CategoryType.BoutiquesBeauty,
         icon: 'storefront',
         hexColor: '#409195',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.FOOD_DRINK,
+      },
+      {
+        name: CategoryType.FoodDrink,
         icon: 'restaurant',
         hexColor: '#ffbc00',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.TRAVEL_ADVENTURE,
+      },
+      {
+        name: CategoryType.TravelAdventure,
         icon: 'airplane',
         hexColor: '#916dd5',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.NIGHTLIFE_ENTERTAINMENT,
+      },
+      {
+        name: CategoryType.NightlifeEntertainment,
         icon: 'beer',
         hexColor: '#dc7730',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.HEALTH_WELLNESS,
-        icon: 'heart',
+      },
+      {
+        name: CategoryType.HealthWellness,
+        icon: 'pulse',
         hexColor: '#93290f',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.MAINTENANCE_REPAIR,
+      },
+      {
+        name: CategoryType.MaintenanceRepair,
         icon: 'build',
         hexColor: '#65c2db',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.NON_PROFIT,
-        icon: 'school',
+      },
+      {
+        name: CategoryType.ChurchState,
+        icon: 'Heart',
         hexColor: '#9eaebe',
         categoryLink: '',
         isSelected: true
-      }),
-      new Category({
-        name: CategoryTypes.SERVICES_MORE,
+      },
+      {
+        name: CategoryType.ServicesMore,
         icon: 'compass',
         hexColor: '#013e43',
         categoryLink: '',
         isSelected: true
-      })
+      }
     ];
   }
 

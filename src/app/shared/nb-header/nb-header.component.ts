@@ -9,7 +9,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { UserSettingsPopoverComponent } from '../popovers/user-settings-popover/user-settings-popover.component';
 import {ElementRef, ViewChild} from '@angular/core';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
-import { CategoryTypes } from 'src/app/constants/category-types';
+import { CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { HeaderGuard } from 'src/app/guards/header.guard';
 import { HeaderDisplay } from 'src/app/models/header-display';
 import { ModalService } from 'src/app/services/modal.service';
@@ -85,7 +85,7 @@ export class NbHeaderComponent implements OnInit {
     this._router.navigateByUrl('/vendor-profile');
   }
 
-  public browseCategory(category: string) {
+  public browseCategory(category: CategoryType) {
     this._nbRouter.goToVendorListByCategory(category);
   }
 
@@ -103,7 +103,7 @@ export class NbHeaderComponent implements OnInit {
   
 
   private _loadNav() {
-    this.secondLevelNav = Object.keys(CategoryTypes).map(category => ({ name: CategoryTypes[category], href: '' }))
+    this.secondLevelNav = Object.values(CategoryType).map(category => ({ name: category, href: '' }));
     this.firstLevelNav = [
       {
         name: 'Home',

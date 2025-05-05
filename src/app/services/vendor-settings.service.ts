@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CategoryTypes } from "../constants/category-types";
-
 import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { AccountsService } from "./accounts.service";
 import { promise } from 'protractor';
-import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile, CustomerDiscount, VendorGeneralDiscountsRequest } from './neat-boutique-api.service';
+import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile, CustomerDiscount, VendorGeneralDiscountsRequest, CategoryType } from './neat-boutique-api.service';
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -98,7 +96,7 @@ export class VendorSettingsService {
   public updateVendorCategories(vendorId: string, categories: string[]) {
     var request = new VendorCategoriesRequest();
     request.vendorId = vendorId;
-    request.categories = categories;
+    request.categories = categories.map(x => x as unknown as CategoryType);
 
     const promise = new Promise<VendorDisplay>((resolve, reject) => {
       this._neatBoutiqueApi.updateCategories(request).subscribe((response: VendorProfileResponse) => {
@@ -194,12 +192,11 @@ export class VendorSettingsService {
   }
 
   public getCategoryTaglines() {
-
     const categoryTaglines = [];
-    for (let category in CategoryTypes) {
+    for (let category in CategoryType) {
       categoryTaglines.push({
-        tagline: `${CategoryTypes[category]} tagline`,
-        label: `${CategoryTypes[category]} tagline`
+        tagline: `${CategoryType[category]} tagline`,
+        label: `${CategoryType[category]} tagline`
       })
     }
     return categoryTaglines;
@@ -219,9 +216,9 @@ export class VendorSettingsService {
   }
 
 
-  public createHeroAdForVendor(vendorId: string, categoryName: string, adTagline: AdTagline, callToAction: string, imageUrl: string) {
+  public createHeroAdForVendor(vendorId: string, categoryName: CategoryType, adTagline: AdTagline, callToAction: string, imageUrl: string) {
     const request = new CreateHeroAdRequest();
-    request.categoryName = categoryName;
+    request.category = categoryName;
     request.adTagline = adTagline;
     request.callToAction = callToAction;
     request.imageUrl = imageUrl;

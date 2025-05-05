@@ -19,7 +19,8 @@ import {
   NotificationTokenRequest,
   Response,
   AccountCreateRequest,
-  VendorProfileCancelRequest
+  VendorProfileCancelRequest,
+  CategoryType
 } from './neat-boutique-api.service';
 import { Router, UrlTree } from '@angular/router';
 import { AccountDeletion, AuthService } from '../auth/auth.service';
@@ -287,7 +288,7 @@ export class AccountsService {
   public updateNotificationSettings(token: string, categories: string[], notificationsForAnsweredQuestions) {
     var request = new ConsumerNotificationSettingsRequest();
     request.notificationToken = token;
-    request.notificationCategories = categories;
+    request.notificationCategories = categories.map(x => x as unknown as CategoryType);
     request.notificationsForAnsweredQuestions = notificationsForAnsweredQuestions;
 
     console.log("updating notification settings: ")
@@ -323,7 +324,7 @@ export class AccountsService {
 
   public updateFeedSettings(categories: string[]) {
     var request = new ConsumerFeedSettingsRequest();
-    request.feedCategoriesToShow = categories;
+    request.feedCategoriesToShow = categories.map(x => x as unknown as CategoryType);
     const promise = new Promise<boolean>((resolve, reject) => {
       this._neatBoutiqueApiService.updateAccountFeedSettings(request).subscribe((response: Response) => {
         if (response.isSuccess) {

@@ -8,7 +8,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { Post, NeatBoutiqueEntity } from 'src/app/services/neat-boutique-api.service';
+import { Post, NeatBoutiqueEntity, CategoryType } from 'src/app/services/neat-boutique-api.service';
 
 @Component({
   selector: 'app-post-question',
@@ -99,7 +99,7 @@ export class PostQuestionComponent implements OnInit {
 
   async addNewRouteQuestion() {
     const post =  new Post();
-    post.categoryName = this.postForm.value.categoryName;
+    post.category = this.postForm.value.categoryName as unknown as CategoryType;
     post.subject = this.postForm.value.newQuestion.trim();
     post.feedContextId = this.feedContextId;
     post.author = new NeatBoutiqueEntity({
@@ -122,7 +122,7 @@ export class PostQuestionComponent implements OnInit {
     this.newPostIcon = 'paper-plane-outline';
     this.postWithQuestionMark = null;
 
-    // var category = this.categories.find(x => x.name === post.categoryName);
+    // var category = this.categories.find(x => x.name === post.category);
     // this.updateSelectedCategories(category);
     this.onPost.emit();
   }
@@ -130,7 +130,7 @@ export class PostQuestionComponent implements OnInit {
   async addNewCategoryPost() {
     
     const post =  new Post();
-    post.categoryName = this.postForm.value.categoryName;
+    post.category = this.postForm.value.categoryName as unknown as CategoryType;
     post.subject = this.postForm.value.newQuestion.trim();
     post.author = new NeatBoutiqueEntity({
       name: this.currentUser?.consumer.name,
@@ -152,7 +152,7 @@ export class PostQuestionComponent implements OnInit {
     this.newPostIcon = 'paper-plane-outline';
     this.postWithQuestionMark = null;
 
-    var category = this.categories.find(x => x.name === post.categoryName);
+    var category = this.categories.find(x => x.name === post.category);
     this.updateSelectedCategories(category);
     this.onPost.emit();
   }
@@ -169,7 +169,7 @@ export class PostQuestionComponent implements OnInit {
     const html = `
       <h1>Great question!</h1>
       <p class="text-left-align modal-p-min">
-      Please note: Questions you ask can only be answered with the name of a local business and will be voted on by other users. Questions will not be able to be edited after posting. After you’ve posted your question, feel free to explore other questions and post your best answer. 
+      Please note: Questions you ask can only be answered with the name of a local business and will be voted on by other users. Questions will not be able to be edited after posting. After you've posted your question, feel free to explore other questions and post your best answer. 
       </p>
     `;
 

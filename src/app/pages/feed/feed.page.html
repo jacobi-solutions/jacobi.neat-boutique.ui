@@ -81,8 +81,8 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <div class="recent-question" *ngFor="let recentPost of recentPosts" (click)="addCategoryToShownPosts(recentPost.categoryName)">
-                {{ recentPost.subject }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.categoryName }}</strong>
+              <div class="recent-question" *ngFor="let recentPost of recentPosts" (click)="addCategoryToShownPosts(recentPost.category)">
+                {{ recentPost.subject }} <strong>by {{ recentPost.author.name }}</strong> in <strong>{{ recentPost.category }}</strong>
               </div>
             </ion-col>
           </ion-row>

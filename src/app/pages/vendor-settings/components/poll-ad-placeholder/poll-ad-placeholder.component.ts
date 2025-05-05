@@ -2,13 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostDisplay as PostDisplay } from 'src/app/models/post-display';
 import { CategoryDisplay, CategoryService } from 'src/app/services/category.service';
-import { NeatBoutiqueEntity, Comment, VendorProfile, Selection, SelectionVote, Post } from 'src/app/services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Comment, VendorProfile, Selection, SelectionVote, Post, CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { UtilService } from 'src/app/services/util.service';
 import { CommentDisplay } from 'src/app/models/comment-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { VendorSubscriptionService } from 'src/app/services/vendor-subscription.service';
-import { CategoryTypes } from 'src/app/constants/category-types';
 import { PostTypes } from 'src/app/constants/post-types';
 import { SubscriptionPlanTypes } from 'src/app/constants/subscription-plan-types';
 
@@ -53,7 +52,7 @@ export class PollAdPlaceholderComponent implements OnInit {
 
   private _loadExamplePoll() {
     // TODO: update with real service when it's ready
-    // this._categoryService.loadPostsByCategoryNames(CategoryTypes.BOUTIQUES_BEAUTY);
+    // this._categoryService.loadPostsByCategoryNames(CategoryType.BoutiquesBeauty);
     // this._categoryService.categoryDisplaySubject.subscribe((display: CategoryDisplay) => {  
 
       // a post with 5+ answers
@@ -63,7 +62,7 @@ export class PollAdPlaceholderComponent implements OnInit {
         createdDateUtc: new Date(),
         lastUpdatedDateUtc: new Date(),
         subject: 'What is your favorite flavor',
-        categoryName: CategoryTypes.FOOD_DRINK,
+        category: CategoryType.FoodDrink,
         startDateUtc: new Date(),
         endDateUtc: new Date(),
         author: new NeatBoutiqueEntity({

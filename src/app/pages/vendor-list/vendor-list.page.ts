@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { VendorProfile } from 'src/app/services/neat-boutique-api.service';
-import { CategoryTypes } from 'src/app/constants/category-types';
+import { VendorProfile, CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { VendorService } from 'src/app/vendor.service';
 import { NbRoutingService } from 'src/app/services/nb-routing.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -46,7 +45,7 @@ export class VendorListPage implements OnInit {
     }
   }
 
-  private async  _loadVendors(category: string) {
+  private async _loadVendors(category: string) {
     
     this._siteVendorService.getVendorsByCategoryName(category);
     this._siteVendorService.vendorsByCategoryNameSubject.subscribe((vendors: VendorDisplay[]) => {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PostDisplay } from 'src/app/models/post-display';
-import { CategoryTypes } from 'src/app/constants/category-types';
+import { CategoryType } from 'src/app/services/neat-boutique-api.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { MyQuestionsService } from 'src/app/services/my-questions.service';
 
