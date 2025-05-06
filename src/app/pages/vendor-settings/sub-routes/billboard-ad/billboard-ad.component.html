@@ -27,11 +27,11 @@
           <ion-col>
             <div class="input-choice" >
               <ion-input type="text" >
-                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.categoryName}">
+                <ion-item lines="none" class="select-wrapper" [ngClass]="{hasValue: selectedHeroAd.category}">
                     <ion-label class="label-placeholder">Category</ion-label>
       
                     <ion-select
-                      [(ngModel)]="selectedHeroAd.categoryName"
+                      [(ngModel)]="selectedHeroAd.category"
                       (ionChange)="selectHeroTemplateByCategory()"
                       css="select-poll-category"
                       multiple="false"
