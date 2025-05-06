@@ -4,7 +4,7 @@ export const environment = {
   production: true,
   // lociApiBaseUrl: 'http://localhost',
   lociApiBaseUrl: 'https://api.lociknows.com',
-  lociUIBaseUrl: 'https://lociknows.com',
+  lociUIBaseUrl: 'https://app.lociknows.com',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
 
