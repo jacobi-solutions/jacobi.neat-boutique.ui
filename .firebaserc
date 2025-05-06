@@ -1,4 +1,9 @@
 {
+  "projects": {
+    "prod": "citric-inkwell-330122",
+    "dev":  "neat-boutique",
+    "default": "prod"
+  },
   "targets": {
     "citric-inkwell-330122": {
       "hosting": {
@@ -6,9 +11,13 @@
           "citric-inkwell-330122"
         ]
       }
+    },
+    "neat-boutique": {
+      "hosting": {
+        "app": [
+          "neat-boutique"
+        ]
+      }
     }
-  },
-  "projects": {
-    "default": "citric-inkwell-330122"
   }
 }
