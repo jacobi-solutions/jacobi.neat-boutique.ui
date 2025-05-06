@@ -3,7 +3,7 @@ import { ModalController } from "@ionic/angular";
 import { CurrentUserDisplay } from "../models/current-user-display";
 import { AccountsService } from "./accounts.service";
 import { promise } from 'protractor';
-import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile, CustomerDiscount, VendorGeneralDiscountsRequest, CategoryType } from './neat-boutique-api.service';
+import { Request, Response, NeatBoutiqueApiService, VendorImageRequest, Post, VendorPostRequest, PostResponse, VendorProfileResponse, HeroAdTemplatesResponse, HeroAdTemplate, CreateHeroAdRequest, VendorDescriptionRequest, VendorSocialLinksRequest, VendorCategoriesRequest, AdTagline, VendorBorderColorRequest, VendorProfile, CustomerDiscount, VendorGeneralDiscountsRequest, CategoryType, VendorProfileRequest } from './neat-boutique-api.service';
 import { VendorProfileOrNull } from 'typings/custom-types';
 import { UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -205,13 +205,26 @@ export class VendorSettingsService {
   // hero ads ======================
   public getHeroAdTemplatesForVendor() {
     return new Promise<HeroAdTemplate[]>((resolve, reject) => {
-      this._neatBoutiqueApi.getHeroAdTemplatesForVendor(new Request()).subscribe((response: HeroAdTemplatesResponse) => {
-        if(response.isSuccess) {
-          resolve(response.templates);
-        } else {
-          reject();
-        }
-      });
+      const currentUser = this._accountsService.currentUserSubject.getValue();
+      const request = new VendorProfileRequest();
+      
+      if (currentUser && currentUser.vendor) {
+        request.vendorId = currentUser.vendor.id;
+        
+        this._neatBoutiqueApi.getHeroAdTemplatesForVendor(request).subscribe((response: HeroAdTemplatesResponse) => {
+          if(response.isSuccess) {
+            resolve(response.templates);
+          } else {
+            reject();
+          }
+        }, error => {
+          console.error('Error loading hero ads:', error);
+          reject(error);
+        });
+      } else {
+        console.error('No vendor ID available from current user');
+        reject('No vendor ID available');
+      }
     });
   }
 

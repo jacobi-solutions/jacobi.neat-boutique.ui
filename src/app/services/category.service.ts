@@ -535,7 +535,7 @@ export class CategoryService {
         isSelected: true
       },
       {
-        name: CategoryType.ChurchState,
+        name: CategoryType.NonProfits,
         icon: 'Heart',
         hexColor: '#9eaebe',
         categoryLink: '',

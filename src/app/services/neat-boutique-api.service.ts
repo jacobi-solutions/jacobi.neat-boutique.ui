@@ -11297,6 +11297,6 @@ export enum CategoryType {
     NightlifeEntertainment = "Nightlife & Entertainment",
     HealthWellness = "Health & Wellness",
     MaintenanceRepair = "Maintenance & Repair",
-    ChurchState = "Church & State",
+    NonProfits = "Non Profits",
     ServicesMore = "Services & More",
 }
