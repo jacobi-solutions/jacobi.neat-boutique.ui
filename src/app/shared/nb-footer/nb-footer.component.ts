@@ -31,7 +31,7 @@ export class NbFooterComponent implements OnInit {
         href: ''
       },
       {
-        name: 'Loçi &copy;2022',
+        name: 'Loçi &copy;2025',
         href: ''
       },
     ];
