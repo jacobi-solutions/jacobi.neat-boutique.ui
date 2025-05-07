@@ -51,8 +51,12 @@ export class VendorService {
 
   // Helper method to map a string category to the CategoryType enum
   private mapStringToCategoryType(categoryName: string): CategoryType {
-    // This assumes the string matches the enum name
-    return CategoryType[categoryName as keyof typeof CategoryType];
+    // Find the enum key that matches the category name value
+    const enumKey = Object.keys(CategoryType).find(key => CategoryType[key] === categoryName);
+    if (!enumKey) {
+      throw new Error(`Invalid category name: ${categoryName}`);
+    }
+    return CategoryType[enumKey as keyof typeof CategoryType];
   }
 
   getVendorsByCategoryName(categoryName: string, pageNumber: number = 0, pageSize: number = 10) {    
