@@ -67,8 +67,25 @@
             </ion-row>
             <ion-row>
               <ion-col>
+                <ion-button [routerLink]="'/legal/data-deletion'" class="nb-footer-button">
+                  Data Retention
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+
+          <ion-col>
+            <ion-row>
+              <ion-col>
                 <ion-button class="nb-footer-button">
                   Loçi &copy;2025
+                </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-button class="nb-footer-button">
+                  <ion-label>Version: {{ lociConstants.VERSION_NUMBER }}</ion-label>
                 </ion-button>
               </ion-col>
             </ion-row>

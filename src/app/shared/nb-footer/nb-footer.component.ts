@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationItem } from '../../models/navigation-item';
+import { LociConstants } from 'src/app.version';
 
 @Component({
   selector: 'app-nb-footer',
@@ -7,6 +8,7 @@ import { NavigationItem } from '../../models/navigation-item';
   styleUrls: ['./nb-footer.component.scss'],
 })
 export class NbFooterComponent implements OnInit {
+  lociConstants = LociConstants;
   public footerNav: NavigationItem[];
   constructor() {
     this.footerNav = [
