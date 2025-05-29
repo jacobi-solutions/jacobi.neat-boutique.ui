@@ -1,0 +1,312 @@
+@import 'src/theme/jacobi-theme/scss/main';
+@import 'src/global-sass-variables';
+
+.announcements-display-wrapper,
+.announcements-edit-wrapper {
+  position: relative;
+  padding: 16px;
+  
+  h2 {
+    color: var(--ion-color-primary);
+    margin-bottom: 8px;
+    font-size: 1.4em;
+    font-weight: 600;
+  }
+}
+
+.announcements-description-text {
+  color: var(--ion-color-medium);
+  font-size: 0.9em;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.announcements-list {
+  margin-bottom: 16px;
+  
+  .announcement-item {
+    padding: 12px;
+    border: 1px solid var(--ion-color-light);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: var(--ion-color-light-tint);
+    
+    h4 {
+      margin: 0 0 8px 0;
+      color: var(--ion-color-dark);
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0 0 8px 0;
+      color: var(--ion-color-medium-shade);
+      line-height: 1.4;
+    }
+    
+    .announcement-date {
+      color: var(--ion-color-medium);
+      font-size: 0.8em;
+      font-style: italic;
+    }
+  }
+}
+
+.empty-announcements-placeholder {
+  padding: 24px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-style: italic;
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.edit-announcements {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: var(--ion-color-primary);
+  
+  &:hover {
+    color: var(--ion-color-primary-shade);
+  }
+}
+
+.announcement-form-item {
+  margin-bottom: 20px;
+  
+  .announcement-section {
+    margin-bottom: 12px;
+  }
+}
+
+.textarea-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  
+  ion-label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+    
+    .required-asterisk {
+      color: var(--ion-color-danger);
+    }
+  }
+  
+  ion-textarea {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 6px;
+    background-color: var(--ion-color-light);
+    
+    &:focus-within {
+      border-color: var(--ion-color-primary);
+    }
+  }
+}
+
+.character-count {
+  text-align: right;
+  font-size: 0.8em;
+  color: var(--ion-color-medium);
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.error-message {
+  margin-top: 4px;
+  
+  small {
+    color: var(--ion-color-danger);
+    font-size: 0.8em;
+  }
+}
+
+.action-buttons-row {
+  margin-top: 12px;
+  align-items: center;
+  
+  .delete-button-col,
+  .add-button-col {
+    display: flex;
+    justify-content: center;
+    
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      --padding-top: 8px;
+      --padding-bottom: 8px;
+      margin: 0;
+      
+      ion-icon {
+        font-size: 1.2em;
+      }
+    }
+  }
+}
+
+.announcement-divider {
+  border: none;
+  border-top: 1px solid var(--ion-color-light-shade);
+  margin: 20px 0;
+}
+
+.form-actions {
+  margin-top: 24px;
+  
+  .action-btn-wrapper {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    app-jacobi-button {
+      min-width: 100px;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .announcements-display-wrapper,
+  .announcements-edit-wrapper {
+    padding: 12px;
+    
+    h2 {
+      font-size: 1.2em;
+    }
+  }
+  
+  .form-actions {
+    .action-btn-wrapper {
+      flex-direction: column;
+      align-items: center;
+      
+      app-jacobi-button {
+        width: 200px;
+      }
+    }
+  }
+}
+
+// Loading states
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+// Animation for smooth transitions
+.announcements-display-wrapper,
+.announcements-edit-wrapper {
+  transition: all 0.3s ease;
+}
+
+.announcement-item {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.announcement-section {
+  align-items: center; /* Aligns elements neatly in each row */
+  margin-bottom: 0.5rem; /* Tight spacing */
+}
+
+.delete-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Ensures it's centered horizontally too */
+}
+
+.add-more-button-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-more-button {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-primary) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+  justify-content: center;
+}
+
+.delete-icon {
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-light-grey) !important;
+  font-size: 2.5rem;
+  min-width: 2.5rem; 
+  min-height: 2.5rem;
+}
+
+ion-icon {
+  font-size: inherit;
+}
+
+.announcements-description-wrapper {
+  position: relative;
+  
+  ul {
+    list-style-type: none;
+  }
+
+  .empty-announcements-description-placeholder {
+    opacity: 0.5;
+    font-weight: 500;
+    font-size: 1.1rem;
+    font-family: inherit; // explicitly inherit the global font
+    line-height: inherit; // ensure line-height matches the global default
+    color: inherit; // ensure color matches global default
+  }
+
+  .announcements-description-text {
+    font-weight: 500;
+    font-size: 1.1rem;
+    font-family: inherit; // explicitly inherit the global font
+    line-height: inherit; // ensure line-height matches the global default
+    color: inherit; // ensure color matches global default
+  }
+
+  .edit-announcements-description {
+    position: absolute;
+    top: -20px;
+    right: -18px;
+    color: var(--nb-primary); // explicitly match the global edit icon color
+    font-size: 1.5rem; // explicitly match the global edit icon size
+    cursor: pointer; 
+  }
+}
+
+// Ensure padding and shadows match exactly:
+ion-card {
+  border-radius: var(--nb-border-radius);
+  border: 1px solid var(--nb-border-color);
+  box-shadow: var(--nb-subtle-box-shadow);
+  padding: 1rem; // Confirmed padding to match the first card precisely
+}
+
+.action-btn-wrapper {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: 0 auto;
+  float: revert;
+} 

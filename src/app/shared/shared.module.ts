@@ -46,6 +46,7 @@ import { ChooseAnswerRankingModalComponent } from './modals/choose-answer-rankin
 import { UserSettingsPopoverComponent } from './popovers/user-settings-popover/user-settings-popover.component';
 import { UsernameAndEmailModalComponent } from './modals/username-and-email-modal/username-and-email-modal.component';
 import { MyListComponent } from './my-list/my-list.component';
+import { EditAnnouncementsComponent } from '../components/edit-announcements/edit-announcements.component';
 
 
 @NgModule({
@@ -93,7 +94,8 @@ import { MyListComponent } from './my-list/my-list.component';
     FeedSettingsModalComponent,
     ChooseAnswerRankingModalComponent,
     UsernameAndEmailModalComponent,
-    MyListComponent
+    MyListComponent,
+    EditAnnouncementsComponent
   ],
   imports: [
     RouterModule,
@@ -146,7 +148,8 @@ import { MyListComponent } from './my-list/my-list.component';
     FeedSettingsModalComponent,
     ChooseAnswerRankingModalComponent,
     UsernameAndEmailModalComponent,
-    MyListComponent
+    MyListComponent,
+    EditAnnouncementsComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,122 @@
+<ion-card *ngIf="announcementsForm">
+  <ion-card-content>
+    <!-- View Mode -->
+    <div *ngIf="!editMode" class="announcements-description-wrapper">
+      <p class="announcements-description-text">Share important news and updates with your customers.</p>
+
+      <div *ngIf="announcements?.length > 0">
+        <ul>
+          <li *ngFor="let announcement of announcements">
+            <p class="announcements-description-text"><strong>{{ announcement.title }}</strong></p>
+            <p class="announcements-description-text">{{ announcement.body }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="!(announcements?.length > 0)" class="empty-announcements-description-placeholder">
+        You haven't created any announcements yet. Let your customers know what's new!
+      </div>
+
+      <ion-icon 
+        class="edit-announcements-description edit-action allow-opacity" 
+        name="create-outline" 
+        (click)="toggleEditMode()">
+      </ion-icon>
+    </div>
+
+    <!-- Edit Mode -->
+    <ion-row *ngIf="editMode" class="announcements-description-wrapper">
+      <ion-col offset=".5" size="11.5">
+        <form [formGroup]="announcementsForm">
+          <p class="announcements-description-text">
+            Create up to {{ maxAnnouncements }} announcements to share with your customers.
+          </p>
+
+          <div formArrayName="announcementsList">
+            <div 
+              *ngFor="let control of announcementsList.controls; let i = index" 
+              [formGroupName]="i">
+              
+              <ion-row class="announcement-section">
+                <ion-col>
+                  <app-input-field
+                    [formGroupInstance]="control"
+                    inputName="title"
+                    label="Announcement Title">
+                  </app-input-field>
+                </ion-col>
+                <ion-col *ngIf="announcementsList.length > 1" class="delete-icon-col" size=".75">
+                  <ion-icon name="trash" class="clickable delete-icon" (click)="removeAnnouncement(i)"></ion-icon>
+                </ion-col>
+                <ion-col class="add-more-button-col" size=".75">
+                  <ion-icon 
+                    *ngIf="canAddMore() && i === announcementsList.length - 1"
+                    name="add-circle-outline" 
+                    class="clickable add-more-button" 
+                    (click)="addAnnouncement()">
+                  </ion-icon>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col>
+                  <ion-item lines="none" class="textarea-item">
+                    <ion-label position="stacked">
+                      Announcement Text <span class="required-asterisk">*</span>
+                    </ion-label>
+                    <ion-textarea
+                      formControlName="body"
+                      placeholder="Share your news, updates, or special offers..."
+                      rows="3"
+                      maxlength="{{ maxCharacters }}"
+                      (ionBlur)="control.get('body')?.markAsTouched()">
+                    </ion-textarea>
+                  </ion-item>
+                  <div class="character-count">
+                    {{ getCharacterCount(i) }} / {{ maxCharacters }}
+                  </div>
+                  <div 
+                    *ngIf="control.get('body')?.invalid && control.get('body')?.touched" 
+                    class="error-message">
+                    <small *ngIf="control.get('body')?.errors?.['required']">
+                      Announcement text is required
+                    </small>
+                    <small *ngIf="control.get('body')?.errors?.['maxlength']">
+                      Text cannot exceed {{ maxCharacters }} characters
+                    </small>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+
+          <ion-row>
+            <ion-col offset="3" size="3" class="ion-text-center">
+              <div class="action-btn-wrapper">
+                <app-jacobi-button 
+                  [buttonType]="'auth-primary'" 
+                  [disabled]="loading || !announcementsForm.valid"
+                  (click)="saveAnnouncements()">
+                  <ion-spinner *ngIf="loading" name="crescent" size="small"></ion-spinner>
+                  {{ loading ? 'Saving...' : 'Save' }}
+                </app-jacobi-button>
+                
+                <app-jacobi-button 
+                  [buttonType]="'ghost-white text-grey'" 
+                  [disabled]="loading"
+                  (click)="toggleEditMode()">
+                  Cancel
+                </app-jacobi-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+      <ion-icon 
+        class="edit-announcements-description edit-action allow-opacity" 
+        name="create-outline" 
+        (click)="toggleEditMode()">
+      </ion-icon>
+    </ion-row>
+  </ion-card-content>
+</ion-card> 

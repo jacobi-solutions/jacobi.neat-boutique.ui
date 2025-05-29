@@ -458,6 +458,26 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     updateVendorGeneralDiscounts(body: VendorGeneralDiscountsRequest | undefined): Observable<VendorProfileResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    get(body: GetVendorAnnouncementsRequest | undefined): Observable<GetVendorAnnouncementsResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    add(body: AddVendorAnnouncementRequest | undefined): Observable<AddVendorAnnouncementResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateVendorAnnouncementRequest | undefined): Observable<UpdateVendorAnnouncementResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    delete(body: DeleteVendorAnnouncementRequest | undefined): Observable<DeleteVendorAnnouncementResponse>;
 }
 
 @Injectable()
@@ -5450,6 +5470,230 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<VendorProfileResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    get(body: GetVendorAnnouncementsRequest | undefined): Observable<GetVendorAnnouncementsResponse> {
+        let url_ = this.baseUrl + "/Vendors/announcements/get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetVendorAnnouncementsResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetVendorAnnouncementsResponse>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetVendorAnnouncementsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetVendorAnnouncementsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetVendorAnnouncementsResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    add(body: AddVendorAnnouncementRequest | undefined): Observable<AddVendorAnnouncementResponse> {
+        let url_ = this.baseUrl + "/Vendors/announcements/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAdd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAdd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AddVendorAnnouncementResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AddVendorAnnouncementResponse>;
+        }));
+    }
+
+    protected processAdd(response: HttpResponseBase): Observable<AddVendorAnnouncementResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AddVendorAnnouncementResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AddVendorAnnouncementResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: UpdateVendorAnnouncementRequest | undefined): Observable<UpdateVendorAnnouncementResponse> {
+        let url_ = this.baseUrl + "/Vendors/announcements/update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UpdateVendorAnnouncementResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UpdateVendorAnnouncementResponse>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<UpdateVendorAnnouncementResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UpdateVendorAnnouncementResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UpdateVendorAnnouncementResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    delete(body: DeleteVendorAnnouncementRequest | undefined): Observable<DeleteVendorAnnouncementResponse> {
+        let url_ = this.baseUrl + "/Vendors/announcements/delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DeleteVendorAnnouncementResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DeleteVendorAnnouncementResponse>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<DeleteVendorAnnouncementResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeleteVendorAnnouncementResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeleteVendorAnnouncementResponse>(null as any);
     }
 }
 
@@ -10618,6 +10862,7 @@ export class MongoDbSettings implements IMongoDbSettings {
     vendorNetworkMembershipsCollectionName?: string | undefined;
     networkInvitesCollectionName?: string | undefined;
     vendorVisitsCollectionName?: string | undefined;
+    vendorAnnouncementsCollectionName?: string | undefined;
 
     constructor(data?: IMongoDbSettings) {
         if (data) {
@@ -10652,6 +10897,7 @@ export class MongoDbSettings implements IMongoDbSettings {
             this.vendorNetworkMembershipsCollectionName = _data["vendorNetworkMembershipsCollectionName"];
             this.networkInvitesCollectionName = _data["networkInvitesCollectionName"];
             this.vendorVisitsCollectionName = _data["vendorVisitsCollectionName"];
+            this.vendorAnnouncementsCollectionName = _data["vendorAnnouncementsCollectionName"];
         }
     }
 
@@ -10686,6 +10932,7 @@ export class MongoDbSettings implements IMongoDbSettings {
         data["vendorNetworkMembershipsCollectionName"] = this.vendorNetworkMembershipsCollectionName;
         data["networkInvitesCollectionName"] = this.networkInvitesCollectionName;
         data["vendorVisitsCollectionName"] = this.vendorVisitsCollectionName;
+        data["vendorAnnouncementsCollectionName"] = this.vendorAnnouncementsCollectionName;
         return data;
     }
 }
@@ -10713,6 +10960,7 @@ export interface IMongoDbSettings {
     vendorNetworkMembershipsCollectionName?: string | undefined;
     networkInvitesCollectionName?: string | undefined;
     vendorVisitsCollectionName?: string | undefined;
+    vendorAnnouncementsCollectionName?: string | undefined;
 }
 
 export class StripeSettings implements IStripeSettings {
@@ -10871,12 +11119,69 @@ export interface IVendorProfilesRequest {
     pageSize?: number;
 }
 
+export class VendorAnnouncement implements IVendorAnnouncement {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendorId?: string | undefined;
+    title?: string | undefined;
+    body?: string | undefined;
+
+    constructor(data?: IVendorAnnouncement) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.createdDateUtc = _data["createdDateUtc"] ? new Date(_data["createdDateUtc"].toString()) : <any>undefined;
+            this.lastUpdatedDateUtc = _data["lastUpdatedDateUtc"] ? new Date(_data["lastUpdatedDateUtc"].toString()) : <any>undefined;
+            this.vendorId = _data["vendorId"];
+            this.title = _data["title"];
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): VendorAnnouncement {
+        data = typeof data === 'object' ? data : {};
+        let result = new VendorAnnouncement();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDateUtc"] = this.createdDateUtc ? this.createdDateUtc.toISOString() : <any>undefined;
+        data["lastUpdatedDateUtc"] = this.lastUpdatedDateUtc ? this.lastUpdatedDateUtc.toISOString() : <any>undefined;
+        data["vendorId"] = this.vendorId;
+        data["title"] = this.title;
+        data["body"] = this.body;
+        return data;
+    }
+}
+
+export interface IVendorAnnouncement {
+    id?: string | undefined;
+    createdDateUtc?: Date;
+    lastUpdatedDateUtc?: Date;
+    vendorId?: string | undefined;
+    title?: string | undefined;
+    body?: string | undefined;
+}
+
 export class VendorProfileWithReviewsResponse implements IVendorProfileWithReviewsResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorProfile?: VendorProfile;
     network?: Network;
     reviews?: Review[] | undefined;
+    announcements?: VendorAnnouncement[] | undefined;
 
     constructor(data?: IVendorProfileWithReviewsResponse) {
         if (data) {
@@ -10901,6 +11206,11 @@ export class VendorProfileWithReviewsResponse implements IVendorProfileWithRevie
                 this.reviews = [] as any;
                 for (let item of _data["reviews"])
                     this.reviews!.push(Review.fromJS(item));
+            }
+            if (Array.isArray(_data["announcements"])) {
+                this.announcements = [] as any;
+                for (let item of _data["announcements"])
+                    this.announcements!.push(VendorAnnouncement.fromJS(item));
             }
         }
     }
@@ -10927,6 +11237,11 @@ export class VendorProfileWithReviewsResponse implements IVendorProfileWithRevie
             for (let item of this.reviews)
                 data["reviews"].push(item ? item.toJSON() : <any>undefined);
         }
+        if (Array.isArray(this.announcements)) {
+            data["announcements"] = [];
+            for (let item of this.announcements)
+                data["announcements"].push(item ? item.toJSON() : <any>undefined);
+        }
         return data;
     }
 }
@@ -10937,6 +11252,7 @@ export interface IVendorProfileWithReviewsResponse {
     vendorProfile?: VendorProfile;
     network?: Network;
     reviews?: Review[] | undefined;
+    announcements?: VendorAnnouncement[] | undefined;
 }
 
 export class GetVendorProfileByInfoRequest implements IGetVendorProfileByInfoRequest {
@@ -11241,6 +11557,374 @@ export class VendorGeneralDiscountsRequest implements IVendorGeneralDiscountsReq
 
 export interface IVendorGeneralDiscountsRequest {
     generalDiscounts?: CustomerDiscount[] | undefined;
+}
+
+export class GetVendorAnnouncementsRequest implements IGetVendorAnnouncementsRequest {
+    vendorId?: string | undefined;
+
+    constructor(data?: IGetVendorAnnouncementsRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vendorId = _data["vendorId"];
+        }
+    }
+
+    static fromJS(data: any): GetVendorAnnouncementsRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetVendorAnnouncementsRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vendorId"] = this.vendorId;
+        return data;
+    }
+}
+
+export interface IGetVendorAnnouncementsRequest {
+    vendorId?: string | undefined;
+}
+
+export class GetVendorAnnouncementsResponse implements IGetVendorAnnouncementsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcements?: VendorAnnouncement[] | undefined;
+
+    constructor(data?: IGetVendorAnnouncementsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            if (Array.isArray(_data["announcements"])) {
+                this.announcements = [] as any;
+                for (let item of _data["announcements"])
+                    this.announcements!.push(VendorAnnouncement.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetVendorAnnouncementsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetVendorAnnouncementsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        if (Array.isArray(this.announcements)) {
+            data["announcements"] = [];
+            for (let item of this.announcements)
+                data["announcements"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IGetVendorAnnouncementsResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcements?: VendorAnnouncement[] | undefined;
+}
+
+export class AddVendorAnnouncementRequest implements IAddVendorAnnouncementRequest {
+    title?: string | undefined;
+    body?: string | undefined;
+
+    constructor(data?: IAddVendorAnnouncementRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): AddVendorAnnouncementRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddVendorAnnouncementRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["body"] = this.body;
+        return data;
+    }
+}
+
+export interface IAddVendorAnnouncementRequest {
+    title?: string | undefined;
+    body?: string | undefined;
+}
+
+export class AddVendorAnnouncementResponse implements IAddVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcement?: VendorAnnouncement;
+
+    constructor(data?: IAddVendorAnnouncementResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.announcement = _data["announcement"] ? VendorAnnouncement.fromJS(_data["announcement"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AddVendorAnnouncementResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddVendorAnnouncementResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["announcement"] = this.announcement ? this.announcement.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAddVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcement?: VendorAnnouncement;
+}
+
+export class UpdateVendorAnnouncementRequest implements IUpdateVendorAnnouncementRequest {
+    id?: string | undefined;
+    title?: string | undefined;
+    body?: string | undefined;
+
+    constructor(data?: IUpdateVendorAnnouncementRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): UpdateVendorAnnouncementRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateVendorAnnouncementRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["body"] = this.body;
+        return data;
+    }
+}
+
+export interface IUpdateVendorAnnouncementRequest {
+    id?: string | undefined;
+    title?: string | undefined;
+    body?: string | undefined;
+}
+
+export class UpdateVendorAnnouncementResponse implements IUpdateVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcement?: VendorAnnouncement;
+
+    constructor(data?: IUpdateVendorAnnouncementResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.announcement = _data["announcement"] ? VendorAnnouncement.fromJS(_data["announcement"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateVendorAnnouncementResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateVendorAnnouncementResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["announcement"] = this.announcement ? this.announcement.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUpdateVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    announcement?: VendorAnnouncement;
+}
+
+export class DeleteVendorAnnouncementRequest implements IDeleteVendorAnnouncementRequest {
+    id?: string | undefined;
+
+    constructor(data?: IDeleteVendorAnnouncementRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DeleteVendorAnnouncementRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteVendorAnnouncementRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface IDeleteVendorAnnouncementRequest {
+    id?: string | undefined;
+}
+
+export class DeleteVendorAnnouncementResponse implements IDeleteVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+
+    constructor(data?: IDeleteVendorAnnouncementResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+        }
+    }
+
+    static fromJS(data: any): DeleteVendorAnnouncementResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteVendorAnnouncementResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        return data;
+    }
+}
+
+export interface IDeleteVendorAnnouncementResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
 }
 
 export class ApiException extends Error {

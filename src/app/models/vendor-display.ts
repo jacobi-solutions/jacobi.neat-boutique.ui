@@ -1,5 +1,5 @@
 import { Url } from 'url';
-import { NeatBoutiqueEntity, Review, VendorProfile } from '../services/neat-boutique-api.service';
+import { NeatBoutiqueEntity, Review, VendorProfile, VendorAnnouncement } from '../services/neat-boutique-api.service';
 import { UserRoleTypes } from '../constants/user-role-types';
 import { ReviewDisplay } from './review-display';
 import { VendorRating } from './vendor-review';
@@ -21,9 +21,10 @@ export class VendorDisplay extends VendorProfile {
     public reviews: ReviewDisplay[] = [];
     public reviewRatingValues: number[] = [];
     public expandNetworkCard: boolean = false;
+    public announcements?: VendorAnnouncement[] = [];
     // public isGooglePlace: boolean;
 
-    constructor(vendor: VendorProfile, reviews?: Review[]) {
+    constructor(vendor: VendorProfile, reviews?: Review[], announcements?: VendorAnnouncement[]) {
         super(vendor);
 
         // if(!this.bio) {
@@ -36,6 +37,10 @@ export class VendorDisplay extends VendorProfile {
 
         if(reviews && (reviews.length > 0)) {
             this.reviews = reviews.map(review => new ReviewDisplay(review))
+        }
+
+        if(announcements && (announcements.length > 0)) {
+            this.announcements = announcements;
         }
         
         this.reviewRatingValues = this.reviews.map(review => review.rating); 

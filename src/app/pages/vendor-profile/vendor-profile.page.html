@@ -6,6 +6,32 @@
   
   <app-vendor-bio *ngIf="vendor" [vendor]="vendor"></app-vendor-bio>
 
+  <div *ngIf="vendor?.announcements?.length > 0">
+    <ion-row>
+      <ion-col>
+        <h1>Announcements</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="7">
+        <div class="announcements-container">
+          <ion-card *ngIf="vendor?.announcements?.length > 0">
+            <ion-card-content>
+              <p class="announcements-description-text">Latest news and updates from {{ vendor.name }}.</p>
+              <ul>
+                <li *ngFor="let announcement of vendor.announcements">
+                  <p class="announcements-title"><strong>{{ announcement.title }}</strong></p>
+                  <p class="announcements-description-text">{{ announcement.body }}</p>
+                  <small class="announcements-date">{{ announcement.lastUpdatedDateUtc | date:'short' }}</small>
+                </li>
+              </ul>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
   <div *ngIf="vendor?.generalDiscounts?.length > 0">
     <ion-row>
       <ion-col>

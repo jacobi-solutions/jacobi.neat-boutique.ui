@@ -23,7 +23,7 @@ export class VendorService {
       .getVendorProfileWithReviewsByPath(request)
       .subscribe((response: VendorProfileWithReviewsResponse) => {
         if(response.isSuccess) {
-          resolve(new VendorDisplay(response.vendorProfile, response.reviews));
+          resolve(new VendorDisplay(response.vendorProfile, response.reviews, response.announcements));
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           reject(false);
         }
@@ -40,7 +40,7 @@ export class VendorService {
       .getVendorProfileWithReviewsById(request)
       .subscribe((response: VendorProfileWithReviewsResponse) => {
         if(response.isSuccess) {
-          resolve(new VendorDisplay(response.vendorProfile, response.reviews));
+          resolve(new VendorDisplay(response.vendorProfile, response.reviews, response.announcements));
         } else if (response.errors.find((x) => x.errorCode === "409")) {
           reject(false);
         }
