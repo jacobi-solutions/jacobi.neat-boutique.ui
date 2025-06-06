@@ -18,6 +18,7 @@ export class MarqueeAdComponent implements OnInit {
   ngOnInit() {}
   
   public goToProfile() {
-    this.router.navigateByUrl(this.heroAd.vendor.profilePath);
+    var vendorProfileUrl = "/vendor-profile/" + this.heroAd.vendor.profilePath;
+    this.router.navigateByUrl(vendorProfileUrl);
   }
 }
