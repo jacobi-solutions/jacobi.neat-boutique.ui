@@ -24,8 +24,8 @@ import { AnswersService } from 'src/app/services/answers.service';
 
 export const NetworkTabTypes = {
   MAP: "Map",
-  NETWORK_POST: "Network Post",
-  TOP_VISITORS: "Top Visitors"
+  NETWORK_FEED: "Network Feed",
+  TOP_MEMBERS: "Top Members"
 }
 
 @Component({
