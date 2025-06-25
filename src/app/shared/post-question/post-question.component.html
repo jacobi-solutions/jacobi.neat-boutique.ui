@@ -34,7 +34,8 @@
       <ion-icon
         #submitPostIcon 
         class="clickable"
-        [ngClass]="{'enabled': postForm?.value?.newQuestion !== '' && postForm?.value?.categoryName !== ''}"
+        [ngClass]="{'enabled': (feedType === feedTypes.COMMUNITY && postForm?.value?.newQuestion !== '' && postForm?.value?.categoryName !== '') || 
+                             (feedType !== feedTypes.COMMUNITY && postForm?.value?.newQuestion !== '')}"
         (click)="confirmNonEditablePost()"
         (mouseenter)="newPostIcon = 'paper-plane'"
         (mouseleave)="newPostIcon = 'paper-plane-outline'"

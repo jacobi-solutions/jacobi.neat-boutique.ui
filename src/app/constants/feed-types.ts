@@ -1,5 +1,5 @@
-
 export enum FeedTypes {
     COMMUNITY = "Category",
-    ROUTE = "Route"
+    ROUTE = "Route",
+    NETWORK = "Network"
 }

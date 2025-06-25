@@ -47,6 +47,8 @@ import {
   MyVisitsResponse,
   RouteSelectionVisit,
   CategoryType,
+  FeedContextRequest,
+  PostsResponse
 } from "./neat-boutique-api.service";
 import { UtilService } from "./util.service";
 import { AnswersService } from "./answers.service";
@@ -87,6 +89,7 @@ export class CategoryService {
   private _categoryDisplay = new CategoryDisplay();
   public categoryDisplaySubject: BehaviorSubject<CategoryDisplay> = new BehaviorSubject<CategoryDisplay>(null);
   public newRouteQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
+  public newNetworkQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public consumerPostsPerPage: number = 12;
   public recentPostsPerPage: number = 3;
   public userHasSeenNonEditableModal: boolean;
@@ -327,7 +330,7 @@ export class CategoryService {
 
     request.post = post;
     this._neatBoutiqueApiService
-      .createRouteFeedQuestion(request)
+      .createContextFeedQuestion(request)
       .subscribe((response: PostResponse) => {
 
         if (response.isSuccess) {
@@ -337,6 +340,23 @@ export class CategoryService {
           // reject(false);
         }
       });
+  }
+
+  createNetworkFeedQuestion(post: Post) {
+    const request = new PostRequest();
+
+    request.post = post;
+    this._neatBoutiqueApiService
+      .createContextFeedQuestion(request)
+      .subscribe((response: PostResponse) => {
+
+      if (response.isSuccess) {
+        this.newNetworkQuestionSubject.next(new PostDisplay(response.post));
+      } else if (response.errors.find((x) => x.errorCode === "409")) {
+        // this.authService.revokeToken();
+        // reject(false);
+      }
+    });
   }
 
   createCommentOnPost(comment: Comment) {
@@ -549,6 +569,25 @@ export class CategoryService {
         isSelected: true
       }
     ];
+  }
+
+  getQuestionsByFeedContextId(feedContextId: string, pageNumber: number = 0, pageSize: number = 10) {
+    return new Promise<PostDisplay[]>((resolve, reject) => {
+      const request = new FeedContextRequest();
+      request.feedContextId = feedContextId;
+      request.pageNumber = pageNumber;
+      request.pageSize = pageSize;
+      
+      this._neatBoutiqueApiService.getQuestionsByFeedContextId(request)
+        .subscribe((response: PostsResponse) => {
+          if (response.isSuccess) {
+            const posts = response.posts.map(post => new PostDisplay(post));
+            resolve(posts);
+          } else {
+            reject(response.errors);
+          }
+        });
+    });
   }
 
 }

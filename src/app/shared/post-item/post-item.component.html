@@ -1,16 +1,16 @@
 <div *ngIf="post" fixed>
   <ion-row class="post-wrapper">
-    <ion-col [ngClass]="{ 'route-post-wrapper-col': post.postType === postTypes.ROUTE }">
+    <ion-col>
       <ion-row >
         <ion-col size="9">
-          <div *ngIf="post.postType !== postTypes.ROUTE" [ngClass]="{ clickable: (post.postType === postTypes.POLL) }" (click)="((post.postType === postTypes.POLL) ? goToVendor() : null)">
+          <div [ngClass]="{ clickable: (post.postType === postTypes.POLL) }" (click)="((post.postType === postTypes.POLL) ? goToVendor() : null)">
             <app-nb-avatar
               class="pointy-cursor"
               (click)="goToConsumerProfilePage(post.author)"
               [username]="getDisplayName()"
               [borderColor]="post.author.borderColor"
               [secondaryText]="post.localCreated"
-              [tertiaryText]="' in '  + post.category"
+              [tertiaryText]="post.category ? ' in ' + post.category : ''"
               [imageSrc]="post.author.avatarSourceURL">
             </app-nb-avatar>
           </div>
@@ -61,7 +61,4 @@
   
     </ion-col>
   </ion-row>
-  
-  
-  
 </div>

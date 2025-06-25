@@ -94,12 +94,14 @@ export class PostQuestionComponent implements OnInit {
       await this.addNewCategoryPost();
     } else if(this.feedType === FeedTypes.ROUTE) {
       await this.addNewRouteQuestion();
+    } else if(this.feedType === FeedTypes.NETWORK) {
+      await this.addNewNetworkQuestion();
     }
   }
 
   async addNewRouteQuestion() {
     const post =  new Post();
-    post.category = this.postForm.value.categoryName as unknown as CategoryType;
+    post.category = null;
     post.subject = this.postForm.value.newQuestion.trim();
     post.feedContextId = this.feedContextId;
     post.author = new NeatBoutiqueEntity({
@@ -122,8 +124,6 @@ export class PostQuestionComponent implements OnInit {
     this.newPostIcon = 'paper-plane-outline';
     this.postWithQuestionMark = null;
 
-    // var category = this.categories.find(x => x.name === post.category);
-    // this.updateSelectedCategories(category);
     this.onPost.emit();
   }
 
@@ -163,7 +163,17 @@ export class PostQuestionComponent implements OnInit {
   }
 
   async confirmNonEditablePost() {
-    if(this.postForm?.value?.newQuestion === '' || (this.postForm?.value?.categoryName === '' && this.feedType === FeedTypes.COMMUNITY)) return;
+    // For community feed, require both question and category
+    if(this.feedType === FeedTypes.COMMUNITY && 
+       (this.postForm?.value?.newQuestion === '' || this.postForm?.value?.categoryName === '')) {
+      return;
+    }
+    
+    // For other feed types (ROUTE, NETWORK), only require question
+    if(this.feedType !== FeedTypes.COMMUNITY && this.postForm?.value?.newQuestion === '') {
+      return;
+    }
+    
     const self = this;
     const showCancelBtn = true;
     const html = `
@@ -175,15 +185,39 @@ export class PostQuestionComponent implements OnInit {
 
     const confirmBtn = {
       label: 'Post now',
-      // callback: this.addNewPost
       callback() {
-        // self.userHasSeenNonEditableModal = true;
-        // self._categoryService.userHasSeenNonEditableModal = true;
         self.addNewPost();
         self._postNoticeModal.dismiss();
       }
     };
 
     this._postNoticeModal = await this._modalService.displayConfirmActionModal(html, confirmBtn, showCancelBtn);
+  }
+
+  async addNewNetworkQuestion() {
+    const post = new Post();
+    post.category = null;
+    post.subject = this.postForm.value.newQuestion.trim();
+    post.feedContextId = this.feedContextId;
+    post.author = new NeatBoutiqueEntity({
+      name: this.currentUser?.consumer.name,
+      avatarSourceURL: this.currentUser?.consumer.avatarSourceURL,
+      role: UserRoleTypes.CONSUMER,
+      id: this.currentUser?.consumer.id
+    });
+
+    if(!post.subject.endsWith('?')) {
+      post.subject += '?';
+    }
+
+    const questionCharArray = [...post.subject];
+    questionCharArray[0] = questionCharArray[0].toUpperCase();
+    post.subject = questionCharArray.join('');
+
+    this._categoryService.createNetworkFeedQuestion(post);
+    this.postForm.reset();
+    this.newPostIcon = 'paper-plane-outline';
+    this.postWithQuestionMark = null;
+    this.onPost.emit();
   }
 }

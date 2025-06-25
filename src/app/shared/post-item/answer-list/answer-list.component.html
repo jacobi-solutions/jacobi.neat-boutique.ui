@@ -28,7 +28,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="answers?.length > defaultNumberOfAnswersToShow && postType !== postTypes.ROUTE">
+      <ion-row *ngIf="answers?.length > defaultNumberOfAnswersToShow">
         <ion-col class="ion-text-left">
           <app-jacobi-button class="btn-show-all" (click)="toggleShowAll()" [buttonType]="'clear-primary'"
             [altStyle]="'text-light-grey paragraph text-left'">{{ viewRangeText }}</app-jacobi-button>
@@ -38,7 +38,7 @@
 
     <ion-row>
       <ion-col>
-        <ng-content *ngIf="postType !== postTypes.ROUTE then searchVendorForm"></ng-content>
+        <ng-content *ngIf="postType !== postTypes.POLL then searchVendorForm"></ng-content>
       </ion-col>
     </ion-row>
   </div>
@@ -72,6 +72,15 @@
       <form *ngIf="feedType === feedTypes.ROUTE" (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
         <ion-item class="input-wrapper">
           <ion-input (click)="routeSelection()" type="text" 
+            class="no-border"
+            [ngClass]="{ hasValue: answerForm.value.newAnswer }">
+            <ion-label>Cast your vote</ion-label>
+          </ion-input>
+        </ion-item>
+      </form>
+      <form *ngIf="feedType === feedTypes.NETWORK" (ngSubmit)="addNewAnswer()" [formGroup]="answerForm">
+        <ion-item class="input-wrapper">
+          <ion-input (click)="routeSelection()" type="text" formControlName="newAnswer" name="newAnswer" ngDefaultControl
             class="no-border"
             [ngClass]="{ hasValue: answerForm.value.newAnswer }">
             <ion-label>Cast your vote</ion-label>

@@ -45,7 +45,7 @@ export class AnswerItemComponent implements OnInit {
     this._customersService.currentUserSubject.subscribe((user) => {
       this.currentUser = user;
       this.currentUserVote = this.answer.votes.find(x => this.currentUser?.hasId(x.voter.id));
-      if(this.answer.postType === PostTypes.QUESTION || this.answer.postType === PostTypes.ROUTE) {
+      if(this.answer.postType === PostTypes.QUESTION) {
         if(this.currentUserVote) {
           this.borderColor = SelectionVoteRankingColorsMap.get(this.currentUserVote.voteRanking);
         } else if(this.answer.entity.isGooglePlaceEntity) {
@@ -89,7 +89,7 @@ export class AnswerItemComponent implements OnInit {
             await this._answersService.answerQuestionWithVendor(new NeatBoutiqueEntity(this.answer.vendor), this.answer.postId, answerRanking.choice, this.feedType);
           }
         }
-      } else if(this.answer.postType === PostTypes.POLL || this.answer.postType === PostTypes.ROUTE) {
+      } else if(this.answer.postType === PostTypes.POLL) {
         if(answerRanking.choice === SelectionVoteRankingTypes.REMOVE) {
           await this._answersService.removeVoteFromPollAnswer(answerRanking.answerToRemove);
         } else { 

@@ -291,7 +291,7 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createRouteFeedQuestion(body: PostRequest | undefined): Observable<PostResponse>;
+    createContextFeedQuestion(body: PostRequest | undefined): Observable<PostResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -302,6 +302,11 @@ export interface INeatBoutiqueApiService {
      * @return Success
      */
     getPostById(body: PostRequest | undefined): Observable<PostResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getQuestionsByFeedContextId(body: FeedContextRequest | undefined): Observable<PostsResponse>;
     /**
      * @param body (optional) 
      * @return Success
@@ -3510,8 +3515,8 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
-    createRouteFeedQuestion(body: PostRequest | undefined): Observable<PostResponse> {
-        let url_ = this.baseUrl + "/Posts/CreateRouteFeedQuestionAsync";
+    createContextFeedQuestion(body: PostRequest | undefined): Observable<PostResponse> {
+        let url_ = this.baseUrl + "/Posts/CreateContextFeedQuestionAsync";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -3527,11 +3532,11 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateRouteFeedQuestion(response_);
+            return this.processCreateContextFeedQuestion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreateRouteFeedQuestion(response_ as any);
+                    return this.processCreateContextFeedQuestion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PostResponse>;
                 }
@@ -3540,7 +3545,7 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
         }));
     }
 
-    protected processCreateRouteFeedQuestion(response: HttpResponseBase): Observable<PostResponse> {
+    protected processCreateContextFeedQuestion(response: HttpResponseBase): Observable<PostResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3672,6 +3677,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<PostResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getQuestionsByFeedContextId(body: FeedContextRequest | undefined): Observable<PostsResponse> {
+        let url_ = this.baseUrl + "/Posts/GetQuestionsByFeedContextIdAsync";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetQuestionsByFeedContextId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetQuestionsByFeedContextId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostsResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostsResponse>;
+        }));
+    }
+
+    protected processGetQuestionsByFeedContextId(response: HttpResponseBase): Observable<PostsResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostsResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PostsResponse>(null as any);
     }
 
     /**
@@ -9745,6 +9806,50 @@ export class VendorPostRequest implements IVendorPostRequest {
 
 export interface IVendorPostRequest {
     post?: Post;
+}
+
+export class FeedContextRequest implements IFeedContextRequest {
+    feedContextId?: string | undefined;
+    pageNumber?: number;
+    pageSize?: number;
+
+    constructor(data?: IFeedContextRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.feedContextId = _data["feedContextId"];
+            this.pageNumber = _data["pageNumber"];
+            this.pageSize = _data["pageSize"];
+        }
+    }
+
+    static fromJS(data: any): FeedContextRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new FeedContextRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["feedContextId"] = this.feedContextId;
+        data["pageNumber"] = this.pageNumber;
+        data["pageSize"] = this.pageSize;
+        return data;
+    }
+}
+
+export interface IFeedContextRequest {
+    feedContextId?: string | undefined;
+    pageNumber?: number;
+    pageSize?: number;
 }
 
 export class ReviewsResponse implements IReviewsResponse {

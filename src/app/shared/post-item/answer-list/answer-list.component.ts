@@ -64,7 +64,6 @@ export class AnswerListComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.postType === PostTypes.ROUTE) this.toggleShowAll();
     this._accountsService.currentUserSubject.subscribe((user) => {
         this.currentUser = user;
     });

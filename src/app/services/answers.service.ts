@@ -15,6 +15,7 @@ export class AnswersService {
 
   public questionAnsweredOnPostSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public questionAnsweredOnRouteQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
+  public questionAnsweredOnNetworkQuestionSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   public pollVotedOnSubject: BehaviorSubject<PostDisplay> = new BehaviorSubject<PostDisplay>(null);
   private _currentUser: CurrentUserDisplay;
   constructor(private _accountsService: AccountsService, private _util: UtilService, private _neatBoutiqueApiService: NeatBoutiqueApiService) {
@@ -42,6 +43,8 @@ export class AnswersService {
             this.questionAnsweredOnPostSubject.next(updatedPost);
           } else if (feedType === FeedTypes.ROUTE) {
             this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.NETWORK) {
+            this.questionAnsweredOnNetworkQuestionSubject.next(updatedPost);
           }
 
         } else if (response.errors.find((x) => x.errorCode === "410")) {
@@ -66,6 +69,8 @@ export class AnswersService {
             this.questionAnsweredOnPostSubject.next(updatedPost);
           } else if (feedType === FeedTypes.ROUTE) {
             this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.NETWORK) {
+            this.questionAnsweredOnNetworkQuestionSubject.next(updatedPost);
           }
 
         } else if (response.errors.find((x) => x.errorCode === "410")) {
@@ -89,6 +94,8 @@ export class AnswersService {
             this.questionAnsweredOnPostSubject.next(updatedPost);
           } else if (feedType === FeedTypes.ROUTE) {
             this.questionAnsweredOnRouteQuestionSubject.next(updatedPost);
+          } else if (feedType === FeedTypes.NETWORK) {
+            this.questionAnsweredOnNetworkQuestionSubject.next(updatedPost);
           }
         } else if (response.errors.find((x) => x.errorCode === "410")) {
           // this.authService.revokeToken();

@@ -17,7 +17,11 @@ import { AuthService } from 'src/app/auth/auth.service';
 import {  } from 'googlemaps';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { Loader } from "@googlemaps/js-api-loader"
-import { resolve } from 'dns';
+import { FeedTypes } from 'src/app/constants/feed-types';
+import { PostDisplay } from 'src/app/models/post-display';
+import { CategoryService } from 'src/app/services/category.service';
+import { AnswersService } from 'src/app/services/answers.service';
+
 export const NetworkTabTypes = {
   MAP: "Map",
   NETWORK_POST: "Network Post",
@@ -31,7 +35,12 @@ export const NetworkTabTypes = {
 })
 export class NetworkCommunityPage implements OnInit {
   
-
+  // Add feed-related properties
+  feedTypes = FeedTypes;
+  networkPosts: PostDisplay[] = [];
+  currentNetworkPostPage: number = 0;
+  networkPostsPerPage: number = 10;
+  showLoadMorePosts: boolean = false;
   
   @ViewChild('map') mapElement: ElementRef;
   currentNetworkTab = NetworkTabTypes.MAP;
@@ -65,7 +74,8 @@ export class NetworkCommunityPage implements OnInit {
 
   constructor(private _networkService: NetworkService, private _customersService: AccountsService, 
     private _fb: FormBuilder, private _router: Router, private _activatedRoute: ActivatedRoute,
-    private _util: UtilService, private _authService: AuthService) {
+    private _util: UtilService, private _authService: AuthService,
+    private _categoryService: CategoryService, private _answersService: AnswersService) {
     const routeParams = this._activatedRoute.snapshot.paramMap;    
     const inviteId = routeParams.get('inviteId');    
     if(inviteId) {
@@ -173,6 +183,8 @@ export class NetworkCommunityPage implements OnInit {
               resolve();
             }
           });
+          // Load network posts once we have the network ID
+          this.loadNetworkPosts();
         }
       });
     });
@@ -191,6 +203,16 @@ export class NetworkCommunityPage implements OnInit {
     //   this.updateNetworkWithMyVisits();
     // });
     // }
+
+    // Subscribe to answer updates for network feed
+    this._answersService.questionAnsweredOnNetworkQuestionSubject.subscribe((post: PostDisplay) => {
+      if (post) {
+        const index = this.networkPosts.findIndex(p => p.id === post.id);
+        if (index !== -1) {
+          this.networkPosts[index] = post;
+        }
+      }
+    });
   }
 
 
@@ -447,13 +469,33 @@ export class NetworkCommunityPage implements OnInit {
     // ... any other POI types you want to include
   ];
 
-
-
-
-
-
-
-
+  // Add network feed methods
+  loadNetworkPosts() {
+    if (!this.network?.id) return;
+    
+    this._categoryService.getQuestionsByFeedContextId(this.network.id, this.currentNetworkPostPage, this.networkPostsPerPage)
+      .then((posts: PostDisplay[]) => {
+        this.networkPosts = posts;
+        this.showLoadMorePosts = posts.length === this.networkPostsPerPage;
+      })
+      .catch(error => {
+        console.error('Error loading network posts:', error);
+      });
+  }
+  
+  loadMoreNetworkPosts() {
+    if (!this.network?.id) return;
+    
+    this.currentNetworkPostPage++;
+    this._categoryService.getQuestionsByFeedContextId(this.network.id, this.currentNetworkPostPage, this.networkPostsPerPage)
+      .then((posts: PostDisplay[]) => {
+        this.networkPosts = [...this.networkPosts, ...posts];
+        this.showLoadMorePosts = posts.length === this.networkPostsPerPage;
+      })
+      .catch(error => {
+        console.error('Error loading more network posts:', error);
+      });
+  }
 }
 
 export class VendorNetworkMembershipDisplay extends VendorNetworkMembership {
