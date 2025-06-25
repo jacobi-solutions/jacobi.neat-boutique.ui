@@ -109,9 +109,9 @@
       <ion-row>
         <ion-col>
           <h3>Network Feed</h3>
-          <!-- Post Question Component -->
+          <!-- Post Question Component - Only visible to network owners -->
           <app-post-question 
-            *ngIf="isCurrentVendorMember || isCurrentVendorOwner"
+            *ngIf="isCurrentVendorOwner"
             [feedType]="feedTypes.NETWORK"
             [feedContextId]="network?.id">
           </app-post-question>
@@ -125,9 +125,7 @@
             </app-post-item>
           </div>
           
-          <div *ngIf="networkPosts && networkPosts.length === 0" class="no-posts-message">
-            <p>No questions have been posted in this network yet. Be the first to ask!</p>
-          </div>
+          
 
           <div *ngIf="showLoadMorePosts" class="load-more-container">
             <app-jacobi-button (click)="loadMoreNetworkPosts()" [buttonType]="'white-primary'">

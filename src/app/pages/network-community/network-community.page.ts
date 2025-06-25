@@ -204,6 +204,14 @@ export class NetworkCommunityPage implements OnInit {
     // });
     // }
 
+    // Subscribe to new network questions
+    this._categoryService.newNetworkQuestionSubject.subscribe((post: PostDisplay) => {
+      if (post && this.network?.id === post.feedContextId) {
+        // Add the new post to the beginning of the list
+        this.networkPosts = [post, ...this.networkPosts];
+      }
+    });
+    
     // Subscribe to answer updates for network feed
     this._answersService.questionAnsweredOnNetworkQuestionSubject.subscribe((post: PostDisplay) => {
       if (post) {
