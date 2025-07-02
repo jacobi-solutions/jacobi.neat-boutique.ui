@@ -57,19 +57,37 @@
               <ion-icon class="social-icon clickable" name="logo-twitter"></ion-icon>
             </a>
           </ion-col>
-
-          <ion-col *ngIf="!isAddedToMyList; else elseRemoveFromMyList">
-            <app-jacobi-button [buttonType]="'auth-secondary secondary hover-auth'" class="my-list-btn hide-md-and-bellow" (click)="addToMyList()">Add to My List</app-jacobi-button>
-          </ion-col>
-          
         </ion-row>
+        
+        <ion-row>
+          <ion-col *ngIf="!isAddedToMyList; else elseRemoveFromMyList">
+            <app-jacobi-button [buttonType]="'auth-secondary secondary hover-auth'" class="my-list-btn" (click)="addToMyList()">Add to My List</app-jacobi-button>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row *ngIf="vendor?.network">
+          <ion-col>
+            <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn" (click)="goToNetworkCommunity()">View Network Community</app-jacobi-button>
+          </ion-col>
+        </ion-row>
+        
       </ion-col>
     </ion-row>
 
   </ion-col>
 
-  <ion-col class="btn-row hide-md-and-below" *ngIf="!isAddedToMyList; else elseRemoveFromMyList">
-    <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn hide-md-and-bellow" (click)="addToMyList()">Add to My List</app-jacobi-button>
+  <ion-col class="btn-row hide-md-and-below">
+    <ion-row *ngIf="!isAddedToMyList; else elseRemoveFromMyListDesktop">
+      <ion-col>
+        <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn" (click)="addToMyList()">Add to My List</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row *ngIf="vendor?.network">
+      <ion-col>
+        <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn" (click)="goToNetworkCommunity()">View Network Community</app-jacobi-button>
+      </ion-col>
+    </ion-row>
   </ion-col>
   
 </ion-row>
@@ -78,6 +96,14 @@
 
 <ng-template #elseRemoveFromMyList>
   <ion-col>
-    <app-jacobi-button [buttonType]="'ghost-auth-secondary secondary'" class="my-list-btn hide-md-and-bellow" (click)="removeFromMyList()">Remove from My List</app-jacobi-button>
+    <app-jacobi-button [buttonType]="'ghost-auth-secondary secondary'" class="my-list-btn" (click)="removeFromMyList()">Remove from My List</app-jacobi-button>
   </ion-col>
+</ng-template>
+
+<ng-template #elseRemoveFromMyListDesktop>
+  <ion-row>
+    <ion-col>
+      <app-jacobi-button [buttonType]="'ghost-auth-secondary secondary'" class="my-list-btn" (click)="removeFromMyList()">Remove from My List</app-jacobi-button>
+    </ion-col>
+  </ion-row>
 </ng-template>
