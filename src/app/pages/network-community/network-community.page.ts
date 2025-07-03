@@ -21,6 +21,7 @@ import { FeedTypes } from 'src/app/constants/feed-types';
 import { PostDisplay } from 'src/app/models/post-display';
 import { CategoryService } from 'src/app/services/category.service';
 import { AnswersService } from 'src/app/services/answers.service';
+import { ToastController } from '@ionic/angular';
 
 export const NetworkTabTypes = {
   MAP: "Map",
@@ -75,27 +76,12 @@ export class NetworkCommunityPage implements OnInit {
   constructor(private _networkService: NetworkService, private _customersService: AccountsService, 
     private _fb: FormBuilder, private _router: Router, private _activatedRoute: ActivatedRoute,
     private _util: UtilService, private _authService: AuthService,
-    private _categoryService: CategoryService, private _answersService: AnswersService) {
-    const routeParams = this._activatedRoute.snapshot.paramMap;    
-    const inviteId = routeParams.get('inviteId');    
-    if(inviteId) {
-      this._networkService.loadNetworkByVendorNetworkMembershipId(inviteId).then((membership: VendorNetworkMembership) =>{
-        if(membership.role === VendorNetworkMembershipTypes.INVITED) {
-          this.isVendorInvited = true;
-          this._inviteId = inviteId;
-        } 
-      }).catch(() => {
-        this._router.navigateByUrl('/vendor-settings', { state: this.currentUser.vendor });
-      });
-      
-    }
+    private _categoryService: CategoryService, private _answersService: AnswersService,
+    private _toastController: ToastController) {
     
     this.addMemberForm = this._fb.group({
       businessName: ['', Validators.required],
     });
-
-    
-
 
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
   }
@@ -142,6 +128,31 @@ export class NetworkCommunityPage implements OnInit {
   }
 
   ngOnInit() {
+    // Handle route parameters - both inviteId and networkId
+    const routeParams = this._activatedRoute.snapshot.paramMap;
+    const inviteId = routeParams.get('inviteId');
+    const networkId = routeParams.get('networkId');
+
+    if (inviteId) {
+      // Invite flow - load network by membership ID
+      this._networkService.loadNetworkByVendorNetworkMembershipId(inviteId).then((membership: VendorNetworkMembership) => {
+        if (membership.role === VendorNetworkMembershipTypes.INVITED) {
+          this.isVendorInvited = true;
+          this._inviteId = inviteId;
+        }
+        // Network and posts will be loaded via the networkPromise subscription below
+      }).catch(() => {
+        this._router.navigateByUrl('/vendor-settings', { state: this.currentUser?.vendor });
+      });
+    } else if (networkId) {
+      // Public network flow - load network by network ID
+      this._networkService.loadNetwork(networkId).then(() => {
+        // Network and posts will be loaded via the networkPromise subscription below
+      }).catch(() => {
+        this._router.navigateByUrl('/vendor-settings', { state: this.currentUser?.vendor });
+      });
+    }
+
     this.addMemberForm.controls.businessName.valueChanges
       .pipe(debounceTime(500))
       .subscribe((searchText) => {
@@ -299,7 +310,7 @@ export class NetworkCommunityPage implements OnInit {
     if(membership.role === VendorNetworkMembershipTypes.MEMBER) { 
       this.inviteLink = "This business is already a member of this network";
     } else {
-      this.inviteLink = `${environment.lociUIBaseUrl}/network-community/${membership.id}`;
+      this.inviteLink = `${environment.lociUIBaseUrl}/network-community/invite/${membership.id}`;
     }
   }
 
@@ -308,6 +319,38 @@ export class NetworkCommunityPage implements OnInit {
     var discounts = this.discountsForm.value.discountsForNetworkMembers.map(discount => new CustomerDiscount(discount));
     
     this._networkService.updateNetworkMembership(this.currentVendorNetworkMembershipDisplay.id, discounts);
+  }
+
+  async copyNetworkLink() {
+    if (!this.network?.id) {
+      return;
+    }
+
+    const networkLink = `${environment.lociUIBaseUrl}/network-community/${this.network.id}`;
+    
+    try {
+      await navigator.clipboard.writeText(networkLink);
+      
+      const toast = await this._toastController.create({
+        message: 'A link to this network has been copied to your clipboard',
+        duration: 2000,
+        position: 'bottom',
+        color: 'primary'
+      });
+      
+      await toast.present();
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+      
+      const toast = await this._toastController.create({
+        message: 'Failed to copy link',
+        duration: 2000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      
+      await toast.present();
+    }
   }
 
   async searchBusinesses(rawSearchText: string) {

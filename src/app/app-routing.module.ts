@@ -152,7 +152,13 @@ const routes: Routes = [
     data: { redirect: '/home', title: 'Community', showNbHeader2: true, showNbHeader3: true }
   },
   {
-    path: 'network-community/:inviteId',
+    path: 'network-community/:networkId',
+    loadChildren: () => import('./pages/network-community/network-community.module').then( m => m.NetworkCommunityPageModule),
+    canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
+    data: { redirect: '/home', title: 'Community', showNbHeader2: true, showNbHeader3: true }
+  },
+  {
+    path: 'network-community/invite/:inviteId',
     loadChildren: () => import('./pages/network-community/network-community.module').then( m => m.NetworkCommunityPageModule),
     canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],
     data: { redirect: '/home', title: 'Community', showNbHeader2: true, showNbHeader3: true }

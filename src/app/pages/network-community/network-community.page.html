@@ -111,6 +111,17 @@
           <ion-col size="auto">
             <ion-icon (click)="currentNetworkTab = networkTabTypes.NETWORK_FEED" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.NETWORK_FEED}" class="clickable" src="../../../assets/icons/leaderboard.svg"></ion-icon>
           </ion-col>
+          
+          <!-- ✨ NEW SHARE BUTTON -->
+          <ion-col size="auto">
+            <ion-icon
+              name="share-social-outline"
+              class="clickable"
+              (click)="copyNetworkLink()"
+              [title]="'Copy Network Link'">
+            </ion-icon>
+          </ion-col>
+          
           <!-- Commenting out third tab for now -->
           <!-- <ion-col size="auto">
             <ion-icon (click)="currentNetworkTab = networkTabTypes.TOP_MEMBERS" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.TOP_MEMBERS}" class="clickable" src="../../../assets/icons/top-user.svg"></ion-icon>
