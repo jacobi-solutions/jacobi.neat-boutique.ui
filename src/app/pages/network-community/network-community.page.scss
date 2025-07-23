@@ -95,6 +95,9 @@ app-expandable {
   font-size: 1.5rem;
   
 }
+.network-visibility {
+  font-size: 1.5rem;
+}
 
 .vendor-description {
   font-size: 0.9rem;
@@ -604,6 +607,76 @@ ion-icon {
       width: 80%;
       flex-direction: column;
       gap: 0.5rem;
+    }
+  }
+}
+
+// Privacy settings styling
+.privacy-setting-wrapper {
+  .privacy-setting-info {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      color: var(--nb-primary);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .privacy-description {
+      color: var(--nb-dark-grey);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+
+      strong {
+        color: var(--nb-deep-emerald);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .privacy-toggle-wrapper {
+    ion-item {
+      --background: transparent;
+      --padding-start: 0;
+      --padding-end: 0;
+      --min-height: auto;
+
+      ion-label {
+        .toggle-label {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--nb-primary);
+        }
+      }
+
+      ion-toggle {
+        --background: var(--nb-light-grey);
+        --background-checked: var(--nb-deep-emerald);
+        --handle-background: white;
+        --handle-background-checked: white;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+// Mobile adjustments for privacy settings
+@include screen-sm-and-below {
+  .privacy-setting-wrapper {
+    .privacy-setting-info {
+      .privacy-description {
+        font-size: 0.9rem;
+      }
+    }
+    
+    .privacy-toggle-wrapper {
+      ion-item {
+        ion-toggle {
+          transform: scale(1.1);
+        }
+      }
     }
   }
 }

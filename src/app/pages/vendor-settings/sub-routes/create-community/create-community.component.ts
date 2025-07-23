@@ -9,7 +9,8 @@ import { NetworkService } from 'src/app/services/network.service';
 
 export const CreateCommunityTabTypes = {
   STEP_ONE: "Step one",
-  STEP_TWO: "Step two"
+  STEP_TWO: "Step two",
+  STEP_THREE: "Step three"
 }
 
 @Component({
@@ -36,7 +37,8 @@ export class CreateCommunityComponent implements OnInit {
     
     this.createCommunityForm = this._fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(3)]]
+      description: ['', [Validators.required, Validators.minLength(3)]],
+      isPrivate: [false]
     });
 
     this.discountTypes = Object.values(DiscountTypes);
@@ -57,32 +59,59 @@ export class CreateCommunityComponent implements OnInit {
   createCommunity() {
     if (this.discountsForm.invalid) {
       this.discountsForm.markAllAsTouched();
+      return;
     }
 
     const networkData = this.createCommunityForm.value;
     const discountsData = this.discountsForm.value;
-    this._networkService.createNetwork(networkData.name, networkData.description, discountsData.discountsForNetworkMembers, this.vendor.id).then(
-      (response: NetworkResponse) => {
-        console.log('Network created successfully', response);
-        if (response) {
-          this._router.navigateByUrl('/network-community', { state: response.network });
+    
+    this._networkService.createNetwork(
+      networkData.name, 
+      networkData.description, 
+      discountsData.discountsForNetworkMembers, 
+      this.vendor.id
+    ).then(
+      async (network: any) => {
+        console.log('Network created successfully', network);
+        
+        // If the user selected private, update the privacy setting
+        if (networkData.isPrivate) {
+          try {
+            const updatedNetwork = await this._networkService.updateNetworkPrivacy(network.id, true);
+            console.log('Network privacy updated to private');
+            this._router.navigateByUrl('/network-community', { state: updatedNetwork });
+          } catch (error) {
+            console.error('Error updating network privacy:', error);
+            // Still navigate to the network even if privacy update failed
+            this._router.navigateByUrl('/network-community', { state: network });
+          }
+        } else {
+          this._router.navigateByUrl('/network-community', { state: network });
         }
-        // Navigate to another page or show a success message
       },
+      (error) => {
+        console.error('Error creating network:', error);
+      }
     );
   }
 
   nextStep() {
     if (this.createCommunityForm.invalid) {
       this.createCommunityForm.markAllAsTouched();
-    } else {
+    } else if (this.currentTab === CreateCommunityTabTypes.STEP_ONE) {
       this.currentTab = CreateCommunityTabTypes.STEP_TWO;
+    } else if (this.currentTab === CreateCommunityTabTypes.STEP_TWO) {
+      this.currentTab = CreateCommunityTabTypes.STEP_THREE;
     }
 
   }
 
   previousStep() {
-    this.currentTab = CreateCommunityTabTypes.STEP_ONE;
+    if (this.currentTab === CreateCommunityTabTypes.STEP_TWO) {
+      this.currentTab = CreateCommunityTabTypes.STEP_ONE;
+    } else if (this.currentTab === CreateCommunityTabTypes.STEP_THREE) {
+      this.currentTab = CreateCommunityTabTypes.STEP_TWO;
+    }
   }
 
   get discountsForNetworkMembers() {
@@ -109,6 +138,11 @@ export class CreateCommunityComponent implements OnInit {
     if(this.discountsForNetworkMembers.length > 1) {
       this.discountsForNetworkMembers.removeAt(index);
     }
+  }
+
+  togglePrivacy(event: any) {
+    const isPrivate = event.detail.checked;
+    this.createCommunityForm.patchValue({ isPrivate: isPrivate });
   }
  
   

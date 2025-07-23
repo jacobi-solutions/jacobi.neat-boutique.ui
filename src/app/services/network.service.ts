@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, CustomerDiscount, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, UpdateVendorMembershipinNetworkRequest, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse, UpdateNetworkNameRequest, UpdateNetworkDescriptionRequest } from './neat-boutique-api.service';
+import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, CustomerDiscount, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, UpdateVendorMembershipinNetworkRequest, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse, UpdateNetworkNameRequest, UpdateNetworkDescriptionRequest, UpdateNetworkIsPrivateRequest } from './neat-boutique-api.service';
 import { EntityDisplay } from '../models/entity-display';
 import { VendorDisplay } from '../models/vendor-display';
 
@@ -203,6 +203,24 @@ export class NetworkService {
           resolve(response.network);
         } else {
           reject('Failed to update network description');
+        }
+      });
+    });
+    return promise;
+  }
+
+  updateNetworkPrivacy(networkId: string, isPrivate: boolean) {
+    var request = new UpdateNetworkIsPrivateRequest();
+    request.networkId = networkId;
+    request.isPrivate = isPrivate;
+    var promise = new Promise<Network>((resolve, reject) => {
+      this._neatBoutiqueApiService.updateNetworkIsPrivate(request).subscribe((response: NetworkResponse) => {
+        if (response.isSuccess) {
+          this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          resolve(response.network);
+        } else {
+          reject('Failed to update network privacy setting');
         }
       });
     });

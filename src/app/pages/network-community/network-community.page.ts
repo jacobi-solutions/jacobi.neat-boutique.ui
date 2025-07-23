@@ -43,6 +43,7 @@ export class NetworkCommunityPage implements OnInit {
   currentNetworkPostPage: number = 0;
   networkPostsPerPage: number = 10;
   showLoadMorePosts: boolean = false;
+  pageInitialized: boolean = false;
   
   @ViewChild('map') mapElement: ElementRef;
   currentNetworkTab = NetworkTabTypes.MAP;
@@ -547,6 +548,41 @@ export class NetworkCommunityPage implements OnInit {
       }
     }
   }
+
+  // Network privacy toggle method
+  public async toggleNetworkPrivacy(event: any) {
+    if (this.network?.id) {
+      try {
+        const isPrivate = event.detail.checked;
+        const updatedNetwork = await this._networkService.updateNetworkPrivacy(
+          this.network.id, 
+          isPrivate
+        );
+        this.network = updatedNetwork;
+        
+        // Show a toast to confirm the change
+        const toast = await this._toastController.create({
+          message: `Network is now ${isPrivate ? 'private' : 'public'}`,
+          duration: 3000,
+          position: 'bottom',
+          color: 'primary'
+        });
+        await toast.present();
+      } catch (error) {
+        console.error('Error updating network privacy:', error);
+        // Revert the toggle if the update failed
+        event.target.checked = !event.detail.checked;
+        
+        const toast = await this._toastController.create({
+          message: 'Failed to update network privacy setting',
+          duration: 3000,
+          position: 'bottom',
+          color: 'danger'
+        });
+        await toast.present();
+      }
+    }
+  }
   
   mapStyles: google.maps.MapTypeStyle[] = [
     {
@@ -597,8 +633,9 @@ export class NetworkCommunityPage implements OnInit {
     this._categoryService.getQuestionsByFeedContextId(this.network.id, this.currentNetworkPostPage, this.networkPostsPerPage)
       .then((posts: PostDisplay[]) => {
         this.networkPosts = posts;
-        if(this.networkPosts.length > 0) {
+        if(this.networkPosts.length > 0 && !this.pageInitialized) {
           this.currentNetworkTab = this.networkTabTypes.NETWORK_FEED;
+          this.pageInitialized = true;
         }
         this.showLoadMorePosts = posts.length === this.networkPostsPerPage;
         

@@ -2,6 +2,62 @@
 @import 'src/theme/jacobi-theme/scss/main';
 @import 'src/global-sass-variables';
 
+// Network visibility styling
+.network-visibility {
+  font-size: 1.5rem;
+  color: var(--nb-primary);
+}
+
+// Privacy settings styling
+.privacy-toggle-wrapper {
+  margin-bottom: 1.5rem;
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+    --padding-end: 0;
+    --min-height: auto;
+
+    ion-toggle {
+      --background: var(--nb-light-grey);
+      --background-checked: var(--nb-primary);
+      --handle-background: white;
+      --handle-background-checked: white;
+      transform: scale(1.2);
+    }
+  }
+}
+
+.privacy-description {
+  color: var(--nb-dark-grey);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+
+  strong {
+    color: var(--nb-deep-emerald);
+    font-weight: 600;
+  }
+}
+
+// Mobile adjustments
+@include screen-sm-and-below {
+  .network-visibility {
+    font-size: 1.3rem;
+  }
+  
+  .privacy-toggle-wrapper {
+    ion-item {
+      ion-toggle {
+        transform: scale(1.1);
+      }
+    }
+  }
+  
+  .privacy-description {
+    font-size: 0.9rem;
+  }
+}
 
 ion-content {
   --padding-top: 2rem;

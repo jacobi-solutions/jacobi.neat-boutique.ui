@@ -65,7 +65,7 @@
           </ion-col>
         </ion-row>
         
-        <ion-row *ngIf="vendor?.network">
+        <ion-row *ngIf="vendor?.network && !vendor?.network?.isPrivate">
           <ion-col>
             <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn" (click)="goToNetworkCommunity()">View Community</app-jacobi-button>
           </ion-col>
@@ -83,7 +83,7 @@
       </ion-col>
     </ion-row>
     
-    <ion-row *ngIf="vendor?.network">
+    <ion-row *ngIf="vendor?.network && !vendor?.network?.isPrivate">
       <ion-col>
         <app-jacobi-button [buttonType]="'green-primary secondary'" class="my-list-btn" (click)="goToNetworkCommunity()">View Community</app-jacobi-button>
       </ion-col>

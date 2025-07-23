@@ -336,6 +336,131 @@
       </div>
 
       <div [hidden]="currentNetworkTab !== networkTabTypes.SETTINGS">
+
+         <!-- Add New Member Section (Only for network owners) -->
+         <div *ngIf="currentVendorNetworkMembershipDisplay?.role === vendorNetworkMembershipTypes.OWNER">
+          <!-- Network Community Settings Card (Owner Only) -->
+          <ion-card>
+            <h3 class="section-heading">Network Visibility</h3>
+            
+            <ion-card-content>
+              <ion-row>
+                <ion-col>
+                  <div class="privacy-setting-wrapper">
+                    <div class="privacy-setting-info">
+                      <div class="privacy-toggle-wrapper">
+                        <ion-row>
+                          <ion-col offset="2" size="1.5">
+                            <ion-label>
+                              <h2 class="network-visibility">Public</h2>
+                            </ion-label>
+                          </ion-col>
+                          <ion-col size="1.5">
+                            <ion-item lines="none">
+                              <ion-toggle 
+                                slot="end" 
+                                [checked]="network?.isPrivate"
+                                (ionChange)="toggleNetworkPrivacy($event)"
+                                color="primary">
+                              </ion-toggle>
+                            </ion-item>
+                          </ion-col>
+                          <ion-col offset="1" size="1.5">
+                            <ion-label>
+                              <h2 class="network-visibility">Private</h2>
+                            </ion-label>
+                          </ion-col>
+                        </ion-row>
+                          
+                          
+                      </div>
+
+                      <p class="privacy-description">
+                        <strong>Public:</strong> Anyone can discover and view your network. Members can share the network link.<br>
+                        <strong>Private:</strong> Only invited members can access the network. The network won't appear in public searches.
+                      </p>
+                    </div>
+                    
+                    
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+          <ion-card>
+            <h3 class="section-heading">Add New Member</h3>
+            <form [formGroup]="addMemberForm">
+              <ion-row>
+                <ion-col size="12" *ngIf="!selectedVendorToAdd">
+                  <app-input-field
+                    [formGroupInstance]="addMemberForm"
+                    inputName="businessName"
+                    label="Business Name"
+                    icon="business-outline"
+                    [invalidInputWarnings]="[
+                      { warning: 'A business name is required.', errorType: 'required' }
+                    ]">
+                  </app-input-field>
+                </ion-col>
+              </ion-row>
+              <ion-row class="vendor-selection-row">
+                <ion-col *ngIf="vendorProfileSearchResults?.length && !selectedVendorToAdd" class="business-search-results">
+                  <ion-row *ngFor="let vendor of vendorProfileSearchResults">
+                    <ion-col class="business-result-item">
+                      <ion-card class="clickable" (click)="selectVendor(vendor)">
+                        <ion-card-header>
+                            <ion-card-title>{{ vendor.name }}</ion-card-title>
+                            <ion-card-subtitle>{{ vendor.formattedAddress }} </ion-card-subtitle>
+                        </ion-card-header>
+                    </ion-card>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+              <!-- Show this only after a vendor is selected -->
+              <ion-row *ngIf="selectedVendorToAdd" class="selected-business">
+                <ion-col>
+
+                  <ion-card>
+                    <ion-card-header>
+                      <ion-card-title>{{ selectedVendorToAdd.name }}</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <p>{{ selectedVendorToAdd.description }}</p>
+                      <br>
+                      <p>{{ selectedVendorToAdd.formattedAddress }}</p>
+                        
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+
+              <!-- Invite Buttons -->
+              <ion-row *ngIf="selectedVendorToAdd && !inviteLink">
+                <ion-col>
+                  <app-jacobi-button (click)="cancelSelectedVendor()" [buttonType]="'white-primary-wide'">
+                    Cancel
+                  </app-jacobi-button>
+                </ion-col>
+                <ion-col>
+                  <app-jacobi-button (click)="createInviteLink()" [buttonType]="'green-primary'">
+                    Create Invite Link
+                  </app-jacobi-button>
+                </ion-col>
+              </ion-row>
+              
+              <!-- Display Invite Link If Generated -->
+              <ion-row *ngIf="inviteLink">
+                <ion-col>
+                  <h5>Copy and share this Invite Link with the business owner:</h5>
+                  <h4>{{ inviteLink }}</h4>
+                </ion-col>
+              </ion-row>
+            </form>
+          </ion-card>
+
+          
+        </div>
         <!-- Membership Details Section -->
         <div *ngIf="isCurrentVendorMember || isCurrentVendorOwner">
           <ion-card>
@@ -413,80 +538,7 @@
             </ion-card-content>
           </ion-card>
         </div>
-        <!-- Add New Member Section (Only for network owners) -->
-        <div *ngIf="currentVendorNetworkMembershipDisplay?.role === vendorNetworkMembershipTypes.OWNER">
-          <ion-card>
-            <h3 class="section-heading">Add New Member</h3>
-            <form [formGroup]="addMemberForm">
-              <ion-row>
-                <ion-col size="12" *ngIf="!selectedVendorToAdd">
-                  <app-input-field
-                    [formGroupInstance]="addMemberForm"
-                    inputName="businessName"
-                    label="Business Name"
-                    icon="business-outline"
-                    [invalidInputWarnings]="[
-                      { warning: 'A business name is required.', errorType: 'required' }
-                    ]">
-                  </app-input-field>
-                </ion-col>
-              </ion-row>
-              <ion-row class="vendor-selection-row">
-                <ion-col *ngIf="vendorProfileSearchResults?.length && !selectedVendorToAdd" class="business-search-results">
-                  <ion-row *ngFor="let vendor of vendorProfileSearchResults">
-                    <ion-col class="business-result-item">
-                      <ion-card class="clickable" (click)="selectVendor(vendor)">
-                        <ion-card-header>
-                            <ion-card-title>{{ vendor.name }}</ion-card-title>
-                            <ion-card-subtitle>{{ vendor.formattedAddress }} </ion-card-subtitle>
-                        </ion-card-header>
-                    </ion-card>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-              <!-- Show this only after a vendor is selected -->
-              <ion-row *ngIf="selectedVendorToAdd" class="selected-business">
-                <ion-col>
-
-                  <ion-card>
-                    <ion-card-header>
-                      <ion-card-title>{{ selectedVendorToAdd.name }}</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <p>{{ selectedVendorToAdd.description }}</p>
-                      <br>
-                      <p>{{ selectedVendorToAdd.formattedAddress }}</p>
-                        
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-
-              <!-- Invite Buttons -->
-              <ion-row *ngIf="selectedVendorToAdd && !inviteLink">
-                <ion-col>
-                  <app-jacobi-button (click)="cancelSelectedVendor()" [buttonType]="'white-primary-wide'">
-                    Cancel
-                  </app-jacobi-button>
-                </ion-col>
-                <ion-col>
-                  <app-jacobi-button (click)="createInviteLink()" [buttonType]="'green-primary'">
-                    Create Invite Link
-                  </app-jacobi-button>
-                </ion-col>
-              </ion-row>
-              
-              <!-- Display Invite Link If Generated -->
-              <ion-row *ngIf="inviteLink">
-                <ion-col>
-                  <h5>Copy and share this Invite Link with the business owner:</h5>
-                  <h4>{{ inviteLink }}</h4>
-                </ion-col>
-              </ion-row>
-            </form>
-          </ion-card>
-        </div>
+       
       </div>
 
       <!-- TOP MEMBERS TAB - For future use -->

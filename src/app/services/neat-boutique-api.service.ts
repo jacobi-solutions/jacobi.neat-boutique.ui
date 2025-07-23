@@ -251,6 +251,11 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    updateNetworkIsPrivate(body: UpdateNetworkIsPrivateRequest | undefined): Observable<NetworkResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     createStripeCheckout(body: StripeCheckoutRequest | undefined): Observable<StripeCheckoutResponse>;
     /**
      * @param body (optional) 
@@ -3052,6 +3057,62 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
     }
 
     protected processUpdateNetworkDescription(response: HttpResponseBase): Observable<NetworkResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateNetworkIsPrivate(body: UpdateNetworkIsPrivateRequest | undefined): Observable<NetworkResponse> {
+        let url_ = this.baseUrl + "/api/Networks/UpdateNetworkIsPrivate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateNetworkIsPrivate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateNetworkIsPrivate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NetworkResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NetworkResponse>;
+        }));
+    }
+
+    protected processUpdateNetworkIsPrivate(response: HttpResponseBase): Observable<NetworkResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6581,6 +6642,7 @@ export class Network implements INetwork {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    isPrivate?: boolean;
     post?: Post;
     networkTopVisitors?: NetworkTopVisitor[] | undefined;
 
@@ -6601,6 +6663,7 @@ export class Network implements INetwork {
             this.postId = _data["postId"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.isPrivate = _data["isPrivate"];
             this.post = _data["post"] ? Post.fromJS(_data["post"]) : <any>undefined;
             if (Array.isArray(_data["networkTopVisitors"])) {
                 this.networkTopVisitors = [] as any;
@@ -6625,6 +6688,7 @@ export class Network implements INetwork {
         data["postId"] = this.postId;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["isPrivate"] = this.isPrivate;
         data["post"] = this.post ? this.post.toJSON() : <any>undefined;
         if (Array.isArray(this.networkTopVisitors)) {
             data["networkTopVisitors"] = [];
@@ -6642,6 +6706,7 @@ export interface INetwork {
     postId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    isPrivate?: boolean;
     post?: Post;
     networkTopVisitors?: NetworkTopVisitor[] | undefined;
 }
@@ -9468,6 +9533,46 @@ export class UpdateNetworkDescriptionRequest implements IUpdateNetworkDescriptio
 export interface IUpdateNetworkDescriptionRequest {
     networkId?: string | undefined;
     description?: string | undefined;
+}
+
+export class UpdateNetworkIsPrivateRequest implements IUpdateNetworkIsPrivateRequest {
+    networkId?: string | undefined;
+    isPrivate?: boolean;
+
+    constructor(data?: IUpdateNetworkIsPrivateRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+            this.isPrivate = _data["isPrivate"];
+        }
+    }
+
+    static fromJS(data: any): UpdateNetworkIsPrivateRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateNetworkIsPrivateRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        data["isPrivate"] = this.isPrivate;
+        return data;
+    }
+}
+
+export interface IUpdateNetworkIsPrivateRequest {
+    networkId?: string | undefined;
+    isPrivate?: boolean;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
