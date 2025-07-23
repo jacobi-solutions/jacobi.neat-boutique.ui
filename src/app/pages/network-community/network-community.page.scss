@@ -541,3 +541,69 @@ ion-icon {
   min-height: 2.5rem;
   justify-content: center;
 }
+
+// Network editing styles
+.network-name-wrapper {
+  position: relative;
+
+  .edit-network-name {
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 1.5rem;
+    color: var(--nb-primary);
+    cursor: pointer;
+  }
+}
+
+.network-description-wrapper {
+  position: relative;
+
+  .edit-network-description {
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 1.5rem;
+    color: var(--nb-primary);
+    cursor: pointer;
+  }
+}
+
+.network-name-edit-wrapper,
+.network-description-edit-wrapper {
+  .remaining-chars {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--nb-light-grey);
+    
+    .char-count {
+      color: var(--nb-primary);
+      font-weight: bold;
+      
+      &.char-close-to-max {
+        color: var(--nb-deep-red);
+      }
+    }
+  }
+
+  .action-btn-wrapper {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    gap: 1rem;
+  }
+}
+
+// Mobile adjustments for editing
+@include screen-md-and-below {
+  .network-name-edit-wrapper,
+  .network-description-edit-wrapper {
+    .action-btn-wrapper {
+      width: 80%;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}

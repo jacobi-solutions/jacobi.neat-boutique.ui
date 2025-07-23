@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, CustomerDiscount, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, UpdateVendorMembershipinNetworkRequest, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse } from './neat-boutique-api.service';
+import { AnswerSearchRequest, AnswerSearchResponse, CreateNetworkRequest, CustomerDiscount, NeatBoutiqueApiService, Network, NetworkInviteRequest, NetworkRequest, NetworkResponse, NetworkWithVendorsResponse, Response, UpdateVendorMembershipinNetworkRequest, VendorNetworkMembership, VendorNetworkMembershipResponse, VendorProfile, VendorProfileResponse, VendorProfilesResponse, UpdateNetworkNameRequest, UpdateNetworkDescriptionRequest } from './neat-boutique-api.service';
 import { EntityDisplay } from '../models/entity-display';
 import { VendorDisplay } from '../models/vendor-display';
 
@@ -173,8 +173,41 @@ export class NetworkService {
     return promise;
   }
 
+  updateNetworkName(networkId: string, name: string) {
+    var request = new UpdateNetworkNameRequest();
+    request.networkId = networkId;
+    request.name = name;
+    var promise = new Promise<Network>((resolve, reject) => {
+      this._neatBoutiqueApiService.updateNetworkName(request).subscribe((response: NetworkResponse) => {
+        if (response.isSuccess) {
+          this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          resolve(response.network);
+        } else {
+          reject('Failed to update network name');
+        }
+      });
+    });
+    return promise;
+  }
 
-
+  updateNetworkDescription(networkId: string, description: string) {
+    var request = new UpdateNetworkDescriptionRequest();
+    request.networkId = networkId;
+    request.description = description;
+    var promise = new Promise<Network>((resolve, reject) => {
+      this._neatBoutiqueApiService.updateNetworkDescription(request).subscribe((response: NetworkResponse) => {
+        if (response.isSuccess) {
+          this._currentNetwork = response.network;
+          this.currentNetworkSubject.next(this._currentNetwork);
+          resolve(response.network);
+        } else {
+          reject('Failed to update network description');
+        }
+      });
+    });
+    return promise;
+  }
   
 
 } 

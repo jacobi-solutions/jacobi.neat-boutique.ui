@@ -4,7 +4,7 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CustomerDiscount, Network, VendorNetworkMembership, VendorProfile } from 'src/app/services/neat-boutique-api.service';
 import { NetworkService } from 'src/app/services/network.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { VendorDisplay } from 'src/app/models/vendor-display';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EntityDisplay } from 'src/app/models/entity-display';
@@ -26,7 +26,8 @@ import { ToastController } from '@ionic/angular';
 export const NetworkTabTypes = {
   MAP: "Map",
   NETWORK_FEED: "Network Feed",
-  TOP_MEMBERS: "Top Members"
+  TOP_MEMBERS: "Top Members", 
+  SETTINGS: "Settings"
 }
 
 @Component({
@@ -55,6 +56,14 @@ export class NetworkCommunityPage implements OnInit {
   addMemberForm: FormGroup;
   discountsForm: FormGroup;
 
+  // Network editing properties
+  editNetworkName: boolean = false;
+  editNetworkDescription: boolean = false;
+  networkNameForm: UntypedFormGroup;
+  networkDescriptionForm: UntypedFormGroup;
+  maxNetworkNameChars: number = 100;
+  maxNetworkDescriptionChars: number = 500;
+
   private _searchVendor: { minChars: number, lastSearchText: string, results: VendorDisplay[] };
   vendorProfileSearchResults: VendorDisplay[];
   selectedVendorToAdd: VendorDisplay;
@@ -81,6 +90,15 @@ export class NetworkCommunityPage implements OnInit {
     
     this.addMemberForm = this._fb.group({
       businessName: ['', Validators.required],
+    });
+
+    // Initialize network editing forms
+    this.networkNameForm = new UntypedFormGroup({
+      name: new UntypedFormControl('', [Validators.required, Validators.maxLength(this.maxNetworkNameChars)]),
+    });
+
+    this.networkDescriptionForm = new UntypedFormGroup({
+      description: new UntypedFormControl('', [Validators.required, Validators.maxLength(this.maxNetworkDescriptionChars)]),
     });
 
     this._searchVendor = { minChars: 3, lastSearchText: '', results: [] };  
@@ -220,6 +238,11 @@ export class NetworkCommunityPage implements OnInit {
       if (post && this.network?.id === post.feedContextId) {
         // Add the new post to the beginning of the list
         this.networkPosts = [post, ...this.networkPosts];
+        
+        // If this was the first post and we're on MAP tab, switch to NETWORK_FEED
+        if (this.networkPosts.length === 1 && this.currentNetworkTab === this.networkTabTypes.MAP) {
+          this.currentNetworkTab = this.networkTabTypes.NETWORK_FEED;
+        }
       }
     });
     
@@ -333,7 +356,7 @@ export class NetworkCommunityPage implements OnInit {
       
       const toast = await this._toastController.create({
         message: 'A link to this network has been copied to your clipboard',
-        duration: 2000,
+        duration: 4000,
         position: 'bottom',
         color: 'primary'
       });
@@ -477,6 +500,53 @@ export class NetworkCommunityPage implements OnInit {
     return marker;
   }
 
+  // Network name editing methods
+  public toggleEditNetworkName() {
+    this.editNetworkName = !this.editNetworkName;
+    if (this.editNetworkName) {
+      this.networkNameForm.patchValue({ name: this.network?.name || '' });
+    }
+  }
+
+  public async saveEditNetworkName() {
+    if (this.networkNameForm.valid && this.network?.id) {
+      try {
+        const updatedNetwork = await this._networkService.updateNetworkName(
+          this.network.id, 
+          this.networkNameForm.value.name
+        );
+        this.network = updatedNetwork;
+        this.editNetworkName = false;
+      } catch (error) {
+        console.error('Error updating network name:', error);
+        // You might want to show a toast message for errors
+      }
+    }
+  }
+
+  // Network description editing methods
+  public toggleEditNetworkDescription() {
+    this.editNetworkDescription = !this.editNetworkDescription;
+    if (this.editNetworkDescription) {
+      this.networkDescriptionForm.patchValue({ description: this.network?.description || '' });
+    }
+  }
+
+  public async saveEditNetworkDescription() {
+    if (this.networkDescriptionForm.valid && this.network?.id) {
+      try {
+        const updatedNetwork = await this._networkService.updateNetworkDescription(
+          this.network.id, 
+          this.networkDescriptionForm.value.description
+        );
+        this.network = updatedNetwork;
+        this.editNetworkDescription = false;
+      } catch (error) {
+        console.error('Error updating network description:', error);
+        // You might want to show a toast message for errors
+      }
+    }
+  }
   
   mapStyles: google.maps.MapTypeStyle[] = [
     {
@@ -527,10 +597,20 @@ export class NetworkCommunityPage implements OnInit {
     this._categoryService.getQuestionsByFeedContextId(this.network.id, this.currentNetworkPostPage, this.networkPostsPerPage)
       .then((posts: PostDisplay[]) => {
         this.networkPosts = posts;
+        if(this.networkPosts.length > 0) {
+          this.currentNetworkTab = this.networkTabTypes.NETWORK_FEED;
+        }
         this.showLoadMorePosts = posts.length === this.networkPostsPerPage;
+        
+        // If there are no posts, switch to MAP tab
+        if (!posts || posts.length === 0) {
+          this.currentNetworkTab = this.networkTabTypes.MAP;
+        }
       })
       .catch(error => {
         console.error('Error loading network posts:', error);
+        // If there's an error loading posts, default to MAP tab
+        this.currentNetworkTab = this.networkTabTypes.MAP;
       });
   }
   

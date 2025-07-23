@@ -92,25 +92,96 @@
 
       <ion-row>
         <ion-col>
-          <h1 class="hide-md-and-above ion-text-center">{{ network?.name }}</h1>
-          <h1 class="hide-sm-and-below">{{ network?.name }}</h1>
+          <!-- Network Name -->
+          <div *ngIf="!editNetworkName || currentNetworkTab !== networkTabTypes.SETTINGS || !isCurrentVendorOwner; else allowNameEdit" class="network-name-wrapper">
+            <h1 class="hide-md-and-above ion-text-center">{{ network?.name }}</h1>
+            <h1 class="hide-sm-and-below">{{ network?.name }}</h1>
+            <ion-icon *ngIf="isCurrentVendorOwner && currentNetworkTab === networkTabTypes.SETTINGS" 
+                      class="edit-network-name edit-action allow-opacity" 
+                      name="create-outline" 
+                      (click)="toggleEditNetworkName()">
+            </ion-icon>
+          </div>
+
+          <ng-template #allowNameEdit>
+            <div class="network-name-edit-wrapper">
+              <form [formGroup]="networkNameForm">
+                <app-input-field
+                  [formGroupInstance]="networkNameForm"
+                  [inputName]="'name'"
+                  [label]="'Network Name'"
+                  [value]="network?.name">
+                </app-input-field>
+                
+                <div class="remaining-chars">
+                  Characters remaining: 
+                  <span class="char-count" [ngClass]="{ 'char-close-to-max': (maxNetworkNameChars - (networkNameForm.value.name?.length || 0)) < 15 }">
+                    {{ maxNetworkNameChars - (networkNameForm.value.name?.length || 0) }}
+                  </span>
+                </div>
+
+                <div class="action-btn-wrapper">
+                  <app-jacobi-button [buttonType]="'auth-primary'" (click)="saveEditNetworkName()">Save</app-jacobi-button>
+                  <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditNetworkName()">Cancel</app-jacobi-button>
+                </div>
+              </form>
+            </div>
+          </ng-template>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <h3 class="ion-text-center hide-md-and-above description">{{ network?.description }}</h3>
-          <h3 class="hide-sm-and-below description">{{ network?.description }}</h3>
+          <!-- Network Description -->
+          <div *ngIf="!editNetworkDescription || currentNetworkTab !== networkTabTypes.SETTINGS || !isCurrentVendorOwner; else allowDescriptionEdit" class="network-description-wrapper">
+            <h3 class="ion-text-center hide-md-and-above description">{{ network?.description }}</h3>
+            <h3 class="hide-sm-and-below description">{{ network?.description }}</h3>
+            <ion-icon *ngIf="isCurrentVendorOwner && currentNetworkTab === networkTabTypes.SETTINGS" 
+                      class="edit-network-description edit-action allow-opacity" 
+                      name="create-outline" 
+                      (click)="toggleEditNetworkDescription()">
+            </ion-icon>
+          </div>
+
+          <ng-template #allowDescriptionEdit>
+            <div class="network-description-edit-wrapper">
+              <form [formGroup]="networkDescriptionForm">
+                <app-textarea-field
+                  [formGroupInstance]="networkDescriptionForm"
+                  [inputName]="'description'"
+                  [label]="'Network Description'"
+                  [remHeight]="6"
+                  [value]="network?.description">
+                </app-textarea-field>
+                
+                <div class="remaining-chars">
+                  Characters remaining: 
+                  <span class="char-count" [ngClass]="{ 'char-close-to-max': (maxNetworkDescriptionChars - (networkDescriptionForm.value.description?.length || 0)) < 15 }">
+                    {{ maxNetworkDescriptionChars - (networkDescriptionForm.value.description?.length || 0) }}
+                  </span>
+                </div>
+
+                <div class="action-btn-wrapper">
+                  <app-jacobi-button [buttonType]="'auth-primary'" (click)="saveEditNetworkDescription()">Save</app-jacobi-button>
+                  <app-jacobi-button [buttonType]="'ghost-white text-grey'" (click)="toggleEditNetworkDescription()">Cancel</app-jacobi-button>
+                </div>
+              </form>
+            </div>
+          </ng-template>
         </ion-col>
       </ion-row>
 
       <ion-row class="network-tab-selector">
         <ion-col>
+          <ion-col size="auto" *ngIf="isCurrentVendorOwner || (networkPosts && networkPosts.length > 0)">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.NETWORK_FEED" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.NETWORK_FEED}" class="clickable" src="../../../assets/icons/leaderboard.svg"></ion-icon>
+          </ion-col>
           <ion-col size="auto">
             <ion-icon (click)="currentNetworkTab = networkTabTypes.MAP" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.MAP}" class="clickable" src="../../../assets/icons/loci-location.svg"></ion-icon>
           </ion-col>
-          <ion-col size="auto">
-            <ion-icon (click)="currentNetworkTab = networkTabTypes.NETWORK_FEED" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.NETWORK_FEED}" class="clickable" src="../../../assets/icons/leaderboard.svg"></ion-icon>
+          <ion-col *ngIf="isCurrentVendorOwner || isCurrentVendorMember" size="auto">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.SETTINGS" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.SETTINGS}" class="clickable" name="settings-outline"></ion-icon>
           </ion-col>
+          
           
           <!-- ✨ NEW SHARE BUTTON -->
           <ion-col size="auto">
@@ -135,7 +206,45 @@
         </ion-col> -->
       </ion-row>
 
-      <!-- MAP TAB - Shows map, membership details, add member form, and vendor list -->
+      <!-- FEED TAB - Shows network feed -->
+      <div [hidden]="currentNetworkTab !== networkTabTypes.NETWORK_FEED">
+        <ion-row>
+          <ion-col>
+            <h3 class="section-heading">Community Feed</h3>
+            <!-- <div *ngIf="isCurrentVendorOwner" class="no-posts-message">
+              <p>Post questions here exclusively for your community, {{ network?.name }}.</p>
+            </div> -->
+            <!-- Post Question Component - Only visible to network owners -->
+            <app-post-question 
+              *ngIf="isCurrentVendorOwner"
+              [feedType]="feedTypes.NETWORK"
+              [feedContextId]="network?.id"
+              [postQuestionPromptText]="'Post a question for your community...'">
+            </app-post-question>
+
+            <br>
+            
+            <!-- Network Posts -->
+            <div *ngIf="networkPosts && networkPosts.length > 0">
+              <app-post-item 
+                *ngFor="let post of networkPosts" 
+                [post]="post" 
+                [feedType]="feedTypes.NETWORK">
+              </app-post-item>
+            </div>
+            
+            
+
+            <div *ngIf="showLoadMorePosts" class="load-more-container">
+              <app-jacobi-button (click)="loadMoreNetworkPosts()" [buttonType]="'white-primary'">
+                Load More
+              </app-jacobi-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- MAP TAB - Shows map and vendor list -->
       <div [hidden]="currentNetworkTab !== networkTabTypes.MAP">
         <ion-row>
           <ion-col>
@@ -155,6 +264,78 @@
           </ion-col>
         </ion-row>
 
+        
+        
+        
+
+        <!-- Existing Vendor List -->
+        <div class="vendor-grid">
+          <ion-card
+            *ngFor="let membership of currentVendorNetworkMembershipDisplays"
+            (click)="toggleExpansion(membership)"
+            class="vendor-info-card"
+            [ngClass]="{ 'expanded': membership.vendorDisplay.expandNetworkCard, 'clickable': !membership.vendorDisplay.expandNetworkCard }"
+            style="position: relative;">
+
+            <ion-card-content>
+              <ion-row>
+                <ion-col offset="3" size="6">
+                  <div class="logo-image-wrapper">
+                    <ion-img
+                      class="logo-image"
+                      [src]="membership.vendorDisplay?.avatarSourceURL || defaultImg">
+                    </ion-img>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+
+            <app-expandable [expanded]="membership.vendorDisplay.expandNetworkCard">
+              <ion-row>
+                <ion-col>
+                  <h3 class="vendor-name">{{ membership.vendorDisplay.name }}</h3>
+                  <p class="vendor-description">{{ membership.vendorDisplay.description }}</p>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="!!currentVendorNetworkMembershipDisplay">
+                <ion-col>
+                  <p class="member-discounts">
+                    Discounts for Network Members
+                  </p>
+                  <!-- Use a regular unordered list for minimal spacing and bullets -->
+                  <ul class="discount-list">
+                    <li *ngFor="let discount of membership.discountsForNetworkMembers">
+                      {{ discount.description }}
+                    </li>
+                  </ul>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="(membership?.vendorDisplay?.generalDiscounts?.length > 0)">
+                <ion-col>
+                  <p class="member-discounts">
+                    Discounts for all Loçi customers
+                  </p>
+                  <ul class="discount-list">
+                    <li *ngFor="let discount of membership.vendorDisplay.generalDiscounts">
+                      {{ discount.description }}
+                    </li>
+                  </ul>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <p class="view-business-page clickable" (click)="goToVendor(membership.vendorDisplay)">
+                    <ion-icon class="form-icon" slot="end" [name]="'eye'"></ion-icon>
+                    View Business Page
+                  </p>
+                </ion-col>
+              </ion-row>
+            </app-expandable>
+          </ion-card>
+        </div>
+      </div>
+
+      <div [hidden]="currentNetworkTab !== networkTabTypes.SETTINGS">
         <!-- Membership Details Section -->
         <div *ngIf="isCurrentVendorMember || isCurrentVendorOwner">
           <ion-card>
@@ -232,7 +413,6 @@
             </ion-card-content>
           </ion-card>
         </div>
-        
         <!-- Add New Member Section (Only for network owners) -->
         <div *ngIf="currentVendorNetworkMembershipDisplay?.role === vendorNetworkMembershipTypes.OWNER">
           <ion-card>
@@ -307,110 +487,6 @@
             </form>
           </ion-card>
         </div>
-
-        <!-- Existing Vendor List -->
-        <div class="vendor-grid">
-          <ion-card
-            *ngFor="let membership of currentVendorNetworkMembershipDisplays"
-            (click)="toggleExpansion(membership)"
-            class="vendor-info-card"
-            [ngClass]="{ 'expanded': membership.vendorDisplay.expandNetworkCard, 'clickable': !membership.vendorDisplay.expandNetworkCard }"
-            style="position: relative;">
-
-            <ion-card-content>
-              <ion-row>
-                <ion-col offset="3" size="6">
-                  <div class="logo-image-wrapper">
-                    <ion-img
-                      class="logo-image"
-                      [src]="membership.vendorDisplay?.avatarSourceURL || defaultImg">
-                    </ion-img>
-                  </div>
-                </ion-col>
-              </ion-row>
-            </ion-card-content>
-
-            <app-expandable [expanded]="membership.vendorDisplay.expandNetworkCard">
-              <ion-row>
-                <ion-col>
-                  <h3 class="vendor-name">{{ membership.vendorDisplay.name }}</h3>
-                  <p class="vendor-description">{{ membership.vendorDisplay.description }}</p>
-                </ion-col>
-              </ion-row>
-              <ion-row *ngIf="!!currentVendorNetworkMembershipDisplay">
-                <ion-col>
-                  <p class="member-discounts">
-                    Discounts for Network Members
-                  </p>
-                  <!-- Use a regular unordered list for minimal spacing and bullets -->
-                  <ul class="discount-list">
-                    <li *ngFor="let discount of membership.discountsForNetworkMembers">
-                      {{ discount.description }}
-                    </li>
-                  </ul>
-                </ion-col>
-              </ion-row>
-              <ion-row *ngIf="(membership?.vendorDisplay?.generalDiscounts?.length > 0)">
-                <ion-col>
-                  <p class="member-discounts">
-                    Discounts for all Loçi customers
-                  </p>
-                  <ul class="discount-list">
-                    <li *ngFor="let discount of membership.vendorDisplay.generalDiscounts">
-                      {{ discount.description }}
-                    </li>
-                  </ul>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                  <p class="view-business-page clickable" (click)="goToVendor(membership.vendorDisplay)">
-                    <ion-icon class="form-icon" slot="end" [name]="'eye'"></ion-icon>
-                    View Business Page
-                  </p>
-                </ion-col>
-              </ion-row>
-            </app-expandable>
-          </ion-card>
-        </div>
-      </div>
-
-      <!-- FEED TAB - Shows network feed -->
-      <div [hidden]="currentNetworkTab !== networkTabTypes.NETWORK_FEED">
-        <ion-row>
-          <ion-col>
-            <h3 class="section-heading">Community Feed</h3>
-            <!-- <div *ngIf="isCurrentVendorOwner" class="no-posts-message">
-              <p>Post questions here exclusively for your community, {{ network?.name }}.</p>
-            </div> -->
-            <!-- Post Question Component - Only visible to network owners -->
-            <app-post-question 
-              *ngIf="isCurrentVendorOwner"
-              [feedType]="feedTypes.NETWORK"
-              [feedContextId]="network?.id"
-              [postQuestionPromptText]="'Post a question for your community...'">
-            </app-post-question>
-
-            <br>
-            
-            <!-- Network Posts -->
-            <div *ngIf="networkPosts && networkPosts.length > 0">
-              <app-post-item 
-                *ngFor="let post of networkPosts" 
-                [post]="post" 
-                [feedType]="feedTypes.NETWORK">
-              </app-post-item>
-            </div>
-            
-            
-
-            <div *ngIf="showLoadMorePosts" class="load-more-container">
-              <app-jacobi-button (click)="loadMoreNetworkPosts()" [buttonType]="'white-primary'">
-                Load More
-              </app-jacobi-button>
-            </div>
-          </ion-col>
-        </ion-row>
       </div>
 
       <!-- TOP MEMBERS TAB - For future use -->
@@ -460,6 +536,7 @@
       </div> -->
     </ion-col>
   </ion-row>
+  <app-nb-footer></app-nb-footer>
 </ion-content>
 
 

@@ -241,6 +241,16 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    updateNetworkName(body: UpdateNetworkNameRequest | undefined): Observable<NetworkResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateNetworkDescription(body: UpdateNetworkDescriptionRequest | undefined): Observable<NetworkResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     createStripeCheckout(body: StripeCheckoutRequest | undefined): Observable<StripeCheckoutResponse>;
     /**
      * @param body (optional) 
@@ -2949,6 +2959,118 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<NetworkWithVendorsResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateNetworkName(body: UpdateNetworkNameRequest | undefined): Observable<NetworkResponse> {
+        let url_ = this.baseUrl + "/api/Networks/UpdateNetworkName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateNetworkName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateNetworkName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NetworkResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NetworkResponse>;
+        }));
+    }
+
+    protected processUpdateNetworkName(response: HttpResponseBase): Observable<NetworkResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateNetworkDescription(body: UpdateNetworkDescriptionRequest | undefined): Observable<NetworkResponse> {
+        let url_ = this.baseUrl + "/api/Networks/UpdateNetworkDescription";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateNetworkDescription(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateNetworkDescription(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NetworkResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NetworkResponse>;
+        }));
+    }
+
+    protected processUpdateNetworkDescription(response: HttpResponseBase): Observable<NetworkResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NetworkResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NetworkResponse>(null as any);
     }
 
     /**
@@ -9266,6 +9388,86 @@ export interface IVendorNetworkMembershipResponse {
     errors?: ErrorDto[] | undefined;
     isSuccess?: boolean;
     vendorNetworkMembership?: VendorNetworkMembership;
+}
+
+export class UpdateNetworkNameRequest implements IUpdateNetworkNameRequest {
+    networkId?: string | undefined;
+    name?: string | undefined;
+
+    constructor(data?: IUpdateNetworkNameRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateNetworkNameRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateNetworkNameRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IUpdateNetworkNameRequest {
+    networkId?: string | undefined;
+    name?: string | undefined;
+}
+
+export class UpdateNetworkDescriptionRequest implements IUpdateNetworkDescriptionRequest {
+    networkId?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IUpdateNetworkDescriptionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.networkId = _data["networkId"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateNetworkDescriptionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateNetworkDescriptionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["networkId"] = this.networkId;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IUpdateNetworkDescriptionRequest {
+    networkId?: string | undefined;
+    description?: string | undefined;
 }
 
 export class StripeCheckoutRequest implements IStripeCheckoutRequest {
