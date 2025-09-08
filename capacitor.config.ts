@@ -16,6 +16,11 @@ const config: CapacitorConfig = {
       splashImmersive: false,
       backgroundColor: "#ffffff" 
     }
+  },
+  cordova: {
+    preferences: {
+      DisableDeploy: "true"
+    }
   }
 };
 

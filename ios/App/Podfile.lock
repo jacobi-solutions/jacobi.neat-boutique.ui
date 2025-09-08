@@ -14,8 +14,6 @@ PODS:
     - Capacitor
   - CapacitorSplashScreen (5.0.6):
     - Capacitor
-  - CordovaPlugins (5.7.8):
-    - CapacitorCordova
   - CordovaPluginsStatic (5.7.8):
     - CapacitorCordova
     - FBSDKCoreKit (= 11.1.0)
@@ -111,7 +109,6 @@ DEPENDENCIES:
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
-  - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
   - CordovaPluginsStatic (from `../capacitor-cordova-ios-plugins`)
   - Firebase/Messaging
 
@@ -149,8 +146,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/push-notifications"
   CapacitorSplashScreen:
     :path: "../../node_modules/@capacitor/splash-screen"
-  CordovaPlugins:
-    :path: "../capacitor-cordova-ios-plugins"
   CordovaPluginsStatic:
     :path: "../capacitor-cordova-ios-plugins"
 
@@ -163,7 +158,6 @@ SPEC CHECKSUMS:
   CapacitorKeyboard: 673a4a303383a61f4d360c871f121f8bbaa745b6
   CapacitorPushNotifications: 946eb28637d904174cab8f6e9846c75636a69b16
   CapacitorSplashScreen: 7c05fd1ec2cbbb1f0a0ba152d012705ba3dc3062
-  CordovaPlugins: 8b42cfbce2c80433ef15202df98c5c4ce413c2f2
   CordovaPluginsStatic: f248116f1ce9566a51c8a897b7156cdf71bcdb61
   FBAEMKit: 5c8a8d08e5b2c79628490784883e0fcc75b12615
   FBSDKCoreKit: 7ccb8b4bb2b5ee2ad94327b774dc23f03509675d
@@ -180,6 +174,6 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 2c8de0d71c7d1c860e94b8ab7057f56517c80c46
+PODFILE CHECKSUM: bbe90ac315a86ca61fed0abfd053902f8a07adf4
 
 COCOAPODS: 1.16.2

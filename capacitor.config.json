@@ -22,5 +22,9 @@
       "backgroundColor": "#ffffff" 
     }
   },
-  "cordova": {}
+  "cordova": {
+      "preferences": {
+        "DisableDeploy": "true"
+      }
+  }
 }

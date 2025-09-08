@@ -18,5 +18,10 @@
 			"splashImmersive": false,
 			"backgroundColor": "#ffffff"
 		}
+	},
+	"cordova": {
+		"preferences": {
+			"DisableDeploy": "true"
+		}
 	}
 }

@@ -71,17 +71,5 @@
     <string>Loci requires access to the camera to upload your profile photo.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Loci requires access to the photo library to upload your profile photo.</string>
-    <key>IonAppId</key>
-    <string>266f7bbf</string>
-    <key>IonChannelName</key>
-    <string>Production</string>
-    <key>IonUpdateMethod</key>
-    <string>background</string>
-    <key>IonMaxVersions</key>
-    <string>2</string>
-    <key>IonMinBackgroundDuration</key>
-    <string>30</string>
-    <key>IonApi</key>
-    <string>https://api.ionicjs.com</string>
   </dict>
 </plist>
