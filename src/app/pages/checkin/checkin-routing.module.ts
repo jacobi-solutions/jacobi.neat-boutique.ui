@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { QrPage } from './qr.page';
+import { CheckinPage } from './checkin.page';
 import { AuthGuard } from 'src/app/auth/auth.guard';
 
 const routes: Routes = [
   {
     path: ':vendorId',
-    component: QrPage,
+    component: CheckinPage,
     canActivate: [AuthGuard]
   },
   {
     path: '',
-    component: QrPage
+    component: CheckinPage
   }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class QrPageRoutingModule {}
+export class CheckinPageRoutingModule {}

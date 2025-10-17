@@ -80,20 +80,25 @@
     <ion-col>
       <ion-row>
         <ion-col size="6">
-          <app-jacobi-button 
+          <app-jacobi-button
             *ngIf="!vendor?.network"
-            [buttonType]="'green-primary secondary'" 
+            [buttonType]="'green-primary secondary'"
             (click)="createCommunity()">
             Create a Community
           </app-jacobi-button>
-          <app-jacobi-button 
+          <app-jacobi-button
             *ngIf="vendor?.network"
-            [buttonType]="'green-primary secondary'" 
+            [buttonType]="'green-primary secondary'"
             (click)="goToMyCommunity()">
             Go to my Community
           </app-jacobi-button>
         </ion-col>
-        
+
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <app-jacobi-button [buttonType]="'green-primary secondary'" (click)="showCheckInQr()">View Check-In QR Code</app-jacobi-button>
+        </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="6">

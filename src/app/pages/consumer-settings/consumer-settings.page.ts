@@ -107,6 +107,4 @@ export class ConsumerSettingsPage implements OnInit {
     this.newUsername = this.currentUser.consumer.name;
     this.editUsername = !this.editUsername;
   }
-
-  
 }

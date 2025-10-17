@@ -47,6 +47,8 @@ import { UserSettingsPopoverComponent } from './popovers/user-settings-popover/u
 import { UsernameAndEmailModalComponent } from './modals/username-and-email-modal/username-and-email-modal.component';
 import { MyListComponent } from './my-list/my-list.component';
 import { EditAnnouncementsComponent } from '../components/edit-announcements/edit-announcements.component';
+import { QrCheckInModalComponent } from './modals/qr-check-in-modal/qr-check-in-modal.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 @NgModule({
@@ -95,14 +97,16 @@ import { EditAnnouncementsComponent } from '../components/edit-announcements/edi
     ChooseAnswerRankingModalComponent,
     UsernameAndEmailModalComponent,
     MyListComponent,
-    EditAnnouncementsComponent
+    EditAnnouncementsComponent,
+    QrCheckInModalComponent
   ],
   imports: [
     RouterModule,
     IonicModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    QRCodeModule
   ],
   exports: [
     NbHeaderComponent,
@@ -149,7 +153,8 @@ import { EditAnnouncementsComponent } from '../components/edit-announcements/edi
     ChooseAnswerRankingModalComponent,
     UsernameAndEmailModalComponent,
     MyListComponent,
-    EditAnnouncementsComponent
+    EditAnnouncementsComponent,
+    QrCheckInModalComponent
   ]
 })
 export class SharedModule { }

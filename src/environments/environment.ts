@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   lociApiBaseUrl: 'http://localhost',
   // lociApiBaseUrl: 'https://neat-boutique-api-ot6bwzgzjq-ue.a.run.app',
-  lociUIBaseUrl: 'http://localhost:8100',
+  //lociUIBaseUrl: 'http://localhost:8100',
+  lociUIBaseUrl: 'https://app.lociknows.com',
   googleCloudStorageBaseUrl: 'https://storage.googleapis.com/neatboutique.com/images/',
   recaptchaSiteKey: '',
 

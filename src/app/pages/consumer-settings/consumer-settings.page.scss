@@ -48,15 +48,26 @@ h4 {
 
 .activity-selection {
     .selected-activity {
-        border-style: solid;  
+        border-style: solid;
         border-width: 0 0 .3rem 0;
         padding-bottom: .3rem;
         border-color: var(--purple) !important;
+    }
+
+    // Desktop: show full labels, hide abbreviated
+    .show-sm-and-below {
+        display: none;
+    }
+    .hide-sm-and-below {
+        display: inline;
     }
 }
 
 .activity {
     margin-top: 2rem;
+    padding-bottom: 4rem;
+    min-height: 15rem;
+
     .recent-question {
         margin-bottom: 1.5rem;
     }
@@ -65,6 +76,22 @@ h4 {
     }
     .recent-review {
         margin-bottom: 1.5rem;
+    }
+    .recent-checkin {
+        margin-bottom: 1.5rem;
+
+        .checkin-date {
+            color: var(--med-grey);
+            font-size: 0.9rem;
+            margin: 0.5rem 0 0 1rem;
+            display: flex;
+            align-items: center;
+
+            ion-icon {
+                margin-right: 0.5rem;
+                font-size: 1.1rem;
+            }
+        }
     }
     .my-list {
         margin-bottom: 1.5rem;
@@ -91,12 +118,12 @@ h4 {
     font-size: 4rem;
     height: 6rem;
     width: 6rem;
-  
+
     .ask {
       ion-icon {
         color: #cd7f31;
       }
-      
+
     }
     .answer {
       ion-icon {
@@ -106,6 +133,11 @@ h4 {
     .review {
       ion-icon {
         color: #ffbc02;
+      }
+    }
+    .checkin {
+      ion-icon {
+        color: #5ac8fa;
       }
     }
 }
@@ -230,10 +262,10 @@ h4 {
         padding-left: 0;
         padding-right: 0;
         }
-        
+
 
     .profile-image-container {
-            
+
         p,
         h4 {
             font-size: 1rem;
@@ -242,12 +274,37 @@ h4 {
             margin: auto;
         }
         margin: auto;
-        
+
     }
     .basic-info {
         padding-left: 0;
         text-align: center;
     }
 
-    
+    // Make badges display in 2x2 grid on mobile
+    .badges {
+        ion-col:not(.badges-title-column) {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+
+    // Make activity tabs more readable on mobile
+    .activity-selection {
+        ion-col.tab-col {
+            padding: 0.5rem 0.15rem;
+        }
+        h4 {
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        // Mobile: show abbreviated labels, hide full labels
+        .show-sm-and-below {
+            display: inline !important;
+        }
+        .hide-sm-and-below {
+            display: none !important;
+        }
+    }
 }

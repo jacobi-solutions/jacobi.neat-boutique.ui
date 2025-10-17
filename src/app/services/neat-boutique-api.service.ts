@@ -100,6 +100,16 @@ export interface INeatBoutiqueApiService {
      * @param body (optional) 
      * @return Success
      */
+    createCheckIn(body: CheckInRequest | undefined): Observable<CheckInResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getCheckInsHistory(body: CheckInsHistoryRequest | undefined): Observable<CheckInsHistoryResponse>;
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     addCommentToPost(body: CommentRequest | undefined): Observable<CommentResponse>;
     /**
      * @param body (optional) 
@@ -1405,6 +1415,118 @@ export class NeatBoutiqueApiService implements INeatBoutiqueApiService {
             }));
         }
         return _observableOf<CategoryResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createCheckIn(body: CheckInRequest | undefined): Observable<CheckInResponse> {
+        let url_ = this.baseUrl + "/CheckIns/CreateCheckIn";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateCheckIn(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateCheckIn(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CheckInResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CheckInResponse>;
+        }));
+    }
+
+    protected processCreateCheckIn(response: HttpResponseBase): Observable<CheckInResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CheckInResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CheckInResponse>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getCheckInsHistory(body: CheckInsHistoryRequest | undefined): Observable<CheckInsHistoryResponse> {
+        let url_ = this.baseUrl + "/CheckIns/GetCheckInsHistory";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCheckInsHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCheckInsHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CheckInsHistoryResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CheckInsHistoryResponse>;
+        }));
+    }
+
+    protected processGetCheckInsHistory(response: HttpResponseBase): Observable<CheckInsHistoryResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CheckInsHistoryResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CheckInsHistoryResponse>(null as any);
     }
 
     /**
@@ -7743,6 +7865,274 @@ export interface ICategoryResponse {
     heroAds?: HeroAd[] | undefined;
 }
 
+export class CheckInRequest implements ICheckInRequest {
+    vendorId?: string | undefined;
+    visitorId?: string | undefined;
+
+    constructor(data?: ICheckInRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vendorId = _data["vendorId"];
+            this.visitorId = _data["visitorId"];
+        }
+    }
+
+    static fromJS(data: any): CheckInRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vendorId"] = this.vendorId;
+        data["visitorId"] = this.visitorId;
+        return data;
+    }
+}
+
+export interface ICheckInRequest {
+    vendorId?: string | undefined;
+    visitorId?: string | undefined;
+}
+
+export class CheckInResponse implements ICheckInResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    message?: string | undefined;
+    vendorName?: string | undefined;
+    vendorId?: string | undefined;
+    checkedInDateUtc?: Date;
+
+    constructor(data?: ICheckInResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            this.message = _data["message"];
+            this.vendorName = _data["vendorName"];
+            this.vendorId = _data["vendorId"];
+            this.checkedInDateUtc = _data["checkedInDateUtc"] ? new Date(_data["checkedInDateUtc"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CheckInResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        data["message"] = this.message;
+        data["vendorName"] = this.vendorName;
+        data["vendorId"] = this.vendorId;
+        data["checkedInDateUtc"] = this.checkedInDateUtc ? this.checkedInDateUtc.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICheckInResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    message?: string | undefined;
+    vendorName?: string | undefined;
+    vendorId?: string | undefined;
+    checkedInDateUtc?: Date;
+}
+
+export class CheckInsHistoryRequest implements ICheckInsHistoryRequest {
+    userId?: string | undefined;
+    pageNumber?: number;
+    pageSize?: number;
+
+    constructor(data?: ICheckInsHistoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.pageNumber = _data["pageNumber"];
+            this.pageSize = _data["pageSize"];
+        }
+    }
+
+    static fromJS(data: any): CheckInsHistoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInsHistoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["pageNumber"] = this.pageNumber;
+        data["pageSize"] = this.pageSize;
+        return data;
+    }
+}
+
+export interface ICheckInsHistoryRequest {
+    userId?: string | undefined;
+    pageNumber?: number;
+    pageSize?: number;
+}
+
+export class CheckInDisplayItem implements ICheckInDisplayItem {
+    id?: string | undefined;
+    vendorId?: string | undefined;
+    vendorName?: string | undefined;
+    vendorAvatarUrl?: string | undefined;
+    vendorAddress?: string | undefined;
+    checkedInDateUtc?: Date;
+
+    constructor(data?: ICheckInDisplayItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.vendorId = _data["vendorId"];
+            this.vendorName = _data["vendorName"];
+            this.vendorAvatarUrl = _data["vendorAvatarUrl"];
+            this.vendorAddress = _data["vendorAddress"];
+            this.checkedInDateUtc = _data["checkedInDateUtc"] ? new Date(_data["checkedInDateUtc"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CheckInDisplayItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInDisplayItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["vendorId"] = this.vendorId;
+        data["vendorName"] = this.vendorName;
+        data["vendorAvatarUrl"] = this.vendorAvatarUrl;
+        data["vendorAddress"] = this.vendorAddress;
+        data["checkedInDateUtc"] = this.checkedInDateUtc ? this.checkedInDateUtc.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICheckInDisplayItem {
+    id?: string | undefined;
+    vendorId?: string | undefined;
+    vendorName?: string | undefined;
+    vendorAvatarUrl?: string | undefined;
+    vendorAddress?: string | undefined;
+    checkedInDateUtc?: Date;
+}
+
+export class CheckInsHistoryResponse implements ICheckInsHistoryResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    checkIns?: CheckInDisplayItem[] | undefined;
+    totalCount?: number;
+
+    constructor(data?: ICheckInsHistoryResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.isSuccess = _data["isSuccess"];
+            if (Array.isArray(_data["checkIns"])) {
+                this.checkIns = [] as any;
+                for (let item of _data["checkIns"])
+                    this.checkIns!.push(CheckInDisplayItem.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): CheckInsHistoryResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CheckInsHistoryResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isSuccess"] = this.isSuccess;
+        if (Array.isArray(this.checkIns)) {
+            data["checkIns"] = [];
+            for (let item of this.checkIns)
+                data["checkIns"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
+}
+
+export interface ICheckInsHistoryResponse {
+    errors?: ErrorDto[] | undefined;
+    isSuccess?: boolean;
+    checkIns?: CheckInDisplayItem[] | undefined;
+    totalCount?: number;
+}
+
 export class CommentRequest implements ICommentRequest {
     postId?: string | undefined;
     body?: string | undefined;
@@ -8349,9 +8739,11 @@ export class ConsumerProfileActivityResponse implements IConsumerProfileActivity
     recentQuestions?: Post[] | undefined;
     recentAnswers?: Post[] | undefined;
     recentReviews?: Review[] | undefined;
+    recentCheckIns?: CheckInDisplayItem[] | undefined;
     questionsAskedCount?: number;
     questionsAnsweredCount?: number;
     reviewsCount?: number;
+    checkInsCount?: number;
 
     constructor(data?: IConsumerProfileActivityResponse) {
         if (data) {
@@ -8385,9 +8777,15 @@ export class ConsumerProfileActivityResponse implements IConsumerProfileActivity
                 for (let item of _data["recentReviews"])
                     this.recentReviews!.push(Review.fromJS(item));
             }
+            if (Array.isArray(_data["recentCheckIns"])) {
+                this.recentCheckIns = [] as any;
+                for (let item of _data["recentCheckIns"])
+                    this.recentCheckIns!.push(CheckInDisplayItem.fromJS(item));
+            }
             this.questionsAskedCount = _data["questionsAskedCount"];
             this.questionsAnsweredCount = _data["questionsAnsweredCount"];
             this.reviewsCount = _data["reviewsCount"];
+            this.checkInsCount = _data["checkInsCount"];
         }
     }
 
@@ -8421,9 +8819,15 @@ export class ConsumerProfileActivityResponse implements IConsumerProfileActivity
             for (let item of this.recentReviews)
                 data["recentReviews"].push(item ? item.toJSON() : <any>undefined);
         }
+        if (Array.isArray(this.recentCheckIns)) {
+            data["recentCheckIns"] = [];
+            for (let item of this.recentCheckIns)
+                data["recentCheckIns"].push(item ? item.toJSON() : <any>undefined);
+        }
         data["questionsAskedCount"] = this.questionsAskedCount;
         data["questionsAnsweredCount"] = this.questionsAnsweredCount;
         data["reviewsCount"] = this.reviewsCount;
+        data["checkInsCount"] = this.checkInsCount;
         return data;
     }
 }
@@ -8434,9 +8838,11 @@ export interface IConsumerProfileActivityResponse {
     recentQuestions?: Post[] | undefined;
     recentAnswers?: Post[] | undefined;
     recentReviews?: Review[] | undefined;
+    recentCheckIns?: CheckInDisplayItem[] | undefined;
     questionsAskedCount?: number;
     questionsAnsweredCount?: number;
     reviewsCount?: number;
+    checkInsCount?: number;
 }
 
 export class ConsumerImageRequest implements IConsumerImageRequest {

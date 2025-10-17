@@ -6,6 +6,7 @@ import { ConsumerProfileActivityDisplay } from '../models/consumer-profile-activ
 import { CurrentUserDisplay } from '../models/current-user-display';
 import { ReviewDisplay } from '../models/review-display';
 import { VendorDisplay } from '../models/vendor-display';
+import { CheckInDisplay } from '../models/check-in-display';
 import { AccountsService } from './accounts.service';
 import { MyPlacesRequest, NeatBoutiqueApiService, VendorProfile, Response, Request, VendorProfileResponse, ReviewRequest, Review, ReviewResponse, ReviewRemoveRequest, VendorProfilesResponse, ReviewUpdateRequest, VendorProfileWithReviewsResponse, ReviewsResponse, ConsumerProfileRequest, ConsumerProfile, ConsumerProfileResponse, ConsumerProfileActivityRequest, ConsumerProfileActivityResponse, ConsumerImageRequest, ConsumerDescriptionRequest, ConsumerBorderColorRequest, ConsumerNotificationSettingsRequest, ConsumerFeedSettingsRequest } from './neat-boutique-api.service';
 
@@ -52,15 +53,17 @@ export class ConsumerService {
     
     return new Promise<ConsumerProfileActivityDisplay>((resolve, reject) => {
       
-      this._neatBoutiqueApiService.getRecentActivityByConsumerId(request).subscribe((response: ConsumerProfileActivityResponse) => {        
+      this._neatBoutiqueApiService.getRecentActivityByConsumerId(request).subscribe((response: ConsumerProfileActivityResponse) => {
         if (response.isSuccess) {
           var activityDisplay = new ConsumerProfileActivityDisplay();
           activityDisplay.questionsAskedCount = response.questionsAskedCount;
           activityDisplay.questionsAnsweredCount = response.questionsAnsweredCount;
           activityDisplay.reviewsCount = response.reviewsCount;
+          activityDisplay.checkInsCount = (response as any).checkInsCount || 0;
           activityDisplay.recentQuestions = response.recentQuestions.map(x => new PostDisplay(x));
           activityDisplay.recentAnswers = response.recentAnswers.map(x => new PostDisplay(x));
           activityDisplay.recentReviews = response.recentReviews.map(x => new ReviewDisplay(x));
+          activityDisplay.recentCheckIns = ((response as any).recentCheckIns || []).map((x: any) => new CheckInDisplay(x));
           resolve(activityDisplay);
         } else {
           reject(response.errors);

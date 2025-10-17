@@ -1,46 +1,51 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Platform, ToastController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
+import { ToastController } from '@ionic/angular';
 import { CheckinService } from 'src/app/services/checkin.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
 
 @Component({
-  selector: 'app-qr',
-  templateUrl: './qr.page.html',
-  styleUrls: ['./qr.page.scss'],
+  selector: 'app-checkin',
+  templateUrl: './checkin.page.html',
+  styleUrls: ['./checkin.page.scss'],
 })
-export class QrPage implements OnInit {
+export class CheckinPage implements OnInit {
   public vendorId: string;
   public isProcessing: boolean = false;
   public hasVendorId: boolean = false;
   private currentUser: CurrentUserDisplay;
 
   constructor(
-    private _platform: Platform,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _checkinService: CheckinService,
     private _accountsService: AccountsService,
     private _toastController: ToastController
   ) {
-    // Get current user
-    this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
-      this.currentUser = user;
-    });
-  }
-
-  ngOnInit() {
-    // Get vendorId from route params
+    // Get vendorId from route params first
     const routeParams = this._activatedRoute.snapshot.paramMap;
     this.vendorId = routeParams.get('vendorId');
 
     if (this.vendorId) {
       this.hasVendorId = true;
-      // User scanned QR code - process check-in
-      this.processCheckIn();
     }
+
+    // Get current user and process check-in when user is available
+    this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
+      if (user) {
+        this.currentUser = user;
+
+        // If we have a vendorId and user is now loaded, process the check-in
+        if (this.vendorId && !this.isProcessing) {
+          this.processCheckIn();
+        }
+      }
+    });
+  }
+
+  ngOnInit() {
+    // Logic moved to constructor subscription
   }
 
   async processCheckIn() {
@@ -53,16 +58,19 @@ export class QrPage implements OnInit {
 
     this.isProcessing = true;
 
+    console.log('Check-in details:', {
+      vendorId: this.vendorId,
+      consumerId: this.currentUser.consumer.id,
+      consumer: this.currentUser.consumer
+    });
+
     try {
       // Call check-in API
-      // NOTE: Once you run the TypeScript generator, you can use the generated types
-      // For now, we'll use the service directly
       this._checkinService.createCheckIn(this.vendorId, this.currentUser.consumer.id).subscribe({
         next: async (response) => {
           if (response.isSuccess) {
             await this.showToast(`Checked in to ${response.vendorName}!`, 'success');
-            // TODO: Navigate to vendor profile once we have the vendor path
-            // For now, navigate to feed
+            // Navigate to feed
             this._router.navigateByUrl('/feed');
           } else {
             const errorMessage = response.errors && response.errors.length > 0
@@ -74,7 +82,16 @@ export class QrPage implements OnInit {
         },
         error: async (error) => {
           console.error('Check-in error:', error);
-          await this.showToast('An error occurred during check-in', 'danger');
+          let errorMessage = 'An error occurred during check-in';
+
+          // Try to extract error message from API response
+          if (error.error && error.error.errors && error.error.errors.length > 0) {
+            errorMessage = error.error.errors[0].errorMessage;
+          } else if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+
+          await this.showToast(errorMessage, 'danger');
           this.isProcessing = false;
         }
       });

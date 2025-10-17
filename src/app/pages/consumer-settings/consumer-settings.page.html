@@ -95,30 +95,58 @@
             </ion-card>
             <p>{{ currentUser?.consumer?.reviewsCount }} {{ currentUser?.consumer?.reviewsCount === 1 ? 'Review' : 'Reviews'}}</p>
           </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-card class="ion-text-center badge-card">
+              <ion-card-header class="checkin nb-vertical-center">
+                <ion-icon name="ribbon-outline"></ion-icon>
+              </ion-card-header>
+            </ion-card>
+            <p>{{ recentActivity?.checkInsCount || 0 }} {{ (recentActivity?.checkInsCount || 0) === 1 ? 'Check-in' : 'Check-ins'}}</p>
+          </ion-col>
         </ion-row>
 
         <ion-row class="activity-selection">
           <ion-col size="12">
             <h2>Recent Activity</h2>
           </ion-col>
-          <ion-col class="ion-text-center" size="3">
+          <ion-col class="ion-text-center tab-col">
             <h4 (click)="selectedActivity = 'recent-questions'">
-              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-questions'}">Questions</strong>
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-questions'}">
+                <span class="hide-sm-and-below">Questions</span>
+                <span class="show-sm-and-below">Ques.</span>
+              </strong>
             </h4>
           </ion-col>
-          <ion-col class="ion-text-center" size="3">
+          <ion-col class="ion-text-center tab-col">
             <h4 (click)="selectedActivity = 'recent-answers'">
-              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-answers'}">Answers</strong>
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-answers'}">
+                <span class="hide-sm-and-below">Answers</span>
+                <span class="show-sm-and-below">Answ.</span>
+              </strong>
             </h4>
           </ion-col>
-          <ion-col class="ion-text-center" size="3">
+          <ion-col class="ion-text-center tab-col">
             <h4 (click)="selectedActivity = 'recent-reviews'">
-              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-reviews'}">Reviews</strong>
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-reviews'}">
+                <span class="hide-sm-and-below">Reviews</span>
+                <span class="show-sm-and-below">Rev.</span>
+              </strong>
             </h4>
           </ion-col>
-          <ion-col class="ion-text-center" size="3">
+          <ion-col class="ion-text-center tab-col">
+            <h4 (click)="selectedActivity = 'recent-checkins'">
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'recent-checkins'}">
+                <span class="hide-sm-and-below">Check-ins</span>
+                <span class="show-sm-and-below">Check</span>
+              </strong>
+            </h4>
+          </ion-col>
+          <ion-col class="ion-text-center tab-col">
             <h4 (click)="selectedActivity = 'my-list'">
-              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'my-list'}">My List</strong>
+              <strong class="pointy-cursor" [ngClass]="{'selected-activity': selectedActivity === 'my-list'}">
+                <span class="hide-sm-and-below">My List</span>
+                <span class="show-sm-and-below">List</span>
+              </strong>
             </h4>
           </ion-col>
         </ion-row>
@@ -141,6 +169,17 @@
             <ion-row class="recent-review" *ngFor="let review of recentActivity.recentReviews">
               <ion-col>
                 <app-review-item [review]="review"></app-review-item>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div *ngIf="selectedActivity === 'recent-checkins'">
+            <ion-row class="recent-checkin" *ngFor="let checkin of recentActivity.recentCheckIns">
+              <ion-col>
+                <app-vendor-list-item [vendor]="checkin.vendorDisplay"></app-vendor-list-item>
+                <p class="checkin-date">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  Checked in {{ checkin.checkedInDateUtc | date: 'MMM d, y, h:mm a' }}
+                </p>
               </ion-col>
             </ion-row>
           </div>
