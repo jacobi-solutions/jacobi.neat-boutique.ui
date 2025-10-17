@@ -58,12 +58,6 @@ export class CheckinPage implements OnInit {
 
     this.isProcessing = true;
 
-    console.log('Check-in details:', {
-      vendorId: this.vendorId,
-      consumerId: this.currentUser.consumer.id,
-      consumer: this.currentUser.consumer
-    });
-
     try {
       // Call check-in API
       this._checkinService.createCheckIn(this.vendorId, this.currentUser.consumer.id).subscribe({
@@ -81,7 +75,6 @@ export class CheckinPage implements OnInit {
           this.isProcessing = false;
         },
         error: async (error) => {
-          console.error('Check-in error:', error);
           let errorMessage = 'An error occurred during check-in';
 
           // Try to extract error message from API response
@@ -96,7 +89,6 @@ export class CheckinPage implements OnInit {
         }
       });
     } catch (error) {
-      console.error('Check-in error:', error);
       await this.showToast('An error occurred during check-in', 'danger');
       this.isProcessing = false;
     }
