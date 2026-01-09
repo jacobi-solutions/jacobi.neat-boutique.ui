@@ -14,6 +14,7 @@ export class CommunityCheckinPage implements OnInit {
   public networkId: string;
   public isProcessing: boolean = false;
   public hasNetworkId: boolean = false;
+  public checkInAttempted: boolean = false;
   private currentUser: CurrentUserDisplay;
 
   constructor(
@@ -34,7 +35,8 @@ export class CommunityCheckinPage implements OnInit {
       if (user) {
         this.currentUser = user;
 
-        if (this.networkId && !this.isProcessing) {
+        // Only attempt check-in once per page load
+        if (this.networkId && !this.isProcessing && !this.checkInAttempted) {
           this.processCheckIn();
         }
       }
@@ -44,6 +46,8 @@ export class CommunityCheckinPage implements OnInit {
   ngOnInit() {}
 
   async processCheckIn() {
+    this.checkInAttempted = true;
+
     if (!this.currentUser || !this.currentUser.consumer) {
       await this.showToast('Please log in to check in', 'warning');
       this._router.navigateByUrl('/home');

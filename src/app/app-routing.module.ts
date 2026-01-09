@@ -146,12 +146,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
   },
   {
-    path: 'checkin',
-    loadChildren: () => import('./pages/checkin/checkin.module').then( m => m.CheckinPageModule)
-  },
-  {
     path: 'checkin/community',
     loadChildren: () => import('./pages/community-checkin/community-checkin.module').then( m => m.CommunityCheckinPageModule)
+  },
+  {
+    path: 'checkin',
+    loadChildren: () => import('./pages/checkin/checkin.module').then( m => m.CheckinPageModule)
   },
   {
     path: 'network-community',
