@@ -582,17 +582,21 @@
             <!-- Check-ins list -->
             <ion-row *ngIf="!isLoadingCheckIns && communityCheckIns && communityCheckIns.length > 0" class="checkins-grid">
               <ion-col size="6" size-md="4" *ngFor="let checkIn of communityCheckIns">
-                <ion-card class="checkin-item-compact">
+                <ion-card class="checkin-card">
                   <ion-card-content>
-                    <div class="checkin-compact-content">
-                      <app-nb-avatar
-                        class="avatar-compact"
-                        [borderColor]="checkIn.visitorBorderColor"
-                        [altStyleClass]="'checkin-avatar-compact'"
-                        [imageSrc]="checkIn.visitorAvatarUrl || defaultImg">
-                      </app-nb-avatar>
-                      <span class="visitor-name-compact">{{ checkIn.visitorName }}</span>
-                      <span class="checkin-date-compact">{{ checkIn.checkedInDateUtc | date:'shortDate' }}</span>
+                    <div class="checkin-content">
+                      <div class="avatar-container">
+                        <app-nb-avatar
+                          class="avatar"
+                          [borderColor]="checkIn.visitorBorderColor"
+                          [altStyleClass]="'checkin-avatar'"
+                          [imageSrc]="checkIn.visitorAvatarUrl || defaultImg">
+                        </app-nb-avatar>
+                      </div>
+                      <div class="checkin-details">
+                        <span class="visitor-name">{{ checkIn.visitorName }}</span>
+                        <span class="checkin-date">{{ checkIn.checkedInDateUtc | date:'short' }}</span>
+                      </div>
                     </div>
                   </ion-card-content>
                 </ion-card>
