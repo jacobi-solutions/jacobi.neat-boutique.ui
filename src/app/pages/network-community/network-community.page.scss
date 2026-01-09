@@ -803,3 +803,34 @@ ion-icon {
     }
   }
 }
+
+// Leave Community section styles
+.leave-community-section {
+  margin-top: 2rem;
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--nb-border-color);
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    color: var(--nb-deep-red);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--med-grey);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .leave-community-btn {
+    --color: var(--nb-deep-red);
+    --border-color: var(--nb-deep-red);
+
+    ion-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}

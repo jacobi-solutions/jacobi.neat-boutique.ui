@@ -226,6 +226,16 @@ export class NetworkService {
     });
     return promise;
   }
-  
+
+  leaveNetwork(networkId: string, vendorId: string) {
+    var promise = new Promise<void>((resolve, reject) => {
+      this._neatBoutiqueApiService.removeVendorFromNetwork(networkId, vendorId).subscribe({
+        next: () => resolve(),
+        error: () => reject('Failed to leave network')
+      });
+    });
+    return promise;
+  }
+
 
 } 

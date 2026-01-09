@@ -770,6 +770,44 @@ export class NetworkCommunityPage implements OnInit {
       this.loadCommunityCheckIns();
     }
   }
+
+  async leaveCommunity() {
+    if (!this.network?.id || !this.currentUser?.vendor?.id) return;
+
+    const confirmToast = await this._toastController.create({
+      message: `Are you sure you want to leave ${this.network.name}?`,
+      position: 'bottom',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Leave',
+          handler: () => {
+            this._networkService.leaveNetwork(this.network.id, this.currentUser.vendor.id)
+              .then(async () => {
+                const successToast = await this._toastController.create({
+                  message: 'You have left the community',
+                  duration: 3000,
+                  position: 'bottom',
+                  color: 'primary'
+                });
+                await successToast.present();
+                this._router.navigate(['/vendor-businesses']);
+              })
+              .catch(async () => {
+                const errorToast = await this._toastController.create({
+                  message: 'Failed to leave community',
+                  duration: 3000,
+                  position: 'bottom',
+                  color: 'danger'
+                });
+                await errorToast.present();
+              });
+          }
+        }
+      ]
+    });
+    await confirmToast.present();
+  }
 }
 
 export class VendorNetworkMembershipDisplay extends VendorNetworkMembership {

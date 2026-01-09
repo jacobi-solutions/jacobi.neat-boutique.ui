@@ -526,7 +526,7 @@
                   
                     <ion-row>
                       <ion-col class="ion-text-center">
-                        <app-jacobi-button 
+                        <app-jacobi-button
                           (click)="updateDiscounts()"
                           [buttonType]="'green-primary'"
                           [disabled]="discountsForm.invalid"
@@ -536,6 +536,22 @@
                       </ion-col>
                     </ion-row>
                   </form>
+
+                  <!-- Leave Community Section (Members only, not owners) -->
+                  <ion-row *ngIf="isCurrentVendorMember && !isCurrentVendorOwner" class="leave-community-section">
+                    <ion-col size="12">
+                      <hr class="section-divider">
+                      <h3>Leave Community</h3>
+                      <p>If you leave this community, you will no longer have access to member benefits and your discounts will be removed.</p>
+                      <app-jacobi-button
+                        (click)="leaveCommunity()"
+                        [buttonType]="'white-primary-wide'"
+                        class="leave-community-btn">
+                        <ion-icon name="exit-outline"></ion-icon>
+                        Leave Community
+                      </app-jacobi-button>
+                    </ion-col>
+                  </ion-row>
                 </ion-col>
               </ion-row>
             </ion-card-content>
