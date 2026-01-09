@@ -175,11 +175,34 @@
           <div *ngIf="selectedActivity === 'recent-checkins'">
             <ion-row class="recent-checkin" *ngFor="let checkin of recentActivity.recentCheckIns">
               <ion-col>
-                <app-vendor-list-item [vendor]="checkin.vendorDisplay"></app-vendor-list-item>
-                <p class="checkin-date">
-                  <ion-icon name="calendar-outline"></ion-icon>
-                  Checked in {{ checkin.checkedInDateUtc | date: 'MMM d, y, h:mm a' }}
-                </p>
+                <!-- Vendor Check-in -->
+                <ng-container *ngIf="checkin.type === 'Vendor'">
+                  <app-vendor-list-item [vendor]="checkin.vendorDisplay"></app-vendor-list-item>
+                  <p class="checkin-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    Checked in {{ checkin.checkedInDateUtc | date: 'MMM d, y, h:mm a' }}
+                  </p>
+                </ng-container>
+                <!-- Community Check-in -->
+                <ng-container *ngIf="checkin.type === 'Community'">
+                  <ion-card class="community-checkin-card">
+                    <ion-card-content>
+                      <ion-row>
+                        <ion-col size="2">
+                          <ion-icon name="people-outline" class="community-icon"></ion-icon>
+                        </ion-col>
+                        <ion-col size="10">
+                          <h3 class="community-name">{{ checkin.networkName }}</h3>
+                          <p class="community-label">Community</p>
+                        </ion-col>
+                      </ion-row>
+                    </ion-card-content>
+                  </ion-card>
+                  <p class="checkin-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    Checked in {{ checkin.checkedInDateUtc | date: 'MMM d, y, h:mm a' }}
+                  </p>
+                </ng-container>
               </ion-col>
             </ion-row>
           </div>

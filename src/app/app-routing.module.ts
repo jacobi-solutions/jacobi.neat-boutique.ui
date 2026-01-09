@@ -150,6 +150,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/checkin/checkin.module').then( m => m.CheckinPageModule)
   },
   {
+    path: 'checkin/community',
+    loadChildren: () => import('./pages/community-checkin/community-checkin.module').then( m => m.CommunityCheckinPageModule)
+  },
+  {
     path: 'network-community',
     loadChildren: () => import('./pages/network-community/network-community.module').then( m => m.NetworkCommunityPageModule),
     canActivate: [ AuthGuard, VendorOnlyGuard, HeaderGuard ],

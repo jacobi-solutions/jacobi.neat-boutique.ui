@@ -181,6 +181,9 @@
           <ion-col *ngIf="isCurrentVendorOwner || isCurrentVendorMember" size="auto">
             <ion-icon (click)="currentNetworkTab = networkTabTypes.SETTINGS" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.SETTINGS}" class="clickable" name="settings-outline"></ion-icon>
           </ion-col>
+          <ion-col *ngIf="isCurrentVendorOwner || isCurrentVendorMember" size="auto">
+            <ion-icon (click)="currentNetworkTab = networkTabTypes.CHECKINS; onCheckInsTabSelected()" [ngClass]="{ 'active' : currentNetworkTab === networkTabTypes.CHECKINS}" class="clickable" name="qr-code-outline"></ion-icon>
+          </ion-col>
           
           
           <!-- ✨ NEW SHARE BUTTON -->
@@ -539,6 +542,74 @@
           </ion-card>
         </div>
        
+      </div>
+
+      <!-- CHECKINS TAB - Shows community check-ins -->
+      <div [hidden]="currentNetworkTab !== networkTabTypes.CHECKINS">
+        <ion-row>
+          <ion-col>
+            <h3 class="section-heading">Community Check-ins</h3>
+
+            <!-- Show QR Code Button -->
+            <div class="qr-button-wrapper">
+              <app-jacobi-button (click)="showCommunityQrCode()" [buttonType]="'green-primary'">
+                <ion-icon name="qr-code-outline"></ion-icon>
+                Show QR Code
+              </app-jacobi-button>
+            </div>
+
+            <!-- Loading indicator -->
+            <div *ngIf="isLoadingCheckIns" class="loading-wrapper">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+
+            <!-- Check-ins list -->
+            <div *ngIf="!isLoadingCheckIns && communityCheckIns && communityCheckIns.length > 0" class="checkins-list">
+              <ion-card *ngFor="let checkIn of communityCheckIns" class="checkin-item">
+                <ion-card-content>
+                  <ion-row class="checkin-row">
+                    <ion-col size="2" size-md="1.5">
+                      <div class="avatar-container">
+                        <app-nb-avatar
+                          class="avatar"
+                          [borderColor]="checkIn.visitorBorderColor"
+                          [altStyleClass]="'checkin-avatar'"
+                          [imageSrc]="checkIn.visitorAvatarUrl || defaultImg">
+                        </app-nb-avatar>
+                      </div>
+                    </ion-col>
+                    <ion-col size="10" size-md="10.5">
+                      <div class="checkin-details">
+                        <span class="visitor-name">{{ checkIn.visitorName }}</span>
+                        <span class="checkin-date">{{ checkIn.checkedInDateUtc | date:'medium' }}</span>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </div>
+
+            <!-- No check-ins message -->
+            <div *ngIf="!isLoadingCheckIns && (!communityCheckIns || communityCheckIns.length === 0)" class="no-checkins-message">
+              <p>No check-ins yet. Share the QR code to let people check in!</p>
+            </div>
+
+            <!-- Load More button -->
+            <div *ngIf="showLoadMoreCheckIns" class="load-more-container">
+              <app-jacobi-button (click)="loadMoreCommunityCheckIns()" [buttonType]="'white-primary'">
+                Load More
+              </app-jacobi-button>
+            </div>
+
+            <!-- Clear All button (Owner only) -->
+            <div *ngIf="isCurrentVendorOwner && communityCheckIns && communityCheckIns.length > 0" class="clear-all-wrapper">
+              <app-jacobi-button (click)="clearAllCommunityCheckIns()" [buttonType]="'white-primary-wide'">
+                <ion-icon name="trash-outline"></ion-icon>
+                Clear All Check-ins
+              </app-jacobi-button>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
 
       <!-- TOP MEMBERS TAB - For future use -->

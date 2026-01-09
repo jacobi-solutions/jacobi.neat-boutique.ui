@@ -20,6 +20,7 @@ import { ChooseAnswerRankingModalComponent } from "../shared/modals/choose-answe
 import { AnswerDisplay } from "../models/answer-display";
 import { UsernameAndEmailModalComponent } from "../shared/modals/username-and-email-modal/username-and-email-modal.component";
 import { QrCheckInModalComponent } from "../shared/modals/qr-check-in-modal/qr-check-in-modal.component";
+import { QrCommunityCheckInModalComponent } from "../shared/modals/qr-community-check-in-modal/qr-community-check-in-modal.component";
 
 @Injectable({
   providedIn: 'root'
@@ -232,6 +233,16 @@ export class ModalService {
     const modalHandle = await this._modalController.create({
       component: QrCheckInModalComponent,
       componentProps: { vendorId, vendorName },
+      cssClass: 'custom-modal qr-check-in-modal',
+    });
+    modalHandle.present();
+    return modalHandle;
+  }
+
+  async displayQrCommunityCheckInModal(networkId: string, networkName: string): Promise<HTMLIonModalElement> {
+    const modalHandle = await this._modalController.create({
+      component: QrCommunityCheckInModalComponent,
+      componentProps: { networkId, networkName },
       cssClass: 'custom-modal qr-check-in-modal',
     });
     modalHandle.present();

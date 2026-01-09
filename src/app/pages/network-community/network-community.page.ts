@@ -22,12 +22,15 @@ import { PostDisplay } from 'src/app/models/post-display';
 import { CategoryService } from 'src/app/services/category.service';
 import { AnswersService } from 'src/app/services/answers.service';
 import { ToastController } from '@ionic/angular';
+import { CheckinService, CommunityCheckInDisplayItem } from 'src/app/services/checkin.service';
+import { ModalService } from 'src/app/services/modal.service';
 
 export const NetworkTabTypes = {
   MAP: "Map",
   NETWORK_FEED: "Network Feed",
-  TOP_MEMBERS: "Top Members", 
-  SETTINGS: "Settings"
+  TOP_MEMBERS: "Top Members",
+  SETTINGS: "Settings",
+  CHECKINS: "Check-ins"
 }
 
 @Component({
@@ -78,16 +81,24 @@ export class NetworkCommunityPage implements OnInit {
   public colors: string[] = THEME.colors.list;
   networkTopVisitors: TopVisitorDisplay[];
 
+  // Check-ins tab properties
+  communityCheckIns: CommunityCheckInDisplayItem[] = [];
+  currentCheckInsPage: number = 1;
+  checkInsPerPage: number = 10;
+  showLoadMoreCheckIns: boolean = false;
+  isLoadingCheckIns: boolean = false;
+
   googleMap: google.maps.Map;
   allMapMarkersMap: Map<string, google.maps.Marker> = new Map<string, google.maps.Marker>();
   orangeLocationIconUrl = "../../../assets/icons/loci-location-orange.svg";
   yellowLocationIconUrl = "../../../assets/icons/loci-location-red.svg";
 
-  constructor(private _networkService: NetworkService, private _customersService: AccountsService, 
+  constructor(private _networkService: NetworkService, private _customersService: AccountsService,
     private _fb: FormBuilder, private _router: Router, private _activatedRoute: ActivatedRoute,
     private _util: UtilService, private _authService: AuthService,
     private _categoryService: CategoryService, private _answersService: AnswersService,
-    private _toastController: ToastController) {
+    private _toastController: ToastController, private _checkinService: CheckinService,
+    private _modalService: ModalService) {
     
     this.addMemberForm = this._fb.group({
       businessName: ['', Validators.required],
@@ -186,7 +197,7 @@ export class NetworkCommunityPage implements OnInit {
     });
     
    
-    var network = (this._router.getCurrentNavigation().extras.state) as Network;  
+    var network = (this._router.getCurrentNavigation()?.extras?.state) as Network;
     if(network) {
       this.network = network;
       this._networkService.setCurrentNetwork(network);
@@ -653,7 +664,7 @@ export class NetworkCommunityPage implements OnInit {
   
   loadMoreNetworkPosts() {
     if (!this.network?.id) return;
-    
+
     this.currentNetworkPostPage++;
     this._categoryService.getQuestionsByFeedContextId(this.network.id, this.currentNetworkPostPage, this.networkPostsPerPage)
       .then((posts: PostDisplay[]) => {
@@ -663,6 +674,101 @@ export class NetworkCommunityPage implements OnInit {
       .catch(error => {
         console.error('Error loading more network posts:', error);
       });
+  }
+
+  // Check-ins tab methods
+  loadCommunityCheckIns() {
+    if (!this.network?.id) return;
+
+    this.isLoadingCheckIns = true;
+    this.currentCheckInsPage = 1;
+
+    this._checkinService.getCommunityCheckIns(this.network.id, this.currentCheckInsPage, this.checkInsPerPage)
+      .subscribe({
+        next: (response) => {
+          this.communityCheckIns = response.checkIns || [];
+          this.showLoadMoreCheckIns = this.communityCheckIns.length === this.checkInsPerPage;
+          this.isLoadingCheckIns = false;
+        },
+        error: (error) => {
+          console.error('Error loading community check-ins:', error);
+          this.isLoadingCheckIns = false;
+        }
+      });
+  }
+
+  loadMoreCommunityCheckIns() {
+    if (!this.network?.id) return;
+
+    this.currentCheckInsPage++;
+    this._checkinService.getCommunityCheckIns(this.network.id, this.currentCheckInsPage, this.checkInsPerPage)
+      .subscribe({
+        next: (response) => {
+          this.communityCheckIns = [...this.communityCheckIns, ...(response.checkIns || [])];
+          this.showLoadMoreCheckIns = (response.checkIns?.length || 0) === this.checkInsPerPage;
+        },
+        error: (error) => {
+          console.error('Error loading more community check-ins:', error);
+        }
+      });
+  }
+
+  async showCommunityQrCode() {
+    if (!this.network?.id || !this.network?.name) return;
+    await this._modalService.displayQrCommunityCheckInModal(this.network.id, this.network.name);
+  }
+
+  async clearAllCommunityCheckIns() {
+    if (!this.network?.id || !this.currentUser?.vendor?.id) return;
+
+    // Show confirmation toast first
+    const confirmToast = await this._toastController.create({
+      message: 'Are you sure you want to clear all check-ins?',
+      position: 'bottom',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Clear All',
+          handler: () => {
+            this._checkinService.clearCommunityCheckIns(this.network.id, this.currentUser.vendor.id)
+              .subscribe({
+                next: async () => {
+                  this.communityCheckIns = [];
+                  this.showLoadMoreCheckIns = false;
+
+                  const successToast = await this._toastController.create({
+                    message: 'All check-ins have been cleared',
+                    duration: 3000,
+                    position: 'bottom',
+                    color: 'primary'
+                  });
+                  await successToast.present();
+                },
+                error: async (error) => {
+                  console.error('Error clearing community check-ins:', error);
+                  const errorToast = await this._toastController.create({
+                    message: 'Failed to clear check-ins',
+                    duration: 3000,
+                    position: 'bottom',
+                    color: 'danger'
+                  });
+                  await errorToast.present();
+                }
+              });
+          }
+        }
+      ]
+    });
+    await confirmToast.present();
+  }
+
+  onCheckInsTabSelected() {
+    if (this.communityCheckIns.length === 0) {
+      this.loadCommunityCheckIns();
+    }
   }
 }
 

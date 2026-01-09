@@ -32,6 +32,52 @@ export interface CheckInsHistoryResponse {
   totalCount: number;
 }
 
+export interface CommunityCheckInRequest {
+  networkId: string;
+  visitorId: string;
+}
+
+export interface CommunityCheckInResponse {
+  isSuccess: boolean;
+  errors: Array<{ errorMessage: string }>;
+  message?: string;
+  networkName?: string;
+  networkId?: string;
+  checkedInDateUtc?: string;
+}
+
+export interface GetCommunityCheckInsRequest {
+  networkId: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface CommunityCheckInDisplayItem {
+  id: string;
+  visitorId: string;
+  visitorName: string;
+  visitorAvatarUrl: string;
+  visitorBorderColor: string;
+  checkedInDateUtc: string;
+}
+
+export interface GetCommunityCheckInsResponse {
+  isSuccess: boolean;
+  errors: Array<{ errorMessage: string }>;
+  checkIns: CommunityCheckInDisplayItem[];
+  totalCount: number;
+}
+
+export interface ClearCommunityCheckInsRequest {
+  networkId: string;
+  vendorId: string;
+}
+
+export interface ClearCommunityCheckInsResponse {
+  isSuccess: boolean;
+  errors: Array<{ errorMessage: string }>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -63,5 +109,30 @@ export class CheckinService {
         return [];
       })
     );
+  }
+
+  createCommunityCheckIn(networkId: string, visitorId: string): Observable<CommunityCheckInResponse> {
+    const url = `${this.apiUrl}/CheckIns/CreateCommunityCheckIn`;
+    const body: CommunityCheckInRequest = { networkId, visitorId };
+
+    return this.http.post<CommunityCheckInResponse>(url, body);
+  }
+
+  getCommunityCheckIns(networkId: string, pageNumber: number = 1, pageSize: number = 20): Observable<GetCommunityCheckInsResponse> {
+    const url = `${this.apiUrl}/CheckIns/GetCommunityCheckIns`;
+    const body: GetCommunityCheckInsRequest = {
+      networkId,
+      pageNumber,
+      pageSize
+    };
+
+    return this.http.post<GetCommunityCheckInsResponse>(url, body);
+  }
+
+  clearCommunityCheckIns(networkId: string, vendorId: string): Observable<ClearCommunityCheckInsResponse> {
+    const url = `${this.apiUrl}/CheckIns/ClearCommunityCheckIns`;
+    const body: ClearCommunityCheckInsRequest = { networkId, vendorId };
+
+    return this.http.post<ClearCommunityCheckInsResponse>(url, body);
   }
 }

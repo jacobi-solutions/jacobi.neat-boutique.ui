@@ -48,6 +48,7 @@ import { UsernameAndEmailModalComponent } from './modals/username-and-email-moda
 import { MyListComponent } from './my-list/my-list.component';
 import { EditAnnouncementsComponent } from '../components/edit-announcements/edit-announcements.component';
 import { QrCheckInModalComponent } from './modals/qr-check-in-modal/qr-check-in-modal.component';
+import { QrCommunityCheckInModalComponent } from './modals/qr-community-check-in-modal/qr-community-check-in-modal.component';
 import { QRCodeModule } from 'angularx-qrcode';
 
 
@@ -98,7 +99,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     UsernameAndEmailModalComponent,
     MyListComponent,
     EditAnnouncementsComponent,
-    QrCheckInModalComponent
+    QrCheckInModalComponent,
+    QrCommunityCheckInModalComponent
   ],
   imports: [
     RouterModule,
@@ -154,7 +156,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     UsernameAndEmailModalComponent,
     MyListComponent,
     EditAnnouncementsComponent,
-    QrCheckInModalComponent
+    QrCheckInModalComponent,
+    QrCommunityCheckInModalComponent
   ]
 })
 export class SharedModule { }

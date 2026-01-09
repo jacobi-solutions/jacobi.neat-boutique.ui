@@ -1,0 +1,26 @@
+<div class="modal-wrapper">
+  <ion-card class="modal-card-wrapper">
+    <ion-card-header class="logo-wrapper">
+      <ion-icon class="close-icon clickable" (click)="onClose()" name="close-outline"></ion-icon>
+    </ion-card-header>
+
+    <ion-card-content class="modal-content-wrapper">
+      <div class="qr-content">
+        <h2 class="network-name">{{ networkName }}</h2>
+        <p class="instructions">Scan this QR code to check in</p>
+
+        <div class="qr-code-container">
+          <qrcode
+            [qrdata]="qrCodeData"
+            [width]="300"
+            [errorCorrectionLevel]="'M'"
+            [elementType]="'canvas'"
+            [margin]="2">
+          </qrcode>
+        </div>
+
+        <p class="url-text">{{ qrCodeData }}</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>

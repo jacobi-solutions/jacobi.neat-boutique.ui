@@ -1,0 +1,33 @@
+<ion-content>
+
+  <ion-grid>
+    <!-- Processing check-in -->
+    <ion-row *ngIf="hasNetworkId && isProcessing">
+      <ion-col size-md="6" offset-md="3" class="ion-text-center">
+        <h1>Checking In...</h1>
+        <ion-spinner></ion-spinner>
+      </ion-col>
+    </ion-row>
+
+    <!-- No network ID - show instructions -->
+    <ion-row *ngIf="!hasNetworkId">
+      <ion-col size-md="6" offset-md="3" class="ion-text-center">
+        <h1>Check In to a Community</h1>
+        <p>Scan a community QR code with your phone camera to check in.</p>
+        <br/>
+        <app-jacobi-button [buttonType]="'green-primary'" (click)="goToFeed()">Browse Communities</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- Check-in complete -->
+    <ion-row *ngIf="hasNetworkId && !isProcessing">
+      <ion-col size-md="6" offset-md="3" class="ion-text-center">
+        <h1>Check-in Complete</h1>
+        <p>You can close this page.</p>
+        <br/>
+        <app-jacobi-button [buttonType]="'green-primary'" (click)="goToFeed()">Go to Feed</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

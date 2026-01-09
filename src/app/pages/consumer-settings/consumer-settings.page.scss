@@ -92,6 +92,35 @@ h4 {
                 font-size: 1.1rem;
             }
         }
+
+        .community-checkin-card {
+            border-radius: var(--nb-border-radius);
+            border: 1px solid var(--nb-border-color);
+            box-shadow: var(--nb-subtle-box-shadow);
+            margin: 0;
+
+            ion-card-content {
+                padding: 1rem;
+            }
+
+            .community-icon {
+                font-size: 2.5rem;
+                color: var(--nb-primary);
+            }
+
+            .community-name {
+                color: var(--nb-primary);
+                font-weight: 600;
+                font-size: 1.2rem;
+                margin: 0;
+            }
+
+            .community-label {
+                color: var(--med-grey);
+                font-size: 0.9rem;
+                margin: 0.25rem 0 0 0;
+            }
+        }
     }
     .my-list {
         margin-bottom: 1.5rem;
