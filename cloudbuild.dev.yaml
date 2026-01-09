@@ -26,4 +26,4 @@ steps:
       - '-c'
       - |
         npm install -g firebase-tools
-        firebase deploy --project dev
+        firebase deploy --only hosting --project dev

@@ -1,8 +1,8 @@
 {
   "projects": {
     "prod": "citric-inkwell-330122",
-    "dev":  "neat-boutique",
-    "default": "prod"
+    "dev": "neat-boutique",
+    "default": "neat-boutique"
   },
   "targets": {
     "citric-inkwell-330122": {
