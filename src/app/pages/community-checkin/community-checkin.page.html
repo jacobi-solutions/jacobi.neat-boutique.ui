@@ -19,11 +19,21 @@
       </ion-col>
     </ion-row>
 
-    <!-- Check-in complete -->
-    <ion-row *ngIf="hasNetworkId && !isProcessing">
+    <!-- Check-in succeeded -->
+    <ion-row *ngIf="hasNetworkId && !isProcessing && checkInSucceeded">
       <ion-col size-md="6" offset-md="3" class="ion-text-center">
         <h1>Check-in Complete</h1>
         <p>You can close this page.</p>
+        <br/>
+        <app-jacobi-button [buttonType]="'green-primary'" (click)="goToFeed()">Go to Feed</app-jacobi-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- Check-in failed -->
+    <ion-row *ngIf="hasNetworkId && !isProcessing && checkInFailed" class="error-state">
+      <ion-col size-md="6" offset-md="3" class="ion-text-center">
+        <h1>Check-in Failed</h1>
+        <p>{{ errorMessage }}</p>
         <br/>
         <app-jacobi-button [buttonType]="'green-primary'" (click)="goToFeed()">Go to Feed</app-jacobi-button>
       </ion-col>

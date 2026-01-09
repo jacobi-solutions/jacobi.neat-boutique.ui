@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { CheckinService } from 'src/app/services/checkin.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { CurrentUserDisplay } from 'src/app/models/current-user-display';
@@ -10,12 +11,16 @@ import { CurrentUserDisplay } from 'src/app/models/current-user-display';
   templateUrl: './community-checkin.page.html',
   styleUrls: ['./community-checkin.page.scss'],
 })
-export class CommunityCheckinPage implements OnInit {
+export class CommunityCheckinPage implements OnInit, OnDestroy {
   public networkId: string;
   public isProcessing: boolean = false;
   public hasNetworkId: boolean = false;
   public checkInAttempted: boolean = false;
+  public checkInSucceeded: boolean = false;
+  public checkInFailed: boolean = false;
+  public errorMessage: string = '';
   private currentUser: CurrentUserDisplay;
+  private userSubscription: Subscription;
 
   constructor(
     private _router: Router,
@@ -31,12 +36,12 @@ export class CommunityCheckinPage implements OnInit {
       this.hasNetworkId = true;
     }
 
-    this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
+    this.userSubscription = this._accountsService.currentUserSubject.subscribe((user: CurrentUserDisplay) => {
       if (user) {
         this.currentUser = user;
 
-        // Only attempt check-in once per page load
-        if (this.networkId && !this.isProcessing && !this.checkInAttempted) {
+        // Only attempt check-in once per page load, and only when consumer data is fully loaded
+        if (this.networkId && !this.isProcessing && !this.checkInAttempted && user.consumer?.id) {
           this.processCheckIn();
         }
       }
@@ -45,10 +50,17 @@ export class CommunityCheckinPage implements OnInit {
 
   ngOnInit() {}
 
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
   async processCheckIn() {
     this.checkInAttempted = true;
 
-    if (!this.currentUser || !this.currentUser.consumer) {
+    // Double-check consumer data is available (should always be true if we got here correctly)
+    if (!this.currentUser?.consumer?.id) {
       await this.showToast('Please log in to check in', 'warning');
       this._router.navigateByUrl('/home');
       return;
@@ -56,36 +68,35 @@ export class CommunityCheckinPage implements OnInit {
 
     this.isProcessing = true;
 
-    try {
-      this._checkinService.createCommunityCheckIn(this.networkId, this.currentUser.consumer.id).subscribe({
-        next: async (response) => {
-          if (response.isSuccess) {
-            await this.showToast(`Checked in to ${response.networkName}!`, 'success');
-          } else {
-            const errorMessage = response.errors && response.errors.length > 0
-              ? response.errors[0].errorMessage
-              : 'Check-in failed';
-            await this.showToast(errorMessage, 'danger');
-          }
-          this.isProcessing = false;
-        },
-        error: async (error) => {
-          let errorMessage = 'An error occurred during check-in';
-
-          if (error.error && error.error.errors && error.error.errors.length > 0) {
-            errorMessage = error.error.errors[0].errorMessage;
-          } else if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          }
-
-          await this.showToast(errorMessage, 'danger');
-          this.isProcessing = false;
+    this._checkinService.createCommunityCheckIn(this.networkId, this.currentUser.consumer.id).subscribe({
+      next: async (response) => {
+        this.isProcessing = false;
+        if (response.isSuccess) {
+          this.checkInSucceeded = true;
+          await this.showToast(`Checked in to ${response.networkName}!`, 'success');
+        } else {
+          this.checkInFailed = true;
+          this.errorMessage = response.errors && response.errors.length > 0
+            ? response.errors[0].errorMessage
+            : 'Check-in failed';
+          await this.showToast(this.errorMessage, 'danger');
         }
-      });
-    } catch (error) {
-      await this.showToast('An error occurred during check-in', 'danger');
-      this.isProcessing = false;
-    }
+      },
+      error: async (error) => {
+        this.isProcessing = false;
+        this.checkInFailed = true;
+
+        if (error.error && error.error.errors && error.error.errors.length > 0) {
+          this.errorMessage = error.error.errors[0].errorMessage;
+        } else if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = 'An error occurred during check-in';
+        }
+
+        await this.showToast(this.errorMessage, 'danger');
+      }
+    });
   }
 
   async showToast(message: string, color: string) {
